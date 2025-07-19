@@ -1,10 +1,10 @@
 const mysql = require("mysql2");
 
 const pool = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "761834925Misch@el",
-    database: "ecoride_db",
+    host: process.env.DB_HOST || "localhost",
+    user: process.env.DB_USER || "root",
+    password: process.env.DB_PASSWORD || "",
+    database: process.env.DB_NAME || "ecoride_db",
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
