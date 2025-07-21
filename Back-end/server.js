@@ -5,9 +5,19 @@ require("dotenv").config();
 // Importer la connexion à la base de données
 const db = require("./Config/db.js"); // Importer la connexion à la base de données
 // Importer le middleware d'authentification
-const authMiddleware = require("./authMiddleware.js");
+const {
+    authMiddleware,
+    requireRole,
+    requireAnyRole,
+} = require("./authMiddleware.js");
 // Importer les routes des utilisateurs
 const userRoutes = require("./routes/userRoutes");
+// Importer les autres routes
+const vehicleRoutes = require("./routes/vehicleRoutes");
+const carpoolingRoutes = require("./routes/carpoolingRoutes");
+const participationRoutes = require("./routes/participationRoutes");
+const creditsRoutes = require("./routes/creditsRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 // Importer cors pour gérer les requêtes cross-origin
 const cors = require("cors");
 
@@ -21,11 +31,26 @@ app.use(cors());
 app.use(express.json());
 
 /* ****************************************************************************************************************** */
-/*                                                     UTILISATEUR                                                    */
+/*                                                     ROUTES                                                         */
 /* ****************************************************************************************************************** */
 // Utiliser les routes pour les utilisateurs
 // Toutes les routes définies dans userRoutes.js seront préfixées par /api/users
 app.use("/api/users", userRoutes);
+
+// Routes pour les véhicules
+app.use("/api/vehicles", vehicleRoutes);
+
+// Routes pour les covoiturages
+app.use("/api/carpoolings", carpoolingRoutes);
+
+// Routes pour les participations
+app.use("/api/participations", participationRoutes);
+
+// Routes pour les crédits
+app.use("/api/credits", creditsRoutes);
+
+// Routes d'administration
+app.use("/api/admin", adminRoutes);
 
 // Démarrer le serveur
 app.listen(PORT, () => {
