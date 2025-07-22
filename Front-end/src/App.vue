@@ -1,0 +1,275 @@
+<script setup>
+import { computed } from 'vue'
+import { RouterView } from 'vue-router'
+import { useAuthStore } from './stores/counter'
+
+const authStore = useAuthStore()
+const isLoggedIn = computed(() => authStore.isLoggedIn)
+const currentUser = computed(() => authStore.currentUser)
+
+const logout = async () => {
+  await authStore.logout()
+  window.location.href = '/'
+}
+</script>
+
+<template>
+  <div id="app">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
+      <div class="container-fluid">
+        <router-link class="navbar-brand fw-bold" to="/">
+          <img src="@/assets/Logo ecoride black bg.png" alt="EcoRide" class="navbar-logo" />
+        </router-link>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <router-link class="nav-link" to="/">
+                <i class="fas fa-home me-1"></i>
+                Accueil
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/search">
+                <i class="fas fa-search me-1"></i>
+                Rechercher
+              </router-link>
+            </li>
+            <li class="nav-item" v-if="isLoggedIn">
+              <router-link class="nav-link" to="/my-trips">
+                <i class="fas fa-car me-1"></i>
+                Mes trajets
+              </router-link>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav">
+            <template v-if="!isLoggedIn">
+              <li class="nav-item">
+                <router-link class="nav-link" to="/login">
+                  <i class="fas fa-sign-in-alt me-1"></i>
+                  Connexion
+                </router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/register">
+                  <i class="fas fa-user-plus me-1"></i>
+                  Inscription
+                </router-link>
+              </li>
+            </template>
+            <template v-else>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                >
+                  <i class="fas fa-user me-1"></i>
+                  {{ currentUser?.prenom || 'Utilisateur' }}
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <router-link class="dropdown-item" to="/profile">
+                      <i class="fas fa-user-edit me-2"></i>
+                      Mon profil
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link class="dropdown-item" to="/credits">
+                      <i class="fas fa-coins me-2"></i>
+                      Mes crédits
+                    </router-link>
+                  </li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item" href="#" @click.prevent="logout">
+                      <i class="fas fa-sign-out-alt me-2"></i>
+                      Déconnexion
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </template>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <RouterView />
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h5>
+              <img src="@/assets/Logo ecoride black bg.png" alt="EcoRide" class="footer-logo" />
+            </h5>
+            <p class="text-muted">Partagez vos trajets, protégez la planète.</p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <p class="text-muted mb-0">© 2025 EcoRide. Développement durable.</p>
+            <div class="mt-2">
+              <a href="#" class="text-light me-3">
+                <i class="fab fa-facebook"></i>
+              </a>
+              <a href="#" class="text-light me-3">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" class="text-light">
+                <i class="fab fa-instagram"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</template>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  margin: 0;
+  padding: 0.3rem 0;
+  width: 100%;
+}
+
+.custom-navbar {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+  border-bottom: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.navbar .container-fluid {
+  margin: 0;
+  padding: 0 1rem;
+  max-width: none;
+}
+
+main {
+  flex: 1;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+}
+
+.navbar-logo {
+  height: 50px;
+  max-width: 120px;
+  width: auto;
+  mix-blend-mode: lighten;
+  object-fit: contain;
+}
+
+.footer-logo {
+  height: 300px;
+  max-width: 500px;
+  width: auto;
+  mix-blend-mode: lighten;
+  object-fit: contain;
+}
+
+.router-link-active {
+  font-weight: bold;
+}
+</style>
+
+<style scoped>
+header {
+  line-height: 1.5;
+  max-height: 100vh;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 2rem;
+}
+
+nav {
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 0;
+}
+
+nav a.router-link-exact-active {
+  color: var(--color-text);
+}
+
+nav a.router-link-exact-active:hover {
+  background-color: transparent;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0 1rem;
+  border-left: 1px solid var(--color-border);
+}
+
+nav a:first-of-type {
+  border: 0;
+}
+
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    place-items: center;
+    padding-right: calc(var(--section-gap) / 2);
+  }
+
+  .logo {
+    margin: 0 2rem 0 0;
+  }
+
+  header .wrapper {
+    display: flex;
+    place-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  nav {
+    text-align: left;
+    margin-left: -1rem;
+    font-size: 1rem;
+    padding: 1rem 0;
+    margin-top: 0; /* ← AUSSI ICI POUR LE DESKTOP */
+  }
+}
+</style>
