@@ -139,12 +139,11 @@
           </div>
 
           <div class="custom-rules">
-            <label class="form-label">📋 Règles particulières</label>
             <textarea
               v-model="driverPreferences.specialRules"
               @input="updatePreferences"
               class="form-textarea"
-              placeholder="Ex: Pas de nourriture dans la voiture, ponctualité requise..."
+              placeholder="Règles spéciales (ex: pas de musique, climatisation à 22°C...)"
               rows="3"
             ></textarea>
           </div>
@@ -524,6 +523,13 @@ export default {
   gap: 15px;
 }
 
+.driver-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 60px;
+}
+
 .vehicle-item {
   background: #2a2a2a;
   border-radius: 12px;
@@ -574,6 +580,7 @@ export default {
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   margin-bottom: 20px;
+  justify-items: center;
 }
 
 .preference-item {
@@ -581,6 +588,7 @@ export default {
   align-items: center;
   gap: 10px;
   cursor: pointer;
+  justify-content: center;
 }
 
 .preference-item input[type='checkbox'] {
@@ -596,6 +604,8 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  align-items: center;
+  text-align: center;
 }
 
 .form-label {
@@ -613,6 +623,8 @@ export default {
   background: #2a2a2a;
   color: #ffffff;
   font-size: 0.95rem;
+  width: 100%;
+  max-width: 250px;
 }
 
 .form-select:focus,
@@ -625,6 +637,13 @@ export default {
 
 .custom-rules {
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.custom-rules .form-textarea {
+  width: 100%;
+  max-width: 600px;
 }
 
 .modal-overlay {
