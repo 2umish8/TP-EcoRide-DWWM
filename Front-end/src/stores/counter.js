@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-// import { authService } from '../services/api' // Temporairement désactivé
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -15,9 +14,11 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    // Version simplifiée pour la démo (à remplacer par l'API plus tard)
-    login(user) {
-      const token = 'demo-token-' + Date.now()
+    // Connexion avec données réelles du back-end uniquement
+    login(user, token) {
+      if (!user || !token) {
+        throw new Error('Données utilisateur ou token manquants')
+      }
 
       this.token = token
       this.user = user
@@ -42,10 +43,16 @@ export const useAuthStore = defineStore('auth', {
       if (!this.isAuthenticated) return
 
       try {
-        // Pour l'instant, on garde les données du localStorage
+        // Récupérer les données du localStorage
         const userData = JSON.parse(localStorage.getItem('user') || 'null')
-        if (userData) {
+        const token = localStorage.getItem('authToken')
+
+        if (userData && token) {
           this.user = userData
+          this.token = token
+        } else {
+          // Si pas de données valides, déconnecter
+          this.logout()
         }
       } catch (error) {
         console.error('Erreur lors du chargement du profil:', error)

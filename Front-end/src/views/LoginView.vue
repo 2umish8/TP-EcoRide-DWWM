@@ -166,15 +166,9 @@ const handleLogin = async () => {
       password: loginForm.value.password,
     })
 
-    // Stocker le token d'authentification
-    if (response.token) {
-      localStorage.setItem('authToken', response.token)
-    }
-
-    // Stocker les informations utilisateur
-    if (response.user) {
-      localStorage.setItem('user', JSON.stringify(response.user))
-      authStore.login(response.user)
+    // Stocker les informations utilisateur et token via le store
+    if (response.user && response.token) {
+      authStore.login(response.user, response.token)
     }
 
     successMessage.value = 'Connexion réussie ! Redirection...'
