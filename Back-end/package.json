@@ -12,7 +12,13 @@
         "mongo:check": "node scripts/checkMongoDB.js",
         "mongo:test": "node scripts/testMongoDB.js",
         "mongo:quick": "node scripts/quickTestMongo.js",
-        "test:full": "npm run check && npm run mongo:quick && npm run test"
+        "test:full": "npm run check && npm run mongo:quick && npm run test",
+        "test:search": "node scripts/testSearchItinerary.js",
+        "test:advanced": "node scripts/testAdvancedSearch.js",
+        "test:all": "node scripts/runAllTests.js",
+        "db:clean": "node scripts/cleanDatabase.js clean",
+        "db:reset": "node scripts/cleanDatabase.js reset",
+        "db:status": "node scripts/cleanDatabase.js status"
     },
     "keywords": [],
     "author": "",

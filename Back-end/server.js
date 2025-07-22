@@ -23,6 +23,8 @@ const adminRoutes = require("./routes/adminRoutes");
 // Importer les nouvelles routes MongoDB
 const reviewRoutes = require("./routes/reviewRoutes");
 const preferencesRoutes = require("./routes/preferencesRoutes");
+// Importer les routes de recherche avancée
+const searchRoutes = require("./routes/searchRoutes");
 // Importer cors pour gérer les requêtes cross-origin
 const cors = require("cors");
 
@@ -64,6 +66,9 @@ app.use("/api/admin", adminRoutes);
 // Routes MongoDB - Avis et préférences
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/preferences", preferencesRoutes);
+
+// Routes de recherche avancée
+app.use("/api/search", searchRoutes);
 
 // Démarrer le serveur
 app.listen(PORT, () => {
