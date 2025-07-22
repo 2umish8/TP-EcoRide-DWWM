@@ -1,181 +1,131 @@
 <template>
   <div class="register-page">
     <div class="register-container">
-      <div class="register-card">
-        <!-- Logo et titre -->
-        <div class="register-header">
-          <div class="logo-section">
-            <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="register-logo" />
-          </div>
-          <h1 class="register-title">Rejoignez EcoRide !</h1>
-          <p class="register-subtitle">
-            Créez votre compte et commencez à voyager de manière éco-responsable
-          </p>
+      <!-- Section titre à gauche -->
+      <div class="register-header-section">
+        <div class="logo-section">
+          <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="register-logo" />
         </div>
+        <h1 class="register-title">Rejoignez EcoRide !</h1>
+        <p class="register-subtitle">
+          Créez votre compte et commencez à voyager de manière éco-responsable
+        </p>
+      </div>
 
+      <div class="register-card">
         <!-- Formulaire d'inscription -->
         <form @submit.prevent="handleRegister" class="register-form">
+          <!-- Première ligne : Email et Pseudo -->
           <div class="form-row">
             <div class="form-group">
-              <label for="prenom" class="form-label">Prénom *</label>
+              <label for="email" class="form-label">Adresse e-mail *</label>
               <input
-                type="text"
-                id="prenom"
-                v-model="registerForm.prenom"
+                type="email"
+                id="email"
+                v-model="registerForm.email"
                 class="form-input"
-                placeholder="Votre prénom"
+                :class="{ error: emailError && registerForm.email }"
+                placeholder="votre@email.com"
                 required
                 :disabled="isLoading"
+              />
+              <div v-if="emailError && registerForm.email" class="field-error">
+                {{ emailError }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="pseudo" class="form-label">Pseudo *</label>
+              <input
+                type="text"
+                id="pseudo"
+                v-model="registerForm.pseudo"
+                class="form-input"
+                placeholder="votre_pseudo"
+                required
+                :disabled="isLoading"
+              />
+            </div>
+          </div>
+
+          <!-- Deuxième ligne : Mot de passe et Confirmation -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password" class="form-label">Mot de passe *</label>
+              <div class="password-input-group">
+                <input
+                  :type="showPassword ? 'text' : 'password'"
+                  id="password"
+                  v-model="registerForm.password"
+                  class="form-input"
+                  :class="{
+                    'password-valid': passwordValidation.isValid,
+                    'password-invalid': registerForm.password && !passwordValidation.isValid,
+                    'password-medium': passwordValidation.strength === 'moyen',
+                  }"
+                  placeholder="Minimum 8 caractères"
+                  required
+                  :disabled="isLoading"
+                  :title="passwordTooltip"
+                  @mouseenter="showTooltip = true"
+                  @mouseleave="showTooltip = false"
+                  @focus="showTooltip = true"
+                  @blur="showTooltip = false"
+                />
+                <button
+                  type="button"
+                  @click="togglePassword"
+                  class="password-toggle"
+                  :disabled="isLoading"
+                >
+                  <span v-if="showPassword">👁️</span>
+                  <span v-else>🙈</span>
+                </button>
+                <!-- Tooltip personnalisé -->
+                <div class="password-tooltip" v-show="showTooltip">
+                  <div class="tooltip-content">
+                    <strong>Critères requis :</strong>
+                    <ul>
+                      <li>8+ caractères</li>
+                      <li>1 minuscule, 1 majuscule</li>
+                      <li>1 chiffre, 1 caractère spécial</li>
+                      <li>Pas de caractères interdits (&lt;&gt;'"&amp;;)</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <!-- Indicateur de force simplifié -->
+              <PasswordStrengthIndicator
+                :password="registerForm.password"
+                :show-requirements="false"
+                @validation-change="handlePasswordValidation"
               />
             </div>
 
             <div class="form-group">
-              <label for="nom" class="form-label">Nom *</label>
+              <label for="confirmPassword" class="form-label">Confirmer le mot de passe *</label>
               <input
-                type="text"
-                id="nom"
-                v-model="registerForm.nom"
-                class="form-input"
-                placeholder="Votre nom"
-                required
-                :disabled="isLoading"
-              />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="email" class="form-label">Adresse e-mail *</label>
-            <input
-              type="email"
-              id="email"
-              v-model="registerForm.email"
-              class="form-input"
-              :class="{ error: emailError && registerForm.email }"
-              placeholder="votre@email.com"
-              required
-              :disabled="isLoading"
-            />
-            <div v-if="emailError && registerForm.email" class="field-error">
-              {{ emailError }}
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="pseudo" class="form-label">Pseudo *</label>
-            <input
-              type="text"
-              id="pseudo"
-              v-model="registerForm.pseudo"
-              class="form-input"
-              placeholder="votre_pseudo"
-              required
-              :disabled="isLoading"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="password" class="form-label">Mot de passe *</label>
-            <div class="password-input-group">
-              <input
-                :type="showPassword ? 'text' : 'password'"
-                id="password"
-                v-model="registerForm.password"
+                type="password"
+                id="confirmPassword"
+                v-model="registerForm.confirmPassword"
                 class="form-input"
                 :class="{
-                  'password-valid': passwordValidation.isValid,
-                  'password-invalid': registerForm.password && !passwordValidation.isValid,
-                  'password-medium': passwordValidation.strength === 'moyen',
+                  'password-valid':
+                    passwordConfirmationValidation.isValid && registerForm.confirmPassword,
+                  'password-invalid':
+                    registerForm.confirmPassword && !passwordConfirmationValidation.isValid,
                 }"
-                placeholder="Minimum 8 caractères"
+                placeholder="Répétez votre mot de passe"
                 required
                 :disabled="isLoading"
-                :title="passwordTooltip"
-                @mouseenter="showTooltip = true"
-                @mouseleave="showTooltip = false"
-                @focus="showTooltip = true"
-                @blur="showTooltip = false"
               />
-              <button
-                type="button"
-                @click="togglePassword"
-                class="password-toggle"
-                :disabled="isLoading"
-              >
-                <span v-if="showPassword">👁️</span>
-                <span v-else>🙈</span>
-              </button>
-              <!-- Tooltip personnalisé -->
-              <div class="password-tooltip" v-show="showTooltip">
-                <div class="tooltip-content">
-                  <strong>Critères requis :</strong>
-                  <ul>
-                    <li>8+ caractères</li>
-                    <li>1 minuscule, 1 majuscule</li>
-                    <li>1 chiffre, 1 caractère spécial</li>
-                    <li>Pas de caractères interdits (&lt;&gt;'"&amp;;)</li>
-                  </ul>
-                </div>
-              </div>
+              <!-- Composant de validation de confirmation -->
+              <PasswordConfirmationValidator
+                :password="registerForm.password"
+                :confirm-password="registerForm.confirmPassword"
+                @confirmation-change="handlePasswordConfirmationValidation"
+              />
             </div>
-            <!-- Indicateur de force simplifié -->
-            <PasswordStrengthIndicator
-              :password="registerForm.password"
-              :show-requirements="false"
-              @validation-change="handlePasswordValidation"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="confirmPassword" class="form-label">Confirmer le mot de passe *</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              v-model="registerForm.confirmPassword"
-              class="form-input"
-              :class="{
-                'password-valid':
-                  passwordConfirmationValidation.isValid && registerForm.confirmPassword,
-                'password-invalid':
-                  registerForm.confirmPassword && !passwordConfirmationValidation.isValid,
-              }"
-              placeholder="Répétez votre mot de passe"
-              required
-              :disabled="isLoading"
-            />
-            <!-- Composant de validation de confirmation -->
-            <PasswordConfirmationValidator
-              :password="registerForm.password"
-              :confirm-password="registerForm.confirmPassword"
-              @confirmation-change="handlePasswordConfirmationValidation"
-            />
-          </div>
-
-          <!-- Acceptation des conditions -->
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input
-                type="checkbox"
-                v-model="registerForm.acceptTerms"
-                required
-                :disabled="isLoading"
-              />
-              <span class="checkmark"></span>
-              J'accepte les
-              <router-link to="/terms" class="link">conditions d'utilisation</router-link> et la
-              <router-link to="/privacy" class="link">politique de confidentialité</router-link>
-            </label>
-          </div>
-
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input
-                type="checkbox"
-                v-model="registerForm.acceptNewsletter"
-                :disabled="isLoading"
-              />
-              <span class="checkmark"></span>
-              Je souhaite recevoir des informations sur les nouveautés EcoRide
-            </label>
           </div>
 
           <!-- Message d'erreur -->
@@ -203,43 +153,6 @@
           <router-link to="/login" class="login-btn-link"> Se connecter </router-link>
         </div>
       </div>
-
-      <!-- Section informative -->
-      <div class="info-section">
-        <div class="info-content">
-          <h2 class="info-title">Pourquoi choisir EcoRide ?</h2>
-          <div class="features-list">
-            <div class="feature-item">
-              <span class="feature-icon">🚗</span>
-              <div class="feature-text">
-                <h3>Trajets vérifiés</h3>
-                <p>Tous nos conducteurs sont vérifiés pour votre sécurité</p>
-              </div>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon">💬</span>
-              <div class="feature-text">
-                <h3>Messagerie intégrée</h3>
-                <p>Communiquez facilement avec les autres voyageurs</p>
-              </div>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon">⭐</span>
-              <div class="feature-text">
-                <h3>Système de notation</h3>
-                <p>Notez et soyez noté pour une communauté de confiance</p>
-              </div>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon">🔒</span>
-              <div class="feature-text">
-                <h3>Paiements sécurisés</h3>
-                <p>Transactions protégées et remboursement garanti</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -257,14 +170,10 @@ const authStore = useAuthStore()
 
 // État du formulaire
 const registerForm = ref({
-  prenom: '',
-  nom: '',
   email: '',
   pseudo: '',
   password: '',
   confirmPassword: '',
-  acceptTerms: false,
-  acceptNewsletter: false,
 })
 
 // États de l'interface
@@ -311,14 +220,11 @@ const passwordsMatch = computed(() => {
 // Validation du formulaire avec la nouvelle validation de mot de passe
 const isFormValid = computed(() => {
   return (
-    registerForm.value.prenom &&
-    registerForm.value.nom &&
     registerForm.value.email &&
     registerForm.value.pseudo &&
     registerForm.value.password &&
     registerForm.value.confirmPassword &&
     passwordsMatch.value &&
-    registerForm.value.acceptTerms &&
     isEmailValid.value &&
     passwordValidation.value.isValid &&
     passwordConfirmationValidation.value.isValid
@@ -358,8 +264,6 @@ const handleRegister = async () => {
     // Inscription réussie
     const newUser = {
       id: Date.now(),
-      prenom: registerForm.value.prenom,
-      nom: registerForm.value.nom,
       pseudo: registerForm.value.pseudo,
       email: registerForm.value.email,
       avatar: `https://i.pravatar.cc/150?u=${registerForm.value.email}`,
@@ -393,14 +297,26 @@ const handleRegister = async () => {
 .register-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  max-width: 1400px;
+  max-width: 1200px;
   width: 100%;
   background: #1a1a1a;
   border-radius: 20px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   overflow: hidden;
-  min-height: 700px;
+  min-height: 600px;
   border: 1px solid #333;
+}
+
+.register-header-section {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #1a1a1a;
+  color: white;
+  text-align: center;
+  border-right: 1px solid #333;
 }
 
 .register-card {
@@ -412,31 +328,23 @@ const handleRegister = async () => {
   background: #1a1a1a;
 }
 
-.register-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.logo-section {
+.register-logo {
+  width: 100px;
+  height: auto;
   margin-bottom: 20px;
 }
 
-.register-logo {
-  width: 80px;
-  height: auto;
-}
-
 .register-title {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 8px;
+  color: #34d399;
+  margin-bottom: 16px;
 }
 
 .register-subtitle {
   color: #cccccc;
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 1.1rem;
+  line-height: 1.6;
 }
 
 .register-form {
@@ -454,7 +362,7 @@ const handleRegister = async () => {
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 2px;
 }
 
 .form-label {
@@ -758,56 +666,6 @@ const handleRegister = async () => {
   color: #22c55e;
 }
 
-/* Section informative */
-.info-section {
-  background: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
-  color: white;
-  padding: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.info-content {
-  max-width: 400px;
-}
-
-.info-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.features-list {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.feature-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.feature-icon {
-  font-size: 2rem;
-  flex-shrink: 0;
-}
-
-.feature-text h3 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.feature-text p {
-  font-size: 0.95rem;
-  opacity: 0.9;
-  line-height: 1.5;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .register-page {
@@ -820,25 +678,23 @@ const handleRegister = async () => {
     max-width: 500px;
   }
 
-  .info-section {
+  .register-header-section {
     order: -1;
     padding: 30px 20px;
   }
 
-  .info-title {
-    font-size: 1.5rem;
+  .register-title {
+    font-size: 2rem;
   }
 
   .register-card {
     padding: 30px 20px;
   }
 
-  .register-title {
-    font-size: 1.5rem;
-  }
-
+  /* Passer en layout vertical sur mobile */
   .form-row {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 }
 </style>
