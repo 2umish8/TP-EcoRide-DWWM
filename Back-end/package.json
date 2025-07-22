@@ -10,7 +10,9 @@
         "check": "node scripts/checkProject.js",
         "db:create": "node -e \"console.log('Exécutez les scripts SQL dans l\\'ordre: creation_base_de_donnees.sql puis insertion_donnees.sql')\"",
         "mongo:check": "node scripts/checkMongoDB.js",
-        "mongo:test": "node scripts/testMongoDB.js"
+        "mongo:test": "node scripts/testMongoDB.js",
+        "mongo:quick": "node scripts/quickTestMongo.js",
+        "test:full": "npm run check && npm run mongo:quick && npm run test"
     },
     "keywords": [],
     "author": "",
