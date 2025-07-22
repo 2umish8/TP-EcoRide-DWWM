@@ -160,13 +160,12 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/counter'
 import { isValidEmail, getEmailErrorMessage } from '@/utils/emailValidator'
 import PasswordStrengthIndicator from '@/components/PasswordStrengthIndicator.vue'
 import PasswordConfirmationValidator from '@/components/PasswordConfirmationValidator.vue'
+import { authService } from '@/services/api'
 
 const router = useRouter()
-const authStore = useAuthStore()
 
 // État du formulaire
 const registerForm = ref({
@@ -245,38 +244,38 @@ const handlePasswordConfirmationValidation = (validation) => {
   passwordConfirmationValidation.value = validation
 }
 
-// Simulation d'inscription
+// Inscription avec connexion au back-end
 const handleRegister = async () => {
   isLoading.value = true
   errorMessage.value = ''
   successMessage.value = ''
 
   try {
-    // Simulation d'un délai d'API
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    // Simulation de validation (vous connecterez cela à votre vraie API)
-    if (registerForm.value.email === 'test@test.com') {
-      errorMessage.value = 'Cette adresse e-mail est déjà utilisée'
-      return
-    }
-
-    // Inscription réussie
-    const newUser = {
-      id: Date.now(),
+    // Appel à l'API d'inscription
+    await authService.register({
       pseudo: registerForm.value.pseudo,
       email: registerForm.value.email,
-      avatar: `https://i.pravatar.cc/150?u=${registerForm.value.email}`,
-    }
+      password: registerForm.value.password,
+    })
 
-    authStore.login(newUser)
-    successMessage.value = 'Compte créé avec succès ! Redirection...'
+    // Inscription réussie
+    successMessage.value = 'Compte créé avec succès ! Redirection vers la connexion...'
 
+    // Redirection vers la page de connexion après un délai
     setTimeout(() => {
-      router.push('/')
-    }, 1500)
-  } catch {
-    errorMessage.value = 'Une erreur est survenue. Veuillez réessayer.'
+      router.push('/login')
+    }, 2000)
+  } catch (error) {
+    console.error("Erreur lors de l'inscription:", error)
+
+    // Gestion des erreurs spécifiques
+    if (error.response?.data?.message) {
+      errorMessage.value = error.response.data.message
+    } else if (error.message) {
+      errorMessage.value = error.message
+    } else {
+      errorMessage.value = "Une erreur est survenue lors de l'inscription. Veuillez réessayer."
+    }
   } finally {
     isLoading.value = false
   }

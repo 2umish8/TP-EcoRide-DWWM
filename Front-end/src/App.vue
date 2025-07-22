@@ -86,7 +86,7 @@ const logout = async () => {
                   data-bs-toggle="dropdown"
                 >
                   <i class="fas fa-user me-1"></i>
-                  {{ currentUser?.prenom || 'Utilisateur' }}
+                  {{ currentUser?.pseudo || currentUser?.prenom || 'Utilisateur' }}
                 </a>
                 <ul class="dropdown-menu">
                   <li>

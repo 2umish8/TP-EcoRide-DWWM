@@ -125,6 +125,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/counter'
+import { authService } from '@/services/api'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -152,40 +153,46 @@ const togglePassword = () => {
   showPassword.value = !showPassword.value
 }
 
-// Simulation de connexion
+// Connexion avec le back-end
 const handleLogin = async () => {
   isLoading.value = true
   errorMessage.value = ''
   successMessage.value = ''
 
   try {
-    // Simulation d'un délai d'API
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    // Appel à l'API de connexion
+    const response = await authService.login({
+      identifier: loginForm.value.email,
+      password: loginForm.value.password,
+    })
 
-    // Simulation de validation (vous connecterez cela à votre vraie API)
-    if (loginForm.value.email === 'demo@ecoride.fr' && loginForm.value.password === 'demo123') {
-      // Connexion réussie
-      const mockUser = {
-        id: 1,
-        prenom: 'Demo',
-        nom: 'User',
-        email: loginForm.value.email,
-        avatar: 'https://i.pravatar.cc/150?img=1',
-      }
-
-      authStore.login(mockUser)
-      successMessage.value = 'Connexion réussie ! Redirection...'
-
-      setTimeout(() => {
-        router.push('/')
-      }, 1000)
-    } else {
-      // Erreur de connexion
-      errorMessage.value =
-        'Email/pseudo ou mot de passe incorrect. Essayez demo@ecoride.fr / demo123'
+    // Stocker le token d'authentification
+    if (response.token) {
+      localStorage.setItem('authToken', response.token)
     }
-  } catch {
-    errorMessage.value = 'Une erreur est survenue. Veuillez réessayer.'
+
+    // Stocker les informations utilisateur
+    if (response.user) {
+      localStorage.setItem('user', JSON.stringify(response.user))
+      authStore.login(response.user)
+    }
+
+    successMessage.value = 'Connexion réussie ! Redirection...'
+
+    setTimeout(() => {
+      router.push('/')
+    }, 1000)
+  } catch (error) {
+    console.error('Erreur lors de la connexion:', error)
+
+    // Gestion des erreurs spécifiques
+    if (error.response?.data?.message) {
+      errorMessage.value = error.response.data.message
+    } else if (error.message) {
+      errorMessage.value = error.message
+    } else {
+      errorMessage.value = 'Email ou mot de passe incorrect. Veuillez réessayer.'
+    }
   } finally {
     isLoading.value = false
   }

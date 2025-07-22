@@ -32,8 +32,8 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Connecter à MongoDB
-connectMongoDB();
+// Connecter à MongoDB (temporairement désactivé pour les tests)
+// connectMongoDB();
 
 // Utiliser cors pour permettre les requêtes cross-origin
 app.use(cors());
