@@ -1,4 +1,5 @@
 @import './base.css';
+@import './eco-variables.css';
 
 /* Reset complet pour éliminer tout décalage */
 * {

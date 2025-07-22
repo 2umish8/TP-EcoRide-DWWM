@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { RouterView } from 'vue-router'
 import { useAuthStore } from './stores/counter'
+import GlassButton from './components/GlassButton.vue'
 
 const authStore = useAuthStore()
 const isLoggedIn = computed(() => authStore.isLoggedIn)
@@ -56,16 +57,16 @@ const logout = async () => {
           <ul class="navbar-nav">
             <template v-if="!isLoggedIn">
               <li class="nav-item">
-                <router-link class="nav-link" to="/login">
+                <GlassButton to="/login" variant="connexion">
                   <i class="fas fa-sign-in-alt me-1"></i>
                   Connexion
-                </router-link>
+                </GlassButton>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" to="/register">
+                <GlassButton to="/register" variant="inscription">
                   <i class="fas fa-user-plus me-1"></i>
                   Inscription
-                </router-link>
+                </GlassButton>
               </li>
             </template>
             <template v-else>
@@ -204,6 +205,18 @@ main {
   width: auto;
   mix-blend-mode: lighten;
   object-fit: contain;
+}
+
+/* Espacement pour les boutons de connexion/inscription */
+.navbar-nav .nav-item:not(:last-child) {
+  margin-right: 15px;
+}
+
+/* Espacement spécifique pour les boutons d'auth sur mobile */
+@media (max-width: 768px) {
+  .navbar-nav .nav-item {
+    margin-bottom: 10px;
+  }
 }
 
 .router-link-active {

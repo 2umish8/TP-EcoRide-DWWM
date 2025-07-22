@@ -1,0 +1,302 @@
+/* ====================================
+   🎨 Variables CSS EcoRide
+   Standards de Design Écologique
+   ==================================== */
+
+:root {
+  /* ===== COULEURS PRINCIPALES ===== */
+
+  /* Palette Écologique */
+  --eco-green: #8fbc8f; /* Vert nature principal */
+  --eco-green-hover: #7fb87f; /* Vert nature hover */
+  --eco-blue: #87ceeb; /* Bleu ciel principal */
+  --eco-blue-hover: #6bb6dd; /* Bleu ciel hover */
+  --eco-beige: #f5deb3; /* Beige terre */
+
+  /* Couleurs Neutres */
+  --text-primary: #2d2d2d; /* Texte principal */
+  --text-secondary: #6b7280; /* Texte secondaire */
+  --border-color: #d1d5db; /* Bordures */
+  --bg-primary: #ffffff; /* Arrière-plan principal */
+  --bg-light: #f9fafb; /* Arrière-plan clair */
+
+  /* Couleurs d'État */
+  --color-success: #8fbc8f; /* Succès (vert nature) */
+  --color-warning: #f4a460; /* Avertissement */
+  --color-error: #cd5c5c; /* Erreur */
+  --color-info: #87ceeb; /* Information (bleu ciel) */
+
+  /* ===== OMBRES ===== */
+
+  /* Ombres pour boutons */
+  --shadow-button: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-button-hover: 0 6px 16px rgba(0, 0, 0, 0.2);
+  --shadow-button-active: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  /* Ombres pour cartes */
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-card-hover: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+  /* Ombre intérieure pour textes */
+  --text-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+
+  /* ===== RAYONS DE BORDURE ===== */
+  --radius-button: 25px;
+  --radius-card: 12px;
+  --radius-input: 8px;
+
+  /* ===== TRANSITIONS ===== */
+  --transition-standard: all 0.3s ease;
+  --transition-fast: all 0.2s ease;
+
+  /* ===== ESPACEMENTS ===== */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* ===== TYPOGRAPHIE ===== */
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
+
+/* ====================================
+   🔘 Classes Boutons Standards
+   ==================================== */
+
+.eco-button {
+  /* Structure de base */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+
+  /* Dimensions */
+  padding: 15px 25px;
+  border-radius: var(--radius-button);
+
+  /* Typographie */
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  white-space: nowrap;
+
+  /* Bordure obligatoire */
+  border: 1px solid var(--border-color);
+
+  /* Texte avec ombre intérieure */
+  color: var(--text-primary);
+  text-shadow: var(--text-shadow-inset);
+
+  /* Ombre portée obligatoire */
+  box-shadow: var(--shadow-button);
+
+  /* Transition fluide */
+  transition: var(--transition-standard);
+
+  /* Curseur et interaction */
+  cursor: pointer;
+  user-select: none;
+}
+
+.eco-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-button-hover);
+  text-decoration: none;
+}
+
+.eco-button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-button-active);
+}
+
+.eco-button:focus-visible {
+  outline: 2px solid var(--eco-beige);
+  outline-offset: 2px;
+}
+
+/* ===== VARIANTES DE COULEURS ===== */
+
+.eco-button--primary {
+  background-color: var(--eco-green);
+}
+
+.eco-button--primary:hover {
+  background-color: var(--eco-green-hover);
+}
+
+.eco-button--secondary {
+  background-color: var(--eco-blue);
+}
+
+.eco-button--secondary:hover {
+  background-color: var(--eco-blue-hover);
+}
+
+.eco-button--neutral {
+  background-color: var(--eco-beige);
+}
+
+.eco-button--neutral:hover {
+  background-color: #edd5a3;
+}
+
+/* ===== TAILLES ===== */
+
+.eco-button--sm {
+  padding: 12px 20px;
+  font-size: var(--font-size-sm);
+}
+
+.eco-button--lg {
+  padding: 18px 30px;
+  font-size: var(--font-size-lg);
+}
+
+/* ====================================
+   📝 Classes Textes Standards
+   ==================================== */
+
+.text-important {
+  color: var(--text-primary);
+  text-shadow: var(--text-shadow-inset);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-input);
+}
+
+.text-eco-shadow {
+  text-shadow: var(--text-shadow-inset);
+}
+
+/* ====================================
+   🃏 Classes Cartes Standards
+   ==================================== */
+
+.eco-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-standard);
+}
+
+.eco-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+/* ====================================
+   📱 Responsive
+   ==================================== */
+
+@media (max-width: 640px) {
+  .eco-button {
+    padding: 12px 20px;
+    font-size: var(--font-size-sm);
+  }
+
+  .eco-button--lg {
+    padding: 15px 25px;
+    font-size: var(--font-size-base);
+  }
+
+  .text-important {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* ====================================
+   🎨 Classes Utilitaires Couleurs
+   ==================================== */
+
+.text-eco-green {
+  color: var(--eco-green);
+}
+.text-eco-blue {
+  color: var(--eco-blue);
+}
+.text-eco-beige {
+  color: var(--eco-beige);
+}
+
+.bg-eco-green {
+  background-color: var(--eco-green);
+}
+.bg-eco-blue {
+  background-color: var(--eco-blue);
+}
+.bg-eco-beige {
+  background-color: var(--eco-beige);
+}
+
+.border-eco-green {
+  border-color: var(--eco-green);
+}
+.border-eco-blue {
+  border-color: var(--eco-blue);
+}
+.border-eco-beige {
+  border-color: var(--eco-beige);
+}
+
+/* ====================================
+   💡 Classes États
+   ==================================== */
+
+.status-success {
+  color: var(--color-success);
+  background-color: rgba(143, 188, 143, 0.1);
+  border-color: var(--color-success);
+}
+
+.status-warning {
+  color: var(--color-warning);
+  background-color: rgba(244, 164, 96, 0.1);
+  border-color: var(--color-warning);
+}
+
+.status-error {
+  color: var(--color-error);
+  background-color: rgba(205, 92, 92, 0.1);
+  border-color: var(--color-error);
+}
+
+.status-info {
+  color: var(--color-info);
+  background-color: rgba(135, 206, 235, 0.1);
+  border-color: var(--color-info);
+}
+
+/* ====================================
+   🔧 Classes Utilitaires
+   ==================================== */
+
+.shadow-eco {
+  box-shadow: var(--shadow-card);
+}
+.shadow-eco-hover {
+  box-shadow: var(--shadow-card-hover);
+}
+.transition-eco {
+  transition: var(--transition-standard);
+}
+
+.radius-button {
+  border-radius: var(--radius-button);
+}
+.radius-card {
+  border-radius: var(--radius-card);
+}
+.radius-input {
+  border-radius: var(--radius-input);
+}
