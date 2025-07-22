@@ -46,8 +46,55 @@
       </div>
     </div>
 
-    <!-- Liste des résultats -->
     <div class="results-container">
+      <!-- Sidebar de filtres -->
+      <div class="filters-sidebar">
+        <h3>Filtrer les résultats</h3>
+        <div class="filter-group">
+          <h4>Prix maximum</h4>
+          <input
+            type="range"
+            min="5"
+            max="100"
+            step="5"
+            v-model="filters.maxPrice"
+            class="price-slider"
+          />
+          <span class="price-value">{{ filters.maxPrice }}<IconCredit style="vertical-align: middle; margin-left: 2px;" /></span>
+        </div>
+        <div class="filter-group">
+          <h4>Aspect écologique</h4>
+          <div class="ecological-filter">
+            <label class="feature-option">
+              <input type="checkbox" v-model="filters.isElectric" /> Voiture électrique uniquement
+            </label>
+          </div>
+        </div>
+        <div class="filter-group">
+          <h4>Durée maximale</h4>
+          <div class="duration-filter">
+            <select v-model="filters.maxDuration" class="duration-select">
+              <option value="480">Toutes durées</option>
+              <option value="60">1h maximum</option>
+              <option value="120">2h maximum</option>
+              <option value="180">3h maximum</option>
+              <option value="240">4h maximum</option>
+              <option value="300">5h maximum</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-group">
+          <h4>Note minimale du chauffeur</h4>
+          <div class="rating-filter">
+            <select v-model="filters.minRating" class="rating-select">
+              <option value="0">Toutes notes</option>
+              <option value="3">3⭐ et plus</option>
+              <option value="4">4⭐ et plus</option>
+              <option value="4.5">4.5⭐ et plus</option>
+            </select>
+          </div>
+        </div>
+      </div>
       <div class="results-list">
         <!-- État de chargement -->
         <div v-if="loading" class="loading-state">
@@ -110,7 +157,7 @@
                   >
                 </div>
                 <div class="price">
-                  <span class="amount">{{ trip.price }}€</span>
+                  <span class="amount">{{ trip.price }}<IconCredit style="vertical-align: middle; margin-left: 2px;" /></span>
                   <span class="per-person">par personne</span>
                 </div>
               </div>
@@ -144,63 +191,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Sidebar avec filtres selon le cahier des charges (US 4) -->
-      <div class="filters-sidebar">
-        <h3>Filtrer les résultats</h3>
-
-        <div class="filter-group">
-          <h4>Prix maximum</h4>
-          <input
-            type="range"
-            min="5"
-            max="100"
-            step="5"
-            v-model="filters.maxPrice"
-            class="price-slider"
-          />
-          <span class="price-value">{{ filters.maxPrice }}€</span>
-        </div>
-
-        <div class="filter-group">
-          <h4>Aspect écologique</h4>
-          <div class="ecological-filter">
-            <label class="feature-option">
-              <input type="checkbox" v-model="filters.isElectric" /> Voiture électrique uniquement
-            </label>
-          </div>
-        </div>
-
-        <div class="filter-group">
-          <h4>Durée maximale</h4>
-          <div class="duration-filter">
-            <select v-model="filters.maxDuration" class="duration-select">
-              <option value="480">Toutes durées</option>
-              <option value="60">1h maximum</option>
-              <option value="120">2h maximum</option>
-              <option value="180">3h maximum</option>
-              <option value="240">4h maximum</option>
-              <option value="300">5h maximum</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="filter-group">
-          <h4>Note minimale du chauffeur</h4>
-          <div class="rating-filter">
-            <select v-model="filters.minRating" class="rating-select">
-              <option value="0">Toutes notes</option>
-              <option value="3">3⭐ et plus</option>
-              <option value="4">4⭐ et plus</option>
-              <option value="4.5">4.5⭐ et plus</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="filter-actions">
-          <button @click="resetFilters" class="reset-filters-btn">Réinitialiser</button>
-        </div>
-      </div>
     </div>
 
     <!-- Message si aucun résultat -->
@@ -224,6 +214,7 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { carpoolingService } from '@/services/api.js'
+import IconCredit from '@/components/icons/IconCredit.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -411,16 +402,6 @@ const searchAlternativeDate = () => {
   }
 }
 
-// Réinitialisation des filtres
-const resetFilters = () => {
-  filters.value = {
-    maxPrice: 100,
-    isElectric: false,
-    maxDuration: 480,
-    minRating: 0,
-  }
-}
-
 // Création d'une alerte pour être notifié de nouveaux trajets
 const createAlert = () => {
   // À implémenter : système d'alertes email
@@ -502,6 +483,9 @@ onMounted(() => {
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .search-inputs-compact {
@@ -707,11 +691,281 @@ onMounted(() => {
 }
 
 .results-container {
+  min-height: calc(100vh - 220px);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.filters-sidebar {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+  border: 1px solid #444;
+  min-width: 260px;
+  max-width: 320px;
+  margin-right: 32px;
+}
+
+.filters-sidebar h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  margin-bottom: 24px;
+}
+
+.filter-group h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.price-slider {
+  width: 100%;
+  margin-bottom: 8px;
+  accent-color: #34d399;
+}
+
+.price-value {
+  font-weight: 600;
+  color: #34d399;
+}
+
+.time-filters,
+.feature-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.time-option,
+.feature-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 0;
+  color: #ccc;
+}
+
+.time-option input,
+.feature-option input {
+  accent-color: #34d399;
+}
+
+.no-results {
   max-width: 1200px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 30px;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.no-results-content {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid #444;
+}
+
+.no-results h2 {
+  font-size: 1.8rem;
+  color: white;
+  margin-bottom: 16px;
+}
+
+.no-results p {
+  color: #ccc;
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.no-results-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn-primary {
+  background: #34d399;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #22c55e;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #34d399;
+  border: 2px solid #34d399;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #34d399;
+  color: #1a1a1a;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .search-results {
+    padding: 60px 15px 20px;
+  }
+
+  .search-header {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .search-form-compact {
+    margin: 0 auto 20px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-inputs-compact {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .search-input-compact {
+    min-width: 100%;
+  }
+
+  .filters-sidebar {
+    position: static;
+    margin: 0 0 24px 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .filters-sidebar h3 {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .filter-group {
+    margin-bottom: 15px;
+  }
+
+  .price-slider {
+    width: 100%;
+  }
+
+  .price-value {
+    text-align: center;
+  }
+
+  .results-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .trip-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .trip-details {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .trip-info {
+    align-items: flex-start;
+    width: 100%;
+  }
+}
+
+@media (min-width: 900px) {
+  .results-container {
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .results-list {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    gap: 24px;
+  }
+  .trip-card {
+    width: 100%;
+    min-width: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .results-container {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .results-list {
+    max-width: 100vw;
+    gap: 12px;
+  }
+  .trip-card {
+    padding: 12px;
+    font-size: 0.92rem;
+    border-radius: 8px;
+  }
+  .trip-header,
+  .trip-details,
+  .trip-info,
+  .driver-info {
+    font-size: 0.95rem;
+  }
+  .departure,
+  .destination {
+    font-size: 1rem;
+  }
+  .results-title {
+    font-size: 1.2rem;
+  }
+}
+
+.confirm-filters-btn {
+  background: #34d399;
+  color: #1a1a1a;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 15px;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+.confirm-filters-btn:hover {
+  background: #22c55e;
 }
 
 .results-list {
@@ -753,8 +1007,9 @@ onMounted(() => {
 .departure,
 .destination {
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--eco-beige);
   font-size: 1.1rem;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.25);
 }
 
 .route-line {
@@ -886,183 +1141,5 @@ onMounted(() => {
   border-radius: 16px;
   font-size: 0.8rem;
   border: 1px solid #444;
-}
-
-.filters-sidebar {
-  background: #2a2a2a;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  height: fit-content;
-  position: sticky;
-  top: 20px;
-  border: 1px solid #444;
-}
-
-.filters-sidebar h3 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 20px;
-}
-
-.filter-group {
-  margin-bottom: 24px;
-}
-
-.filter-group h4 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 12px;
-}
-
-.price-slider {
-  width: 100%;
-  margin-bottom: 8px;
-  accent-color: #34d399;
-}
-
-.price-value {
-  font-weight: 600;
-  color: #34d399;
-}
-
-.time-filters,
-.feature-filters {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.time-option,
-.feature-option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  padding: 4px 0;
-  color: #ccc;
-}
-
-.time-option input,
-.feature-option input {
-  accent-color: #34d399;
-}
-
-.no-results {
-  max-width: 1200px;
-  margin: 0 auto;
-  text-align: center;
-  padding: 60px 20px;
-}
-
-.no-results-content {
-  background: #2a2a2a;
-  border-radius: 12px;
-  padding: 40px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  border: 1px solid #444;
-}
-
-.no-results h2 {
-  font-size: 1.8rem;
-  color: white;
-  margin-bottom: 16px;
-}
-
-.no-results p {
-  color: #ccc;
-  font-size: 1.1rem;
-  margin-bottom: 24px;
-  line-height: 1.6;
-}
-
-.no-results-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-}
-
-.btn-primary {
-  background: #34d399;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.btn-primary:hover {
-  background: #22c55e;
-}
-
-.btn-secondary {
-  background: transparent;
-  color: #34d399;
-  border: 2px solid #34d399;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-secondary:hover {
-  background: #34d399;
-  color: #1a1a1a;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .search-results {
-    padding: 60px 15px 20px;
-  }
-
-  .search-header {
-    flex-direction: column;
-    gap: 16px;
-    text-align: center;
-  }
-
-  .search-form-compact {
-    margin: 0 auto 20px;
-  }
-
-  .search-inputs-compact {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .search-input-compact {
-    min-width: 100%;
-  }
-
-  .results-container {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .filters-sidebar {
-    order: -1;
-  }
-
-  .trip-header {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .trip-details {
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
-  }
-
-  .trip-info {
-    align-items: flex-start;
-    width: 100%;
-  }
 }
 </style>

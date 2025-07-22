@@ -23,19 +23,19 @@ router.post("/", authMiddleware, createReview); // Créer un avis
 router.get(
     "/pending",
     authMiddleware,
-    requireRole(["admin", "employe"]),
+    requireRole(["administrateur", "employe"]),
     getPendingReviews
 );
 router.put(
     "/:id/validate",
     authMiddleware,
-    requireRole(["admin", "employe"]),
+    requireRole(["administrateur", "employe"]),
     validateReview
 );
 router.get(
     "/reported",
     authMiddleware,
-    requireRole(["admin", "employe"]),
+    requireRole(["administrateur", "employe"]),
     getReportedTrips
 );
 

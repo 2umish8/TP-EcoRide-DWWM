@@ -120,27 +120,13 @@ const logout = async () => {
     <RouterView />
 
     <!-- Footer -->
-    <footer class="bg-dark text-light py-4 mt-5">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            <p class="text-muted">Partagez vos trajets, protégez la planète.</p>
-          </div>
-          <div class="col-md-6 text-md-end">
-            <p class="text-muted mb-0">© 2025 EcoRide. Développement durable.</p>
-            <div class="mt-2">
-              <a href="#" class="text-light me-3">
-                <i class="fab fa-facebook"></i>
-              </a>
-              <a href="#" class="text-light me-3">
-                <i class="fab fa-twitter"></i>
-              </a>
-              <a href="#" class="text-light">
-                <i class="fab fa-instagram"></i>
-              </a>
-            </div>
-          </div>
-        </div>
+    <footer class="footer-ecoride">
+      <div class="footer-content">
+        <span class="footer-text">© 2025 EcoRide</span>
+        <span class="footer-separator">|</span>
+        <a href="mailto:attention@nous.nexistons.pas" class="footer-link">attention@nous.nexistons.pas</a>
+        <span class="footer-separator">|</span>
+        <a href="#" class="footer-link">Mentions légales</a>
       </div>
     </footer>
   </div>
@@ -171,6 +157,22 @@ body {
   padding: 0;
 }
 
+main, .router-view {
+  flex: 1 1 auto;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  z-index: 100;
+}
+
+.search-results {
+  padding-bottom: 100px; /* Ajuster selon la hauteur du footer */
+}
+
 .navbar {
   margin: 0;
   padding: 0.3rem 0;
@@ -186,10 +188,6 @@ body {
   margin: 0;
   padding: 0 1rem;
   max-width: none;
-}
-
-main {
-  flex: 1;
 }
 
 .navbar-brand {
@@ -238,6 +236,42 @@ main {
 
 .nav-link:hover .nav-icon {
   filter: invert(1) sepia(1) saturate(5) hue-rotate(150deg);
+}
+
+.footer-ecoride {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  z-index: 100;
+  background: linear-gradient(90deg, #181c1f, #23272b 80%);
+  color: #f5f5f5;
+  font-size: 1rem;
+  padding: 10px 0 8px 0;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.12);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.footer-content {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.footer-link {
+  color: #f5f5f5;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+.footer-link:hover {
+  color: var(--eco-blue);
+}
+.footer-separator {
+  color: #f5f5f5;
+  opacity: 0.5;
+}
+.footer-text {
+  font-weight: 500;
 }
 </style>
 

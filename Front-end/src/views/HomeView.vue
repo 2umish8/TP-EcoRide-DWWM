@@ -140,8 +140,6 @@ const scrollToAbout = () => {
         />
       </div>
       <div class="footer-links">
-        <span>attention@nous.nexistons.pas</span>
-        <span>Mentions légales</span>
       </div>
       <div class="arrow-down">
         <img

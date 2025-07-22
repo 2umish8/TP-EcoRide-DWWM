@@ -7,7 +7,7 @@
       <h2>{{ carpooling.departure_address }} → {{ carpooling.arrival_address }}</h2>
       <p>Date : {{ formatDate(carpooling.departure_datetime) }}</p>
       <p>Chauffeur : {{ carpooling.driver_pseudo }}</p>
-      <p>Prix : {{ carpooling.price_per_passenger }} €</p>
+      <p>Prix : {{ carpooling.price_per_passenger }} <IconCredit style="vertical-align: middle; margin-left: 2px;" /></p>
       <!-- Ajoute ici d'autres infos utiles -->
     </div>
     <div v-else>Aucun covoiturage trouvé.</div>
@@ -18,6 +18,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '@/services/api.js'
+import IconCredit from '@/components/icons/IconCredit.vue'
 
 const route = useRoute()
 const carpooling = ref(null)

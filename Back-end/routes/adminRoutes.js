@@ -14,41 +14,41 @@ const {
 // Importer les middlewares d'authentification
 const { authMiddleware, requireRole } = require("../authMiddleware");
 
-// Routes d'administration (nécessitent le rôle admin ou employe)
+// Routes d'administration (nécessitent le rôle administrateur ou employe)
 router.get(
     "/stats",
     authMiddleware,
-    requireRole(["admin", "employe"]),
+    requireRole(["administrateur", "employe"]),
     getPlatformStats
 );
 router.get(
     "/users",
     authMiddleware,
-    requireRole(["admin", "employe"]),
+    requireRole(["administrateur", "employe"]),
     getAllUsers
 );
 router.put(
     "/users/:id/suspension",
     authMiddleware,
-    requireRole(["admin", "employe"]),
+    requireRole(["administrateur", "employe"]),
     toggleUserSuspension
 );
 router.put(
     "/users/:id/roles",
     authMiddleware,
-    requireRole(["admin"]),
+    requireRole(["administrateur"]),
     manageUserRoles
 );
 router.get(
     "/carpoolings",
     authMiddleware,
-    requireRole(["admin", "employe"]),
+    requireRole(["administrateur", "employe"]),
     getAllCarpoolings
 );
 router.post(
     "/carpoolings/:id/cancel",
     authMiddleware,
-    requireRole(["admin", "employe"]),
+    requireRole(["administrateur", "employe"]),
     adminCancelCarpooling
 );
 
