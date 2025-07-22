@@ -36,19 +36,23 @@ const logout = async () => {
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
               <router-link class="nav-link" to="/">
-                <i class="fas fa-home me-1"></i>
+                <img src="@/assets/home-svgrepo-com.svg" alt="Accueil" class="nav-icon me-1" />
                 Accueil
               </router-link>
             </li>
             <li class="nav-item">
               <router-link class="nav-link" to="/search">
-                <i class="fas fa-search me-1"></i>
+                <img
+                  src="@/assets/search-sort-svgrepo-com.svg"
+                  alt="Rechercher"
+                  class="nav-icon me-1"
+                />
                 Rechercher
               </router-link>
             </li>
             <li class="nav-item" v-if="isLoggedIn">
               <router-link class="nav-link" to="/my-trips">
-                <i class="fas fa-car me-1"></i>
+                <img src="@/assets/trip-svgrepo-com.svg" alt="Mes trajets" class="nav-icon me-1" />
                 Mes trajets
               </router-link>
             </li>
@@ -58,13 +62,17 @@ const logout = async () => {
             <template v-if="!isLoggedIn">
               <li class="nav-item">
                 <GlassButton to="/login" variant="connexion">
-                  <i class="fas fa-sign-in-alt me-1"></i>
+                  <img src="@/assets/login-svgrepo-com.svg" alt="Connexion" class="nav-icon me-1" />
                   Connexion
                 </GlassButton>
               </li>
               <li class="nav-item">
                 <GlassButton to="/register" variant="inscription">
-                  <i class="fas fa-user-plus me-1"></i>
+                  <img
+                    src="@/assets/user-add-svgrepo-com.svg"
+                    alt="Inscription"
+                    class="nav-icon me-1"
+                  />
                   Inscription
                 </GlassButton>
               </li>
@@ -116,9 +124,6 @@ const logout = async () => {
       <div class="container">
         <div class="row">
           <div class="col-md-6">
-            <h5>
-              <img src="@/assets/Logo ecoride black bg.png" alt="EcoRide" class="footer-logo" />
-            </h5>
             <p class="text-muted">Partagez vos trajets, protégez la planète.</p>
           </div>
           <div class="col-md-6 text-md-end">
@@ -221,6 +226,18 @@ main {
 
 .router-link-active {
   font-weight: bold;
+}
+
+/* Style pour les icônes de navigation */
+.nav-icon {
+  width: 16px;
+  height: 16px;
+  filter: invert(1);
+  vertical-align: middle;
+}
+
+.nav-link:hover .nav-icon {
+  filter: invert(1) sepia(1) saturate(5) hue-rotate(150deg);
 }
 </style>
 
