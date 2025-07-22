@@ -1,4 +1,5 @@
-const Review = require("../models/Review");
+// MongoDB models temporarily disabled
+// const Review = require("../models/Review");
 const db = require("../Config/db.js");
 
 /* --------------------------------------------------- Créer un avis ---------------------------------- */

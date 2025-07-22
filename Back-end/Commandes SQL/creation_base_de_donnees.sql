@@ -1,3 +1,9 @@
+-- =============================================
+-- Script de création de la base de données EcoRide
+-- Version mise à jour : 23 juillet 2025
+-- Compatible avec l'implémentation actuelle
+-- =============================================
+
 -- Suppression des tables si elles existent pour repartir de zéro
 DROP TABLE IF EXISTS Participation, Carpooling, Vehicle, Brand, Color, User_Role, Role, User;
 
@@ -86,3 +92,46 @@ CREATE TABLE Participation (
     FOREIGN KEY (passenger_id) REFERENCES User(id),
     FOREIGN KEY (carpooling_id) REFERENCES Carpooling(id)
 );
+
+-- =============================================
+-- INSERTION DES RÔLES SYSTÈME (OBLIGATOIRE)
+-- =============================================
+INSERT INTO Role (name) VALUES 
+('admin'),
+('employe'),
+('chauffeur'),
+('passager');
+
+-- =============================================
+-- INDEXES POUR LES PERFORMANCES
+-- =============================================
+
+-- Index pour les recherches par email (connexions fréquentes)
+CREATE INDEX idx_user_email ON User(email);
+
+-- Index pour les recherches de covoiturages par statut et date
+CREATE INDEX idx_carpooling_status ON Carpooling(status);
+CREATE INDEX idx_carpooling_departure_date ON Carpooling(departure_datetime);
+
+-- Index pour les participations par utilisateur
+CREATE INDEX idx_participation_passenger ON Participation(passenger_id);
+CREATE INDEX idx_participation_carpooling ON Participation(carpooling_id);
+
+-- Index pour les véhicules par propriétaire
+CREATE INDEX idx_vehicle_user ON Vehicle(user_id);
+
+-- =============================================
+-- COMMENTAIRES ET CONTRAINTES BUSINESS
+-- =============================================
+
+-- Contrainte : Les crédits ne peuvent pas être négatifs
+ALTER TABLE User ADD CONSTRAINT chk_credits_positive CHECK (credits >= 0);
+
+-- Contrainte : Le prix par passager doit être positif
+ALTER TABLE Carpooling ADD CONSTRAINT chk_price_positive CHECK (price_per_passenger > 0);
+
+-- Contrainte : Les sièges restants ne peuvent pas être négatifs
+ALTER TABLE Carpooling ADD CONSTRAINT chk_seats_remaining_positive CHECK (seats_remaining >= 0);
+
+-- Contrainte : Les sièges disponibles du véhicule doivent être positifs
+ALTER TABLE Vehicle ADD CONSTRAINT chk_seats_available_positive CHECK (seats_available > 0);

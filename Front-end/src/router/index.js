@@ -42,6 +42,21 @@ const router = createRouter({
       name: 'CarpoolingDetail',
       component: () => import('../views/CarpoolingDetailView.vue'),
     },
+    {
+      path: '/my-trips',
+      name: 'MyTrips',
+      component: () => import('../views/MyTripsView.vue'),
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: () => import('../views/ProfileView.vue'),
+    },
+    {
+      path: '/credits',
+      name: 'Credits',
+      component: () => import('../views/CreditsView.vue'),
+    },
   ],
 })
 

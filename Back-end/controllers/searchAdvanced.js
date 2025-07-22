@@ -2,7 +2,8 @@
 // Ce script ajoute des fonctionnalités avancées à la recherche
 
 const db = require("../Config/db.js");
-const Review = require("../models/Review");
+// MongoDB models temporarily disabled
+// const Review = require("../models/Review");
 
 /*
  * Fonction améliorée de recherche d'itinéraires avec fonctionnalités avancées

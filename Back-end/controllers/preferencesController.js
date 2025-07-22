@@ -1,4 +1,5 @@
-const DriverPreferences = require("../models/DriverPreferences");
+// MongoDB models temporarily disabled
+// const DriverPreferences = require("../models/DriverPreferences");
 
 /* --------------------------------------------------- Créer/Mettre à jour les préférences ---------------------------------- */
 const createOrUpdatePreferences = async (req, res) => {

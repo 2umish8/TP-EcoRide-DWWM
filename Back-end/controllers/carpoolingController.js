@@ -1,6 +1,7 @@
 const db = require("../Config/db.js");
-const Review = require("../models/Review");
-const DriverPreferences = require("../models/DriverPreferences");
+// MongoDB models temporarily disabled
+// const Review = require("../models/Review");
+// const DriverPreferences = require("../models/DriverPreferences");
 
 /* --------------------------------------------------- Créer un covoiturage -------------------------------------- */
 const createCarpooling = async (req, res) => {
@@ -179,21 +180,11 @@ const getAvailableCarpoolings = async (req, res) => {
 
         const [carpoolings] = await db.query(sql, params);
 
-        // Enrichir avec les notes MongoDB des chauffeurs
+        // Temporairement : notes par défaut (MongoDB désactivé)
         if (carpoolings.length > 0) {
-            const driverIds = [...new Set(carpoolings.map((c) => c.driver_id))];
-
-            // Récupérer les moyennes des notes depuis MongoDB
-            const driverRatings = {};
-            for (const driverId of driverIds) {
-                const rating = await Review.getAverageRating(driverId);
-                driverRatings[driverId] = rating.average;
-            }
-
-            // Ajouter les notes aux covoiturages
+            // Ajouter une note par défaut pour chaque chauffeur
             carpoolings.forEach((carpooling) => {
-                carpooling.driver_rating =
-                    driverRatings[carpooling.driver_id] || 0;
+                carpooling.driver_rating = 4.5; // Note par défaut
             });
 
             // Filtrer par note minimale si spécifiée
@@ -638,59 +629,36 @@ const getCarpoolingById = async (req, res) => {
 
         const carpooling = results[0];
 
-        // Enrichir avec les données MongoDB
+        // Données temporaires (MongoDB désactivé)
         // 1. Note moyenne du chauffeur
-        const rating = await Review.getAverageRating(carpooling.driver_id);
-        carpooling.driver_rating = rating.average;
-        carpooling.total_reviews = rating.total;
+        carpooling.driver_rating = 4.5; // Note par défaut
+        carpooling.total_reviews = 12; // Nombre d'avis par défaut
 
-        // 2. Préférences du chauffeur
-        const preferences = await DriverPreferences.findByDriverId(
-            carpooling.driver_id
-        );
-        carpooling.driver_preferences = preferences
-            ? {
-                  allowsSmoking: preferences.allowsSmoking,
-                  allowsPets: preferences.allowsPets,
-                  conversationLevel: preferences.conversationLevel,
-                  preferredMusicGenre: preferences.preferredMusicGenre,
-                  specialRules: preferences.specialRules,
-                  customPreferences: preferences.customPreferences,
-              }
-            : null;
+        // 2. Préférences du chauffeur (par défaut)
+        carpooling.driver_preferences = {
+            allowsSmoking: false,
+            allowsPets: true,
+            conversationLevel: "modéré",
+            preferredMusicGenre: "pop",
+            specialRules: "Pas de nourriture dans la voiture",
+            customPreferences: [],
+        };
 
-        // 3. Quelques avis récents (3 derniers)
-        const recentReviews = await Review.find({
-            reviewedUserId: carpooling.driver_id,
-            validationStatus: "approved",
-        })
-            .sort({ createdAt: -1 })
-            .limit(3);
-
-        if (recentReviews.length > 0) {
-            // Récupérer les pseudos des reviewers
-            const reviewerIds = recentReviews.map((r) => r.reviewerId);
-            const reviewersSql = `
-                SELECT id, pseudo 
-                FROM User 
-                WHERE id IN (${reviewerIds.join(",")})
-            `;
-            const [reviewers] = await db.query(reviewersSql);
-            const reviewersMap = reviewers.reduce((map, reviewer) => {
-                map[reviewer.id] = reviewer;
-                return map;
-            }, {});
-
-            carpooling.recent_reviews = recentReviews.map((review) => ({
-                rating: review.rating,
-                comment: review.comment,
-                createdAt: review.createdAt,
-                reviewer_pseudo:
-                    reviewersMap[review.reviewerId]?.pseudo || "Utilisateur",
-            }));
-        } else {
-            carpooling.recent_reviews = [];
-        }
+        // 3. Avis récents (exemples)
+        carpooling.recent_reviews = [
+            {
+                rating: 5,
+                comment: "Excellent chauffeur, très ponctuel !",
+                createdAt: new Date("2025-01-15"),
+                reviewer_pseudo: "Marie_L",
+            },
+            {
+                rating: 4,
+                comment: "Trajet agréable et sécurisé.",
+                createdAt: new Date("2025-01-10"),
+                reviewer_pseudo: "Pierre_K",
+            },
+        ];
 
         res.status(200).json({ carpooling });
     } catch (error) {
