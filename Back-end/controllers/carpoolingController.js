@@ -101,7 +101,12 @@ const createCarpooling = async (req, res) => {
             });
         }
     } catch (error) {
-        console.error(error);
+        console.error(
+            "Erreur détaillée lors de la création du covoiturage:",
+            error
+        );
+        console.error("Code erreur:", error.code);
+        console.error("Message SQL:", error.sqlMessage);
         res.status(500).json({
             message: "Erreur lors de la création du covoiturage.",
         });
