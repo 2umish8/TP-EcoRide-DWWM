@@ -5,7 +5,7 @@
         <!-- Logo et titre -->
         <div class="forgot-password-header">
           <div class="logo-section">
-            <img src="@/assets/Logo ecoride black bg.png" alt="EcoRide" class="logo" />
+            <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="logo" />
           </div>
           <h1 class="title">Mot de passe oublié ?</h1>
           <p class="subtitle">

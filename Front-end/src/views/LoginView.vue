@@ -5,7 +5,7 @@
         <!-- Logo et titre -->
         <div class="login-header">
           <div class="logo-section">
-            <img src="@/assets/Logo ecoride black bg.png" alt="EcoRide" class="login-logo" />
+            <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="login-logo" />
           </div>
           <h1 class="login-title">Bon retour parmi nous !</h1>
           <p class="login-subtitle">Connectez-vous pour continuer votre aventure éco-responsable</p>

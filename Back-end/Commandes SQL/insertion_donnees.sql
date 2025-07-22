@@ -1,6 +1,3 @@
--- Insérer les rôles de base
-INSERT INTO Role (name) VALUES ('administrateur'), ('employe'), ('chauffeur'), ('passager');
-
 -- Insérer un utilisateur Administrateur (mot de passe = 'admin_password')
 -- Le compte admin doit être créé en amont [cite: 149]
 INSERT INTO User (pseudo, email, password_hash, credits) VALUES 

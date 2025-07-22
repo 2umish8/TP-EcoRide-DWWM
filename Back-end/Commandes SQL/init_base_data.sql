@@ -3,7 +3,7 @@ INSERT IGNORE INTO Role (name) VALUES
 ('passager'),
 ('chauffeur'),
 ('employe'),
-('admin');
+('administrateur');
 
 -- Insérer quelques marques et couleurs de base pour les véhicules
 INSERT IGNORE INTO Brand (name) VALUES 

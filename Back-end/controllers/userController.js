@@ -1,6 +1,11 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../Config/db.js");
+const { validateAndNormalizeEmail } = require("../utils/emailValidator.js");
+const {
+    validatePassword,
+    getPasswordErrorMessage,
+} = require("../utils/passwordValidator.js");
 
 /* --------------------------------------------------- inscription -------------------------------------------------- */
 const registerUser = async (req, res) => {
@@ -13,12 +18,38 @@ const registerUser = async (req, res) => {
                 .json({ message: "Veuillez fournir toutes les informations." });
         }
 
+        // Validation du format d'email
+        const emailValidation = validateAndNormalizeEmail(email);
+        if (!emailValidation.isValid) {
+            return res.status(400).json({
+                message:
+                    "Format d'email invalide. Veuillez saisir une adresse email valide (ex: utilisateur@exemple.com).",
+            });
+        }
+
+        // Validation de la force du mot de passe
+        const passwordValidation = validatePassword(password);
+        if (!passwordValidation.isValid) {
+            return res.status(400).json({
+                message: getPasswordErrorMessage(passwordValidation),
+                errors: passwordValidation.errors,
+                suggestions: passwordValidation.suggestions,
+            });
+        }
+
+        // Utiliser l'email normalisé (minuscules, sans espaces)
+        const normalizedEmail = emailValidation.normalizedEmail;
+
         const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 10;
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
         const sql =
             "INSERT INTO User (pseudo, email, password_hash) VALUES (?, ?, ?)";
-        const [result] = await db.query(sql, [pseudo, email, passwordHash]);
+        const [result] = await db.query(sql, [
+            pseudo,
+            normalizedEmail,
+            passwordHash,
+        ]);
 
         if (result.affectedRows && result.affectedRows > 0) {
             // Attribuer le rôle "passager" par défaut
@@ -30,6 +61,11 @@ const registerUser = async (req, res) => {
             res.status(201).json({
                 message:
                     "Utilisateur créé avec succès ! Veuillez vous connecter avec vos identifiants.",
+                user: {
+                    id: userId,
+                    pseudo: pseudo,
+                    email: normalizedEmail,
+                },
             });
         } else {
             res.status(500).json({
@@ -197,8 +233,16 @@ const updateUserProfile = async (req, res) => {
             values.push(pseudo);
         }
         if (email !== undefined) {
+            // Validation du format d'email si l'email est fourni
+            const emailValidation = validateAndNormalizeEmail(email);
+            if (!emailValidation.isValid) {
+                return res.status(400).json({
+                    message:
+                        "Format d'email invalide. Veuillez saisir une adresse email valide (ex: utilisateur@exemple.com).",
+                });
+            }
             updates.push("email = ?");
-            values.push(email);
+            values.push(emailValidation.normalizedEmail);
         }
         if (profile_picture_url !== undefined) {
             updates.push("profile_picture_url = ?");
@@ -247,6 +291,16 @@ const changePassword = async (req, res) => {
             return res.status(400).json({
                 message:
                     "Veuillez fournir l'ancien et le nouveau mot de passe.",
+            });
+        }
+
+        // Validation de la force du nouveau mot de passe
+        const passwordValidation = validatePassword(newPassword);
+        if (!passwordValidation.isValid) {
+            return res.status(400).json({
+                message: getPasswordErrorMessage(passwordValidation),
+                errors: passwordValidation.errors,
+                suggestions: passwordValidation.suggestions,
             });
         }
 

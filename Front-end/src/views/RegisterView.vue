@@ -5,7 +5,7 @@
         <!-- Logo et titre -->
         <div class="register-header">
           <div class="logo-section">
-            <img src="@/assets/Logo ecoride black bg.png" alt="EcoRide" class="register-logo" />
+            <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="register-logo" />
           </div>
           <h1 class="register-title">Rejoignez EcoRide !</h1>
           <p class="register-subtitle">
@@ -50,10 +50,14 @@
               id="email"
               v-model="registerForm.email"
               class="form-input"
+              :class="{ error: emailError && registerForm.email }"
               placeholder="votre@email.com"
               required
               :disabled="isLoading"
             />
+            <div v-if="emailError && registerForm.email" class="field-error">
+              {{ emailError }}
+            </div>
           </div>
 
           <div class="form-group">
@@ -90,6 +94,11 @@
                 id="password"
                 v-model="registerForm.password"
                 class="form-input"
+                :class="{
+                  'password-valid': passwordValidation.isValid,
+                  'password-invalid': registerForm.password && !passwordValidation.isValid,
+                  'password-medium': passwordValidation.strength === 'moyen',
+                }"
                 placeholder="Minimum 8 caractères"
                 required
                 :disabled="isLoading"
@@ -104,18 +113,12 @@
                 <span v-else>🙈</span>
               </button>
             </div>
-            <div class="password-strength" v-if="registerForm.password">
-              <div class="strength-bar">
-                <div
-                  class="strength-fill"
-                  :class="passwordStrength.class"
-                  :style="{ width: passwordStrength.width }"
-                ></div>
-              </div>
-              <span class="strength-text" :class="passwordStrength.class">
-                {{ passwordStrength.text }}
-              </span>
-            </div>
+            <!-- Composant d'indicateur de force -->
+            <PasswordStrengthIndicator
+              :password="registerForm.password"
+              :show-requirements="!registerForm.password"
+              @validation-change="handlePasswordValidation"
+            />
           </div>
 
           <div class="form-group">
@@ -125,13 +128,22 @@
               id="confirmPassword"
               v-model="registerForm.confirmPassword"
               class="form-input"
+              :class="{
+                'password-valid':
+                  passwordConfirmationValidation.isValid && registerForm.confirmPassword,
+                'password-invalid':
+                  registerForm.confirmPassword && !passwordConfirmationValidation.isValid,
+              }"
               placeholder="Répétez votre mot de passe"
               required
               :disabled="isLoading"
             />
-            <div v-if="registerForm.confirmPassword && !passwordsMatch" class="password-error">
-              Les mots de passe ne correspondent pas
-            </div>
+            <!-- Composant de validation de confirmation -->
+            <PasswordConfirmationValidator
+              :password="registerForm.password"
+              :confirm-password="registerForm.confirmPassword"
+              @confirmation-change="handlePasswordConfirmationValidation"
+            />
           </div>
 
           <!-- Date de naissance -->
@@ -247,6 +259,9 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/counter'
+import { isValidEmail, getEmailErrorMessage } from '@/utils/emailValidator'
+import PasswordStrengthIndicator from '@/components/PasswordStrengthIndicator.vue'
+import PasswordConfirmationValidator from '@/components/PasswordConfirmationValidator.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -271,6 +286,18 @@ const showPassword = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
 
+// États de validation des mots de passe
+const passwordValidation = ref({
+  isValid: false,
+  strength: 'invalid',
+  percentage: 0,
+})
+
+const passwordConfirmationValidation = ref({
+  isValid: false,
+  error: null,
+})
+
 // Date maximum pour la naissance (18 ans minimum)
 const maxBirthDate = computed(() => {
   const date = new Date()
@@ -278,41 +305,24 @@ const maxBirthDate = computed(() => {
   return date.toISOString().split('T')[0]
 })
 
+// Validation de l'email
+const emailError = computed(() => {
+  if (!registerForm.value.email) {
+    return null // Ne pas afficher d'erreur si le champ est vide
+  }
+  return getEmailErrorMessage(registerForm.value.email)
+})
+
+const isEmailValid = computed(() => {
+  return registerForm.value.email && isValidEmail(registerForm.value.email)
+})
+
 // Validation des mots de passe
 const passwordsMatch = computed(() => {
   return registerForm.value.password === registerForm.value.confirmPassword
 })
 
-// Force du mot de passe
-const passwordStrength = computed(() => {
-  const password = registerForm.value.password
-  if (!password) return { class: '', width: '0%', text: '' }
-
-  let score = 0
-  let requirements = []
-
-  if (password.length >= 8) score++
-  else requirements.push('8 caractères minimum')
-
-  if (/[a-z]/.test(password)) score++
-  else requirements.push('une minuscule')
-
-  if (/[A-Z]/.test(password)) score++
-  else requirements.push('une majuscule')
-
-  if (/\d/.test(password)) score++
-  else requirements.push('un chiffre')
-
-  if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score++
-  else requirements.push('un caractère spécial')
-
-  if (score < 2) return { class: 'weak', width: '25%', text: 'Faible' }
-  if (score < 4) return { class: 'medium', width: '50%', text: 'Moyen' }
-  if (score < 5) return { class: 'good', width: '75%', text: 'Bon' }
-  return { class: 'strong', width: '100%', text: 'Excellent' }
-})
-
-// Validation du formulaire
+// Validation du formulaire avec la nouvelle validation de mot de passe
 const isFormValid = computed(() => {
   return (
     registerForm.value.prenom &&
@@ -325,14 +335,24 @@ const isFormValid = computed(() => {
     registerForm.value.dateNaissance &&
     passwordsMatch.value &&
     registerForm.value.acceptTerms &&
-    registerForm.value.email.includes('@') &&
-    registerForm.value.password.length >= 8
+    isEmailValid.value &&
+    passwordValidation.value.isValid &&
+    passwordConfirmationValidation.value.isValid
   )
 })
 
 // Basculer l'affichage du mot de passe
 const togglePassword = () => {
   showPassword.value = !showPassword.value
+}
+
+// Gestionnaires de validation des mots de passe
+const handlePasswordValidation = (validation) => {
+  passwordValidation.value = validation
+}
+
+const handlePasswordConfirmationValidation = (validation) => {
+  passwordConfirmationValidation.value = validation
 }
 
 // Simulation d'inscription
@@ -480,6 +500,31 @@ const handleRegister = async () => {
 
 .form-input::placeholder {
   color: #888;
+}
+
+.form-input.error {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.form-input.error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.field-error {
+  color: #ef4444;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.field-error::before {
+  content: '⚠️';
+  font-size: 0.75rem;
 }
 
 .form-input:disabled {

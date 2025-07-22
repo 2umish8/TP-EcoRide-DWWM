@@ -22,11 +22,43 @@ Authorization: Bearer <token>
 
 Inscription d'un nouvel utilisateur
 
+**Corps de la requête :**
+
 ```json
 {
     "pseudo": "john_doe",
     "email": "john@example.com",
     "password": "motdepasse123"
+}
+```
+
+**Validation des données :**
+
+-   `pseudo` : obligatoire, chaîne de caractères
+-   `email` : obligatoire, format d'email valide selon RFC 5322
+-   `password` : obligatoire, chaîne de caractères
+
+**Validation d'email :**
+L'email est automatiquement validé et normalisé :
+
+-   Format vérifié selon les standards RFC 5322
+-   Normalisation automatique (minuscules, suppression des espaces)
+-   Longueur maximale : 320 caractères
+-   Partie locale maximale : 64 caractères
+-   Domaine maximal : 253 caractères
+-   Interdiction des points consécutifs (..) et en début/fin de partie locale
+
+**Réponses :**
+
+-   `201` : Utilisateur créé avec succès
+-   `400` : Données manquantes ou format d'email invalide
+-   `409` : Email ou pseudo déjà utilisé
+
+**Exemple de réponse en cas d'email invalide :**
+
+```json
+{
+    "message": "Format d'email invalide. Veuillez saisir une adresse email valide (ex: utilisateur@exemple.com)."
 }
 ```
 

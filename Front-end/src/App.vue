@@ -20,7 +20,7 @@ const logout = async () => {
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
       <div class="container-fluid">
         <router-link class="navbar-brand fw-bold" to="/">
-          <img src="@/assets/Logo ecoride black bg.png" alt="EcoRide" class="navbar-logo" />
+          <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="navbar-logo" />
         </router-link>
 
         <button
@@ -124,7 +124,9 @@ const logout = async () => {
       <div class="footer-content">
         <span class="footer-text">© 2025 EcoRide</span>
         <span class="footer-separator">|</span>
-        <a href="mailto:attention@nous.nexistons.pas" class="footer-link">attention@nous.nexistons.pas</a>
+        <a href="mailto:attention@nous.nexistons.pas" class="footer-link"
+          >attention@nous.nexistons.pas</a
+        >
         <span class="footer-separator">|</span>
         <a href="#" class="footer-link">Mentions légales</a>
       </div>
@@ -157,7 +159,8 @@ body {
   padding: 0;
 }
 
-main, .router-view {
+main,
+.router-view {
   flex: 1 1 auto;
 }
 
@@ -248,7 +251,7 @@ footer {
   color: #f5f5f5;
   font-size: 1rem;
   padding: 10px 0 8px 0;
-  box-shadow: 0 -2px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.12);
   display: flex;
   justify-content: center;
   align-items: center;
