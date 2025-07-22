@@ -74,19 +74,6 @@
           </div>
 
           <div class="form-group">
-            <label for="telephone" class="form-label">Téléphone *</label>
-            <input
-              type="tel"
-              id="telephone"
-              v-model="registerForm.telephone"
-              class="form-input"
-              placeholder="06 12 34 56 78"
-              required
-              :disabled="isLoading"
-            />
-          </div>
-
-          <div class="form-group">
             <label for="password" class="form-label">Mot de passe *</label>
             <div class="password-input-group">
               <input
@@ -102,6 +89,11 @@
                 placeholder="Minimum 8 caractères"
                 required
                 :disabled="isLoading"
+                :title="passwordTooltip"
+                @mouseenter="showTooltip = true"
+                @mouseleave="showTooltip = false"
+                @focus="showTooltip = true"
+                @blur="showTooltip = false"
               />
               <button
                 type="button"
@@ -112,11 +104,23 @@
                 <span v-if="showPassword">👁️</span>
                 <span v-else>🙈</span>
               </button>
+              <!-- Tooltip personnalisé -->
+              <div class="password-tooltip" v-show="showTooltip">
+                <div class="tooltip-content">
+                  <strong>Critères requis :</strong>
+                  <ul>
+                    <li>8+ caractères</li>
+                    <li>1 minuscule, 1 majuscule</li>
+                    <li>1 chiffre, 1 caractère spécial</li>
+                    <li>Pas de caractères interdits (&lt;&gt;'"&amp;;)</li>
+                  </ul>
+                </div>
+              </div>
             </div>
-            <!-- Composant d'indicateur de force -->
+            <!-- Indicateur de force simplifié -->
             <PasswordStrengthIndicator
               :password="registerForm.password"
-              :show-requirements="!registerForm.password"
+              :show-requirements="false"
               @validation-change="handlePasswordValidation"
             />
           </div>
@@ -143,21 +147,6 @@
               :password="registerForm.password"
               :confirm-password="registerForm.confirmPassword"
               @confirmation-change="handlePasswordConfirmationValidation"
-            />
-          </div>
-
-          <!-- Date de naissance -->
-          <div class="form-group">
-            <label for="dateNaissance" class="form-label">Date de naissance *</label>
-            <input
-              type="date"
-              id="dateNaissance"
-              v-model="registerForm.dateNaissance"
-              class="form-input"
-              required
-              :disabled="isLoading"
-              :max="maxBirthDate"
-              lang="fr"
             />
           </div>
 
@@ -272,10 +261,8 @@ const registerForm = ref({
   nom: '',
   email: '',
   pseudo: '',
-  telephone: '',
   password: '',
   confirmPassword: '',
-  dateNaissance: '',
   acceptTerms: false,
   acceptNewsletter: false,
 })
@@ -283,8 +270,14 @@ const registerForm = ref({
 // États de l'interface
 const isLoading = ref(false)
 const showPassword = ref(false)
+const showTooltip = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
+
+// Tooltip pour les critères de mot de passe
+const passwordTooltip = computed(() => {
+  return 'Critères : 8+ caractères, 1 minuscule, 1 majuscule, 1 chiffre, 1 caractère spécial'
+})
 
 // États de validation des mots de passe
 const passwordValidation = ref({
@@ -296,13 +289,6 @@ const passwordValidation = ref({
 const passwordConfirmationValidation = ref({
   isValid: false,
   error: null,
-})
-
-// Date maximum pour la naissance (18 ans minimum)
-const maxBirthDate = computed(() => {
-  const date = new Date()
-  date.setFullYear(date.getFullYear() - 18)
-  return date.toISOString().split('T')[0]
 })
 
 // Validation de l'email
@@ -329,10 +315,8 @@ const isFormValid = computed(() => {
     registerForm.value.nom &&
     registerForm.value.email &&
     registerForm.value.pseudo &&
-    registerForm.value.telephone &&
     registerForm.value.password &&
     registerForm.value.confirmPassword &&
-    registerForm.value.dateNaissance &&
     passwordsMatch.value &&
     registerForm.value.acceptTerms &&
     isEmailValid.value &&
@@ -378,8 +362,6 @@ const handleRegister = async () => {
       nom: registerForm.value.nom,
       pseudo: registerForm.value.pseudo,
       email: registerForm.value.email,
-      telephone: registerForm.value.telephone,
-      dateNaissance: registerForm.value.dateNaissance,
       avatar: `https://i.pravatar.cc/150?u=${registerForm.value.email}`,
     }
 
@@ -551,6 +533,59 @@ const handleRegister = async () => {
 
 .password-toggle:hover {
   background: #333;
+}
+
+/* Tooltip pour les critères de mot de passe */
+.password-input-group {
+  position: relative;
+}
+
+.password-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  margin-top: 8px;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.tooltip-content {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-size: 0.85rem;
+  color: #ffffff;
+}
+
+.tooltip-content strong {
+  color: #34d399;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.tooltip-content ul {
+  margin: 0;
+  padding-left: 16px;
+  color: #cccccc;
+}
+
+.tooltip-content li {
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .password-strength {
