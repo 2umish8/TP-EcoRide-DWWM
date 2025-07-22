@@ -63,23 +63,68 @@ export const authService = {
 
 // Services de covoiturage
 export const carpoolingService = {
-  async searchTrips(filters) {
-    const response = await api.get('/carpooling/search', { params: filters })
+  async getAvailableTrips(filters = {}) {
+    const response = await api.get('/carpoolings/available', { params: filters })
+    return response.data
+  },
+
+  async getTripDetails(tripId) {
+    const response = await api.get(`/carpoolings/${tripId}`)
     return response.data
   },
 
   async createTrip(tripData) {
-    const response = await api.post('/carpooling', tripData)
+    const response = await api.post('/carpoolings', tripData)
     return response.data
   },
 
-  async getMyTrips() {
-    const response = await api.get('/carpooling/my-trips')
+  async getDriverTrips() {
+    const response = await api.get('/carpoolings/my-carpoolings')
     return response.data
   },
 
-  async bookTrip(tripId) {
-    const response = await api.post(`/participations`, { carpooling_id: tripId })
+  async updateTrip(tripId, tripData) {
+    const response = await api.put(`/carpoolings/${tripId}`, tripData)
+    return response.data
+  },
+
+  async cancelTrip(tripId) {
+    const response = await api.post(`/carpoolings/${tripId}/cancel`)
+    return response.data
+  },
+
+  async startTrip(tripId) {
+    const response = await api.post(`/carpoolings/${tripId}/start`)
+    return response.data
+  },
+
+  async finishTrip(tripId) {
+    const response = await api.post(`/carpoolings/${tripId}/finish`)
+    return response.data
+  },
+}
+
+// Services de participations
+export const participationService = {
+  async joinTrip(tripId) {
+    const response = await api.post(`/participations/${tripId}/join`)
+    return response.data
+  },
+
+  async cancelParticipation(tripId) {
+    const response = await api.post(`/participations/${tripId}/cancel`)
+    return response.data
+  },
+
+  async getMyParticipations() {
+    const response = await api.get('/participations/my-participations')
+    return response.data
+  },
+
+  async validateTrip(tripId, isValidated) {
+    const response = await api.post(`/participations/${tripId}/validate`, {
+      is_validated: isValidated,
+    })
     return response.data
   },
 }

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { authService } from '../services/api'
+// import { authService } from '../services/api' // Temporairement désactivé
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -15,36 +15,18 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    async login(credentials) {
-      try {
-        const response = await authService.login(credentials)
+    // Version simplifiée pour la démo (à remplacer par l'API plus tard)
+    login(user) {
+      const token = 'demo-token-' + Date.now()
 
-        this.token = response.token
-        this.user = response.user
-        this.isAuthenticated = true
+      this.token = token
+      this.user = user
+      this.isAuthenticated = true
 
-        localStorage.setItem('authToken', response.token)
-        localStorage.setItem('user', JSON.stringify(response.user))
+      localStorage.setItem('authToken', token)
+      localStorage.setItem('user', JSON.stringify(user))
 
-        return { success: true, user: response.user }
-      } catch (error) {
-        return {
-          success: false,
-          message: error.response?.data?.message || 'Erreur de connexion',
-        }
-      }
-    },
-
-    async register(userData) {
-      try {
-        await authService.register(userData)
-        return { success: true, message: 'Inscription réussie' }
-      } catch (error) {
-        return {
-          success: false,
-          message: error.response?.data?.message || "Erreur d'inscription",
-        }
-      }
+      return { success: true, user }
     },
 
     async logout() {
@@ -52,16 +34,19 @@ export const useAuthStore = defineStore('auth', {
       this.token = null
       this.isAuthenticated = false
 
-      await authService.logout()
+      localStorage.removeItem('authToken')
+      localStorage.removeItem('user')
     },
 
     async loadUserProfile() {
       if (!this.isAuthenticated) return
 
       try {
-        const response = await authService.getProfile()
-        this.user = response.user
-        localStorage.setItem('user', JSON.stringify(response.user))
+        // Pour l'instant, on garde les données du localStorage
+        const userData = JSON.parse(localStorage.getItem('user') || 'null')
+        if (userData) {
+          this.user = userData
+        }
       } catch (error) {
         console.error('Erreur lors du chargement du profil:', error)
         this.logout()

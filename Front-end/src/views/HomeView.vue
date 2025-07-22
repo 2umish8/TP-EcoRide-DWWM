@@ -1,5 +1,41 @@
 <script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
 // Configuration future pour l'authentification
+const router = useRouter()
+
+// Variables réactives pour le formulaire de recherche
+const searchForm = ref({
+  departure: '',
+  destination: '',
+  date: '',
+})
+
+// Fonction pour gérer la recherche
+const handleSearch = () => {
+  // Navigation vers la page de résultats avec les paramètres de recherche (même si vides)
+  router.push({
+    name: 'SearchResults',
+    query: {
+      from: searchForm.value.departure || '',
+      to: searchForm.value.destination || '',
+      date: searchForm.value.date || '',
+    },
+  })
+}
+
+// Fonction pour aller directement à la page des covoiturages
+const goToCarpooling = () => {
+  router.push({
+    name: 'SearchResults',
+    query: {
+      from: '',
+      to: '',
+      date: '',
+    },
+  })
+}
 
 // Fonction pour scroller vers la section "À propos"
 const scrollToAbout = () => {
@@ -37,17 +73,36 @@ const scrollToAbout = () => {
           <!-- Barre de recherche principale -->
           <div class="search-section">
             <div class="search-bar">
-              <div class="search-inputs">
+              <form @submit.prevent="handleSearch" class="search-inputs">
                 <div class="input-group">
-                  <input type="text" placeholder="Partir de ..." class="search-input" />
+                  <input
+                    type="text"
+                    placeholder="Partir de ..."
+                    class="search-input"
+                    v-model="searchForm.departure"
+                    required
+                  />
                 </div>
                 <div class="input-group">
-                  <input type="text" placeholder="Aller à ..." class="search-input" />
+                  <input
+                    type="text"
+                    placeholder="Aller à ..."
+                    class="search-input"
+                    v-model="searchForm.destination"
+                    required
+                  />
                 </div>
                 <div class="input-group">
-                  <input type="text" placeholder="Partir le ..." class="search-input" />
+                  <input
+                    type="date"
+                    placeholder="dd/mm/yyyy"
+                    class="search-input"
+                    v-model="searchForm.date"
+                    lang="fr"
+                    :min="new Date().toISOString().split('T')[0]"
+                  />
                 </div>
-                <button class="search-btn">
+                <button type="submit" class="search-btn">
                   <span>ecoRIDEZ</span>
                   <img
                     src="@/assets/search-sort-svgrepo-com.svg"
@@ -55,7 +110,13 @@ const scrollToAbout = () => {
                     class="search-icon"
                   />
                 </button>
-              </div>
+              </form>
+            </div>
+            <!-- Bouton pour parcourir tous les covoiturages -->
+            <div class="browse-all-section">
+              <button @click="goToCarpooling" class="browse-all-btn">
+                <span>Parcourir tous les covoiturages</span>
+              </button>
             </div>
           </div>
           <!-- Section "En savoir plus" -->
@@ -361,6 +422,15 @@ const scrollToAbout = () => {
   width: 100%; /* Prend toute la largeur disponible dans son conteneur */
 }
 
+.search-input[type='date'] {
+  color-scheme: dark;
+}
+
+.search-input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
 .search-input::placeholder {
   color: #cccccc;
 }
@@ -392,6 +462,32 @@ const scrollToAbout = () => {
   width: 18px;
   height: 18px;
   filter: invert(1);
+}
+
+/* Styles pour la section de navigation vers tous les covoiturages */
+.browse-all-section {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.browse-all-btn {
+  background: transparent;
+  color: #34d399;
+  border: 2px solid #34d399;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.browse-all-btn:hover {
+  background: #34d399;
+  color: #1a1a1a;
+  transform: translateY(-2px);
 }
 
 .arrows-section {

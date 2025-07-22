@@ -109,14 +109,24 @@ const createCarpooling = async (req, res) => {
 /* --------------------------------------------------- Lister tous les covoiturages disponibles --------------- */
 const getAvailableCarpoolings = async (req, res) => {
     try {
-        const { departure, arrival, date } = req.query;
+        const {
+            departure,
+            arrival,
+            date,
+            maxPrice,
+            isElectric,
+            maxDuration,
+            minRating,
+        } = req.query;
 
         let sql = `
             SELECT c.*, 
                    u.pseudo as driver_pseudo,
+                   u.profile_picture_url as driver_photo,
                    v.model, v.plate_number, v.is_electric,
                    b.name as brand_name, 
-                   col.name as color_name
+                   col.name as color_name,
+                   TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime) as duration_minutes
             FROM Carpooling c
             INNER JOIN User u ON c.driver_id = u.id
             INNER JOIN Vehicle v ON c.vehicle_id = v.id
@@ -126,7 +136,7 @@ const getAvailableCarpoolings = async (req, res) => {
         `;
         const params = [];
 
-        // Filtres optionnels
+        // Filtres optionnels selon le cahier des charges (US 4)
         if (departure) {
             sql += " AND c.departure_address LIKE ?";
             params.push(`%${departure}%`);
@@ -140,9 +150,55 @@ const getAvailableCarpoolings = async (req, res) => {
             params.push(date);
         }
 
+        // Filtre prix maximum
+        if (maxPrice) {
+            sql += " AND c.price_per_passenger <= ?";
+            params.push(parseFloat(maxPrice));
+        }
+
+        // Filtre écologique (voiture électrique)
+        if (isElectric === "true") {
+            sql += " AND v.is_electric = 1";
+        }
+
+        // Filtre durée maximale (en minutes)
+        if (maxDuration) {
+            sql +=
+                " AND TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime) <= ?";
+            params.push(parseInt(maxDuration));
+        }
+
         sql += " ORDER BY c.departure_datetime ASC";
 
         const [carpoolings] = await db.query(sql, params);
+
+        // Si aucun résultat trouvé, proposer la date du prochain itinéraire disponible
+        if (carpoolings.length === 0 && date) {
+            const nextAvailableSql = `
+                SELECT MIN(DATE(c.departure_datetime)) as next_date
+                FROM Carpooling c
+                WHERE c.status = 'prévu' AND c.seats_remaining > 0
+                AND DATE(c.departure_datetime) > ?
+                ${departure ? "AND c.departure_address LIKE ?" : ""}
+                ${arrival ? "AND c.arrival_address LIKE ?" : ""}
+            `;
+            const nextParams = [date];
+            if (departure) nextParams.push(`%${departure}%`);
+            if (arrival) nextParams.push(`%${arrival}%`);
+
+            const [nextAvailable] = await db.query(
+                nextAvailableSql,
+                nextParams
+            );
+
+            return res.status(200).json({
+                carpoolings: [],
+                nextAvailableDate: nextAvailable[0]?.next_date || null,
+                message:
+                    "Aucun covoiturage trouvé pour cette date. Consultez la prochaine date disponible.",
+            });
+        }
+
         res.status(200).json({ carpoolings });
     } catch (error) {
         console.error(error);

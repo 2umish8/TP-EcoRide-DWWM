@@ -23,7 +23,7 @@ function authMiddleware(req, res, next) {
 }
 
 // Middleware pour vérifier les rôles spécifiques
-function requireRole(roleName) {
+function requireRole(roleNames) {
     return (req, res, next) => {
         // S'assurer que l'utilisateur est connecté
         if (!req.user) {
@@ -32,10 +32,19 @@ function requireRole(roleName) {
                 .json({ message: "Utilisateur non authentifié." });
         }
 
-        // Vérifier si l'utilisateur a le rôle requis
-        if (!req.user.roles || !req.user.roles.includes(roleName)) {
+        // Normaliser en tableau si c'est un string
+        const rolesArray = Array.isArray(roleNames) ? roleNames : [roleNames];
+
+        // Vérifier si l'utilisateur a au moins un des rôles requis
+        const hasRole = rolesArray.some(
+            (role) => req.user.roles && req.user.roles.includes(role)
+        );
+
+        if (!hasRole) {
             return res.status(403).json({
-                message: `Accès refusé : rôle '${roleName}' requis.`,
+                message: `Accès refusé : un des rôles suivants requis : ${rolesArray.join(
+                    ", "
+                )}`,
                 userRoles: req.user.roles,
             });
         }
