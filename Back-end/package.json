@@ -8,7 +8,9 @@
         "dev": "nodemon server.js",
         "setup": "node scripts/generatePasswords.js",
         "check": "node scripts/checkProject.js",
-        "db:create": "node -e \"console.log('Exécutez les scripts SQL dans l\\'ordre: creation_base_de_donnees.sql puis insertion_donnees.sql')\""
+        "db:create": "node -e \"console.log('Exécutez les scripts SQL dans l\\'ordre: creation_base_de_donnees.sql puis insertion_donnees.sql')\"",
+        "mongo:check": "node scripts/checkMongoDB.js",
+        "mongo:test": "node scripts/testMongoDB.js"
     },
     "keywords": [],
     "author": "",
@@ -20,6 +22,7 @@
         "dotenv": "^17.2.0",
         "express": "^5.1.0",
         "jsonwebtoken": "^9.0.2",
+        "mongoose": "^8.16.4",
         "mysql2": "^3.14.2",
         "sequelize": "^6.37.7"
     },

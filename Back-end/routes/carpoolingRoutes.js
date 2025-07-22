@@ -10,6 +10,7 @@ const {
     cancelCarpooling,
     startCarpooling,
     finishCarpooling,
+    getCarpoolingById,
 } = require("../controllers/carpoolingController");
 
 // Importer les middlewares d'authentification
@@ -17,6 +18,7 @@ const { authMiddleware, requireRole } = require("../authMiddleware");
 
 // Routes publiques
 router.get("/available", getAvailableCarpoolings); // Recherche de covoiturages
+router.get("/:id", getCarpoolingById); // Détail d'un covoiturage
 
 // Routes protégées
 router.post("/", authMiddleware, requireRole(["chauffeur"]), createCarpooling);

@@ -204,7 +204,7 @@
     </div>
 
     <!-- Message si aucun résultat -->
-    <div v-if="mockResults.length === 0" class="no-results">
+    <div v-if="formattedResults.length === 0 && !loading && !error" class="no-results">
       <div class="no-results-content">
         <h2>Aucun trajet trouvé 😕</h2>
         <p>

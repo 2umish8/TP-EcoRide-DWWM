@@ -2,8 +2,10 @@
 const express = require("express");
 // Importer et configurer dotenv pour les variables d'environnement
 require("dotenv").config();
-// Importer la connexion à la base de données
-const db = require("./Config/db.js"); // Importer la connexion à la base de données
+// Importer la connexion à la base de données MySQL
+const db = require("./Config/db.js");
+// Importer la connexion à MongoDB
+const connectMongoDB = require("./Config/mongodb.js");
 // Importer le middleware d'authentification
 const {
     authMiddleware,
@@ -18,12 +20,19 @@ const carpoolingRoutes = require("./routes/carpoolingRoutes");
 const participationRoutes = require("./routes/participationRoutes");
 const creditsRoutes = require("./routes/creditsRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+// Importer les nouvelles routes MongoDB
+const reviewRoutes = require("./routes/reviewRoutes");
+const preferencesRoutes = require("./routes/preferencesRoutes");
 // Importer cors pour gérer les requêtes cross-origin
 const cors = require("cors");
 
 // Créer l'application Express
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Connecter à MongoDB
+connectMongoDB();
+
 // Utiliser cors pour permettre les requêtes cross-origin
 app.use(cors());
 
@@ -51,6 +60,10 @@ app.use("/api/credits", creditsRoutes);
 
 // Routes d'administration
 app.use("/api/admin", adminRoutes);
+
+// Routes MongoDB - Avis et préférences
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/preferences", preferencesRoutes);
 
 // Démarrer le serveur
 app.listen(PORT, () => {

@@ -1,4 +1,6 @@
 const db = require("../Config/db.js");
+const Review = require("../models/Review");
+const DriverPreferences = require("../models/DriverPreferences");
 
 /* --------------------------------------------------- Créer un covoiturage -------------------------------------- */
 const createCarpooling = async (req, res) => {
@@ -171,6 +173,42 @@ const getAvailableCarpoolings = async (req, res) => {
         sql += " ORDER BY c.departure_datetime ASC";
 
         const [carpoolings] = await db.query(sql, params);
+
+        // Enrichir avec les notes MongoDB des chauffeurs
+        if (carpoolings.length > 0) {
+            const driverIds = [...new Set(carpoolings.map((c) => c.driver_id))];
+
+            // Récupérer les moyennes des notes depuis MongoDB
+            const driverRatings = {};
+            for (const driverId of driverIds) {
+                const rating = await Review.getAverageRating(driverId);
+                driverRatings[driverId] = rating.average;
+            }
+
+            // Ajouter les notes aux covoiturages
+            carpoolings.forEach((carpooling) => {
+                carpooling.driver_rating =
+                    driverRatings[carpooling.driver_id] || 0;
+            });
+
+            // Filtrer par note minimale si spécifiée
+            if (minRating && parseFloat(minRating) > 0) {
+                const filteredCarpoolings = carpoolings.filter(
+                    (c) => c.driver_rating >= parseFloat(minRating)
+                );
+
+                if (filteredCarpoolings.length === 0) {
+                    return res.status(200).json({
+                        carpoolings: [],
+                        message: `Aucun covoiturage trouvé avec une note minimale de ${minRating}.`,
+                    });
+                }
+
+                return res
+                    .status(200)
+                    .json({ carpoolings: filteredCarpoolings });
+            }
+        }
 
         // Si aucun résultat trouvé, proposer la date du prochain itinéraire disponible
         if (carpoolings.length === 0 && date) {
@@ -569,6 +607,95 @@ const finishCarpooling = async (req, res) => {
     }
 };
 
+// --------------------------------------------------- Détail d'un covoiturage par ID ----------------------------
+const getCarpoolingById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const sql = `
+            SELECT c.*, 
+                   u.pseudo as driver_pseudo,
+                   u.profile_picture_url as driver_photo,
+                   v.model, v.plate_number, v.is_electric,
+                   b.name as brand_name, 
+                   col.name as color_name,
+                   TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime) as duration_minutes
+            FROM Carpooling c
+            INNER JOIN User u ON c.driver_id = u.id
+            INNER JOIN Vehicle v ON c.vehicle_id = v.id
+            LEFT JOIN Brand b ON v.brand_id = b.id
+            LEFT JOIN Color col ON v.color_id = col.id
+            WHERE c.id = ?
+        `;
+        const [results] = await db.query(sql, [id]);
+        if (results.length === 0) {
+            return res.status(404).json({ message: "Covoiturage non trouvé." });
+        }
+
+        const carpooling = results[0];
+
+        // Enrichir avec les données MongoDB
+        // 1. Note moyenne du chauffeur
+        const rating = await Review.getAverageRating(carpooling.driver_id);
+        carpooling.driver_rating = rating.average;
+        carpooling.total_reviews = rating.total;
+
+        // 2. Préférences du chauffeur
+        const preferences = await DriverPreferences.findByDriverId(
+            carpooling.driver_id
+        );
+        carpooling.driver_preferences = preferences
+            ? {
+                  allowsSmoking: preferences.allowsSmoking,
+                  allowsPets: preferences.allowsPets,
+                  conversationLevel: preferences.conversationLevel,
+                  preferredMusicGenre: preferences.preferredMusicGenre,
+                  specialRules: preferences.specialRules,
+                  customPreferences: preferences.customPreferences,
+              }
+            : null;
+
+        // 3. Quelques avis récents (3 derniers)
+        const recentReviews = await Review.find({
+            reviewedUserId: carpooling.driver_id,
+            validationStatus: "approved",
+        })
+            .sort({ createdAt: -1 })
+            .limit(3);
+
+        if (recentReviews.length > 0) {
+            // Récupérer les pseudos des reviewers
+            const reviewerIds = recentReviews.map((r) => r.reviewerId);
+            const reviewersSql = `
+                SELECT id, pseudo 
+                FROM User 
+                WHERE id IN (${reviewerIds.join(",")})
+            `;
+            const [reviewers] = await db.query(reviewersSql);
+            const reviewersMap = reviewers.reduce((map, reviewer) => {
+                map[reviewer.id] = reviewer;
+                return map;
+            }, {});
+
+            carpooling.recent_reviews = recentReviews.map((review) => ({
+                rating: review.rating,
+                comment: review.comment,
+                createdAt: review.createdAt,
+                reviewer_pseudo:
+                    reviewersMap[review.reviewerId]?.pseudo || "Utilisateur",
+            }));
+        } else {
+            carpooling.recent_reviews = [];
+        }
+
+        res.status(200).json({ carpooling });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Erreur lors de la récupération du covoiturage.",
+        });
+    }
+};
+
 module.exports = {
     createCarpooling,
     getAvailableCarpoolings,
@@ -577,4 +704,5 @@ module.exports = {
     cancelCarpooling,
     startCarpooling,
     finishCarpooling,
+    getCarpoolingById,
 };
