@@ -52,6 +52,6 @@ onMounted(async () => {
   color: #fff;
   padding: 32px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
-</style> 
+</style>
