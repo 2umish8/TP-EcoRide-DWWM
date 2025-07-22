@@ -1,0 +1,100 @@
+import axios from 'axios'
+
+// Configuration de base pour l'API
+const API_BASE_URL = 'http://localhost:3000/api'
+
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+// Intercepteur pour ajouter le token JWT automatiquement
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('authToken')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  },
+)
+
+// Intercepteur pour gérer les erreurs de réponse
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token expiré ou invalide
+      localStorage.removeItem('authToken')
+      localStorage.removeItem('user')
+      window.location.href = '/login'
+    }
+    return Promise.reject(error)
+  },
+)
+
+// Services d'authentification
+export const authService = {
+  async login(credentials) {
+    const response = await api.post('/users/login', credentials)
+    return response.data
+  },
+
+  async register(userData) {
+    const response = await api.post('/users/register', userData)
+    return response.data
+  },
+
+  async logout() {
+    localStorage.removeItem('authToken')
+    localStorage.removeItem('user')
+  },
+
+  async getProfile() {
+    const response = await api.get('/users/profile')
+    return response.data
+  },
+}
+
+// Services de covoiturage
+export const carpoolingService = {
+  async searchTrips(filters) {
+    const response = await api.get('/carpooling/search', { params: filters })
+    return response.data
+  },
+
+  async createTrip(tripData) {
+    const response = await api.post('/carpooling', tripData)
+    return response.data
+  },
+
+  async getMyTrips() {
+    const response = await api.get('/carpooling/my-trips')
+    return response.data
+  },
+
+  async bookTrip(tripId) {
+    const response = await api.post(`/participations`, { carpooling_id: tripId })
+    return response.data
+  },
+}
+
+// Services de crédits
+export const creditsService = {
+  async getBalance() {
+    const response = await api.get('/credits/balance')
+    return response.data
+  },
+
+  async getTransactions() {
+    const response = await api.get('/credits/transactions')
+    return response.data
+  },
+}
+
+export default api
