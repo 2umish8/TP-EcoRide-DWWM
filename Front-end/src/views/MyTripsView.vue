@@ -8,30 +8,23 @@
       <!-- Onglets Conducteur/Passager -->
       <div class="tabs-container">
         <button
-          @click="activeTab = 'passenger'"
+          @click="handlePassengerTab"
           :class="['tab-btn', { active: activeTab === 'passenger' }]"
         >
-          🎒 Passager
+          <span v-if="activeTab === 'passenger'" class="tab-content action-mode">
+            <span class="icon">🔍</span>
+            Rechercher un EcoRide
+          </span>
+          <span v-else class="tab-content normal-mode"> 🎒 Passager </span>
         </button>
-        <button
-          @click="activeTab = 'driver'"
-          :class="['tab-btn', { active: activeTab === 'driver' }]"
-        >
-          🚗 Conducteur
+        <button @click="handleDriverTab" :class="['tab-btn', { active: activeTab === 'driver' }]">
+          <span v-if="activeTab === 'driver'" class="tab-content action-mode">
+            <span class="icon">➕</span>
+            Proposer un nouvel EcoRide
+          </span>
+          <span v-else class="tab-content normal-mode"> 🚗 Conducteur </span>
         </button>
       </div>
-    </div>
-
-    <!-- Actions rapides -->
-    <div class="quick-actions">
-      <router-link to="/search" class="action-btn secondary">
-        <span class="icon">🔍</span>
-        Rechercher un trajet
-      </router-link>
-      <router-link to="/create-trip" class="action-btn primary">
-        <span class="icon">➕</span>
-        Créer un nouveau trajet
-      </router-link>
     </div>
 
     <!-- Contenu principal -->
@@ -75,13 +68,13 @@
           <!-- Aucun trajet -->
           <div v-else-if="trips.length === 0" class="empty-state">
             <div class="empty-icon">🚗</div>
-            <h3>Aucun trajet trouvé</h3>
+            <h3>Aucun EcoRide trouvé</h3>
             <p>
               Vous n'avez pas encore créé de covoiturage. Commencez par proposer votre premier
-              trajet !
+              EcoRide !
             </p>
             <router-link to="/create-trip" class="create-first-trip-btn">
-              Créer mon premier trajet
+              Créer mon premier EcoRide
             </router-link>
           </div>
 
@@ -92,7 +85,7 @@
               <div class="stat-card completed-trips">
                 <span class="stat-number">{{ getStatsByStatus('terminé').length }}</span>
                 <span class="stat-label"
-                  >Trajet{{ getStatsByStatus('terminé').length > 1 ? 's' : '' }} effectué{{
+                  >EcoRide{{ getStatsByStatus('terminé').length > 1 ? 's' : '' }} effectué{{
                     getStatsByStatus('terminé').length > 1 ? 's' : ''
                   }}</span
                 >
@@ -169,11 +162,11 @@
               class="no-trips-status"
             >
               <div class="no-trips-icon">📭</div>
-              <h3>Aucun trajet {{ getStatusEmptyMessage(selectedStatus) }}</h3>
+              <h3>Aucun EcoRide {{ getStatusEmptyMessage(selectedStatus) }}</h3>
               <p>
-                Vous n'avez actuellement aucun trajet avec le statut "{{
-                  getStatusLabel(selectedStatus)
-                }}".
+                Réduisez les embouteillages et
+                <router-link to="/create-trip" class="invite-link">proposez un EcoRide</router-link>
+                !
               </p>
             </div>
 
@@ -581,6 +574,27 @@ export default {
       }
     }
 
+    // Gestion des onglets avec actions
+    const handlePassengerTab = () => {
+      if (activeTab.value === 'passenger') {
+        // Si déjà sur l'onglet passager, rediriger vers recherche
+        window.location.href = '/search'
+      } else {
+        // Sinon, changer vers l'onglet passager
+        activeTab.value = 'passenger'
+      }
+    }
+
+    const handleDriverTab = () => {
+      if (activeTab.value === 'driver') {
+        // Si déjà sur l'onglet conducteur, rediriger vers création
+        window.location.href = '/create-trip'
+      } else {
+        // Sinon, changer vers l'onglet conducteur
+        activeTab.value = 'driver'
+      }
+    }
+
     // Charger les données au montage
     onMounted(() => {
       checkDriverStatus() // Vérifier d'abord le statut conducteur
@@ -612,6 +626,8 @@ export default {
       finishTrip,
       cancelTrip,
       becomeDriver,
+      handlePassengerTab,
+      handleDriverTab,
     }
   },
 }
@@ -666,6 +682,8 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-width: 180px;
+  justify-content: center;
 }
 
 .tab-btn:hover {
@@ -681,52 +699,23 @@ export default {
   box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
 }
 
-/* Actions rapides */
-.quick-actions {
+.tab-content {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-}
-
-.action-btn {
-  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  border: none;
-  cursor: pointer;
 }
 
-.action-btn.primary {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  color: white;
+.tab-content.action-mode {
+  font-weight: 700;
+  font-size: 0.95rem;
 }
 
-.action-btn.primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-}
-
-.action-btn.secondary {
-  background: #2d3748;
-  color: #e9ecef;
-  border: 2px solid #4a5568;
-}
-
-.action-btn.secondary:hover {
-  background: #374151;
-  border-color: #28a745;
-  color: #28a745;
-}
-
-.action-btn .icon {
+.tab-content.action-mode .icon {
   font-size: 1.1rem;
+}
+
+.tab-content.normal-mode {
+  font-size: 1rem;
 }
 
 /* Container principal */
@@ -1113,6 +1102,34 @@ export default {
   opacity: 0.7;
 }
 
+.invite-link {
+  color: #28a745;
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.invite-link:hover {
+  color: #20c997;
+  text-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
+}
+
+.invite-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #28a745, #20c997);
+  transition: width 0.3s ease;
+}
+
+.invite-link:hover::after {
+  width: 100%;
+}
+
 /* Grille des trajets */
 .trips-grid {
   display: grid;
@@ -1367,13 +1384,8 @@ export default {
   }
 
   .tab-btn {
-    width: 200px;
+    width: 250px;
     justify-content: center;
-  }
-
-  .quick-actions {
-    flex-direction: column;
-    align-items: center;
   }
 
   .trips-grid {
