@@ -48,6 +48,11 @@ const router = createRouter({
       component: () => import('../views/MyTripsView.vue'),
     },
     {
+      path: '/create-trip',
+      name: 'CreateTrip',
+      component: () => import('../views/CreateTripView.vue'),
+    },
+    {
       path: '/profile',
       name: 'Profile',
       component: () => import('../views/ProfileView.vue'),

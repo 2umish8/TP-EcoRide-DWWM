@@ -28,7 +28,7 @@
         <span class="icon">🔍</span>
         Rechercher un trajet
       </router-link>
-      <router-link to="/" class="action-btn primary">
+      <router-link to="/create-trip" class="action-btn primary">
         <span class="icon">➕</span>
         Créer un nouveau trajet
       </router-link>
@@ -80,7 +80,7 @@
               Vous n'avez pas encore créé de covoiturage. Commencez par proposer votre premier
               trajet !
             </p>
-            <router-link to="/" class="create-first-trip-btn">
+            <router-link to="/create-trip" class="create-first-trip-btn">
               Créer mon premier trajet
             </router-link>
           </div>
@@ -119,14 +119,39 @@
             <!-- Filtres -->
             <div class="trips-filters">
               <div class="filter-group">
-                <label for="status-filter">Statut :</label>
-                <select id="status-filter" v-model="selectedStatus" class="filter-select">
-                  <option value="">Tous les statuts</option>
-                  <option value="prévu">Prévus</option>
-                  <option value="démarré">En cours</option>
-                  <option value="terminé">Terminés</option>
-                  <option value="annulé">Annulés</option>
-                </select>
+                <label>Filtrer par statut :</label>
+                <div class="status-buttons">
+                  <button
+                    @click="selectedStatus = ''"
+                    :class="['status-btn', { active: selectedStatus === '' }]"
+                  >
+                    Tous
+                  </button>
+                  <button
+                    @click="selectedStatus = 'prévu'"
+                    :class="['status-btn', { active: selectedStatus === 'prévu' }]"
+                  >
+                    📅 Prévus
+                  </button>
+                  <button
+                    @click="selectedStatus = 'démarré'"
+                    :class="['status-btn', { active: selectedStatus === 'démarré' }]"
+                  >
+                    🚗 En cours
+                  </button>
+                  <button
+                    @click="selectedStatus = 'terminé'"
+                    :class="['status-btn', { active: selectedStatus === 'terminé' }]"
+                  >
+                    ✅ Terminés
+                  </button>
+                  <button
+                    @click="selectedStatus = 'annulé'"
+                    :class="['status-btn', { active: selectedStatus === 'annulé' }]"
+                  >
+                    ❌ Annulés
+                  </button>
+                </div>
               </div>
               <div class="filter-group">
                 <label for="sort-filter">Trier par :</label>
@@ -139,7 +164,20 @@
             </div>
 
             <!-- Trajets -->
-            <div class="trips-grid">
+            <div
+              v-if="filteredAndSortedTrips.length === 0 && selectedStatus"
+              class="no-trips-status"
+            >
+              <div class="no-trips-icon">📭</div>
+              <h3>Aucun trajet {{ getStatusEmptyMessage(selectedStatus) }}</h3>
+              <p>
+                Vous n'avez actuellement aucun trajet avec le statut "{{
+                  getStatusLabel(selectedStatus)
+                }}".
+              </p>
+            </div>
+
+            <div v-else class="trips-grid">
               <div
                 v-for="trip in filteredAndSortedTrips"
                 :key="trip.id"
@@ -439,6 +477,16 @@ export default {
       return labels[status] || status
     }
 
+    const getStatusEmptyMessage = (status) => {
+      const messages = {
+        prévu: 'prévu',
+        démarré: 'en cours',
+        terminé: 'terminé',
+        annulé: 'annulé',
+      }
+      return messages[status] || status
+    }
+
     const formatDate = (dateString) => {
       return new Date(dateString).toLocaleDateString('fr-FR', {
         weekday: 'short',
@@ -555,6 +603,7 @@ export default {
       getCarbonSaved,
       getStatusIcon,
       getStatusLabel,
+      getStatusEmptyMessage,
       formatDate,
       formatTime,
       formatDuration,
@@ -1010,6 +1059,58 @@ export default {
 .filter-select:focus {
   outline: none;
   border-color: #28a745;
+}
+
+/* Boutons de statut */
+.status-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.status-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid #4a5568;
+  border-radius: 6px;
+  background: #374151;
+  color: #adb5bd;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.status-btn:hover {
+  border-color: #28a745;
+  color: #28a745;
+  background: #2d3748;
+}
+
+.status-btn.active {
+  border-color: #28a745;
+  background: #28a745;
+  color: white;
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+/* Message aucun trajet pour statut */
+.no-trips-status {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: #2d3748;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  color: #e9ecef;
+  margin-bottom: 2rem;
+}
+
+.no-trips-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
 }
 
 /* Grille des trajets */
