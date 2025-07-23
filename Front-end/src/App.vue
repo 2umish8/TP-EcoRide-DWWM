@@ -162,6 +162,22 @@ main,
   padding-top: 70px; /* Espace pour la navbar fixe */
 }
 
+/* Assurer que toutes les vues principales ont l'espacement navbar */
+.router-view > * {
+  padding-top: 70px;
+  margin-top: -70px; /* Compenser le padding pour éviter le double espacement */
+}
+
+/* Cibler spécifiquement les vues principales */
+.my-trips,
+.home-view,
+.search-view,
+.profile-view,
+.login-view,
+.register-view {
+  padding-top: 80px !important; /* Forcer l'espacement */
+}
+
 footer {
   position: static; /* Complètement dans le flux normal */
   width: 100%;
