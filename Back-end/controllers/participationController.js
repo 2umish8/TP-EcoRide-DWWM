@@ -1,16 +1,118 @@
 const db = require("../Config/db.js");
 
-/* --------------------------------------------------- Rejoindre un covoiturage ---------------------------------- */
+/* --------------------------------------------------- Vérifier les conditions de participation ------------------- */
+const checkParticipationConditions = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const carpoolingId = req.params.id;
+
+        // Vérifier que le covoiturage existe et est disponible
+        const carpoolingSql = `
+            SELECT driver_id, status, price_per_passenger, seats_remaining 
+            FROM Carpooling 
+            WHERE id = ?
+        `;
+        const [carpoolingCheck] = await db.query(carpoolingSql, [carpoolingId]);
+
+        if (carpoolingCheck.length === 0) {
+            return res.status(404).json({ message: "Covoiturage non trouvé." });
+        }
+
+        const carpooling = carpoolingCheck[0];
+
+        // Vérifier que l'utilisateur n'est pas le chauffeur
+        if (carpooling.driver_id === userId) {
+            return res.status(400).json({
+                message:
+                    "Vous ne pouvez pas rejoindre votre propre covoiturage.",
+            });
+        }
+
+        // Vérifier que le covoiturage est disponible
+        if (carpooling.status !== "prévu") {
+            return res.status(400).json({
+                message: "Ce covoiturage n'est plus disponible.",
+            });
+        }
+
+        // Vérifier qu'il reste au moins une place (revérification)
+        if (carpooling.seats_remaining <= 0) {
+            return res.status(400).json({
+                message:
+                    "Il n'y a plus de places disponibles pour ce covoiturage.",
+            });
+        }
+
+        // Vérifier que l'utilisateur ne participe pas déjà
+        const existingParticipationSql = `
+            SELECT id FROM Participation 
+            WHERE passenger_id = ? AND carpooling_id = ? AND cancellation_date IS NULL
+        `;
+        const [existingParticipation] = await db.query(
+            existingParticipationSql,
+            [userId, carpoolingId]
+        );
+
+        if (existingParticipation.length > 0) {
+            return res.status(400).json({
+                message: "Vous participez déjà à ce covoiturage.",
+            });
+        }
+
+        // Vérifier que l'utilisateur a assez de crédits
+        const userSql = "SELECT credits FROM User WHERE id = ?";
+        const [userCheck] = await db.query(userSql, [userId]);
+
+        if (userCheck[0].credits < carpooling.price_per_passenger) {
+            return res.status(400).json({
+                message:
+                    "Vous n'avez pas assez de crédits pour ce covoiturage.",
+            });
+        }
+
+        // Toutes les conditions sont remplies, retourner les informations pour confirmation
+        res.status(200).json({
+            message: "Participation possible",
+            carpooling: {
+                id: carpoolingId,
+                price_per_passenger: carpooling.price_per_passenger,
+                seats_remaining: carpooling.seats_remaining,
+            },
+            user: {
+                current_credits: userCheck[0].credits,
+                credits_after_participation:
+                    userCheck[0].credits - carpooling.price_per_passenger,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message:
+                "Erreur lors de la vérification des conditions de participation.",
+        });
+    }
+};
+
+/* --------------------------------------------------- Rejoindre un covoiturage (avec confirmation) -------------- */
 const joinCarpooling = async (req, res) => {
     try {
         const userId = req.user.id;
         const carpoolingId = req.params.id;
+        const { confirmed } = req.body; // Indication que l'utilisateur confirme
+
+        // Vérifier que la confirmation est explicite
+        if (!confirmed) {
+            return res.status(400).json({
+                message:
+                    "La confirmation explicite est requise pour participer au covoiturage.",
+            });
+        }
 
         // Démarrer une transaction
         await db.query("START TRANSACTION");
 
         try {
-            // Vérifier que le covoiturage existe et est disponible
+            // RE-VÉRIFIER toutes les conditions (car d'autres auraient pu déjà participer)
             const carpoolingSql = `
                 SELECT driver_id, status, price_per_passenger, seats_remaining 
                 FROM Carpooling 
@@ -29,7 +131,7 @@ const joinCarpooling = async (req, res) => {
 
             const carpooling = carpoolingCheck[0];
 
-            // Vérifier que l'utilisateur n'est pas le chauffeur
+            // Re-vérifier que l'utilisateur n'est pas le chauffeur
             if (carpooling.driver_id === userId) {
                 await db.query("ROLLBACK");
                 return res.status(400).json({
@@ -38,7 +140,7 @@ const joinCarpooling = async (req, res) => {
                 });
             }
 
-            // Vérifier que le covoiturage est disponible
+            // Re-vérifier que le covoiturage est disponible
             if (carpooling.status !== "prévu") {
                 await db.query("ROLLBACK");
                 return res.status(400).json({
@@ -46,15 +148,16 @@ const joinCarpooling = async (req, res) => {
                 });
             }
 
+            // RE-VÉRIFIER qu'il reste au moins une place (crucial car d'autres ont pu participer)
             if (carpooling.seats_remaining <= 0) {
                 await db.query("ROLLBACK");
                 return res.status(400).json({
                     message:
-                        "Il n'y a plus de places disponibles pour ce covoiturage.",
+                        "Plus de places disponibles ! D'autres passagers ont réservé entre temps.",
                 });
             }
 
-            // Vérifier que l'utilisateur ne participe pas déjà
+            // Re-vérifier que l'utilisateur ne participe pas déjà
             const existingParticipationSql = `
                 SELECT id FROM Participation 
                 WHERE passenger_id = ? AND carpooling_id = ? AND cancellation_date IS NULL
@@ -71,7 +174,7 @@ const joinCarpooling = async (req, res) => {
                 });
             }
 
-            // Vérifier que l'utilisateur a assez de crédits
+            // RE-VÉRIFIER que l'utilisateur a assez de crédits
             const userSql = "SELECT credits FROM User WHERE id = ?";
             const [userCheck] = await db.query(userSql, [userId]);
 
@@ -79,7 +182,7 @@ const joinCarpooling = async (req, res) => {
                 await db.query("ROLLBACK");
                 return res.status(400).json({
                     message:
-                        "Vous n'avez pas assez de crédits pour ce covoiturage.",
+                        "Vous n'avez plus assez de crédits pour ce covoiturage.",
                 });
             }
 
@@ -109,8 +212,11 @@ const joinCarpooling = async (req, res) => {
             await db.query("COMMIT");
 
             res.status(200).json({
-                message: "Vous avez rejoint le covoiturage avec succès !",
+                message:
+                    "Participation confirmée avec succès ! Vos crédits ont été débités.",
                 creditsDebited: carpooling.price_per_passenger,
+                remainingCredits:
+                    userCheck[0].credits - carpooling.price_per_passenger,
             });
         } catch (error) {
             await db.query("ROLLBACK");
@@ -349,6 +455,7 @@ const getCarpoolingParticipants = async (req, res) => {
 };
 
 module.exports = {
+    checkParticipationConditions,
     joinCarpooling,
     cancelParticipation,
     getUserParticipations,

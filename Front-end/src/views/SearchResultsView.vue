@@ -60,7 +60,9 @@
             v-model="filters.maxPrice"
             class="price-slider"
           />
-          <span class="price-value">{{ filters.maxPrice }}<IconCredit style="vertical-align: middle; margin-left: 2px;" /></span>
+          <span class="price-value"
+            >{{ filters.maxPrice }}<IconCredit style="vertical-align: middle; margin-left: 2px"
+          /></span>
         </div>
         <div class="filter-group">
           <h4>Aspect écologique</h4>
@@ -115,8 +117,18 @@
             v-for="trip in formattedResults"
             :key="trip.id"
             class="trip-card"
+            :class="{
+              'my-trip': isMyTrip(trip),
+              'eco-trip': trip.vehicle.isElectric,
+            }"
             @click="selectTrip(trip)"
           >
+            <!-- Badges en haut de la carte -->
+            <div class="trip-badges">
+              <span v-if="trip.vehicle.isElectric" class="badge eco-badge"> 🌱 Écologique </span>
+              <span v-if="isMyTrip(trip)" class="badge my-trip-badge"> 🚗 Mon trajet </span>
+            </div>
+
             <div class="trip-header">
               <div class="trip-route">
                 <span class="departure">{{ trip.departure }}</span>
@@ -157,7 +169,9 @@
                   >
                 </div>
                 <div class="price">
-                  <span class="amount">{{ trip.price }}<IconCredit style="vertical-align: middle; margin-left: 2px;" /></span>
+                  <span class="amount"
+                    >{{ trip.price }}<IconCredit style="vertical-align: middle; margin-left: 2px"
+                  /></span>
                   <span class="per-person">par personne</span>
                 </div>
               </div>
@@ -214,10 +228,13 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { carpoolingService } from '@/services/api.js'
+import { useAuthStore } from '@/stores/counter'
 import IconCredit from '@/components/icons/IconCredit.vue'
+import { showAlert } from '@/composables/useModal'
 
 const route = useRoute()
 const router = useRouter()
+const authStore = useAuthStore()
 
 // État de chargement et d'erreur
 const loading = ref(false)
@@ -226,9 +243,10 @@ const nextAvailableDate = ref(null)
 
 // Paramètres de recherche depuis l'URL
 const searchParams = ref({
-  from: route.query.from || '',
-  to: route.query.to || '',
+  from: route.query.departure || route.query.from || '',
+  to: route.query.destination || route.query.to || '',
   date: route.query.date || '',
+  showMyTrips: route.query.showMyTrips === 'true' || false,
 })
 
 // Computed pour vérifier si des critères de recherche ont été fournis
@@ -305,7 +323,7 @@ const loadCarpoolings = async () => {
 
 // Formatage des données pour l'affichage
 const formattedResults = computed(() => {
-  return carpoolings.value.map((carpooling) => ({
+  const results = carpoolings.value.map((carpooling) => ({
     id: carpooling.id,
     departure: carpooling.departure_address,
     destination: carpooling.arrival_address,
@@ -320,6 +338,7 @@ const formattedResults = computed(() => {
     duration: formatDuration(carpooling.duration_minutes),
     price: carpooling.price_per_passenger,
     seatsAvailable: carpooling.seats_remaining,
+    driverId: carpooling.driver_id, // Ajouter l'ID du chauffeur
     driver: {
       name: carpooling.driver_pseudo,
       avatar: carpooling.driver_photo || 'https://i.pravatar.cc/150?img=' + (carpooling.id % 70),
@@ -334,6 +353,25 @@ const formattedResults = computed(() => {
     },
     features: getFeatures(carpooling),
   }))
+
+  // Tri par ordre de priorité : Mes trajets > Trajets écologiques > Note du chauffeur
+  return results.sort((a, b) => {
+    const aIsMyTrip = authStore.currentUser && a.driverId === authStore.currentUser.id
+    const bIsMyTrip = authStore.currentUser && b.driverId === authStore.currentUser.id
+
+    // 1. Priorité : Mes trajets en premier
+    if (aIsMyTrip && !bIsMyTrip) return -1
+    if (!aIsMyTrip && bIsMyTrip) return 1
+
+    // 2. Si aucun n'est mon trajet, ou si les deux le sont : trajets écologiques ensuite
+    if (a.vehicle.isElectric && !b.vehicle.isElectric) return -1
+    if (!a.vehicle.isElectric && b.vehicle.isElectric) return 1
+
+    // 3. Enfin, tri par note du chauffeur (décroissant)
+    const aRating = a.driver.rating === 'N/A' ? 0 : parseFloat(a.driver.rating)
+    const bRating = b.driver.rating === 'N/A' ? 0 : parseFloat(b.driver.rating)
+    return bRating - aRating
+  })
 })
 
 // Fonction pour formater la durée
@@ -405,9 +443,15 @@ const searchAlternativeDate = () => {
 // Création d'une alerte pour être notifié de nouveaux trajets
 const createAlert = () => {
   // À implémenter : système d'alertes email
-  alert(
+  showAlert(
     "Fonctionnalité d'alerte à implémenter - Vous serez notifié par email quand un nouveau trajet correspondant sera disponible",
+    'Alerte trajet',
   )
+}
+
+// Fonction pour vérifier si un trajet appartient à l'utilisateur actuel
+const isMyTrip = (trip) => {
+  return authStore.currentUser && trip.driverId === authStore.currentUser.id
 }
 
 // Nouvelle recherche depuis le formulaire compact
@@ -929,7 +973,7 @@ onMounted(() => {
   }
   .results-list {
     max-width: 100vw;
-    gap: 12px;
+    gap: 16px;
   }
   .trip-card {
     padding: 12px;
@@ -971,7 +1015,7 @@ onMounted(() => {
 .results-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
 }
 
 .trip-card {
@@ -982,6 +1026,7 @@ onMounted(() => {
   cursor: pointer;
   transition: all 0.3s ease;
   border: 1px solid #444;
+  position: relative;
 }
 
 .trip-card:hover {
@@ -989,6 +1034,77 @@ onMounted(() => {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   border-color: #34d399;
 }
+
+/* Style spécial pour les trajets de l'utilisateur actuel */
+.trip-card.my-trip {
+  border: 2px solid #34d399;
+  background: linear-gradient(135deg, #1a1a1a 0%, rgba(52, 211, 153, 0.1) 100%);
+  box-shadow: 0 4px 20px rgba(52, 211, 153, 0.2);
+}
+
+.trip-card.my-trip:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(52, 211, 153, 0.4);
+  border-color: #22c55e;
+}
+
+/* Style spécial pour les trajets écologiques */
+.trip-card.eco-trip {
+  border: 1px solid #22c55e;
+  background: linear-gradient(135deg, #1a1a1a 0%, rgba(34, 197, 94, 0.08) 100%);
+  box-shadow: 0 2px 12px rgba(34, 197, 94, 0.15);
+}
+
+.trip-card.eco-trip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.25);
+  border-color: #16a34a;
+}
+
+/* Gestion du cas où un trajet est à la fois "mon trajet" ET écologique */
+.trip-card.my-trip.eco-trip {
+  border: 2px solid #34d399;
+  background: linear-gradient(135deg, #1a1a1a 0%, rgba(52, 211, 153, 0.1) 100%);
+  box-shadow: 0 4px 20px rgba(52, 211, 153, 0.2);
+}
+
+/* Styles pour les badges */
+.trip-badges {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Quand il n'y a que "Mon trajet" (pas écologique), on le pousse à droite */
+.trip-badges:has(.my-trip-badge):not(:has(.eco-badge)) {
+  justify-content: flex-end;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.eco-badge {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  border-radius: 8px 0 12px 0;
+}
+
+.my-trip-badge {
+  background: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
+  border-radius: 0 8px 0 12px;
+}
+
+/* Suppression des anciens styles du badge */
 
 .trip-header {
   display: flex;
@@ -1009,7 +1125,7 @@ onMounted(() => {
   font-weight: 600;
   color: var(--eco-beige);
   font-size: 1.1rem;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 .route-line {

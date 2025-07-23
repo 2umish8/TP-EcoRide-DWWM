@@ -129,8 +129,13 @@ export const carpoolingService = {
 
 // Services de participations
 export const participationService = {
-  async joinTrip(tripId) {
-    const response = await api.post(`/participations/${tripId}/join`)
+  async checkConditions(tripId) {
+    const response = await api.get(`/participations/${tripId}/check`)
+    return response.data
+  },
+
+  async joinTrip(tripId, confirmed = true) {
+    const response = await api.post(`/participations/${tripId}/join`, { confirmed })
     return response.data
   },
 
@@ -149,6 +154,38 @@ export const participationService = {
       is_validated: isValidated,
     })
     return response.data
+  },
+
+  // Récupérer l'historique complet (chauffeur + passager)
+  async getFullHistory() {
+    try {
+      const [driverHistory, passengerHistory] = await Promise.allSettled([
+        carpoolingService.getDriverTrips(),
+        this.getMyParticipations(),
+      ])
+
+      const result = {
+        asDriver: driverHistory.status === 'fulfilled' ? driverHistory.value.carpoolings || [] : [],
+        asPassenger:
+          passengerHistory.status === 'fulfilled'
+            ? passengerHistory.value.participations || []
+            : [],
+        errors: [],
+      }
+
+      // Collecter les erreurs éventuelles
+      if (driverHistory.status === 'rejected') {
+        result.errors.push({ type: 'driver', error: driverHistory.reason })
+      }
+      if (passengerHistory.status === 'rejected') {
+        result.errors.push({ type: 'passenger', error: passengerHistory.reason })
+      }
+
+      return result
+    } catch (error) {
+      console.error("Erreur lors de la récupération de l'historique complet:", error)
+      throw error
+    }
   },
 }
 

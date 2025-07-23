@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Thème Sombre - EcoRide Avis</title>
+    <style>
+      /* Thème sombre EcoRide */
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background-color: #1a1a1a;
+        color: #e9ecef;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .header h1 {
+        color: #ffffff;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        color: #adb5bd;
+        font-size: 1.1rem;
+      }
+
+      .card {
+        background: #2d3748;
+        border: 1px solid #4a5568;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        margin-bottom: 30px;
+        padding: 30px;
+      }
+
+      .card h3 {
+        color: #ffffff;
+        margin-top: 0;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #e9ecef;
+      }
+
+      .form-input,
+      .form-textarea,
+      .form-select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #4a5568;
+        border-radius: 8px;
+        background-color: #374151;
+        color: #e9ecef;
+        font-family: inherit;
+        box-sizing: border-box;
+      }
+
+      .form-input:focus,
+      .form-textarea:focus,
+      .form-select:focus {
+        outline: none;
+        border-color: #28a745;
+      }
+
+      .star-rating {
+        display: flex;
+        gap: 5px;
+        margin: 10px 0;
+      }
+
+      .star {
+        font-size: 2rem;
+        color: #ffd700;
+        cursor: pointer;
+      }
+
+      .star.inactive {
+        color: #4a5568;
+      }
+
+      .btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin: 5px;
+      }
+
+      .btn-primary {
+        background: #28a745;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #218838;
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background: #374151;
+        color: #e9ecef;
+        border: 2px solid #4a5568;
+      }
+
+      .btn-secondary:hover {
+        background: #4a5568;
+      }
+
+      .btn-danger {
+        background: #e74c3c;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background: #c0392b;
+      }
+
+      .warning-card {
+        background: #2d1b1b;
+        border: 1px solid #4a5568;
+        border-left: 4px solid #e74c3c;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+
+      .warning-card h4 {
+        color: #e74c3c;
+        margin-top: 0;
+      }
+
+      .warning-card p {
+        color: #f8d7da;
+        margin-bottom: 0;
+      }
+
+      .success-card {
+        background: #1e3a28;
+        border: 1px solid #28a745;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+
+      .success-card h4 {
+        color: #28a745;
+        margin-top: 0;
+      }
+
+      .severity-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px;
+        border: 2px solid #4a5568;
+        border-radius: 8px;
+        background-color: #374151;
+        margin: 10px 0;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .severity-option:hover {
+        border-color: #6b7280;
+        background: #4a5568;
+      }
+
+      .severity-option input[type='radio'] {
+        margin: 0;
+      }
+
+      .demo-section {
+        margin: 40px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🌟 EcoRide - Thème Sombre</h1>
+        <p>Test du nouveau design des interfaces d'avis et signalement</p>
+      </div>
+
+      <div class="demo-section">
+        <div class="card">
+          <h3>📝 Interface d'Avis</h3>
+          <div class="form-group">
+            <label class="form-label">Note globale :</label>
+            <div class="star-rating">
+              <span class="star">⭐</span>
+              <span class="star">⭐</span>
+              <span class="star">⭐</span>
+              <span class="star">⭐</span>
+              <span class="star inactive">⭐</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Votre commentaire :</label>
+            <textarea
+              class="form-textarea"
+              rows="4"
+              placeholder="Excellent chauffeur ! Très ponctuel et conduite sécurisée..."
+            ></textarea>
+          </div>
+          <div>
+            <button class="btn btn-primary">✅ Publier l'avis</button>
+            <button class="btn btn-secondary">❌ Annuler</button>
+          </div>
+        </div>
+
+        <div class="warning-card">
+          <h4>⚠️ Signaler un Problème</h4>
+          <p>
+            Si le trajet s'est mal passé, vous pouvez le signaler pour un traitement par notre
+            équipe.
+          </p>
+          <button class="btn btn-danger">🚨 Signaler un problème</button>
+        </div>
+
+        <div class="card">
+          <h3>🚨 Interface de Signalement</h3>
+          <div class="form-group">
+            <label class="form-label">Type de problème :</label>
+            <select class="form-select">
+              <option>Sélectionnez une catégorie</option>
+              <option>Sécurité routière</option>
+              <option>Comportement inapproprié</option>
+              <option>Véhicule non conforme</option>
+              <option>Retard important</option>
+              <option>Annulation de dernière minute</option>
+              <option>Problème de communication</option>
+              <option>Tarification incorrecte</option>
+              <option>Autre</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Niveau de gravité :</label>
+            <div class="severity-option">
+              <input type="radio" name="severity" value="minor" id="minor" />
+              <label for="minor">
+                <span style="color: #ffd700">⚠️</span>
+                <strong>Mineur</strong> - Gêne légère, problème facilement résolvable
+              </label>
+            </div>
+            <div class="severity-option">
+              <input type="radio" name="severity" value="moderate" id="moderate" />
+              <label for="moderate">
+                <span style="color: #f39c12">🔶</span>
+                <strong>Modéré</strong> - Problème notable affectant l'expérience
+              </label>
+            </div>
+            <div class="severity-option">
+              <input type="radio" name="severity" value="grave" id="grave" />
+              <label for="grave">
+                <span style="color: #e74c3c">🔴</span>
+                <strong>Grave</strong> - Problème sérieux nécessitant une intervention immédiate
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description détaillée :</label>
+            <textarea
+              class="form-textarea"
+              rows="6"
+              placeholder="Décrivez précisément ce qui s'est passé..."
+            ></textarea>
+          </div>
+
+          <div>
+            <button class="btn btn-danger">🚨 Envoyer le signalement</button>
+            <button class="btn btn-secondary">⬅️ Retour aux avis</button>
+          </div>
+        </div>
+
+        <div class="success-card">
+          <h4>✅ Succès</h4>
+          <p>
+            Votre avis a été soumis avec succès ! Il sera examiné par notre équipe avant
+            publication.
+          </p>
+        </div>
+      </div>
+
+      <div class="header">
+        <h3 style="color: #28a745">🎨 Palette de couleurs utilisée</h3>
+        <div
+          style="
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+          "
+        >
+          <div style="text-align: center">
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                background: #1a1a1a;
+                border: 2px solid #4a5568;
+                border-radius: 8px;
+                margin: 0 auto 5px;
+              "
+            ></div>
+            <small>#1a1a1a<br />Arrière-plan</small>
+          </div>
+          <div style="text-align: center">
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                background: #2d3748;
+                border: 2px solid #4a5568;
+                border-radius: 8px;
+                margin: 0 auto 5px;
+              "
+            ></div>
+            <small>#2d3748<br />Cartes</small>
+          </div>
+          <div style="text-align: center">
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                background: #374151;
+                border: 2px solid #4a5568;
+                border-radius: 8px;
+                margin: 0 auto 5px;
+              "
+            ></div>
+            <small>#374151<br />Champs</small>
+          </div>
+          <div style="text-align: center">
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                background: #28a745;
+                border: 2px solid #4a5568;
+                border-radius: 8px;
+                margin: 0 auto 5px;
+              "
+            ></div>
+            <small>#28a745<br />Succès</small>
+          </div>
+          <div style="text-align: center">
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                background: #e74c3c;
+                border: 2px solid #4a5568;
+                border-radius: 8px;
+                margin: 0 auto 5px;
+              "
+            ></div>
+            <small>#e74c3c<br />Danger</small>
+          </div>
+          <div style="text-align: center">
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                background: #e9ecef;
+                border: 2px solid #4a5568;
+                border-radius: 8px;
+                margin: 0 auto 5px;
+              "
+            ></div>
+            <small>#e9ecef<br />Texte principal</small>
+          </div>
+          <div style="text-align: center">
+            <div
+              style="
+                width: 60px;
+                height: 60px;
+                background: #adb5bd;
+                border: 2px solid #4a5568;
+                border-radius: 8px;
+                margin: 0 auto 5px;
+              "
+            ></div>
+            <small>#adb5bd<br />Texte secondaire</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Interaction simple pour les étoiles
+      document.querySelectorAll('.star').forEach((star, index) => {
+        star.addEventListener('click', () => {
+          document.querySelectorAll('.star').forEach((s, i) => {
+            if (i <= index) {
+              s.classList.remove('inactive')
+            } else {
+              s.classList.add('inactive')
+            }
+          })
+        })
+      })
+
+      // Interaction pour les options de gravité
+      document.querySelectorAll('.severity-option').forEach((option) => {
+        option.addEventListener('click', () => {
+          document.querySelectorAll('.severity-option').forEach((opt) => {
+            opt.style.borderColor = '#4a5568'
+            opt.style.background = '#374151'
+          })
+          option.style.borderColor = '#e74c3c'
+          option.style.background = '#4a5568'
+          option.querySelector('input[type="radio"]').checked = true
+        })
+      })
+
+      console.log('🌟 Test du thème sombre EcoRide chargé !')
+      console.log("📝 Nouvelles interfaces d'avis et signalement avec design sombre")
+    </script>
+  </body>
+</html>

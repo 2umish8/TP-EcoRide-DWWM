@@ -105,7 +105,13 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">📅 Date de départ</label>
-              <input type="date" v-model="newRide.date" class="form-input" required />
+              <input
+                type="date"
+                v-model="newRide.date"
+                :min="minDate"
+                class="form-input"
+                required
+              />
             </div>
             <div class="form-group">
               <label class="form-label">🕐 Heure de départ</label>
@@ -351,6 +357,36 @@
         </form>
       </div>
     </div>
+
+    <!-- Modal de succès après création d'un trajet -->
+    <div v-if="showSuccessModal" class="modal-overlay" @click="showSuccessModal = false">
+      <div class="modal-content success-modal" @click.stop>
+        <div class="modal-header">
+          <h3>🎉 Trajet créé avec succès !</h3>
+          <button @click="showSuccessModal = false" class="close-btn">×</button>
+        </div>
+
+        <div class="success-content">
+          <div class="success-message">
+            <p>Votre EcoRide a été proposé avec succès !</p>
+            <div v-if="lastCreatedTrip" class="trip-summary">
+              <p><strong>🚩 Départ :</strong> {{ lastCreatedTrip.departure }}</p>
+              <p><strong>🏁 Arrivée :</strong> {{ lastCreatedTrip.destination }}</p>
+              <p><strong>📅 Date :</strong> {{ formatDate(lastCreatedTrip.date) }}</p>
+              <p><strong>🕐 Heure :</strong> {{ lastCreatedTrip.time }}</p>
+            </div>
+          </div>
+
+          <div class="success-actions">
+            <button @click="viewCreatedTrip" class="view-trip-btn">
+              <span class="btn-icon">👀</span>
+              Voir mon trajet
+            </button>
+            <button @click="showSuccessModal = false" class="dismiss-btn">Non merci</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -358,6 +394,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useAuthStore } from '../stores/counter'
 import { carpoolingService, authService, vehicleService } from '../services/api'
+import { showAlert, showError } from '@/composables/useModal'
 
 export default {
   name: 'ProfileView',
@@ -370,6 +407,14 @@ export default {
     const vehicles = ref([])
     const showAddVehicle = ref(false)
     const isSubmitting = ref(false)
+    const showSuccessModal = ref(false)
+    const lastCreatedTrip = ref(null)
+
+    // Date minimale pour le formulaire (aujourd'hui)
+    const minDate = computed(() => {
+      const today = new Date()
+      return today.toISOString().split('T')[0]
+    })
 
     // Préférences du chauffeur
     const driverPreferences = ref({
@@ -483,7 +528,7 @@ export default {
 
         // Si erreur d'authentification, rediriger vers login
         if (error.response?.status === 401 || error.response?.status === 403) {
-          alert('Session expirée. Veuillez vous reconnecter.')
+          showError('Session expirée. Veuillez vous reconnecter.')
           authStore.logout()
           window.location.href = '/login'
           return
@@ -514,8 +559,9 @@ export default {
             console.log('Utilisateur maintenant chauffeur')
 
             // Message informatif et redirection pour un nouveau token
-            alert(
+            showAlert(
               'Félicitations ! Vous êtes maintenant chauffeur. Reconnectez-vous pour accéder à toutes les fonctionnalités de chauffeur.',
+              'Félicitations !',
             )
             authStore.logout()
             window.location.href = '/login'
@@ -533,7 +579,7 @@ export default {
 
           // Si erreur d'authentification, rediriger vers login
           if (error.response?.status === 401 || error.response?.status === 403) {
-            alert('Session expirée. Veuillez vous reconnecter.')
+            showError('Session expirée. Veuillez vous reconnecter.')
             authStore.logout()
             window.location.href = '/login'
             return
@@ -546,7 +592,7 @@ export default {
           }
 
           // Pour les autres erreurs, afficher le message
-          alert(
+          showError(
             'Erreur lors de la mise à jour du rôle: ' +
               (error.response?.data?.message || error.message),
           )
@@ -601,7 +647,7 @@ export default {
         console.log('Véhicule ajouté avec succès')
       } catch (error) {
         console.error("Erreur lors de l'ajout du véhicule:", error)
-        alert(
+        showError(
           "Erreur lors de l'ajout du véhicule: " + (error.response?.data?.message || error.message),
         )
       } finally {
@@ -622,7 +668,7 @@ export default {
         console.log('Véhicule supprimé avec succès')
       } catch (error) {
         console.error('Erreur lors de la suppression du véhicule:', error)
-        alert(
+        showError(
           'Erreur lors de la suppression du véhicule: ' +
             (error.response?.data?.message || error.message),
         )
@@ -639,7 +685,34 @@ export default {
         // Calculer une heure d'arrivée estimée (2h après le départ par défaut)
         const departureDate = new Date(departureDateTime)
         const arrivalDate = new Date(departureDate.getTime() + 2 * 60 * 60 * 1000) // +2h
-        const arrivalDateTime = arrivalDate.toISOString().slice(0, 19)
+
+        // Formater les dates au même format que departure_datetime
+        const formatDateTime = (date) => {
+          const year = date.getFullYear()
+          const month = String(date.getMonth() + 1).padStart(2, '0')
+          const day = String(date.getDate()).padStart(2, '0')
+          const hours = String(date.getHours()).padStart(2, '0')
+          const minutes = String(date.getMinutes()).padStart(2, '0')
+          const seconds = String(date.getSeconds()).padStart(2, '0')
+          return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
+        }
+
+        const arrivalDateTime = formatDateTime(arrivalDate)
+
+        console.log('Dates formatées:')
+        console.log('Départ:', departureDateTime)
+        console.log('Arrivée:', arrivalDateTime)
+
+        // Validation des dates côté frontend
+        if (departureDate <= new Date()) {
+          showError('La date de départ doit être dans le futur.')
+          return
+        }
+
+        if (arrivalDate <= departureDate) {
+          showError('Erreur de calcul des dates. Veuillez réessayer.')
+          return
+        }
 
         // Préparer les données pour l'API
         const tripData = {
@@ -654,6 +727,16 @@ export default {
 
         // Appel API
         const response = await carpoolingService.createTrip(tripData)
+
+        // Sauvegarder les données du trajet créé pour le modal
+        lastCreatedTrip.value = {
+          departure: newRide.value.departure,
+          destination: newRide.value.destination,
+          date: newRide.value.date,
+          time: newRide.value.time,
+          price: newRide.value.price,
+          seats: newRide.value.seats,
+        }
 
         // Reset du formulaire après proposition
         newRide.value = {
@@ -678,11 +761,39 @@ export default {
         console.log('Réponse API:', response)
       } catch (error) {
         console.error('Erreur lors de la proposition du trajet:', error)
-        alert(
+        showError(
           'Erreur lors de la proposition du trajet: ' +
             (error.response?.data?.message || error.message),
         )
       }
+    }
+
+    // Fonction pour formater la date de manière lisible
+    const formatDate = (dateString) => {
+      const date = new Date(dateString)
+      return date.toLocaleDateString('fr-FR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    }
+
+    // Fonction pour aller voir le trajet créé
+    const viewCreatedTrip = () => {
+      if (lastCreatedTrip.value) {
+        // Préparer les paramètres de recherche avec les données du trajet créé
+        const searchParams = new URLSearchParams({
+          departure: lastCreatedTrip.value.departure,
+          destination: lastCreatedTrip.value.destination,
+          date: lastCreatedTrip.value.date,
+          showMyTrips: 'true', // Flag pour mettre en évidence les trajets de l'utilisateur
+        })
+
+        // Rediriger vers la page de recherche avec les paramètres
+        window.location.href = `/search?${searchParams.toString()}`
+      }
+      showSuccessModal.value = false
     }
 
     onMounted(async () => {
@@ -710,6 +821,9 @@ export default {
       showAddVehicle,
       isSubmitting,
       isLoadingProfile,
+      showSuccessModal,
+      lastCreatedTrip,
+      minDate,
       driverPreferences,
       newVehicle,
       newRide,
@@ -721,6 +835,8 @@ export default {
       removeVehicle,
       proposeRide,
       loadUserProfile,
+      formatDate,
+      viewCreatedTrip,
     }
   },
 }
@@ -1336,6 +1452,112 @@ export default {
   .user-info {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+/* Styles pour le modal de succès */
+.success-modal {
+  max-width: 500px;
+  text-align: center;
+}
+
+.success-modal .modal-header h3 {
+  color: #34d399;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.success-content {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.success-message {
+  color: #ffffff;
+}
+
+.success-message p {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+.trip-summary {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #333;
+  text-align: left;
+}
+
+.trip-summary p {
+  margin: 8px 0;
+  color: #cccccc;
+  font-size: 0.95rem;
+}
+
+.trip-summary strong {
+  color: #ffffff;
+}
+
+.success-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.view-trip-btn {
+  background: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(52, 211, 153, 0.3);
+}
+
+.view-trip-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 211, 153, 0.4);
+}
+
+.dismiss-btn {
+  background: #6b7280;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dismiss-btn:hover {
+  background: #555;
+  transform: translateY(-1px);
+}
+
+.btn-icon {
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .success-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .view-trip-btn,
+  .dismiss-btn {
+    width: 100%;
+    max-width: 250px;
   }
 }
 </style>

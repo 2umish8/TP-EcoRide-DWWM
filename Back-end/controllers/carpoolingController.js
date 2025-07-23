@@ -1,4 +1,8 @@
 const db = require("../Config/db.js");
+const {
+    sendReviewInvitation,
+    sendTripCompletionNotification,
+} = require("../utils/emailService.js");
 // MongoDB models temporarily disabled
 // const Review = require("../models/Review");
 // const DriverPreferences = require("../models/DriverPreferences");
@@ -554,16 +558,32 @@ const finishCarpooling = async (req, res) => {
                 });
             }
 
-            // Calculer les gains du chauffeur (nombre de participants * prix - commission)
+            // Récupérer les informations détaillées du covoiturage et du chauffeur pour les emails
+            const carpoolingDetailsSql = `
+                SELECT c.departure_address, c.arrival_address, c.departure_datetime,
+                       u.pseudo as driver_pseudo, u.email as driver_email
+                FROM Carpooling c
+                INNER JOIN User u ON c.driver_id = u.id
+                WHERE c.id = ?
+            `;
+            const [carpoolingDetails] = await db.query(carpoolingDetailsSql, [
+                carpoolingId,
+            ]);
+            const carpoolingInfo = carpoolingDetails[0];
+
+            // Récupérer les participants pour calculer les gains ET pour envoyer les emails
             const participantsSql = `
-                SELECT COUNT(*) as participants_count 
-                FROM Participation 
-                WHERE carpooling_id = ? AND cancellation_date IS NULL
+                SELECT p.passenger_id, p.credits_paid, 
+                       u.pseudo as passenger_pseudo, u.email as passenger_email
+                FROM Participation p
+                INNER JOIN User u ON p.passenger_id = u.id
+                WHERE p.carpooling_id = ? AND p.cancellation_date IS NULL
             `;
             const [participantsResult] = await db.query(participantsSql, [
                 carpoolingId,
             ]);
-            const participantsCount = participantsResult[0].participants_count;
+            const participants = participantsResult;
+            const participantsCount = participants.length;
 
             const totalEarnings =
                 participantsCount * carpoolingCheck[0].price_per_passenger;
@@ -586,10 +606,75 @@ const finishCarpooling = async (req, res) => {
 
             await db.query("COMMIT");
 
+            // NOUVELLE FONCTIONNALITÉ: Envoyer les emails de notification après la transaction réussie
+            try {
+                // 1. Envoyer un email de confirmation au chauffeur
+                console.log(
+                    "📧 Envoi de l'email de confirmation au chauffeur..."
+                );
+                await sendTripCompletionNotification({
+                    driverEmail: carpoolingInfo.driver_email,
+                    driverName: carpoolingInfo.driver_pseudo,
+                    departureAddress: carpoolingInfo.departure_address,
+                    arrivalAddress: carpoolingInfo.arrival_address,
+                    departureDate: carpoolingInfo.departure_datetime,
+                    participantsCount: participantsCount,
+                    earnings: driverEarnings,
+                });
+
+                // 2. Envoyer les invitations à l'avis à tous les passagers
+                console.log(
+                    `📧 Envoi des invitations d'avis à ${participantsCount} passager(s)...`
+                );
+                const emailPromises = participants.map((passenger) =>
+                    sendReviewInvitation({
+                        passengerEmail: passenger.passenger_email,
+                        passengerName: passenger.passenger_pseudo,
+                        driverName: carpoolingInfo.driver_pseudo,
+                        departureAddress: carpoolingInfo.departure_address,
+                        arrivalAddress: carpoolingInfo.arrival_address,
+                        departureDate: carpoolingInfo.departure_datetime,
+                        carpoolingId: carpoolingId,
+                        driverId: userId,
+                    })
+                );
+
+                // Envoyer tous les emails en parallèle
+                const emailResults = await Promise.allSettled(emailPromises);
+
+                // Compter les succès et échecs
+                const successCount = emailResults.filter(
+                    (result) =>
+                        result.status === "fulfilled" && result.value.success
+                ).length;
+                const failureCount = emailResults.length - successCount;
+
+                console.log(
+                    `✅ Emails envoyés: ${successCount} succès, ${failureCount} échecs`
+                );
+
+                // Logger les échecs pour le débogage
+                emailResults.forEach((result, index) => {
+                    if (result.status === "rejected" || !result.value.success) {
+                        console.error(
+                            `❌ Échec email pour ${participants[index].passenger_email}:`,
+                            result.reason || result.value.error
+                        );
+                    }
+                });
+            } catch (emailError) {
+                // Les erreurs d'email ne doivent pas faire échouer la transaction
+                console.error(
+                    "⚠️ Erreur lors de l'envoi des emails (transaction réussie):",
+                    emailError
+                );
+            }
+
             res.status(200).json({
                 message: "Covoiturage terminé avec succès !",
                 earnings: driverEarnings,
                 commission: commission,
+                participants_notified: participantsCount,
             });
         } catch (error) {
             await db.query("ROLLBACK");
