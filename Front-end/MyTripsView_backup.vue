@@ -5,19 +5,19 @@
       <h1 class="page-title">Mes Trajets</h1>
       <p class="page-subtitle">Gérez tous vos covoiturages</p>
 
-      <!-- Onglets Conducteur/Passager -->
+            <!-- Onglets Conducteur/Passager -->
       <div class="tabs-container">
-        <button
+        <button 
           @click="activeTab = 'passenger'"
           :class="['tab-btn', { active: activeTab === 'passenger' }]"
         >
-          🎒 Passager
+          � Passager
         </button>
-        <button
+        <button 
           @click="activeTab = 'driver'"
           :class="['tab-btn', { active: activeTab === 'driver' }]"
         >
-          🚗 Conducteur
+          � Conducteur
         </button>
       </div>
     </div>
@@ -43,7 +43,9 @@
           <div class="become-driver-icon">🚗</div>
           <h3>Devenez conducteur</h3>
           <p>Vous n'êtes pas encore conducteur sur EcoRide.</p>
-          <p class="become-driver-description">En devenant conducteur, vous pourrez :</p>
+          <p class="become-driver-description">
+            En devenant conducteur, vous pourrez :
+          </p>
           <ul class="benefit-list">
             <li>🎯 Proposer vos trajets à la communauté</li>
             <li>💰 Gagner des crédits en partageant vos frais</li>
@@ -51,8 +53,12 @@
             <li>🤝 Rencontrer de nouvelles personnes</li>
           </ul>
           <div class="become-driver-actions">
-            <button @click="becomeDriver" class="become-driver-btn">🚗 Devenir conducteur</button>
-            <router-link to="/help" class="learn-more-btn"> 📚 En savoir plus </router-link>
+            <button @click="becomeDriver" class="become-driver-btn">
+              🚗 Devenir conducteur
+            </button>
+            <router-link to="/help" class="learn-more-btn">
+              📚 En savoir plus
+            </router-link>
           </div>
         </div>
 
@@ -77,195 +83,192 @@
             <div class="empty-icon">🚗</div>
             <h3>Aucun trajet trouvé</h3>
             <p>
-              Vous n'avez pas encore créé de covoiturage. Commencez par proposer votre premier
-              trajet !
+              Vous n'avez pas encore créé de covoiturage. Commencez par proposer votre premier trajet
+              !
             </p>
-            <router-link to="/" class="create-first-trip-btn">
-              Créer mon premier trajet
-            </router-link>
+            <router-link to="/" class="create-first-trip-btn"> Créer mon premier trajet </router-link>
           </div>
 
-          <!-- Liste des trajets conducteur -->
-          <div v-else class="trips-list">
-            <!-- Statistiques rapides -->
-            <div class="trips-stats">
-              <div class="stat-card completed-trips">
-                <span class="stat-number">{{ getStatsByStatus('terminé').length }}</span>
-                <span class="stat-label"
-                  >Trajet{{ getStatsByStatus('terminé').length > 1 ? 's' : '' }} effectué{{
-                    getStatsByStatus('terminé').length > 1 ? 's' : ''
-                  }}</span
-                >
-              </div>
-              <div class="stat-card upcoming-trips">
-                <span class="stat-number">{{ getStatsByStatus('prévu').length }}</span>
-                <span class="stat-label">À venir</span>
-              </div>
-              <div class="stat-card passengers-transported">
-                <span class="stat-number">{{ getTotalParticipants() }}</span>
-                <span class="stat-label"
-                  >Passager{{ getTotalParticipants() > 1 ? 's' : '' }} transporté{{
-                    getTotalParticipants() > 1 ? 's' : ''
-                  }}</span
-                >
-              </div>
-              <div class="stat-card eco-impact">
-                <span class="stat-number">{{ getCarbonSaved() }}</span>
-                <span class="stat-label">kg CO₂ économisés</span>
-                <span class="stat-subtext">🌱 Impact écologique</span>
-              </div>
-            </div>
-
-            <!-- Filtres -->
-            <div class="trips-filters">
-              <div class="filter-group">
-                <label for="status-filter">Statut :</label>
-                <select id="status-filter" v-model="selectedStatus" class="filter-select">
-                  <option value="">Tous les statuts</option>
-                  <option value="prévu">Prévus</option>
-                  <option value="démarré">En cours</option>
-                  <option value="terminé">Terminés</option>
-                  <option value="annulé">Annulés</option>
-                </select>
-              </div>
-              <div class="filter-group">
-                <label for="sort-filter">Trier par :</label>
-                <select id="sort-filter" v-model="sortOrder" class="filter-select">
-                  <option value="date-desc">Plus récents</option>
-                  <option value="date-asc">Plus anciens</option>
-                  <option value="status">Statut</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- Trajets -->
-            <div class="trips-grid">
-              <div
-                v-for="trip in filteredAndSortedTrips"
-                :key="trip.id"
-                class="trip-card"
-                :class="[
-                  `status-${trip.status}`,
-                  { 'has-participants': trip.participants_count > 0 },
-                ]"
+        <!-- Liste des trajets conducteur -->
+        <div v-else class="trips-list">
+          <!-- Statistiques rapides -->
+          <div class="trips-stats">
+            <div class="stat-card completed-trips">
+              <span class="stat-number">{{ getStatsByStatus('terminé').length }}</span>
+              <span class="stat-label"
+                >Trajet{{ getStatsByStatus('terminé').length > 1 ? 's' : '' }} effectué{{
+                  getStatsByStatus('terminé').length > 1 ? 's' : ''
+                }}</span
               >
-                <!-- Header de la carte -->
-                <div class="trip-card-header">
-                  <div class="trip-status">
-                    <span :class="['status-badge', `status-${trip.status}`]">
-                      {{ getStatusIcon(trip.status) }} {{ getStatusLabel(trip.status) }}
-                    </span>
-                  </div>
-                  <div class="trip-actions">
-                    <button
-                      v-if="trip.status === 'prévu'"
-                      @click="startTrip(trip.id)"
-                      class="action-btn-small start"
-                      title="Démarrer le trajet"
-                    >
-                      ▶️
-                    </button>
-                    <button
-                      v-if="trip.status === 'démarré'"
-                      @click="finishTrip(trip.id)"
-                      class="action-btn-small finish"
-                      title="Terminer le trajet"
-                    >
-                      🏁
-                    </button>
-                    <button
-                      v-if="['prévu', 'démarré'].includes(trip.status)"
-                      @click="cancelTrip(trip.id)"
-                      class="action-btn-small cancel"
-                      title="Annuler le trajet"
-                    >
-                      ❌
-                    </button>
-                    <router-link
-                      :to="`/carpoolings/${trip.id}`"
-                      class="action-btn-small view"
-                      title="Voir les détails"
-                    >
-                      👁️
-                    </router-link>
-                  </div>
+            </div>
+            <div class="stat-card upcoming-trips">
+              <span class="stat-number">{{ getStatsByStatus('prévu').length }}</span>
+              <span class="stat-label">À venir</span>
+            </div>
+            <div class="stat-card passengers-transported">
+              <span class="stat-number">{{ getTotalParticipants() }}</span>
+              <span class="stat-label"
+                >Passager{{ getTotalParticipants() > 1 ? 's' : '' }} transporté{{
+                  getTotalParticipants() > 1 ? 's' : ''
+                }}</span
+              >
+            </div>
+            <div class="stat-card eco-impact">
+              <span class="stat-number">{{ getCarbonSaved() }}</span>
+              <span class="stat-label">kg CO₂ économisés</span>
+              <span class="stat-subtext">🌱 Impact écologique</span>
+            </div>
+          </div>
+
+          <!-- Filtres -->
+          <div class="trips-filters">
+            <div class="filter-group">
+              <label for="status-filter">Statut :</label>
+              <select id="status-filter" v-model="selectedStatus" class="filter-select">
+                <option value="">Tous les statuts</option>
+                <option value="prévu">Prévus</option>
+                <option value="démarré">En cours</option>
+                <option value="terminé">Terminés</option>
+                <option value="annulé">Annulés</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="sort-filter">Trier par :</label>
+              <select id="sort-filter" v-model="sortOrder" class="filter-select">
+                <option value="date-desc">Plus récents</option>
+                <option value="date-asc">Plus anciens</option>
+                <option value="status">Statut</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Trajets -->
+          <div class="trips-grid">
+            <div
+              v-for="trip in filteredAndSortedTrips"
+              :key="trip.id"
+              class="trip-card"
+              :class="[
+                `status-${trip.status}`,
+                { 'has-participants': trip.participants_count > 0 },
+              ]"
+            >
+              <!-- Header de la carte -->
+              <div class="trip-card-header">
+                <div class="trip-status">
+                  <span :class="['status-badge', `status-${trip.status}`]">
+                    {{ getStatusIcon(trip.status) }} {{ getStatusLabel(trip.status) }}
+                  </span>
                 </div>
-
-                <!-- Itinéraire -->
-                <div class="trip-route">
-                  <div class="route-info">
-                    <span class="departure">📍 {{ trip.departure_address }}</span>
-                    <div class="route-arrow">→</div>
-                    <span class="destination">🎯 {{ trip.arrival_address }}</span>
-                  </div>
-                </div>
-
-                <!-- Détails du voyage -->
-                <div class="trip-details">
-                  <div class="detail-item">
-                    <span class="detail-icon">📅</span>
-                    <div class="detail-content">
-                      <span class="detail-label">Date de départ</span>
-                      <span class="detail-value">{{ formatDate(trip.departure_datetime) }}</span>
-                      <span class="detail-time">{{ formatTime(trip.departure_datetime) }}</span>
-                    </div>
-                  </div>
-
-                  <div class="detail-item">
-                    <span class="detail-icon">⏱️</span>
-                    <div class="detail-content">
-                      <span class="detail-label">Durée estimée</span>
-                      <span class="detail-value">{{
-                        formatDuration(trip.departure_datetime, trip.arrival_datetime)
-                      }}</span>
-                    </div>
-                  </div>
-
-                  <div class="detail-item">
-                    <span class="detail-icon">💰</span>
-                    <div class="detail-content">
-                      <span class="detail-label">Prix par personne</span>
-                      <span class="detail-value">{{ trip.price_per_passenger }} crédits</span>
-                    </div>
-                  </div>
-
-                  <div class="detail-item">
-                    <span class="detail-icon">👥</span>
-                    <div class="detail-content">
-                      <span class="detail-label">Participants</span>
-                      <span class="detail-value">
-                        {{ trip.participants_count || 0 }} / {{ trip.initial_seats_offered }}
-                        <span class="seats-remaining"
-                          >({{ trip.seats_remaining }} restante{{
-                            trip.seats_remaining > 1 ? 's' : ''
-                          }})</span
-                        >
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Véhicule -->
-                <div class="trip-vehicle" v-if="trip.model">
-                  <span class="vehicle-icon">🚗</span>
-                  <span class="vehicle-info">{{ trip.model }} ({{ trip.plate_number }})</span>
-                </div>
-
-                <!-- Footer de la carte -->
-                <div class="trip-card-footer">
-                  <div
-                    class="trip-earnings"
-                    v-if="trip.status === 'terminé' && trip.participants_count > 0"
+                <div class="trip-actions">
+                  <button
+                    v-if="trip.status === 'prévu'"
+                    @click="startTrip(trip.id)"
+                    class="action-btn-small start"
+                    title="Démarrer le trajet"
                   >
-                    <span class="earnings-icon">💵</span>
-                    <span class="earnings-text">
-                      Revenus estimés : {{ calculateEarnings(trip) }} crédits
+                    ▶️
+                  </button>
+                  <button
+                    v-if="trip.status === 'démarré'"
+                    @click="finishTrip(trip.id)"
+                    class="action-btn-small finish"
+                    title="Terminer le trajet"
+                  >
+                    🏁
+                  </button>
+                  <button
+                    v-if="['prévu', 'démarré'].includes(trip.status)"
+                    @click="cancelTrip(trip.id)"
+                    class="action-btn-small cancel"
+                    title="Annuler le trajet"
+                  >
+                    ❌
+                  </button>
+                  <router-link
+                    :to="`/carpoolings/${trip.id}`"
+                    class="action-btn-small view"
+                    title="Voir les détails"
+                  >
+                    👁️
+                  </router-link>
+                </div>
+              </div>
+
+              <!-- Itinéraire -->
+              <div class="trip-route">
+                <div class="route-info">
+                  <span class="departure">📍 {{ trip.departure_address }}</span>
+                  <div class="route-arrow">→</div>
+                  <span class="destination">🎯 {{ trip.arrival_address }}</span>
+                </div>
+              </div>
+
+              <!-- Détails du voyage -->
+              <div class="trip-details">
+                <div class="detail-item">
+                  <span class="detail-icon">📅</span>
+                  <div class="detail-content">
+                    <span class="detail-label">Date de départ</span>
+                    <span class="detail-value">{{ formatDate(trip.departure_datetime) }}</span>
+                    <span class="detail-time">{{ formatTime(trip.departure_datetime) }}</span>
+                  </div>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-icon">⏱️</span>
+                  <div class="detail-content">
+                    <span class="detail-label">Durée estimée</span>
+                    <span class="detail-value">{{
+                      formatDuration(trip.departure_datetime, trip.arrival_datetime)
+                    }}</span>
+                  </div>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-icon">💰</span>
+                  <div class="detail-content">
+                    <span class="detail-label">Prix par personne</span>
+                    <span class="detail-value">{{ trip.price_per_passenger }} crédits</span>
+                  </div>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-icon">👥</span>
+                  <div class="detail-content">
+                    <span class="detail-label">Participants</span>
+                    <span class="detail-value">
+                      {{ trip.participants_count || 0 }} / {{ trip.initial_seats_offered }}
+                      <span class="seats-remaining"
+                        >({{ trip.seats_remaining }} restante{{
+                          trip.seats_remaining > 1 ? 's' : ''
+                        }})</span
+                      >
                     </span>
                   </div>
-                  <div class="trip-id">
-                    <span class="id-label">ID :</span>
-                    <span class="id-value">#{{ trip.id }}</span>
-                  </div>
+                </div>
+              </div>
+
+              <!-- Véhicule -->
+              <div class="trip-vehicle" v-if="trip.model">
+                <span class="vehicle-icon">🚗</span>
+                <span class="vehicle-info">{{ trip.model }} ({{ trip.plate_number }})</span>
+              </div>
+
+              <!-- Footer de la carte -->
+              <div class="trip-card-footer">
+                <div
+                  class="trip-earnings"
+                  v-if="trip.status === 'terminé' && trip.participants_count > 0"
+                >
+                  <span class="earnings-icon">💵</span>
+                  <span class="earnings-text">
+                    Revenus estimés : {{ calculateEarnings(trip) }} crédits
+                  </span>
+                </div>
+                <div class="trip-id">
+                  <span class="id-label">ID :</span>
+                  <span class="id-value">#{{ trip.id }}</span>
                 </div>
               </div>
             </div>
@@ -289,6 +292,7 @@
           <div class="coming-soon">
             <span class="coming-soon-badge">🔜 Bientôt disponible</span>
           </div>
+          </div>
         </div>
       </div>
     </div>
@@ -310,27 +314,6 @@ export default {
     const activeTab = ref('passenger') // Onglet passager par défaut
     const isDriver = ref(false) // État conducteur de l'utilisateur
 
-    // Vérifier si l'utilisateur est conducteur
-    const checkDriverStatus = async () => {
-      try {
-        await carpoolingService.getDriverTrips()
-        isDriver.value = true
-      } catch (err) {
-        // Si erreur d'autorisation, l'utilisateur n'est pas conducteur
-        if (
-          err.response?.status === 403 ||
-          err.response?.status === 401 ||
-          err.response?.data?.message?.includes('conducteur') ||
-          err.response?.data?.message?.includes('driver')
-        ) {
-          isDriver.value = false
-        } else {
-          // Pour d'autres erreurs, on considère qu'il pourrait être conducteur
-          isDriver.value = true
-        }
-      }
-    }
-
     // Charger les trajets
     const loadTrips = async () => {
       try {
@@ -339,25 +322,9 @@ export default {
 
         const response = await carpoolingService.getDriverTrips()
         trips.value = response.carpoolings || []
-
-        // Si on arrive ici sans erreur, l'utilisateur est conducteur
-        isDriver.value = true
       } catch (err) {
         console.error('Erreur lors du chargement des trajets:', err)
-
-        // Si erreur 403/401 ou message indiquant que l'utilisateur n'est pas conducteur
-        if (
-          err.response?.status === 403 ||
-          err.response?.status === 401 ||
-          err.response?.data?.message?.includes('conducteur') ||
-          err.response?.data?.message?.includes('driver')
-        ) {
-          isDriver.value = false
-          error.value = null // Pas d'erreur à afficher, juste pas conducteur
-        } else {
-          error.value = err.response?.data?.message || 'Erreur lors du chargement des trajets'
-          isDriver.value = true // Considérer comme conducteur si erreur technique
-        }
+        error.value = err.response?.data?.message || 'Erreur lors du chargement des trajets'
       } finally {
         loading.value = false
       }
@@ -525,18 +492,14 @@ export default {
           isDriver.value = true
           alert('Félicitations ! Vous êtes maintenant conducteur sur EcoRide.')
         } catch (err) {
-          alert(
-            "Erreur lors de l'inscription en tant que conducteur : " +
-              (err.response?.data?.message || err.message),
-          )
+          alert('Erreur lors de l\'inscription en tant que conducteur : ' + (err.response?.data?.message || err.message))
         }
       }
     }
 
     // Charger les données au montage
     onMounted(() => {
-      checkDriverStatus() // Vérifier d'abord le statut conducteur
-      loadTrips() // Puis charger les trajets si conducteur
+      loadTrips()
     })
 
     return {
@@ -549,7 +512,6 @@ export default {
       isDriver,
       filteredAndSortedTrips,
       loadTrips,
-      checkDriverStatus,
       getStatsByStatus,
       getTotalParticipants,
       getCarbonSaved,
