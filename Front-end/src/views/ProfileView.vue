@@ -639,7 +639,34 @@ export default {
         // Calculer une heure d'arrivée estimée (2h après le départ par défaut)
         const departureDate = new Date(departureDateTime)
         const arrivalDate = new Date(departureDate.getTime() + 2 * 60 * 60 * 1000) // +2h
-        const arrivalDateTime = arrivalDate.toISOString().slice(0, 19)
+
+        // Formater les dates au même format que departure_datetime
+        const formatDateTime = (date) => {
+          const year = date.getFullYear()
+          const month = String(date.getMonth() + 1).padStart(2, '0')
+          const day = String(date.getDate()).padStart(2, '0')
+          const hours = String(date.getHours()).padStart(2, '0')
+          const minutes = String(date.getMinutes()).padStart(2, '0')
+          const seconds = String(date.getSeconds()).padStart(2, '0')
+          return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
+        }
+
+        const arrivalDateTime = formatDateTime(arrivalDate)
+
+        console.log('Dates formatées:')
+        console.log('Départ:', departureDateTime)
+        console.log('Arrivée:', arrivalDateTime)
+
+        // Validation des dates côté frontend
+        if (departureDate <= new Date()) {
+          alert('La date de départ doit être dans le futur.')
+          return
+        }
+
+        if (arrivalDate <= departureDate) {
+          alert('Erreur de calcul des dates. Veuillez réessayer.')
+          return
+        }
 
         // Préparer les données pour l'API
         const tripData = {
@@ -667,7 +694,11 @@ export default {
         }
 
         // Afficher un message de confirmation avec un lien vers la recherche
-        if (confirm('Trajet proposé avec succès ! Voulez-vous voir votre trajet dans la liste des recherches ?')) {
+        if (
+          confirm(
+            'Trajet proposé avec succès ! Voulez-vous voir votre trajet dans la liste des recherches ?',
+          )
+        ) {
           // Rediriger vers la page de recherche pour voir le trajet
           window.open('/search', '_blank')
         }
