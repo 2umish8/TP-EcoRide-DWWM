@@ -666,8 +666,11 @@ export default {
           vehicleId: '',
         }
 
-        // Afficher un message de confirmation
-        alert('Trajet proposé avec succès !')
+        // Afficher un message de confirmation avec un lien vers la recherche
+        if (confirm('Trajet proposé avec succès ! Voulez-vous voir votre trajet dans la liste des recherches ?')) {
+          // Rediriger vers la page de recherche pour voir le trajet
+          window.open('/search', '_blank')
+        }
         console.log('Réponse API:', response)
       } catch (error) {
         console.error('Erreur lors de la proposition du trajet:', error)
