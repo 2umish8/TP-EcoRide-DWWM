@@ -3,7 +3,23 @@
     <!-- Header -->
     <div class="trips-header">
       <h1 class="page-title">Mes Trajets</h1>
-      <p class="page-subtitle">Gérez tous vos covoiturages en tant que conducteur</p>
+      <p class="page-subtitle">Gérez tous vos covoiturages</p>
+
+      <!-- Onglets Conducteur/Passager -->
+      <div class="tabs-container">
+        <button
+          @click="activeTab = 'driver'"
+          :class="['tab-btn', { active: activeTab === 'driver' }]"
+        >
+          🚗 Conducteur
+        </button>
+        <button
+          @click="activeTab = 'passenger'"
+          :class="['tab-btn', { active: activeTab === 'passenger' }]"
+        >
+          👤 Passager
+        </button>
+      </div>
     </div>
 
     <!-- Actions rapides -->
@@ -20,209 +36,235 @@
 
     <!-- Contenu principal -->
     <div class="trips-container">
-      <!-- État de chargement -->
-      <div v-if="loading" class="loading-state">
-        <div class="loading-spinner"></div>
-        <p>Chargement de vos trajets...</p>
-      </div>
-
-      <!-- État d'erreur -->
-      <div v-else-if="error" class="error-state">
-        <div class="error-icon">❌</div>
-        <h3>Erreur de chargement</h3>
-        <p>{{ error }}</p>
-        <button @click="loadTrips" class="retry-btn">Réessayer</button>
-      </div>
-
-      <!-- Aucun trajet -->
-      <div v-else-if="trips.length === 0" class="empty-state">
-        <div class="empty-icon">🚗</div>
-        <h3>Aucun trajet trouvé</h3>
-        <p>
-          Vous n'avez pas encore créé de covoiturage. Commencez par proposer votre premier trajet !
-        </p>
-        <router-link to="/" class="create-first-trip-btn"> Créer mon premier trajet </router-link>
-      </div>
-
-      <!-- Liste des trajets -->
-      <div v-else class="trips-list">
-        <!-- Statistiques rapides -->
-        <div class="trips-stats">
-          <div class="stat-card completed-trips">
-            <span class="stat-number">{{ getStatsByStatus('terminé').length }}</span>
-            <span class="stat-label"
-              >Trajet{{ getStatsByStatus('terminé').length > 1 ? 's' : '' }} effectué{{
-                getStatsByStatus('terminé').length > 1 ? 's' : ''
-              }}</span
-            >
-          </div>
-          <div class="stat-card upcoming-trips">
-            <span class="stat-number">{{ getStatsByStatus('prévu').length }}</span>
-            <span class="stat-label">À venir</span>
-          </div>
-          <div class="stat-card passengers-transported">
-            <span class="stat-number">{{ getTotalParticipants() }}</span>
-            <span class="stat-label"
-              >Passager{{ getTotalParticipants() > 1 ? 's' : '' }} transporté{{
-                getTotalParticipants() > 1 ? 's' : ''
-              }}</span
-            >
-          </div>
-          <div class="stat-card eco-impact">
-            <span class="stat-number">{{ getCarbonSaved() }}</span>
-            <span class="stat-label">kg CO₂ économisés</span>
-            <span class="stat-subtext">🌱 Impact écologique</span>
-          </div>
+      <!-- Vue Conducteur -->
+      <div v-if="activeTab === 'driver'" class="driver-content">
+        <!-- État de chargement -->
+        <div v-if="loading" class="loading-state">
+          <div class="loading-spinner"></div>
+          <p>Chargement de vos trajets...</p>
         </div>
 
-        <!-- Filtres -->
-        <div class="trips-filters">
-          <div class="filter-group">
-            <label for="status-filter">Statut :</label>
-            <select id="status-filter" v-model="selectedStatus" class="filter-select">
-              <option value="">Tous les statuts</option>
-              <option value="prévu">Prévus</option>
-              <option value="démarré">En cours</option>
-              <option value="terminé">Terminés</option>
-              <option value="annulé">Annulés</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label for="sort-filter">Trier par :</label>
-            <select id="sort-filter" v-model="sortOrder" class="filter-select">
-              <option value="date-desc">Plus récents</option>
-              <option value="date-asc">Plus anciens</option>
-              <option value="status">Statut</option>
-            </select>
-          </div>
+        <!-- État d'erreur -->
+        <div v-else-if="error" class="error-state">
+          <div class="error-icon">❌</div>
+          <h3>Erreur de chargement</h3>
+          <p>{{ error }}</p>
+          <button @click="loadTrips" class="retry-btn">Réessayer</button>
         </div>
 
-        <!-- Trajets -->
-        <div class="trips-grid">
-          <div
-            v-for="trip in filteredAndSortedTrips"
-            :key="trip.id"
-            class="trip-card"
-            :class="[`status-${trip.status}`, { 'has-participants': trip.participants_count > 0 }]"
-          >
-            <!-- Header de la carte -->
-            <div class="trip-card-header">
-              <div class="trip-status">
-                <span :class="['status-badge', `status-${trip.status}`]">
-                  {{ getStatusIcon(trip.status) }} {{ getStatusLabel(trip.status) }}
-                </span>
-              </div>
-              <div class="trip-actions">
-                <button
-                  v-if="trip.status === 'prévu'"
-                  @click="startTrip(trip.id)"
-                  class="action-btn-small start"
-                  title="Démarrer le trajet"
-                >
-                  ▶️
-                </button>
-                <button
-                  v-if="trip.status === 'démarré'"
-                  @click="finishTrip(trip.id)"
-                  class="action-btn-small finish"
-                  title="Terminer le trajet"
-                >
-                  🏁
-                </button>
-                <button
-                  v-if="['prévu', 'démarré'].includes(trip.status)"
-                  @click="cancelTrip(trip.id)"
-                  class="action-btn-small cancel"
-                  title="Annuler le trajet"
-                >
-                  ❌
-                </button>
-                <router-link
-                  :to="`/carpoolings/${trip.id}`"
-                  class="action-btn-small view"
-                  title="Voir les détails"
-                >
-                  👁️
-                </router-link>
-              </div>
+        <!-- Aucun trajet -->
+        <div v-else-if="trips.length === 0" class="empty-state">
+          <div class="empty-icon">🚗</div>
+          <h3>Aucun trajet trouvé</h3>
+          <p>
+            Vous n'avez pas encore créé de covoiturage. Commencez par proposer votre premier trajet
+            !
+          </p>
+          <router-link to="/" class="create-first-trip-btn"> Créer mon premier trajet </router-link>
+        </div>
+
+        <!-- Liste des trajets conducteur -->
+        <div v-else class="trips-list">
+          <!-- Statistiques rapides -->
+          <div class="trips-stats">
+            <div class="stat-card completed-trips">
+              <span class="stat-number">{{ getStatsByStatus('terminé').length }}</span>
+              <span class="stat-label"
+                >Trajet{{ getStatsByStatus('terminé').length > 1 ? 's' : '' }} effectué{{
+                  getStatsByStatus('terminé').length > 1 ? 's' : ''
+                }}</span
+              >
             </div>
-
-            <!-- Itinéraire -->
-            <div class="trip-route">
-              <div class="route-info">
-                <span class="departure">📍 {{ trip.departure_address }}</span>
-                <div class="route-arrow">→</div>
-                <span class="destination">🎯 {{ trip.arrival_address }}</span>
-              </div>
+            <div class="stat-card upcoming-trips">
+              <span class="stat-number">{{ getStatsByStatus('prévu').length }}</span>
+              <span class="stat-label">À venir</span>
             </div>
+            <div class="stat-card passengers-transported">
+              <span class="stat-number">{{ getTotalParticipants() }}</span>
+              <span class="stat-label"
+                >Passager{{ getTotalParticipants() > 1 ? 's' : '' }} transporté{{
+                  getTotalParticipants() > 1 ? 's' : ''
+                }}</span
+              >
+            </div>
+            <div class="stat-card eco-impact">
+              <span class="stat-number">{{ getCarbonSaved() }}</span>
+              <span class="stat-label">kg CO₂ économisés</span>
+              <span class="stat-subtext">🌱 Impact écologique</span>
+            </div>
+          </div>
 
-            <!-- Détails du voyage -->
-            <div class="trip-details">
-              <div class="detail-item">
-                <span class="detail-icon">📅</span>
-                <div class="detail-content">
-                  <span class="detail-label">Date de départ</span>
-                  <span class="detail-value">{{ formatDate(trip.departure_datetime) }}</span>
-                  <span class="detail-time">{{ formatTime(trip.departure_datetime) }}</span>
-                </div>
-              </div>
+          <!-- Filtres -->
+          <div class="trips-filters">
+            <div class="filter-group">
+              <label for="status-filter">Statut :</label>
+              <select id="status-filter" v-model="selectedStatus" class="filter-select">
+                <option value="">Tous les statuts</option>
+                <option value="prévu">Prévus</option>
+                <option value="démarré">En cours</option>
+                <option value="terminé">Terminés</option>
+                <option value="annulé">Annulés</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="sort-filter">Trier par :</label>
+              <select id="sort-filter" v-model="sortOrder" class="filter-select">
+                <option value="date-desc">Plus récents</option>
+                <option value="date-asc">Plus anciens</option>
+                <option value="status">Statut</option>
+              </select>
+            </div>
+          </div>
 
-              <div class="detail-item">
-                <span class="detail-icon">⏱️</span>
-                <div class="detail-content">
-                  <span class="detail-label">Durée estimée</span>
-                  <span class="detail-value">{{
-                    formatDuration(trip.departure_datetime, trip.arrival_datetime)
-                  }}</span>
-                </div>
-              </div>
-
-              <div class="detail-item">
-                <span class="detail-icon">💰</span>
-                <div class="detail-content">
-                  <span class="detail-label">Prix par personne</span>
-                  <span class="detail-value">{{ trip.price_per_passenger }} crédits</span>
-                </div>
-              </div>
-
-              <div class="detail-item">
-                <span class="detail-icon">👥</span>
-                <div class="detail-content">
-                  <span class="detail-label">Participants</span>
-                  <span class="detail-value">
-                    {{ trip.participants_count || 0 }} / {{ trip.initial_seats_offered }}
-                    <span class="seats-remaining"
-                      >({{ trip.seats_remaining }} restante{{
-                        trip.seats_remaining > 1 ? 's' : ''
-                      }})</span
-                    >
+          <!-- Trajets -->
+          <div class="trips-grid">
+            <div
+              v-for="trip in filteredAndSortedTrips"
+              :key="trip.id"
+              class="trip-card"
+              :class="[
+                `status-${trip.status}`,
+                { 'has-participants': trip.participants_count > 0 },
+              ]"
+            >
+              <!-- Header de la carte -->
+              <div class="trip-card-header">
+                <div class="trip-status">
+                  <span :class="['status-badge', `status-${trip.status}`]">
+                    {{ getStatusIcon(trip.status) }} {{ getStatusLabel(trip.status) }}
                   </span>
                 </div>
+                <div class="trip-actions">
+                  <button
+                    v-if="trip.status === 'prévu'"
+                    @click="startTrip(trip.id)"
+                    class="action-btn-small start"
+                    title="Démarrer le trajet"
+                  >
+                    ▶️
+                  </button>
+                  <button
+                    v-if="trip.status === 'démarré'"
+                    @click="finishTrip(trip.id)"
+                    class="action-btn-small finish"
+                    title="Terminer le trajet"
+                  >
+                    🏁
+                  </button>
+                  <button
+                    v-if="['prévu', 'démarré'].includes(trip.status)"
+                    @click="cancelTrip(trip.id)"
+                    class="action-btn-small cancel"
+                    title="Annuler le trajet"
+                  >
+                    ❌
+                  </button>
+                  <router-link
+                    :to="`/carpoolings/${trip.id}`"
+                    class="action-btn-small view"
+                    title="Voir les détails"
+                  >
+                    👁️
+                  </router-link>
+                </div>
               </div>
-            </div>
 
-            <!-- Véhicule -->
-            <div class="trip-vehicle" v-if="trip.model">
-              <span class="vehicle-icon">🚗</span>
-              <span class="vehicle-info">{{ trip.model }} ({{ trip.plate_number }})</span>
-            </div>
+              <!-- Itinéraire -->
+              <div class="trip-route">
+                <div class="route-info">
+                  <span class="departure">📍 {{ trip.departure_address }}</span>
+                  <div class="route-arrow">→</div>
+                  <span class="destination">🎯 {{ trip.arrival_address }}</span>
+                </div>
+              </div>
 
-            <!-- Footer de la carte -->
-            <div class="trip-card-footer">
-              <div
-                class="trip-earnings"
-                v-if="trip.status === 'terminé' && trip.participants_count > 0"
-              >
-                <span class="earnings-icon">💵</span>
-                <span class="earnings-text">
-                  Revenus estimés : {{ calculateEarnings(trip) }} crédits
-                </span>
+              <!-- Détails du voyage -->
+              <div class="trip-details">
+                <div class="detail-item">
+                  <span class="detail-icon">📅</span>
+                  <div class="detail-content">
+                    <span class="detail-label">Date de départ</span>
+                    <span class="detail-value">{{ formatDate(trip.departure_datetime) }}</span>
+                    <span class="detail-time">{{ formatTime(trip.departure_datetime) }}</span>
+                  </div>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-icon">⏱️</span>
+                  <div class="detail-content">
+                    <span class="detail-label">Durée estimée</span>
+                    <span class="detail-value">{{
+                      formatDuration(trip.departure_datetime, trip.arrival_datetime)
+                    }}</span>
+                  </div>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-icon">💰</span>
+                  <div class="detail-content">
+                    <span class="detail-label">Prix par personne</span>
+                    <span class="detail-value">{{ trip.price_per_passenger }} crédits</span>
+                  </div>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-icon">👥</span>
+                  <div class="detail-content">
+                    <span class="detail-label">Participants</span>
+                    <span class="detail-value">
+                      {{ trip.participants_count || 0 }} / {{ trip.initial_seats_offered }}
+                      <span class="seats-remaining"
+                        >({{ trip.seats_remaining }} restante{{
+                          trip.seats_remaining > 1 ? 's' : ''
+                        }})</span
+                      >
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div class="trip-id">
-                <span class="id-label">ID :</span>
-                <span class="id-value">#{{ trip.id }}</span>
+
+              <!-- Véhicule -->
+              <div class="trip-vehicle" v-if="trip.model">
+                <span class="vehicle-icon">🚗</span>
+                <span class="vehicle-info">{{ trip.model }} ({{ trip.plate_number }})</span>
+              </div>
+
+              <!-- Footer de la carte -->
+              <div class="trip-card-footer">
+                <div
+                  class="trip-earnings"
+                  v-if="trip.status === 'terminé' && trip.participants_count > 0"
+                >
+                  <span class="earnings-icon">💵</span>
+                  <span class="earnings-text">
+                    Revenus estimés : {{ calculateEarnings(trip) }} crédits
+                  </span>
+                </div>
+                <div class="trip-id">
+                  <span class="id-label">ID :</span>
+                  <span class="id-value">#{{ trip.id }}</span>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vue Passager -->
+      <div v-if="activeTab === 'passenger'" class="passenger-content">
+        <div class="placeholder-state">
+          <div class="placeholder-icon">🚧</div>
+          <h3>Vue Passager</h3>
+          <p>Cette fonctionnalité est en cours de développement.</p>
+          <p class="placeholder-description">Ici vous pourrez consulter :</p>
+          <ul class="feature-list">
+            <li>📅 Vos réservations de trajets</li>
+            <li>🕒 L'historique de vos voyages en tant que passager</li>
+            <li>⭐ Vos évaluations et commentaires</li>
+            <li>💳 Vos paiements et crédits utilisés</li>
+          </ul>
+          <div class="coming-soon">
+            <span class="coming-soon-badge">🔜 Bientôt disponible</span>
           </div>
         </div>
       </div>
@@ -242,6 +284,7 @@ export default {
     const error = ref(null)
     const selectedStatus = ref('')
     const sortOrder = ref('date-desc')
+    const activeTab = ref('driver') // Onglet actif par défaut
 
     // Charger les trajets
     const loadTrips = async () => {
@@ -423,6 +466,7 @@ export default {
       error,
       selectedStatus,
       sortOrder,
+      activeTab,
       filteredAndSortedTrips,
       loadTrips,
       getStatsByStatus,
@@ -467,7 +511,42 @@ export default {
 .page-subtitle {
   font-size: 1.1rem;
   color: #adb5bd;
-  margin: 0;
+  margin: 0 0 2rem 0;
+}
+
+/* Onglets */
+.tabs-container {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.tab-btn {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #4a5568;
+  border-radius: 8px;
+  background: #2d3748;
+  color: #adb5bd;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tab-btn:hover {
+  border-color: #28a745;
+  color: #28a745;
+  background: #374151;
+}
+
+.tab-btn.active {
+  border-color: #28a745;
+  background: #28a745;
+  color: white;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
 }
 
 /* Actions rapides */
@@ -527,13 +606,64 @@ export default {
 /* États de chargement, erreur, vide */
 .loading-state,
 .error-state,
-.empty-state {
+.empty-state,
+.placeholder-state {
   text-align: center;
   padding: 3rem 2rem;
   background: #2d3748;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   color: #e9ecef;
+}
+
+.placeholder-state {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.placeholder-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.placeholder-description {
+  font-size: 1.1rem;
+  color: #adb5bd;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.feature-list {
+  text-align: left;
+  margin: 1.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feature-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #4a5568;
+  font-size: 1rem;
+  color: #e9ecef;
+}
+
+.feature-list li:last-child {
+  border-bottom: none;
+}
+
+.coming-soon {
+  margin-top: 2rem;
+}
+
+.coming-soon-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: #212529;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .loading-spinner {
@@ -991,6 +1121,17 @@ export default {
 
   .page-title {
     font-size: 2rem;
+  }
+
+  .tabs-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .tab-btn {
+    width: 200px;
+    justify-content: center;
   }
 
   .quick-actions {
