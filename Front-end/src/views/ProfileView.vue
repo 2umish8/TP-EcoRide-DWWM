@@ -667,7 +667,11 @@ export default {
         }
 
         // Afficher un message de confirmation avec un lien vers la recherche
-        if (confirm('Trajet proposé avec succès ! Voulez-vous voir votre trajet dans la liste des recherches ?')) {
+        if (
+          confirm(
+            'Trajet proposé avec succès ! Voulez-vous voir votre trajet dans la liste des recherches ?',
+          )
+        ) {
           // Rediriger vers la page de recherche pour voir le trajet
           window.open('/search', '_blank')
         }
