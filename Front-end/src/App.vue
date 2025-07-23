@@ -151,9 +151,6 @@ body {
 }
 
 #app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -161,19 +158,18 @@ body {
 
 main,
 .router-view {
-  flex: 1 1 auto;
+  padding-bottom: 20px; /* Espace minimal entre contenu et footer */
+  padding-top: 70px; /* Espace pour la navbar fixe */
 }
 
 footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100vw;
+  position: static; /* Complètement dans le flux normal */
+  width: 100%;
   z-index: 100;
 }
 
 .search-results {
-  padding-bottom: 100px; /* Ajuster selon la hauteur du footer */
+  padding-bottom: 0; /* Plus besoin de compensation */
 }
 
 .navbar {
@@ -242,15 +238,13 @@ footer {
 }
 
 .footer-ecoride {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100vw;
+  position: static;
+  width: 100%;
   z-index: 100;
   background: linear-gradient(90deg, #181c1f, #23272b 80%);
   color: #f5f5f5;
   font-size: 1rem;
-  padding: 10px 0 8px 0;
+  padding: 15px 0;
   box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.12);
   display: flex;
   justify-content: center;
@@ -275,68 +269,5 @@ footer {
 }
 .footer-text {
   font-weight: 500;
-}
-</style>
-
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 0;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-    padding: 1rem 0;
-    margin-top: 0; /* ← AUSSI ICI POUR LE DESKTOP */
-  }
 }
 </style>
