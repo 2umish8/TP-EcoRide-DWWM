@@ -3,10 +3,13 @@ import { computed } from 'vue'
 import { RouterView } from 'vue-router'
 import { useAuthStore } from './stores/counter'
 import GlassButton from './components/GlassButton.vue'
+import CustomModal from './components/CustomModal.vue'
+import { useModal } from './composables/useModal'
 
 const authStore = useAuthStore()
 const isLoggedIn = computed(() => authStore.isLoggedIn)
 const currentUser = computed(() => authStore.currentUser)
+const { modals } = useModal()
 
 const logout = async () => {
   await authStore.logout()
@@ -198,6 +201,23 @@ const logout = async () => {
         <a href="#" class="footer-link">Mentions légales</a>
       </div>
     </footer>
+
+    <!-- Modales globales -->
+    <CustomModal
+      v-for="modal in modals"
+      :key="modal.id"
+      :is-visible="modal.isVisible"
+      :type="modal.type"
+      :title="modal.title"
+      :message="modal.message"
+      :confirm-text="modal.confirmText"
+      :cancel-text="modal.cancelText"
+      :hide-close-button="modal.hideCloseButton"
+      :close-on-overlay="modal.closeOnOverlay"
+      @confirm="modal.onConfirm"
+      @cancel="modal.onCancel"
+      @close="modal.onClose"
+    />
   </div>
 </template>
 

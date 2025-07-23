@@ -62,6 +62,11 @@ const router = createRouter({
       name: 'Credits',
       component: () => import('../views/CreditsView.vue'),
     },
+    {
+      path: '/test-modals',
+      name: 'TestModals',
+      component: () => import('../views/TestModalView.vue'),
+    },
   ],
 })
 

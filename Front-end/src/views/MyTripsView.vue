@@ -352,6 +352,7 @@
 <script>
 import { ref, computed, onMounted } from 'vue'
 import { carpoolingService } from '@/services/api'
+import { showAlert, showConfirm, showError } from '@/composables/useModal'
 
 export default {
   name: 'MyTripsView',
@@ -543,12 +544,16 @@ export default {
 
     // Actions sur les trajets
     const startTrip = async (tripId) => {
-      if (confirm('Êtes-vous sûr de vouloir démarrer ce trajet ?')) {
+      const confirmed = await showConfirm(
+        'Êtes-vous sûr de vouloir démarrer ce trajet ?',
+        'Démarrer le trajet',
+      )
+      if (confirmed) {
         try {
           await carpoolingService.startTrip(tripId)
           await loadTrips() // Recharger la liste
         } catch (err) {
-          alert(
+          showError(
             'Erreur lors du démarrage du trajet : ' + (err.response?.data?.message || err.message),
           )
         }
@@ -556,23 +561,33 @@ export default {
     }
 
     const finishTrip = async (tripId) => {
-      if (confirm('Êtes-vous sûr de vouloir terminer ce trajet ?')) {
+      const confirmed = await showConfirm(
+        'Êtes-vous sûr de vouloir terminer ce trajet ?',
+        'Terminer le trajet',
+      )
+      if (confirmed) {
         try {
           await carpoolingService.finishTrip(tripId)
           await loadTrips() // Recharger la liste
         } catch (err) {
-          alert('Erreur lors de la fin du trajet : ' + (err.response?.data?.message || err.message))
+          showError(
+            'Erreur lors de la fin du trajet : ' + (err.response?.data?.message || err.message),
+          )
         }
       }
     }
 
     const cancelTrip = async (tripId) => {
-      if (confirm('Êtes-vous sûr de vouloir annuler ce trajet ? Cette action est irréversible.')) {
+      const confirmed = await showConfirm(
+        'Êtes-vous sûr de vouloir annuler ce trajet ? Cette action est irréversible.',
+        'Annuler le trajet',
+      )
+      if (confirmed) {
         try {
           await carpoolingService.cancelTrip(tripId)
           await loadTrips() // Recharger la liste
         } catch (err) {
-          alert(
+          showError(
             "Erreur lors de l'annulation du trajet : " +
               (err.response?.data?.message || err.message),
           )
@@ -582,14 +597,18 @@ export default {
 
     // Action pour devenir conducteur
     const becomeDriver = async () => {
-      if (confirm('Voulez-vous devenir conducteur sur EcoRide ?')) {
+      const confirmed = await showConfirm(
+        'Voulez-vous devenir conducteur sur EcoRide ?',
+        'Devenir conducteur',
+      )
+      if (confirmed) {
         try {
           // TODO: Ajouter l'appel API pour devenir conducteur
           // await userService.becomeDriver()
           isDriver.value = true
-          alert('Félicitations ! Vous êtes maintenant conducteur sur EcoRide.')
+          showAlert('Félicitations ! Vous êtes maintenant conducteur sur EcoRide.', 'Succès')
         } catch (err) {
-          alert(
+          showError(
             "Erreur lors de l'inscription en tant que conducteur : " +
               (err.response?.data?.message || err.message),
           )

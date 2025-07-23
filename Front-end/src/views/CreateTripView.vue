@@ -209,6 +209,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { carpoolingService } from '@/services/api'
+import { showAlert, showError } from '@/composables/useModal'
 
 export default {
   name: 'CreateTripView',
@@ -288,12 +289,12 @@ export default {
 
         // Validation basique
         if (!tripData.value.departure_address || !tripData.value.arrival_address) {
-          alert('Veuillez renseigner le départ et la destination')
+          showError('Veuillez renseigner le départ et la destination')
           return
         }
 
         if (!tripData.value.departure_datetime) {
-          alert("Veuillez renseigner la date et l'heure de départ")
+          showError("Veuillez renseigner la date et l'heure de départ")
           return
         }
 
@@ -309,11 +310,11 @@ export default {
         await carpoolingService.createTrip(submitData)
 
         // Redirection vers la liste des trajets
-        alert('Trajet créé avec succès !')
+        showAlert('Trajet créé avec succès !', 'Succès')
         router.push('/my-trips?tab=driver')
       } catch (error) {
         console.error('Erreur lors de la création du trajet:', error)
-        alert(
+        showError(
           'Erreur lors de la création du trajet : ' +
             (error.response?.data?.message || error.message),
         )

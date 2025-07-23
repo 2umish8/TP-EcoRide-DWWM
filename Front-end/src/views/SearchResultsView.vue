@@ -230,6 +230,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { carpoolingService } from '@/services/api.js'
 import { useAuthStore } from '@/stores/counter'
 import IconCredit from '@/components/icons/IconCredit.vue'
+import { showAlert } from '@/composables/useModal'
 
 const route = useRoute()
 const router = useRouter()
@@ -442,8 +443,9 @@ const searchAlternativeDate = () => {
 // Création d'une alerte pour être notifié de nouveaux trajets
 const createAlert = () => {
   // À implémenter : système d'alertes email
-  alert(
+  showAlert(
     "Fonctionnalité d'alerte à implémenter - Vous serez notifié par email quand un nouveau trajet correspondant sera disponible",
+    'Alerte trajet',
   )
 }
 
