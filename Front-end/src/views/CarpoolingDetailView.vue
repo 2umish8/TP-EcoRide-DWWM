@@ -161,8 +161,13 @@
 
       <!-- Actions -->
       <div class="actions">
-        <button class="participate-btn" :disabled="carpooling.seats_remaining <= 0">
-          {{ carpooling.seats_remaining > 0 ? '🎫 Participer' : '❌ Complet' }}
+        <button
+          class="participate-btn"
+          :disabled="carpooling.seats_remaining <= 0 || isParticipating"
+          @click="initiateParticipation"
+        >
+          <span v-if="isParticipating">⏳ Vérification...</span>
+          <span v-else>{{ carpooling.seats_remaining > 0 ? '🎫 Participer' : '❌ Complet' }}</span>
         </button>
         <button class="details-btn" @click="showMoreDetails = !showMoreDetails">
           {{ showMoreDetails ? '📄 Moins de détails' : '📄 Plus de détails' }}
@@ -186,6 +191,81 @@
       </div>
     </div>
 
+    <!-- Modal de confirmation de participation -->
+    <div v-if="showConfirmationModal" class="modal-overlay" @click="closeConfirmationModal">
+      <div class="confirmation-modal" @click.stop>
+        <div class="modal-header">
+          <h3>🎫 Confirmer votre participation</h3>
+        </div>
+
+        <div class="modal-content">
+          <div class="participation-summary">
+            <h4>Résumé de votre participation :</h4>
+            <div class="summary-item">
+              <span class="label">Trajet :</span>
+              <span class="value"
+                >{{ carpooling.departure_address }} → {{ carpooling.arrival_address }}</span
+              >
+            </div>
+            <div class="summary-item">
+              <span class="label">Date :</span>
+              <span class="value">{{ formatDate(carpooling.departure_datetime) }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">Heure de départ :</span>
+              <span class="value">{{ formatTime(carpooling.departure_datetime) }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">Coût :</span>
+              <span class="value cost-highlight">
+                {{ carpooling.price_per_passenger }}
+                <IconCredit class="credit-icon" />
+              </span>
+            </div>
+          </div>
+
+          <div class="credits-info">
+            <div class="credits-current">
+              <span class="label">Vos crédits actuels :</span>
+              <span class="value"
+                >{{ participationCheck?.user?.current_credits || 'Chargement...' }} crédits</span
+              >
+            </div>
+            <div class="credits-after">
+              <span class="label">Après participation :</span>
+              <span class="value"
+                >{{
+                  participationCheck?.user?.credits_after_participation || 'Chargement...'
+                }}
+                crédits</span
+              >
+            </div>
+          </div>
+
+          <div class="confirmation-warning">
+            <p>
+              ⚠️ <strong>Attention :</strong> Une fois confirmée, votre participation sera
+              définitive et vos crédits seront immédiatement débités.
+            </p>
+            <p>
+              ✅ Cette participation vous donne accès à une place dans le véhicule pour le trajet
+              spécifié.
+            </p>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="cancel-btn" @click="closeConfirmationModal" :disabled="isConfirming">
+            ❌ Annuler
+          </button>
+          <button class="confirm-btn" @click="confirmParticipation" :disabled="isConfirming">
+            <span v-if="isConfirming">⏳ Confirmation...</span>
+            <span v-else>✅ Confirmer ma participation</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div v-else class="not-found">
       <p>🔍 Aucun covoiturage trouvé.</p>
       <button @click="$router.push('/search')" class="search-btn">Retourner à la recherche</button>
@@ -195,15 +275,22 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import api from '@/services/api.js'
+import { useRoute, useRouter } from 'vue-router'
+import api, { participationService } from '@/services/api.js'
 import IconCredit from '@/components/icons/IconCredit.vue'
 
 const route = useRoute()
+const router = useRouter()
 const carpooling = ref(null)
 const loading = ref(true)
 const error = ref(null)
 const showMoreDetails = ref(false)
+
+// Variables pour la double confirmation
+const showConfirmationModal = ref(false)
+const participationCheck = ref(null)
+const isParticipating = ref(false)
+const isConfirming = ref(false)
 
 const formatDate = (dateString) => {
   if (!dateString) return ''
@@ -268,6 +355,60 @@ const getStatusLabel = (status) => {
     annulé: '❌ Annulé',
   }
   return statusLabels[status] || status
+}
+
+// Fonction pour initier la participation (première étape)
+const initiateParticipation = async () => {
+  try {
+    isParticipating.value = true
+    error.value = null
+
+    // Vérifier les conditions de participation
+    const checkResult = await participationService.checkConditions(carpooling.value.id)
+    participationCheck.value = checkResult
+
+    // Ouvrir la modal de confirmation
+    showConfirmationModal.value = true
+  } catch (err) {
+    console.error('Erreur lors de la vérification des conditions:', err)
+    error.value = err.response?.data?.message || 'Erreur lors de la vérification des conditions'
+  } finally {
+    isParticipating.value = false
+  }
+}
+
+// Fonction pour confirmer la participation (deuxième étape)
+const confirmParticipation = async () => {
+  try {
+    isConfirming.value = true
+    error.value = null
+
+    // Confirmer la participation avec le flag explicite
+    const result = await participationService.joinTrip(carpooling.value.id, true)
+
+    // Fermer la modal
+    showConfirmationModal.value = false
+
+    // Afficher un message de succès et rediriger vers les voyages
+    alert(
+      `✅ ${result.message}\n💰 ${result.creditsDebited} crédits débités\n🏦 Crédits restants: ${result.remainingCredits}`,
+    )
+
+    // Rediriger vers la page "Mes voyages"
+    router.push('/trips')
+  } catch (err) {
+    console.error('Erreur lors de la confirmation:', err)
+    error.value =
+      err.response?.data?.message || 'Erreur lors de la confirmation de la participation'
+  } finally {
+    isConfirming.value = false
+  }
+}
+
+// Fonction pour fermer la modal de confirmation
+const closeConfirmationModal = () => {
+  showConfirmationModal.value = false
+  participationCheck.value = null
 }
 
 onMounted(async () => {
@@ -735,8 +876,186 @@ onMounted(async () => {
 }
 
 .details-btn:hover {
-  background: #555;
-  border-color: #777;
+  background: #444;
+  border-color: #666;
+}
+
+/* Modal de confirmation */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirmation-modal {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 0;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #333;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #00ff88;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.modal-content {
+  padding: 24px;
+}
+
+.participation-summary {
+  margin-bottom: 24px;
+}
+
+.participation-summary h4 {
+  color: #fff;
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.summary-item .label {
+  color: #888;
+  font-size: 14px;
+}
+
+.summary-item .value {
+  color: #fff;
+  font-weight: 500;
+}
+
+.cost-highlight {
+  color: #00ff88 !important;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.credits-info {
+  background: #242424;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.credits-current,
+.credits-after {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.credits-current .label,
+.credits-after .label {
+  color: #888;
+  font-size: 14px;
+}
+
+.credits-current .value {
+  color: #fff;
+  font-weight: 500;
+}
+
+.credits-after .value {
+  color: #ff9500;
+  font-weight: 600;
+}
+
+.confirmation-warning {
+  background: #2a1a1a;
+  border: 1px solid #442;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.confirmation-warning p {
+  margin: 0 0 8px;
+  color: #ccc;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.confirmation-warning p:last-child {
+  margin-bottom: 0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px 24px;
+  border-top: 1px solid #333;
+}
+
+.cancel-btn,
+.confirm-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.cancel-btn {
+  background: #333;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background: #444;
+  border-color: #666;
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, #00ff88, #00cc6a);
+  color: #000;
+}
+
+.confirm-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #00cc6a, #00aa55);
+}
+
+.cancel-btn:disabled,
+.confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Additional details */

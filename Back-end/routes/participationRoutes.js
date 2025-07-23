@@ -3,6 +3,7 @@ const router = express.Router();
 
 // Importer les fonctions du contrôleur
 const {
+    checkParticipationConditions,
     joinCarpooling,
     cancelParticipation,
     getUserParticipations,
@@ -14,6 +15,7 @@ const {
 const { authMiddleware } = require("../authMiddleware");
 
 // Routes protégées (nécessitent une authentification)
+router.get("/:id/check", authMiddleware, checkParticipationConditions); // Vérifier les conditions avant participation
 router.post("/:id/join", authMiddleware, joinCarpooling);
 router.post("/:id/cancel", authMiddleware, cancelParticipation);
 router.get("/my-participations", authMiddleware, getUserParticipations);

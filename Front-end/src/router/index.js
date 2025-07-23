@@ -67,6 +67,24 @@ const router = createRouter({
       name: 'TestModals',
       component: () => import('../views/TestModalView.vue'),
     },
+    {
+      path: '/review/:carpoolingId',
+      name: 'ReviewTrip',
+      component: () => import('../views/ReviewTripView.vue'),
+      props: (route) => ({
+        carpoolingId: route.params.carpoolingId,
+        driverId: route.query.driverId,
+      }),
+    },
+    {
+      path: '/report/:carpoolingId',
+      name: 'ReportTrip',
+      component: () => import('../views/ReportTripView.vue'),
+      props: (route) => ({
+        carpoolingId: route.params.carpoolingId,
+        driverId: route.query.driverId,
+      }),
+    },
   ],
 })
 

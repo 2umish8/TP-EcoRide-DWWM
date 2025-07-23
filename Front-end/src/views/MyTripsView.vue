@@ -329,19 +329,251 @@
 
       <!-- Vue Passager -->
       <div v-if="activeTab === 'passenger'" class="passenger-content">
-        <div class="placeholder-state">
-          <div class="placeholder-icon">🚧</div>
-          <h3>Vue Passager</h3>
-          <p>Cette fonctionnalité est en cours de développement.</p>
-          <p class="placeholder-description">Ici vous pourrez consulter :</p>
-          <ul class="feature-list">
-            <li>📅 Vos réservations de trajets</li>
-            <li>🕒 L'historique de vos voyages en tant que passager</li>
-            <li>⭐ Vos évaluations et commentaires</li>
-            <li>💳 Vos paiements et crédits utilisés</li>
-          </ul>
-          <div class="coming-soon">
-            <span class="coming-soon-badge">🔜 Bientôt disponible</span>
+        <!-- État de chargement -->
+        <div v-if="loading" class="loading-state">
+          <div class="loading-spinner"></div>
+          <p>Chargement de vos participations...</p>
+        </div>
+
+        <!-- État d'erreur -->
+        <div v-else-if="error" class="error-state">
+          <div class="error-icon">❌</div>
+          <h3>Erreur de chargement</h3>
+          <p>{{ error }}</p>
+          <button @click="loadParticipations" class="retry-btn">Réessayer</button>
+        </div>
+
+        <!-- Aucune participation -->
+        <div v-else-if="participations.length === 0" class="empty-state">
+          <div class="empty-icon">🎫</div>
+          <h3>Aucune participation trouvée</h3>
+          <p>
+            Vous n'avez pas encore participé à un covoiturage. Découvrez les EcoRides disponibles !
+          </p>
+          <router-link to="/search" class="create-first-trip-btn">
+            Rechercher un EcoRide
+          </router-link>
+        </div>
+
+        <!-- Liste des participations -->
+        <div v-else class="participations-list">
+          <!-- Statistiques rapides -->
+          <div class="trips-stats">
+            <div class="stat-card completed-trips">
+              <span class="stat-number">{{ getParticipationStatsByStatus('terminé').length }}</span>
+              <span class="stat-label"
+                >Voyage{{
+                  getParticipationStatsByStatus('terminé').length > 1 ? 's' : ''
+                }}
+                effectué{{ getParticipationStatsByStatus('terminé').length > 1 ? 's' : '' }}</span
+              >
+            </div>
+            <div class="stat-card upcoming-trips">
+              <span class="stat-number">{{ getParticipationStatsByStatus('prévu').length }}</span>
+              <span class="stat-label">À venir</span>
+            </div>
+            <div class="stat-card passengers-transported">
+              <span class="stat-number">{{ getTotalSpent() }}</span>
+              <span class="stat-label">Crédits dépensés</span>
+            </div>
+            <div class="stat-card eco-impact">
+              <span class="stat-number">{{ participations.length }}</span>
+              <span class="stat-label"
+                >Participation{{ participations.length > 1 ? 's' : '' }} total{{
+                  participations.length > 1 ? 'es' : 'e'
+                }}</span
+              >
+              <span class="stat-subtext">🎫 Historique complet</span>
+            </div>
+          </div>
+
+          <!-- Filtres -->
+          <div class="trips-filters">
+            <div class="filter-group">
+              <label>Filtrer par statut :</label>
+              <div class="status-buttons">
+                <button
+                  @click="selectedStatus = ''"
+                  :class="['status-btn', { active: selectedStatus === '' }]"
+                >
+                  Tous
+                </button>
+                <button
+                  @click="selectedStatus = 'prévu'"
+                  :class="['status-btn', { active: selectedStatus === 'prévu' }]"
+                >
+                  📅 Prévus
+                </button>
+                <button
+                  @click="selectedStatus = 'démarré'"
+                  :class="['status-btn', { active: selectedStatus === 'démarré' }]"
+                >
+                  🚗 En cours
+                </button>
+                <button
+                  @click="selectedStatus = 'terminé'"
+                  :class="['status-btn', { active: selectedStatus === 'terminé' }]"
+                >
+                  ✅ Terminés
+                </button>
+                <button
+                  @click="selectedStatus = 'annulé'"
+                  :class="['status-btn', { active: selectedStatus === 'annulé' }]"
+                >
+                  ❌ Annulés
+                </button>
+              </div>
+            </div>
+            <div class="filter-group">
+              <label for="sort-filter-passenger">Trier par :</label>
+              <select id="sort-filter-passenger" v-model="sortOrder" class="filter-select">
+                <option value="date-desc">Plus récents</option>
+                <option value="date-asc">Plus anciens</option>
+                <option value="status">Statut</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Participations -->
+          <div
+            v-if="filteredAndSortedParticipations.length === 0 && selectedStatus"
+            class="no-trips-status"
+          >
+            <div class="no-trips-icon">�</div>
+            <h3>Aucune participation {{ getStatusEmptyMessage(selectedStatus) }}</h3>
+            <p>
+              Découvrez les
+              <router-link to="/search" class="invite-link">EcoRides disponibles</router-link>
+              !
+            </p>
+          </div>
+
+          <div v-else class="trips-grid">
+            <div
+              v-for="participation in filteredAndSortedParticipations"
+              :key="`${participation.carpooling_id}-${participation.id}`"
+              class="trip-card participation-card"
+              :class="[
+                `status-${participation.carpooling_status}`,
+                { 'is-cancelled': participation.cancellation_date },
+              ]"
+            >
+              <!-- Header de la carte -->
+              <div class="trip-card-header">
+                <div class="trip-status">
+                  <span :class="['status-badge', `status-${participation.carpooling_status}`]">
+                    {{ getStatusIcon(participation.carpooling_status) }}
+                    {{ getStatusLabel(participation.carpooling_status) }}
+                  </span>
+                  <span v-if="participation.cancellation_date" class="cancellation-badge">
+                    � Annulée
+                  </span>
+                </div>
+                <div class="trip-actions">
+                  <router-link
+                    :to="`/carpoolings/${participation.carpooling_id}`"
+                    class="action-btn-small view"
+                    title="Voir les détails"
+                  >
+                    👁️
+                  </router-link>
+                  <button
+                    v-if="canCancelParticipation(participation)"
+                    @click="cancelParticipation(participation.carpooling_id)"
+                    class="action-btn-small cancel"
+                    title="Annuler la participation"
+                  >
+                    ❌
+                  </button>
+                </div>
+              </div>
+
+              <!-- Itinéraire -->
+              <div class="trip-route">
+                <div class="route-info">
+                  <div class="route-addresses">
+                    <div class="departure">
+                      <span class="icon">🟢</span>
+                      <span class="address">{{ participation.departure_address }}</span>
+                    </div>
+                    <div class="route-arrow">
+                      <span class="arrow">↓</span>
+                    </div>
+                    <div class="arrival">
+                      <span class="icon">🔴</span>
+                      <span class="address">{{ participation.arrival_address }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Détails du voyage -->
+              <div class="trip-details">
+                <div class="trip-schedule">
+                  <div class="schedule-item">
+                    <span class="schedule-label">📅 Date :</span>
+                    <span class="schedule-value">{{
+                      formatDate(participation.departure_datetime)
+                    }}</span>
+                  </div>
+                  <div class="schedule-item">
+                    <span class="schedule-label">🕒 Heure :</span>
+                    <span class="schedule-value">
+                      {{ formatTime(participation.departure_datetime) }} -
+                      {{ formatTime(participation.arrival_datetime) }}
+                    </span>
+                  </div>
+                  <div class="schedule-item">
+                    <span class="schedule-label">⏱️ Durée :</span>
+                    <span class="schedule-value">
+                      {{
+                        formatDuration(
+                          participation.departure_datetime,
+                          participation.arrival_datetime,
+                        )
+                      }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="trip-info">
+                  <div class="info-item driver-info">
+                    <span class="info-label">👨‍✈️ Conducteur :</span>
+                    <span class="info-value">{{ participation.driver_pseudo }}</span>
+                  </div>
+                  <div class="info-item vehicle-info">
+                    <span class="info-label">🚗 Véhicule :</span>
+                    <span class="info-value"
+                      >{{ participation.model }} ({{ participation.plate_number }})</span
+                    >
+                  </div>
+                  <div class="info-item price-info">
+                    <span class="info-label">💰 Prix payé :</span>
+                    <span class="info-value price">{{ participation.credits_paid }} crédits</span>
+                  </div>
+                  <div v-if="participation.participation_date" class="info-item date-info">
+                    <span class="info-label">📝 Réservé le :</span>
+                    <span class="info-value">{{
+                      formatDate(participation.participation_date)
+                    }}</span>
+                  </div>
+                  <div v-if="participation.cancellation_date" class="info-item cancellation-info">
+                    <span class="info-label">❌ Annulé le :</span>
+                    <span class="info-value">{{
+                      formatDate(participation.cancellation_date)
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footer de la carte -->
+              <div class="trip-card-footer">
+                <div class="trip-id">
+                  <span class="id-label">ID :</span>
+                  <span class="id-value">#{{ participation.carpooling_id }}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -351,13 +583,14 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue'
-import { carpoolingService } from '@/services/api'
+import { carpoolingService, participationService } from '@/services/api'
 import { showAlert, showConfirm, showError } from '@/composables/useModal'
 
 export default {
   name: 'MyTripsView',
   setup() {
     const trips = ref([])
+    const participations = ref([])
     const loading = ref(true)
     const error = ref(null)
     const selectedStatus = ref('')
@@ -418,6 +651,22 @@ export default {
       }
     }
 
+    // Charger les participations
+    const loadParticipations = async () => {
+      try {
+        loading.value = true
+        error.value = null
+
+        const response = await participationService.getMyParticipations()
+        participations.value = response.participations || []
+      } catch (err) {
+        console.error('Erreur lors du chargement des participations:', err)
+        error.value = err.response?.data?.message || 'Erreur lors du chargement des participations'
+      } finally {
+        loading.value = false
+      }
+    }
+
     // Trajets filtrés et triés
     const filteredAndSortedTrips = computed(() => {
       let filtered = trips.value
@@ -442,13 +691,52 @@ export default {
       })
     })
 
+    // Participations filtrées et triées
+    const filteredAndSortedParticipations = computed(() => {
+      let filtered = participations.value
+
+      // Filtrer par statut
+      if (selectedStatus.value) {
+        filtered = filtered.filter(
+          (participation) => participation.carpooling_status === selectedStatus.value,
+        )
+      }
+
+      // Trier
+      return filtered.sort((a, b) => {
+        switch (sortOrder.value) {
+          case 'date-asc':
+            return new Date(a.departure_datetime) - new Date(b.departure_datetime)
+          case 'date-desc':
+            return new Date(b.departure_datetime) - new Date(a.departure_datetime)
+          case 'status':
+            return a.carpooling_status.localeCompare(b.carpooling_status)
+          default:
+            return new Date(b.departure_datetime) - new Date(a.departure_datetime)
+        }
+      })
+    })
+
     // Méthodes utilitaires
     const getStatsByStatus = (status) => {
       return trips.value.filter((trip) => trip.status === status)
     }
 
+    const getParticipationStatsByStatus = (status) => {
+      return participations.value.filter(
+        (participation) => participation.carpooling_status === status,
+      )
+    }
+
     const getTotalParticipants = () => {
       return trips.value.reduce((total, trip) => total + (trip.participants_count || 0), 0)
+    }
+
+    const getTotalSpent = () => {
+      return participations.value.reduce(
+        (total, participation) => total + (participation.credits_paid || 0),
+        0,
+      )
     }
 
     const getCarbonSaved = () => {
@@ -595,6 +883,51 @@ export default {
       }
     }
 
+    // Vérifier si une participation peut être annulée
+    const canCancelParticipation = (participation) => {
+      // Impossible d'annuler si déjà annulée
+      if (participation.cancellation_date) {
+        return false
+      }
+
+      // Impossible d'annuler si le covoiturage est déjà démarré ou terminé
+      if (participation.carpooling_status !== 'prévu') {
+        return false
+      }
+
+      return true
+    }
+
+    // Annuler une participation
+    const cancelParticipation = async (carpoolingId) => {
+      const confirmed = await showConfirm(
+        "Êtes-vous sûr de vouloir annuler votre participation ? Vous serez remboursé selon la politique d'annulation.",
+        'Annuler la participation',
+      )
+      if (confirmed) {
+        try {
+          const result = await participationService.cancelParticipation(carpoolingId)
+          await loadParticipations() // Recharger la liste
+
+          // Afficher le message de succès avec les détails du remboursement
+          let message = result.message
+          if (result.creditsRefunded !== undefined) {
+            message += `\n💰 Crédits remboursés: ${result.creditsRefunded}`
+          }
+          if (result.penalty && result.penalty > 0) {
+            message += `\n⚠️ Pénalité appliquée: ${result.penalty} crédits`
+          }
+
+          showAlert(message, 'Participation annulée')
+        } catch (err) {
+          showError(
+            "Erreur lors de l'annulation de la participation : " +
+              (err.response?.data?.message || err.message),
+          )
+        }
+      }
+    }
+
     // Action pour devenir conducteur
     const becomeDriver = async () => {
       const confirmed = await showConfirm(
@@ -622,8 +955,9 @@ export default {
         // Si déjà sur l'onglet passager, rediriger vers recherche
         window.location.href = '/search'
       } else {
-        // Sinon, changer vers l'onglet passager
+        // Sinon, changer vers l'onglet passager et charger les participations
         activeTab.value = 'passenger'
+        loadParticipations()
       }
     }
 
@@ -632,19 +966,25 @@ export default {
         // Si déjà sur l'onglet conducteur, rediriger vers création
         window.location.href = '/create-trip'
       } else {
-        // Sinon, changer vers l'onglet conducteur
+        // Sinon, changer vers l'onglet conducteur et charger les trajets
         activeTab.value = 'driver'
+        loadTrips()
       }
     }
 
     // Charger les données au montage
     onMounted(() => {
       checkDriverStatus() // Vérifier d'abord le statut conducteur
-      loadTrips() // Puis charger les trajets si conducteur
+      if (activeTab.value === 'passenger') {
+        loadParticipations() // Charger les participations si onglet passager actif
+      } else {
+        loadTrips() // Charger les trajets si onglet conducteur actif
+      }
     })
 
     return {
       trips,
+      participations,
       loading,
       error,
       selectedStatus,
@@ -652,10 +992,14 @@ export default {
       activeTab,
       isDriver,
       filteredAndSortedTrips,
+      filteredAndSortedParticipations,
       loadTrips,
+      loadParticipations,
       checkDriverStatus,
       getStatsByStatus,
+      getParticipationStatsByStatus,
       getTotalParticipants,
+      getTotalSpent,
       getCarbonSaved,
       getStatusIcon,
       getStatusLabel,
@@ -667,6 +1011,8 @@ export default {
       startTrip,
       finishTrip,
       cancelTrip,
+      canCancelParticipation,
+      cancelParticipation,
       becomeDriver,
       handlePassengerTab,
       handleDriverTab,
@@ -1523,6 +1869,86 @@ export default {
 @media (max-width: 480px) {
   .trips-stats {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Styles spécifiques pour les participations */
+.passenger-content {
+  width: 100%;
+}
+
+.participations-list {
+  width: 100%;
+}
+
+.participation-card {
+  position: relative;
+}
+
+.participation-card.is-cancelled {
+  opacity: 0.7;
+  background: linear-gradient(135deg, #2d1b1b, #3d2d2d);
+  border-left: 4px solid #dc3545;
+}
+
+.participation-card.is-cancelled::before {
+  content: 'ANNULÉE';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #dc3545;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  z-index: 1;
+}
+
+.cancellation-badge {
+  background: #dc3545;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
+.driver-info .info-value {
+  font-weight: 600;
+  color: #28a745;
+}
+
+.vehicle-info .info-value {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.price-info .info-value.price {
+  color: #ffc107;
+  font-weight: 600;
+}
+
+.cancellation-info .info-value {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+/* Animation pour le changement d'onglet */
+.passenger-content,
+.driver-content {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 </style>
