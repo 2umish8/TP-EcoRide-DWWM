@@ -137,3 +137,22 @@ dist
 
 # Fichiers de développement personnels
 shortcuts.ps1
+
+# Documents personnels et guides de développement (non destinés à l'évaluateur)
+GUIDE_*.md
+MONGODB_INSTALLATION_URGENTE.md
+MONGODB_ATLAS_EXPRESS.md
+SOLUTION_URGENTE_MODE_DEGRADE.md
+lancer-mongodb-compass.bat
+**/NETTOYAGE_TESTS.md
+**/POPINS_REMPLACEMENT.md
+**/EMAIL_VALIDATION_IMPLEMENTATION.md
+**/MONGODB_INSTALL_GUIDE.md
+**/MONGODB_INTEGRATION.md
+**/MONGODB_SETUP.md
+**/TESTS_README.md
+temp_fix.txt
+
+# Fichiers de sauvegarde et temporaires
+*_backup.*
+MyTripsView_backup.vue
