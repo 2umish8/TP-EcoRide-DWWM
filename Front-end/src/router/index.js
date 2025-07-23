@@ -58,6 +58,11 @@ const router = createRouter({
       component: () => import('../views/ProfileView.vue'),
     },
     {
+      path: '/become-driver',
+      name: 'BecomeDriver',
+      component: () => import('../views/BecomeDriverView.vue'),
+    },
+    {
       path: '/credits',
       name: 'Credits',
       component: () => import('../views/CreditsView.vue'),

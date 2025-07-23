@@ -144,7 +144,7 @@ const loginUser = async (req, res) => {
 };
 
 /* --------------------------------------------------- gestion des rôles -------------------------------------------- */
-// Devenir chauffeur (ajouter le rôle chauffeur)
+// Devenir chauffeur (ajouter le rôle chauffeur) - PROCESSUS STRICT
 const becomeDriver = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -163,17 +163,34 @@ const becomeDriver = async (req, res) => {
                 .json({ message: "Vous êtes déjà chauffeur." });
         }
 
-        // Ajouter le rôle chauffeur
+        // Vérifier que l'utilisateur a au moins un véhicule
+        const vehicleCheckSql =
+            "SELECT COUNT(*) as count FROM Vehicle WHERE owner_id = ?";
+        const [[vehicleCount]] = await db.query(vehicleCheckSql, [userId]);
+
+        if (vehicleCount.count === 0) {
+            return res.status(400).json({
+                message:
+                    "Vous devez enregistrer au moins un véhicule pour devenir chauffeur.",
+                code: "VEHICLE_REQUIRED",
+            });
+        }
+
+        // Ajouter le rôle chauffeur (permanent et définitif)
         const sql =
             "INSERT INTO User_Role (user_id, role_id) VALUES (?, (SELECT id FROM Role WHERE name = 'chauffeur'))";
         await db.query(sql, [userId]);
 
+        // Log de l'événement important
+        console.log(`🚗 Nouvel chauffeur EcoRide: User ID ${userId}`);
+
         res.status(200).json({
             message:
-                "Vous êtes maintenant chauffeur ! Vous pouvez ajouter vos véhicules.",
+                "Félicitations ! Vous êtes maintenant chauffeur EcoRide. Ce statut est permanent.",
+            isPermanent: true,
         });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur lors de la création du chauffeur:", error);
         res.status(500).json({
             message: "Erreur lors de l'ajout du rôle chauffeur.",
         });

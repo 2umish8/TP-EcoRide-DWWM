@@ -57,7 +57,7 @@
         <!-- Vérification si l'utilisateur est conducteur -->
         <div v-if="!isDriver" class="become-driver-state">
           <div class="become-driver-icon">🚗</div>
-          <h3>Devenez conducteur</h3>
+          <h3>Devenez conducteur EcoRide</h3>
           <p>Vous n'êtes pas encore conducteur sur EcoRide.</p>
           <p class="become-driver-description">En devenant conducteur, vous pourrez :</p>
           <ul class="benefit-list">
@@ -65,9 +65,20 @@
             <li>💰 Gagner des crédits en partageant vos frais</li>
             <li>🌱 Réduire votre empreinte carbone</li>
             <li>🤝 Rencontrer de nouvelles personnes</li>
+            <li>⭐ Recevoir des avis de vos passagers</li>
           </ul>
+          <div class="become-driver-notice">
+            <p><strong>📋 Processus d'inscription requis :</strong></p>
+            <ul>
+              <li>✅ Informations de votre véhicule</li>
+              <li>✅ Vos préférences de conduite</li>
+              <li>✅ Engagement de conduite responsable</li>
+            </ul>
+          </div>
           <div class="become-driver-actions">
-            <button @click="becomeDriver" class="become-driver-btn">🚗 Devenir conducteur</button>
+            <router-link to="/become-driver" class="become-driver-btn">
+              🚗 Commencer l'inscription chauffeur
+            </router-link>
             <router-link to="/help" class="learn-more-btn"> 📚 En savoir plus </router-link>
           </div>
         </div>
@@ -928,27 +939,6 @@ export default {
       }
     }
 
-    // Action pour devenir conducteur
-    const becomeDriver = async () => {
-      const confirmed = await showConfirm(
-        'Voulez-vous devenir conducteur sur EcoRide ?',
-        'Devenir conducteur',
-      )
-      if (confirmed) {
-        try {
-          // TODO: Ajouter l'appel API pour devenir conducteur
-          // await userService.becomeDriver()
-          isDriver.value = true
-          showAlert('Félicitations ! Vous êtes maintenant conducteur sur EcoRide.', 'Succès')
-        } catch (err) {
-          showError(
-            "Erreur lors de l'inscription en tant que conducteur : " +
-              (err.response?.data?.message || err.message),
-          )
-        }
-      }
-    }
-
     // Gestion des onglets avec actions
     const handlePassengerTab = () => {
       if (activeTab.value === 'passenger') {
@@ -1013,7 +1003,6 @@ export default {
       cancelTrip,
       canCancelParticipation,
       cancelParticipation,
-      becomeDriver,
       handlePassengerTab,
       handleDriverTab,
     }
