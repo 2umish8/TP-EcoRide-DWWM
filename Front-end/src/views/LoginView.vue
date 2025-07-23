@@ -44,8 +44,8 @@
                 class="password-toggle"
                 :disabled="isLoading"
               >
-                <span v-if="showPassword">👁️</span>
-                <span v-else>🙈</span>
+                <i v-if="showPassword" class="fas fa-eye"></i>
+                <i v-else class="fas fa-eye-slash"></i>
               </button>
             </div>
           </div>
@@ -64,19 +64,19 @@
 
           <!-- Message d'erreur -->
           <div v-if="errorMessage" class="error-message">
-            <span class="error-icon">⚠️</span>
+            <i class="fas fa-exclamation-triangle error-icon"></i>
             {{ errorMessage }}
           </div>
 
           <!-- Message de succès -->
           <div v-if="successMessage" class="success-message">
-            <span class="success-icon">✅</span>
+            <i class="fas fa-check-circle success-icon"></i>
             {{ successMessage }}
           </div>
 
           <!-- Bouton de connexion -->
           <button type="submit" class="login-btn" :disabled="isLoading || !isFormValid">
-            <span v-if="isLoading" class="loading-spinner">⏳</span>
+            <i v-if="isLoading" class="fas fa-spinner fa-spin loading-spinner"></i>
             <span v-else>Se connecter</span>
           </button>
         </form>
@@ -85,36 +85,6 @@
         <div class="signup-link">
           <p>Vous n'avez pas encore de compte ?</p>
           <router-link to="/register" class="signup-btn"> Créer un compte </router-link>
-        </div>
-      </div>
-
-      <!-- Section informative -->
-      <div class="info-section">
-        <div class="info-content">
-          <h2 class="info-title">Rejoignez la communauté EcoRide</h2>
-          <div class="benefits-list">
-            <div class="benefit-item">
-              <span class="benefit-icon">🌱</span>
-              <div class="benefit-text">
-                <h3>Impact environnemental</h3>
-                <p>Réduisez votre empreinte carbone en partageant vos trajets</p>
-              </div>
-            </div>
-            <div class="benefit-item">
-              <span class="benefit-icon">💰</span>
-              <div class="benefit-text">
-                <h3>Économies garanties</h3>
-                <p>Partagez les frais et économisez sur vos trajets quotidiens</p>
-              </div>
-            </div>
-            <div class="benefit-item">
-              <span class="benefit-icon">👥</span>
-              <div class="benefit-text">
-                <h3>Nouvelles rencontres</h3>
-                <p>Rencontrez des personnes partageant vos valeurs</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -205,15 +175,12 @@ const handleLogin = async () => {
 }
 
 .login-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  max-width: 1200px;
+  max-width: 500px;
   width: 100%;
   background: #1a1a1a;
   border-radius: 20px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   overflow: hidden;
-  min-height: 600px;
   border: 1px solid #333;
 }
 
@@ -400,19 +367,6 @@ const handleLogin = async () => {
   transform: none;
 }
 
-.loading-spinner {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .signup-link {
   text-align: center;
   margin-top: 20px;
@@ -437,56 +391,6 @@ const handleLogin = async () => {
   color: #22c55e;
 }
 
-/* Section informative */
-.info-section {
-  background: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
-  color: white;
-  padding: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.info-content {
-  max-width: 400px;
-}
-
-.info-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.benefits-list {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.benefit-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.benefit-icon {
-  font-size: 2rem;
-  flex-shrink: 0;
-}
-
-.benefit-text h3 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.benefit-text p {
-  font-size: 0.95rem;
-  opacity: 0.9;
-  line-height: 1.5;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .login-page {
@@ -495,17 +399,7 @@ const handleLogin = async () => {
   }
 
   .login-container {
-    grid-template-columns: 1fr;
-    max-width: 500px;
-  }
-
-  .info-section {
-    order: -1;
-    padding: 30px 20px;
-  }
-
-  .info-title {
-    font-size: 1.5rem;
+    max-width: 450px;
   }
 
   .login-card {

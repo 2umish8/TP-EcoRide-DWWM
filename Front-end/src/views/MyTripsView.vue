@@ -7,23 +7,46 @@
 
       <!-- Onglets Conducteur/Passager -->
       <div class="tabs-container">
-        <button
-          @click="handlePassengerTab"
-          :class="['tab-btn', { active: activeTab === 'passenger' }]"
-        >
-          <span v-if="activeTab === 'passenger'" class="tab-content action-mode">
-            <span class="icon">🔍</span>
-            Rechercher un EcoRide
-          </span>
-          <span v-else class="tab-content normal-mode"> 🎒 Passager </span>
-        </button>
-        <button @click="handleDriverTab" :class="['tab-btn', { active: activeTab === 'driver' }]">
-          <span v-if="activeTab === 'driver'" class="tab-content action-mode">
-            <span class="icon">➕</span>
-            Proposer un nouvel EcoRide
-          </span>
-          <span v-else class="tab-content normal-mode"> 🚗 Conducteur </span>
-        </button>
+        <div class="tab-wrapper">
+          <div v-if="activeTab === 'passenger'" class="action-hint left">
+            <span class="hint-text">Cliquez à nouveau pour</span>
+          </div>
+          <div v-else class="action-hint left invisible">
+            <span class="hint-text">Cliquez à nouveau pour</span>
+          </div>
+          <button
+            @click="handlePassengerTab"
+            :class="['tab-btn', { active: activeTab === 'passenger' }]"
+          >
+            <span v-if="activeTab === 'passenger'" class="tab-content action-mode">
+              <span class="icon">🔍</span>
+              Rechercher un EcoRide
+            </span>
+            <span v-else class="tab-content normal-mode">
+              <span class="icon">📅</span>
+              Voir mes réservations
+            </span>
+          </button>
+        </div>
+
+        <div class="tab-wrapper">
+          <button @click="handleDriverTab" :class="['tab-btn', { active: activeTab === 'driver' }]">
+            <span v-if="activeTab === 'driver'" class="tab-content action-mode">
+              <span class="icon">➕</span>
+              Proposer un nouvel EcoRide
+            </span>
+            <span v-else class="tab-content normal-mode">
+              <span class="icon">🚗</span>
+              Voir mes EcoRides proposés
+            </span>
+          </button>
+          <div v-if="activeTab === 'driver'" class="action-hint right">
+            <span class="hint-text">Cliquez à nouveau pour</span>
+          </div>
+          <div v-else class="action-hint right invisible">
+            <span class="hint-text">Cliquez à nouveau pour</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -666,8 +689,14 @@ export default {
 .tabs-container {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 2rem;
   margin-top: 1.5rem;
+}
+
+.tab-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .tab-btn {
@@ -682,7 +711,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  min-width: 180px;
+  min-width: 220px;
   justify-content: center;
 }
 
@@ -716,6 +745,46 @@ export default {
 
 .tab-content.normal-mode {
   font-size: 1rem;
+}
+
+.action-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+  opacity: 0;
+  animation: fadeInHint 0.3s ease-in-out 0.5s forwards;
+  white-space: nowrap;
+}
+
+.action-hint.invisible {
+  opacity: 0 !important;
+  animation: none;
+}
+
+.action-hint.left {
+  order: -1; /* Place l'indice avant le bouton */
+}
+
+.action-hint.right {
+  order: 1; /* Place l'indice après le bouton */
+}
+
+.hint-text {
+  font-style: italic;
+  font-weight: 500;
+}
+
+@keyframes fadeInHint {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 0.8;
+    transform: translateX(0);
+  }
 }
 
 /* Container principal */
@@ -1380,12 +1449,32 @@ export default {
   .tabs-container {
     flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1.5rem;
+  }
+
+  .tab-wrapper {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .action-hint.left,
+  .action-hint.right {
+    order: -1; /* Par défaut, au-dessus du bouton */
+  }
+
+  .action-hint.right {
+    order: 1; /* L'indice droit (proposer) en dessous du bouton */
   }
 
   .tab-btn {
-    width: 250px;
+    width: 280px;
     justify-content: center;
+  }
+
+  .action-hint {
+    justify-content: center;
+    font-size: 0.75rem;
   }
 
   .trips-grid {

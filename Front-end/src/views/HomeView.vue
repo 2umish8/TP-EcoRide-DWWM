@@ -104,11 +104,17 @@ const scrollToAbout = () => {
                 </div>
                 <button type="submit" class="search-btn">
                   <span>ecoRIDEZ</span>
-                  <img
-                    src="@/assets/search-sort-svgrepo-com.svg"
-                    alt="Rechercher"
+                  <svg
                     class="search-icon"
-                  />
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                    />
+                  </svg>
                 </button>
               </form>
             </div>
@@ -121,8 +127,11 @@ const scrollToAbout = () => {
           </div>
           <!-- Section "En savoir plus" -->
           <div class="qui-sommes-nous">
-            <div class="scroll-icon">
-              <img src="@/assets/scroll-svgrepo-com.svg" alt="Scroll" class="scroll-svg" />
+            <div class="scroll-icon" @click="scrollToAbout">
+              <svg class="scroll-svg" width="24" height="24" viewBox="0 0 24 24">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                <path d="M7.41 15.59L12 20.17l4.59-4.58L18 17l-6 6-6-6 1.41-1.41z" />
+              </svg>
             </div>
             <div class="en-savoir-plus" @click="scrollToAbout">En Savoir Plus</div>
           </div>
@@ -133,20 +142,15 @@ const scrollToAbout = () => {
     <!-- Footer arrows section -->
     <div class="arrows-section">
       <div class="arrow-down">
-        <img
-          src="@/assets/arrow-down-svgrepo-com.svg"
-          alt="Scroller vers le bas"
-          class="arrow-icon"
-        />
+        <svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+        </svg>
       </div>
-      <div class="footer-links">
-      </div>
+      <div class="footer-links"></div>
       <div class="arrow-down">
-        <img
-          src="@/assets/arrow-down-svgrepo-com.svg"
-          alt="Scroller vers le bas"
-          class="arrow-icon"
-        />
+        <svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+        </svg>
       </div>
     </div>
 
@@ -320,12 +324,27 @@ const scrollToAbout = () => {
   font-size: 2rem;
   color: #ffffff;
   animation: bounce 2s infinite;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 10px;
+  border-radius: 50%;
+}
+
+.scroll-icon:hover {
+  color: #34d399;
+  transform: scale(1.1);
+  background-color: rgba(52, 211, 153, 0.1);
 }
 
 .scroll-svg {
   width: 32px;
   height: 32px;
   filter: invert(1);
+  transition: filter 0.3s ease;
+}
+
+.scroll-icon:hover .scroll-svg {
+  filter: invert(1) sepia(1) saturate(5) hue-rotate(150deg);
 }
 
 @keyframes bounce {
@@ -470,7 +489,7 @@ const scrollToAbout = () => {
 }
 
 .browse-all-btn {
-  background: transparent;
+  background: rgba(52, 211, 153, 0.15);
   color: #34d399;
   border: 2px solid #34d399;
   padding: 12px 20px;
@@ -480,6 +499,7 @@ const scrollToAbout = () => {
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
+  backdrop-filter: blur(10px);
 }
 
 .browse-all-btn:hover {
