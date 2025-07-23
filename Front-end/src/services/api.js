@@ -59,6 +59,29 @@ export const authService = {
     const response = await api.get('/users/profile')
     return response.data
   },
+
+  async becomeDriver() {
+    const response = await api.post('/users/become-driver')
+    return response.data
+  },
+}
+
+// Services de véhicules
+export const vehicleService = {
+  async getUserVehicles() {
+    const response = await api.get('/vehicles/my-vehicles')
+    return response.data
+  },
+
+  async addVehicle(vehicleData) {
+    const response = await api.post('/vehicles', vehicleData)
+    return response.data
+  },
+
+  async removeVehicle(vehicleId) {
+    const response = await api.delete(`/vehicles/${vehicleId}`)
+    return response.data
+  },
 }
 
 // Services de covoiturage
