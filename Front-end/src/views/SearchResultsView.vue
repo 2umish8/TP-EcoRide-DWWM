@@ -60,7 +60,9 @@
             v-model="filters.maxPrice"
             class="price-slider"
           />
-          <span class="price-value">{{ filters.maxPrice }}<IconCredit style="vertical-align: middle; margin-left: 2px;" /></span>
+          <span class="price-value"
+            >{{ filters.maxPrice }}<IconCredit style="vertical-align: middle; margin-left: 2px"
+          /></span>
         </div>
         <div class="filter-group">
           <h4>Aspect écologique</h4>
@@ -115,6 +117,7 @@
             v-for="trip in formattedResults"
             :key="trip.id"
             class="trip-card"
+            :class="{ 'my-trip': isMyTrip(trip) }"
             @click="selectTrip(trip)"
           >
             <div class="trip-header">
@@ -157,7 +160,9 @@
                   >
                 </div>
                 <div class="price">
-                  <span class="amount">{{ trip.price }}<IconCredit style="vertical-align: middle; margin-left: 2px;" /></span>
+                  <span class="amount"
+                    >{{ trip.price }}<IconCredit style="vertical-align: middle; margin-left: 2px"
+                  /></span>
                   <span class="per-person">par personne</span>
                 </div>
               </div>
@@ -214,10 +219,12 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { carpoolingService } from '@/services/api.js'
+import { useAuthStore } from '@/stores/counter'
 import IconCredit from '@/components/icons/IconCredit.vue'
 
 const route = useRoute()
 const router = useRouter()
+const authStore = useAuthStore()
 
 // État de chargement et d'erreur
 const loading = ref(false)
@@ -226,9 +233,10 @@ const nextAvailableDate = ref(null)
 
 // Paramètres de recherche depuis l'URL
 const searchParams = ref({
-  from: route.query.from || '',
-  to: route.query.to || '',
+  from: route.query.departure || route.query.from || '',
+  to: route.query.destination || route.query.to || '',
   date: route.query.date || '',
+  showMyTrips: route.query.showMyTrips === 'true' || false,
 })
 
 // Computed pour vérifier si des critères de recherche ont été fournis
@@ -320,6 +328,7 @@ const formattedResults = computed(() => {
     duration: formatDuration(carpooling.duration_minutes),
     price: carpooling.price_per_passenger,
     seatsAvailable: carpooling.seats_remaining,
+    driverId: carpooling.driver_id, // Ajouter l'ID du chauffeur
     driver: {
       name: carpooling.driver_pseudo,
       avatar: carpooling.driver_photo || 'https://i.pravatar.cc/150?img=' + (carpooling.id % 70),
@@ -408,6 +417,11 @@ const createAlert = () => {
   alert(
     "Fonctionnalité d'alerte à implémenter - Vous serez notifié par email quand un nouveau trajet correspondant sera disponible",
   )
+}
+
+// Fonction pour vérifier si un trajet appartient à l'utilisateur actuel
+const isMyTrip = (trip) => {
+  return authStore.currentUser && trip.driverId === authStore.currentUser.id
 }
 
 // Nouvelle recherche depuis le formulaire compact
@@ -990,6 +1004,34 @@ onMounted(() => {
   border-color: #34d399;
 }
 
+/* Style spécial pour les trajets de l'utilisateur actuel */
+.trip-card.my-trip {
+  border: 2px solid #34d399;
+  background: linear-gradient(135deg, #1a1a1a 0%, rgba(52, 211, 153, 0.1) 100%);
+  box-shadow: 0 4px 20px rgba(52, 211, 153, 0.2);
+  position: relative;
+}
+
+.trip-card.my-trip::before {
+  content: '🚗 Mon trajet';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  background: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 0 8px 0 12px;
+  box-shadow: 0 2px 8px rgba(52, 211, 153, 0.3);
+}
+
+.trip-card.my-trip:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(52, 211, 153, 0.4);
+  border-color: #22c55e;
+}
+
 .trip-header {
   display: flex;
   justify-content: space-between;
@@ -1009,7 +1051,7 @@ onMounted(() => {
   font-weight: 600;
   color: var(--eco-beige);
   font-size: 1.1rem;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 .route-line {
