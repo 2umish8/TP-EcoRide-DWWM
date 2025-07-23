@@ -51,6 +51,53 @@
         </div>
       </div>
 
+      <!-- Section Proposer un trajet (si chauffeur sélectionné) -->
+      <div v-if="selectedRoles.includes('chauffeur')" class="propose-ride-card">
+        <h3 class="card-title">Proposer un EcoRide</h3>
+        <div class="propose-ride-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">🚩 Lieu de départ</label>
+              <input
+                type="text"
+                v-model="newRide.departure"
+                class="form-input"
+                placeholder="Entrez le lieu de départ"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">🏁 Lieu d'arrivée</label>
+              <input
+                type="text"
+                v-model="newRide.destination"
+                class="form-input"
+                placeholder="Entrez le lieu d'arrivée"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">📅 Date de départ</label>
+              <input type="date" v-model="newRide.date" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">🕐 Heure de départ</label>
+              <input type="time" v-model="newRide.time" class="form-input" required />
+            </div>
+          </div>
+
+          <div class="propose-ride-actions">
+            <button @click="proposeRide" class="propose-btn" :disabled="!canProposeRide">
+              <span class="propose-icon">🚗</span>
+              Proposer un EcoRide
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Section Chauffeur (si chauffeur sélectionné) -->
       <div v-if="selectedRoles.includes('chauffeur')" class="driver-section">
         <!-- Véhicules -->
@@ -277,6 +324,24 @@ export default {
       is_electric: false,
     })
 
+    // Nouveau trajet
+    const newRide = ref({
+      departure: '',
+      destination: '',
+      date: '',
+      time: '',
+    })
+
+    // Computed pour vérifier si on peut proposer un trajet
+    const canProposeRide = computed(() => {
+      return (
+        newRide.value.departure &&
+        newRide.value.destination &&
+        newRide.value.date &&
+        newRide.value.time
+      )
+    })
+
     // Méthodes
     const updateRole = () => {
       console.log('Rôles sélectionnés:', JSON.stringify(selectedRoles.value))
@@ -319,6 +384,22 @@ export default {
       // TODO: Appel API pour supprimer
     }
 
+    const proposeRide = () => {
+      console.log('Nouveau trajet proposé:', JSON.stringify(newRide.value))
+      // TODO: Appel API pour proposer le trajet
+
+      // Reset du formulaire après proposition
+      newRide.value = {
+        departure: '',
+        destination: '',
+        date: '',
+        time: '',
+      }
+
+      // Afficher un message de confirmation (à implémenter)
+      alert('Trajet proposé avec succès !')
+    }
+
     onMounted(() => {
       // TODO: Charger les données depuis l'API
     })
@@ -331,10 +412,13 @@ export default {
       isSubmitting,
       driverPreferences,
       newVehicle,
+      newRide,
+      canProposeRide,
       updateRole,
       updatePreferences,
       addVehicle,
       removeVehicle,
+      proposeRide,
     }
   },
 }
@@ -419,6 +503,7 @@ export default {
 }
 
 .role-selection-card,
+.propose-ride-card,
 .vehicles-card,
 .preferences-card {
   background: #1a1a1a;
@@ -627,6 +712,12 @@ export default {
   max-width: 250px;
 }
 
+/* Styles spécifiques pour les inputs de la section proposer un trajet */
+.propose-ride-form .form-input {
+  max-width: none;
+  width: 100%;
+}
+
 .form-select:focus,
 .form-input:focus,
 .form-textarea:focus {
@@ -773,6 +864,54 @@ export default {
 .submit-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.propose-ride-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.propose-ride-form .form-row {
+  gap: 20px;
+}
+
+.propose-ride-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.propose-btn {
+  background: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 15px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(52, 211, 153, 0.3);
+}
+
+.propose-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 211, 153, 0.4);
+}
+
+.propose-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.propose-icon {
+  font-size: 1.2rem;
 }
 
 @media (max-width: 768px) {
