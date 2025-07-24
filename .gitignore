@@ -79,6 +79,9 @@ web_modules/
 .env.production.local
 .env.local
 
+# Scripts de test archivés (non nécessaires)
+scripts-archive/
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
