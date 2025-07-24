@@ -98,4 +98,15 @@ const router = createRouter({
   ],
 })
 
+// Guard global : redirection forcée pour les admins
+router.beforeEach((to, from, next) => {
+  // Récupère le user depuis le localStorage
+  const user = JSON.parse(localStorage.getItem('user') || 'null')
+  const isAdmin = user && user.role === 'admin'
+  if (isAdmin && to.path !== '/admin') {
+    return next({ path: '/admin' })
+  }
+  return next()
+})
+
 export default router

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { RouterView } from 'vue-router'
+import { RouterView, useRoute } from 'vue-router'
 import { useAuthStore } from './stores/counter'
 import GlassButton from './components/GlassButton.vue'
 import CustomModal from './components/CustomModal.vue'
@@ -11,6 +11,9 @@ const isLoggedIn = computed(() => authStore.isLoggedIn)
 const currentUser = computed(() => authStore.currentUser)
 const { modals } = useModal()
 
+const route = useRoute()
+const hideLayout = computed(() => route.name === 'Admin' || route.path === '/admin')
+
 const logout = async () => {
   await authStore.logout()
   window.location.href = '/'
@@ -20,7 +23,7 @@ const logout = async () => {
 <template>
   <div id="app">
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
+    <nav v-if="!hideLayout" class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
       <div class="container-fluid">
         <router-link class="navbar-brand fw-bold" to="/">
           <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="navbar-logo" />
@@ -190,7 +193,7 @@ const logout = async () => {
     <RouterView />
 
     <!-- Footer -->
-    <footer class="footer-ecoride">
+    <footer v-if="!hideLayout" class="footer-ecoride">
       <div class="footer-content">
         <span class="footer-text">© 2025 EcoRide</span>
         <span class="footer-separator">|</span>
