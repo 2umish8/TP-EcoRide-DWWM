@@ -1,255 +1,327 @@
 # EcoRide - Application de Covoiturage Écologique 🌱🚗
 
-Application web de covoiturage axée sur la mobilité durable, développée dans le cadre du TP Développeur Web et Web Mobile.
+Application web de covoiturage axée sur la mobilité durable.
 
-## 📋 Description
+## 📋 Description du projet
 
-EcoRide est une plateforme de covoiturage qui encourage les déplacements écologiques en valorisant les véhicules électriques et en proposant un système de crédits pour récompenser les conducteurs responsables.
+EcoRide est une plateforme de covoiturage qui encourage les déplacements écologiques en## 📋 Documents projet fournis
 
-## 🚀 Déploiement en local
+| Document                       | Contenu                        | Objectif                  |
+| ------------------------------ | ------------------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| 📖 **Manuel Utilisateur**      | Guide complet d'utilisation    | Documentation utilisateur |
+| 🔧 **Documentation Technique** | Architecture, API, déploiement | Détails techniques        |
+| 📊 **Gestion de Projet**       | Méthodologie, planning, tests  | Approche projet           |
+| 🎨 **Charte Graphique**        | Design system complet          | Guide visuel              | ant les véhicules électriques et en proposant un système de crédits pour récompenser les conducteurs responsables. |
 
-### Prérequis
+### 🎯 Fonctionnalités principales
 
--   **Node.js** (version 18+)
--   **MySQL** (version 8+)
--   **Git**
+-   ✅ Développement d'une application web full-stack
+-   ✅ Interface Vue.js 3 moderne et responsive
+-   ✅ API REST avec Node.js/Express
+-   ✅ Gestion de bases de données relationnelles (MySQL) et NoSQL (MongoDB)
+-   ✅ Authentification sécurisée (JWT)
+-   ✅ Tests automatisés et documentation technique
 
-### Installation
+## 🚀 Déploiement rapide
 
-1. **Cloner le repository**
+### ⚡ Démarrage express
 
 ```bash
+# 1. Cloner le repository
 git clone https://github.com/2umish8/TP-EcoRide-DWWM.git
 cd TP-EcoRide-DWWM
+
+# 2. Backend (Terminal 1)
+cd Back-end
+npm install
+# Configurer .env avec vos paramètres MySQL
+npm start
+
+# 3. Frontend (Terminal 2)
+cd Front-end
+npm install
+npm run dev
 ```
 
-2. **Configurer la base de données**
+**Accès :**
+
+-   **Application** : http://localhost:5173
+-   **API** : http://localhost:3000
+
+### 🔑 Comptes de test (prêts à utiliser)
+
+| Rôle               | Email             | Mot de passe | Fonctionnalités  |
+| ------------------ | ----------------- | ------------ | ---------------- |
+| **Administrateur** | admin@ecoride.fr  | Admin123!    | Gestion système  |
+| **Conducteur**     | driver@ecoride.fr | Driver123!   | Création trajets |
+| **Utilisateur**    | user@ecoride.fr   | User123!     | Participation    |
+
+````
+
+### 🗄️ Configuration base de données (si nécessaire)
+
+<details>
+<summary><strong>📊 Setup MySQL complet</strong></summary>
 
 ```bash
 # Se connecter à MySQL
 mysql -u root -p
 
-# Exécuter les scripts de création
-source Back-end/Commandes SQL/creation_base_de_donnees.sql
-source Back-end/Commandes SQL/insertion_donnees.sql
+# Créer la base de données
+CREATE DATABASE ecoride CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE ecoride;
+
+# Importer le schéma et les données
+source Back-end/Database/schema.sql;
+source Back-end/Database/seed.sql;
+````
+
+**Variables d'environnement (.env) :**
+
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=votre_mot_de_passe
+DB_NAME=ecoride
+JWT_SECRET=votre_jwt_secret
+MONGODB_URI=mongodb://localhost:27017/ecoride_reviews
 ```
 
-3. **Configurer le Back-end**
+</details>
+
+## 🏆 Fonctionnalités démonstrées
+
+### ✅ Parcours de test recommandé
+
+1. **Visiteur non connecté**
+
+    - Recherche de trajets par destination
+    - Filtrage avancé (prix, durée, écologique)
+    - Consultation détaillée des covoiturages
+
+2. **Utilisateur connecté** (user@ecoride.fr)
+
+    - Inscription avec 20 crédits offerts
+    - Participation à un covoiturage
+    - Historique des trajets
+    - Système d'avis et notes
+
+3. **Conducteur** (driver@ecoride.fr)
+
+    - Ajout de véhicules (marquer comme électrique)
+    - Création de trajets avec gestion des prix
+    - Gestion des réservations
+    - Consultation des avis reçus
+
+4. **Administrateur** (admin@ecoride.fr)
+    - Tableau de bord avec statistiques
+    - Gestion des utilisateurs
+    - Modération des avis
+    - Vue d'ensemble de la plateforme
+
+## 🏗️ Architecture et technologies
+
+### Stack technique maîtrisé
+
+**Frontend :**
+
+-   **Vue.js 3** avec Composition API - Framework moderne
+-   **Vite** - Build tool performant
+-   **Bootstrap 5** - Design responsive
+-   **Axios** - Client HTTP pour API
+
+**Backend :**
+
+-   **Node.js + Express.js** - Serveur API REST
+-   **MySQL** - Base de données relationnelle (pool de connexions)
+-   **MongoDB** - Base NoSQL pour avis et notes
+-   **JWT + bcrypt** - Authentification sécurisée
+
+**DevOps & Tests :**
+
+-   **Git** avec workflow GitFlow
+-   **Vitest** - Tests unitaires
+-   **Playwright** - Tests end-to-end
+
+## 📊 Fonctionnalités principales réalisées
+
+### 🌐 Côté visiteur (non connecté)
+
+-   ✅ **Recherche intuitive** : Barre de recherche avec destination
+-   ✅ **Filtrage avancé** : Prix, durée, note conducteur, aspect écologique
+-   ✅ **Consultation détaillée** : Informations complètes sur trajets et conducteurs
+-   ✅ **Interface responsive** : Compatible mobile, tablette, desktop
+
+### 👤 Côté utilisateur connecté
+
+-   ✅ **Inscription sécurisée** : Validation email + 20 crédits offerts
+-   ✅ **Profil personnalisable** : Passager, conducteur, ou mixte
+-   ✅ **Participation trajets** : Réservation avec système de crédits
+-   ✅ **Historique complet** : Trajets passés et à venir
+-   ✅ **Système d'avis** : Notes et commentaires bidirectionnels
+
+### 🚗 Côté conducteur
+
+-   ✅ **Gestion véhicules** : Ajout avec type (électrique valorisé)
+-   ✅ **Création trajets** : Planning, prix, places, préférences
+-   ✅ **Gestion réservations** : Acceptation/refus passagers
+-   ✅ **Revenus en crédits** : Monétisation des trajets proposés
+
+### ⚙️ Côté administration
+
+-   ✅ **Dashboard analytique** : Statistiques temps réel
+-   ✅ **Gestion utilisateurs** : CRUD complet avec modération
+-   ✅ **Supervision avis** : Modération contenus inappropriés
+-   ✅ **Vue globale** : Monitoring activité plateforme
+
+## 🧪 Tests et validation
+
+### Suite de tests complète
 
 ```bash
-cd Back-end
+# Tests unitaires Frontend
+cd Front-end && npm test
 
-# Installer les dépendances
-npm install
+# Tests End-to-End
+cd Front-end && npm run test:e2e
 
-# Configurer les variables d'environnement
-cp .env.example .env
-# Éditer le fichier .env avec vos paramètres de base de données
-
-# Lancer le serveur
-npm start
+# Tests Backend (API)
+cd Back-end && npm test
 ```
 
-4. **Configurer le Front-end**
+**Résultats obtenus :**
 
-```bash
-cd Front-end
+-   ✅ **Bonne couverture de code**
+-   ✅ **Performance API correcte**
+-   ✅ **Scénarios E2E validés**
+-   ✅ **Sécurité : Vulnérabilités traitées**
 
-# Installer les dépendances
-npm install
-
-# Lancer le serveur de développement
-npm run dev
-```
-
-### Accès à l'application
-
--   **Front-end** : http://localhost:5173
--   **Back-end API** : http://localhost:3000
-
-## 🏗️ Architecture
-
-### Technologies utilisées
-
-**Front-end :**
-
--   Vue.js 3 avec Composition API
--   Vite (build tool)
--   Bootstrap 5 pour le design responsive
--   Axios pour les appels API
-
-**Back-end :**
-
--   Node.js avec Express.js
--   MySQL avec pool de connexions
--   JWT pour l'authentification
--   Bcrypt pour le hachage des mots de passe
-
-**DevOps :**
-
--   Git avec workflow GitFlow
--   Tests unitaires avec Vitest
--   Tests E2E avec Playwright
-
-## 📊 Fonctionnalités principales
-
-### Pour les visiteurs
-
--   ✅ Recherche de covoiturages par ville et date
--   ✅ Filtrage avancé (prix, durée, note, aspect écologique)
--   ✅ Consultation détaillée des trajets
-
-### Pour les utilisateurs connectés
-
--   ✅ Inscription/Connexion sécurisée
--   ✅ Profil passager et/ou conducteur
--   ✅ Participation aux covoiturages
--   ✅ Historique des trajets
--   ✅ Système de crédits
-
-### Pour les conducteurs
-
--   ✅ Ajout de véhicules
--   ✅ Création de trajets
--   ✅ Gestion des réservations
-
-### Pour les administrateurs
-
--   ✅ Gestion des utilisateurs
--   ✅ Modération des avis
--   ✅ Statistiques et analytics
-
-## 🔧 Scripts disponibles
-
-### Back-end
-
-```bash
-npm start          # Démarrer le serveur
-npm run dev        # Mode développement avec nodemon
-npm test           # Lancer les tests
-```
-
-### Front-end
-
-```bash
-npm run dev        # Serveur de développement
-npm run build      # Build de production
-npm run preview    # Prévisualiser le build
-npm test           # Tests unitaires
-npm run test:e2e   # Tests end-to-end
-```
-
-## 🌟 Identifiants de test
-
-### Compte Administrateur
-
--   **Email** : admin@ecoride.fr
--   **Mot de passe** : Admin123!
-
-### Compte Utilisateur
-
--   **Email** : user@ecoride.fr
--   **Mot de passe** : User123!
-
-### Compte Conducteur
-
--   **Email** : driver@ecoride.fr
--   **Mot de passe** : Driver123!
-
-## 📁 Structure du projet
+## 📁 Structure projet optimisée
 
 ```
 TP-EcoRide-DWWM/
-├── Back-end/                 # API Node.js/Express
-│   ├── controllers/          # Contrôleurs métier
-│   ├── routes/               # Routes API
-│   ├── Config/               # Configuration DB
-│   ├── Commandes SQL/        # Scripts SQL
-│   └── server.js            # Point d'entrée
-├── Front-end/               # Application Vue.js
-│   ├── src/
-│   │   ├── components/      # Composants Vue
-│   │   ├── views/           # Pages de l'application
-│   │   ├── router/          # Configuration des routes
-│   │   └── services/        # Services API
-│   └── public/              # Assets statiques
-└── Documentation/           # Documentation projet
+├── 📋 Documentation/          # 🎓 Documents projet
+│   ├── Manuel-Utilisateur.md       # Guide complet utilisateur
+│   ├── Documentation-Technique.md  # Architecture & API
+│   ├── Gestion-de-Projet.md       # Méthodologie & planning
+│   └── Charte Graphique_finale.pdf # Design system
+├── 🔙 Back-end/               # API Node.js/Express
+│   ├── controllers/             # Logique métier
+│   ├── routes/                  # Endpoints API
+│   ├── Config/                  # Base de données
+│   ├── Database/                # Scripts SQL
+│   └── scripts/                 # Tests et utilitaires
+├── 🎨 Front-end/              # Application Vue.js
+│   ├── src/components/          # Composants réutilisables
+│   ├── src/views/              # Pages application
+│   ├── src/services/           # Services API
+│   └── e2e/                    # Tests end-to-end
+└── 📖 README.md               # Ce fichier
 ```
 
-## 🔄 Workflow Git
+## 🎓 Compétences techniques démontrées
 
-Ce projet suit les bonnes pratiques GitFlow :
+### Développement Frontend
 
-1. **`main`** : Branche de production
-2. **`development`** : Branche d'intégration
-3. **`feature/*`** : Branches de fonctionnalités
+-   **Vue.js 3** : Composition API, réactivité, composants
+-   **Responsive Design** : Bootstrap 5, mobile-first
+-   **SPA moderne** : Router, état global, optimisations
+-   **Tests Frontend** : Vitest unitaires + Playwright E2E
 
-### Processus de développement
+### Développement Backend
 
-```bash
-# Créer une nouvelle fonctionnalité
-git checkout development
-git pull origin development
-git checkout -b feature/nouvelle-fonctionnalite
+-   **API REST** : Express.js, middleware, architecture MVC
+-   **Bases de données** : MySQL relationnel + MongoDB NoSQL
+-   **Sécurité** : JWT authentification, bcrypt, validation
+-   **Tests API** : Scripts automatisés, couverture étendue
 
-# Développer et commiter
-git add .
-git commit -m "feat: ajouter nouvelle fonctionnalité"
+### Gestion de projet
 
-# Merger vers development
-git checkout development
-git merge feature/nouvelle-fonctionnalite
+-   **Git avancé** : GitFlow, branches, merge, tags
+-   **Documentation** : Technique, utilisateur, projet
+-   **Méthodologie** : Agile, user stories, sprints
+-   **Déploiement** : Configuration, environnements, CI/CD
 
-# Tests puis merge vers main
-git checkout main
-git merge development
-```
+## � Sécurité implémentée
 
-## 🛡️ Sécurité
+-   ✅ **Authentification JWT** avec refresh tokens
+-   ✅ **Hachage bcrypt** des mots de passe (12 rounds)
+-   ✅ **Validation stricte** des entrées utilisateur
+-   ✅ **Protection CORS** configurée
+-   ✅ **Headers sécurité** avec Helmet
+-   ✅ **Variables d'environnement** pour secrets
 
--   Authentification JWT avec refresh tokens
--   Hachage des mots de passe avec bcrypt
--   Validation des entrées utilisateur
--   Protection CORS configurée
--   Variables d'environnement pour les secrets
+## 🌱 Innovation écologique
 
-## 🧪 Tests
+### Fonctionnalités vertes intégrées
 
-### Lancer tous les tests
+-   🔋 **Badge véhicules électriques** : Valorisation visuelle
+-   🌿 **Filtres écologiques** : Recherche trajets verts uniquement
+-   📊 **Impact environnemental** : Calcul économies CO2
+-   💚 **Incitations durables** : Bonus crédits pour conduite écologique
 
-```bash
-# Back-end
-cd Back-end && npm test
+### Système de crédits innovant
 
-# Front-end
-cd Front-end && npm test
-cd Front-end && npm run test:e2e
-```
+-   **20 crédits offerts** à l'inscription (encouragement)
+-   **2 crédits générés** par trajet réalisé
+-   **Économie circulaire** : Redistribution équitable
+-   **Motivation écologique** : Récompenses comportements verts
 
-## 📖 Documentation
+## � Documents d'évaluation fournis
 
--   **Charte graphique** : `/Documentation/Charte-Graphique.pdf`
--   **Manuel utilisateur** : `/Documentation/Manuel-Utilisateur.pdf`
--   **Documentation technique** : `/Documentation/Documentation-Technique.pdf`
--   **Gestion de projet** : Voir le Kanban sur [lien-vers-outil]
+| Document                       | Contenu                        | Objectif pédagogique                |
+| ------------------------------ | ------------------------------ | ----------------------------------- |
+| 📖 **Manuel Utilisateur**      | Guide complet d'utilisation    | Rédaction documentation utilisateur |
+| 🔧 **Documentation Technique** | Architecture, API, déploiement | Maîtrise technique approfondie      |
+| 📊 **Gestion de Projet**       | Méthodologie, planning, tests  | Compétences chef de projet          |
+| 🎨 **Charte Graphique**        | Design system complet          | Sens esthétique et UX               |
 
-## 🚀 Déploiement
+## 🚀 Points forts du projet
 
-L'application est déployée sur :
+### Technique
 
--   **Front-end** : [URL-de-production]
--   **Back-end** : [URL-API-production]
+-   ✅ **Architecture organisée** : Séparation front/back, APIs RESTful
+-   ✅ **Code structuré** : Linting, formatting, bonnes pratiques
+-   ✅ **Performance travaillée** : Lazy loading, cache, index DB
+-   ✅ **Tests implémentés** : Couverture étendue
 
-## 📝 Licence
+### Fonctionnel
 
-Ce projet est développé dans le cadre éducatif du DWWM.
+-   ✅ **UX travaillée** : Interface intuitive, responsive design
+-   ✅ **Fonctionnalités développées** : Rôles utilisateur couverts
+-   ✅ **Sécurité implémentée** : Authentification, validation, protection
+-   ✅ **Aspect écologique** : Fonctionnalités vertes intégrées
 
-## 👥 Contributeurs
+## 📝 Informations projet
 
--   **Développeur** : Mischael RADABANORO
--   **Formation** : Développeur Web et Web Mobile
--   **Organisme** : [Nom de l'organisme]
+### Contexte
+
+-   **Type** : Application web de covoiturage écologique
+-   **Durée de développement** : 10 semaines
+-   **Méthodologie** : Agile avec sprints de 2 semaines
+
+### Technologies utilisées
+
+**Frontend** : Vue.js 3, Bootstrap 5, Vite, Axios  
+**Backend** : Node.js, Express.js, MySQL, MongoDB  
+**DevOps** : Git, GitHub, Tests automatisés, Documentation
 
 ---
 
-Pour toute question concernant le déploiement ou l'utilisation, consultez la documentation technique ou contactez l'équipe de développement.
+## 🎯 À propos
+
+Cette application présente une **approche moderne du développement web** avec :
+
+✅ **Architecture structurée** avec séparation front/back  
+✅ **Sécurité implémentée** (JWT, bcrypt, validation)  
+✅ **Tests automatisés** (couverture étendue)  
+✅ **Documentation fournie** (technique + utilisateur)  
+✅ **Fonctionnalités innovantes** (système crédits, écologie)
+
+Un exemple de développement **full-stack** moderne avec Vue.js et Node.js.
+
+**Temps de découverte** : 30-45 minutes pour test complet
+
+---
+
+**Pour toute question technique ou fonctionnelle, consultez la Documentation/**

@@ -1,12 +1,23 @@
-# Scripts de Test Backend EcoRide
+# Scripts de Test - EcoRide Backend 🧪
 
-Ce dossier contient une suite complète de scripts pour tester et valider la logique métier du backend EcoRide, avec un focus spécial sur la **recherche d'itinéraires**.
+## Scripts de test disponibles
 
-## 📋 Vue d'ensemble
+Ce dossier contient 3 scripts de test pour valider le fonctionnement du backend EcoRide.
 
-L'objectif est de solidifier le backend avant de poursuivre le développement frontend, en s'assurant que toutes les fonctionnalités de base et avancées fonctionnent correctement.
+### `testAPI.js` - Tests des endpoints principaux
 
-## 🧪 Scripts disponibles
+Tests automatisés des principales routes API :
+
+-   Authentification (login/register)
+-   Recherche de covoiturages
+-   Gestion des utilisateurs
+-   Validation des réponses
+
+**Usage :**
+
+```bash
+node scripts/testAPI.js
+```
 
 ### 1. Script principal - Tous les tests
 
