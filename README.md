@@ -4,14 +4,7 @@ Application web de covoiturage axée sur la mobilité durable.
 
 ## 📋 Description du projet
 
-EcoRide est une plateforme de covoiturage qui encourage les déplacements écologiques en## 📋 Documents projet fournis
-
-| Document                       | Contenu                        | Objectif                  |
-| ------------------------------ | ------------------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| 📖 **Manuel Utilisateur**      | Guide complet d'utilisation    | Documentation utilisateur |
-| 🔧 **Documentation Technique** | Architecture, API, déploiement | Détails techniques        |
-| 📊 **Gestion de Projet**       | Méthodologie, planning, tests  | Approche projet           |
-| 🎨 **Charte Graphique**        | Design system complet          | Guide visuel              | ant les véhicules électriques et en proposant un système de crédits pour récompenser les conducteurs responsables. |
+EcoRide est une plateforme de covoiturage qui encourage les déplacements écologiques en valorisant les véhicules électriques et en proposant un système de crédits pour récompenser les conducteurs responsables.
 
 ### 🎯 Fonctionnalités principales
 
@@ -45,18 +38,16 @@ npm run dev
 
 **Accès :**
 
--   **Application** : http://localhost:5173
+-   **Application** : http://localhost:5173 (Ou peut être un autre port si configuré)
 -   **API** : http://localhost:3000
 
-### 🔑 Comptes de test (prêts à utiliser)
+### 🔑 Comptes de test prêts à utiliser
 
-| Rôle               | Email             | Mot de passe | Fonctionnalités  |
-| ------------------ | ----------------- | ------------ | ---------------- |
-| **Administrateur** | admin@ecoride.fr  | Admin123!    | Gestion système  |
-| **Conducteur**     | driver@ecoride.fr | Driver123!   | Création trajets |
-| **Utilisateur**    | user@ecoride.fr   | User123!     | Participation    |
-
-````
+| 👤 Rôle               | 📧 Email          | 🔐 Mot de passe | ⚡ Accès         |
+| --------------------- | ----------------- | --------------- | ---------------- |
+| 🛡️ **Administrateur** | admin@ecoride.fr  | Admin123!       | Gestion système  |
+| 🚗 **Conducteur**     | driver@ecoride.fr | Driver123!      | Création trajets |
+| 👥 **Utilisateur**    | user@ecoride.fr   | User123!        | Participation    |
 
 ### 🗄️ Configuration base de données (si nécessaire)
 
@@ -74,7 +65,7 @@ USE ecoride;
 # Importer le schéma et les données
 source Back-end/Database/schema.sql;
 source Back-end/Database/seed.sql;
-````
+```
 
 **Variables d'environnement (.env) :**
 
@@ -267,14 +258,14 @@ TP-EcoRide-DWWM/
 -   **Économie circulaire** : Redistribution équitable
 -   **Motivation écologique** : Récompenses comportements verts
 
-## � Documents d'évaluation fournis
+## 📋 Documentation fournie
 
-| Document                       | Contenu                        | Objectif pédagogique                |
-| ------------------------------ | ------------------------------ | ----------------------------------- |
-| 📖 **Manuel Utilisateur**      | Guide complet d'utilisation    | Rédaction documentation utilisateur |
-| 🔧 **Documentation Technique** | Architecture, API, déploiement | Maîtrise technique approfondie      |
-| 📊 **Gestion de Projet**       | Méthodologie, planning, tests  | Compétences chef de projet          |
-| 🎨 **Charte Graphique**        | Design system complet          | Sens esthétique et UX               |
+| 📄 Document                    | 🎯 Contenu                     | 💡 Utilité                |
+| ------------------------------ | ------------------------------ | ------------------------- |
+| 📖 **Manuel Utilisateur**      | Guide complet d'utilisation    | Prise en main rapide      |
+| 🔧 **Documentation Technique** | Architecture, API, déploiement | Compréhension technique   |
+| 📊 **Gestion de Projet**       | Méthodologie, planning, tests  | Approche de développement |
+| 🎨 **Charte Graphique**        | Design system complet          | Guide visuel et UX        |
 
 ## 🚀 Points forts du projet
 
