@@ -144,7 +144,11 @@ const handleLogin = async () => {
     successMessage.value = 'Connexion réussie ! Redirection...'
 
     setTimeout(() => {
-      router.push('/')
+      if (response.user && response.user.role === 'admin') {
+        router.push('/admin')
+      } else {
+        router.push('/')
+      }
     }, 1000)
   } catch (error) {
     console.error('Erreur lors de la connexion:', error)

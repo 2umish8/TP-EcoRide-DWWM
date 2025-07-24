@@ -38,6 +38,11 @@ const router = createRouter({
       component: () => import('../views/ForgotPasswordView.vue'),
     },
     {
+      path: '/admin',
+      name: 'Admin',
+      component: () => import('../views/AdminView.vue'),
+    },
+    {
       path: '/carpoolings/:id',
       name: 'CarpoolingDetail',
       component: () => import('../views/CarpoolingDetailView.vue'),
