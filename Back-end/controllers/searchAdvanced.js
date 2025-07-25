@@ -61,7 +61,7 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
                    TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime) as duration_minutes,
                    -- Calcul du taux d'occupation
                    ROUND((c.initial_seats_offered - c.seats_remaining) / c.initial_seats_offered * 100, 1) as occupancy_rate
-            FROM Carpooling c
+            FROM carpooling c
             INNER JOIN User u ON c.driver_id = u.id AND u.suspended = FALSE
             INNER JOIN Vehicle v ON c.vehicle_id = v.id
             LEFT JOIN Brand b ON v.brand_id = b.id
@@ -327,7 +327,7 @@ async function generateSearchSuggestions(originalQuery) {
         if (originalQuery.date || originalQuery.dateFrom) {
             const baseSql = `
                 SELECT DISTINCT DATE(departure_datetime) as suggestion_date, COUNT(*) as count
-                FROM Carpooling 
+                FROM carpooling 
                 WHERE status = 'prévu' AND seats_remaining > 0 AND departure_datetime > NOW()
             `;
 
@@ -357,7 +357,7 @@ async function generateSearchSuggestions(originalQuery) {
         // Destinations populaires
         const popularSql = `
             SELECT arrival_address, COUNT(*) as trip_count
-            FROM Carpooling 
+            FROM carpooling 
             WHERE status = 'prévu' AND seats_remaining > 0 AND departure_datetime > NOW()
             GROUP BY arrival_address
             ORDER BY trip_count DESC
@@ -413,7 +413,7 @@ const getSearchStatistics = async (req, res) => {
         // Destinations les plus populaires
         const [popularDestinations] = await db.query(`
             SELECT arrival_address, COUNT(*) as search_count
-            FROM Carpooling 
+            FROM carpooling 
             WHERE status = 'prévu' AND departure_datetime > NOW()
             GROUP BY arrival_address
             ORDER BY search_count DESC
@@ -427,7 +427,7 @@ const getSearchStatistics = async (req, res) => {
                 CONCAT(departure_address, ' → ', arrival_address) as route,
                 ROUND(AVG(price_per_passenger), 2) as avg_price,
                 COUNT(*) as trip_count
-            FROM Carpooling 
+            FROM carpooling 
             WHERE status = 'prévu' AND departure_datetime > NOW()
             GROUP BY departure_address, arrival_address
             HAVING trip_count >= 2
@@ -443,7 +443,7 @@ const getSearchStatistics = async (req, res) => {
                 SUM(CASE WHEN v.is_electric = 1 THEN 1 ELSE 0 END) as electric_trips,
                 ROUND(AVG(c.price_per_passenger), 2) as avg_price,
                 ROUND(AVG(TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime)), 0) as avg_duration_minutes
-            FROM Carpooling c
+            FROM carpooling c
             INNER JOIN Vehicle v ON c.vehicle_id = v.id
             WHERE c.status = 'prévu' AND c.departure_datetime > NOW()
         `);

@@ -18,8 +18,8 @@ const createReview = async (req, res) => {
         // Vérifier que l'utilisateur a participé à ce covoiturage
         const participationSql = `
             SELECT p.id, c.driver_id, c.status
-            FROM Participation p
-            INNER JOIN Carpooling c ON p.carpooling_id = c.id
+            FROM participation p
+            INNER JOIN carpooling c ON p.carpooling_id = c.id
             WHERE p.passenger_id = ? AND p.carpooling_id = ? AND p.cancellation_date IS NULL
         `;
         const [participation] = await db.query(participationSql, [
@@ -115,7 +115,7 @@ const getDriverReviews = async (req, res) => {
             const reviewerIds = reviews.map((review) => review.reviewerId);
             const reviewersSql = `
                 SELECT id, pseudo, profile_picture_url
-                FROM User
+                FROM user
                 WHERE id IN (${reviewerIds.join(",")})
             `;
             const [reviewers] = await db.query(reviewersSql);
@@ -191,7 +191,7 @@ const getPendingReviews = async (req, res) => {
 
             const usersSql = `
                 SELECT id, pseudo, profile_picture_url
-                FROM User
+                FROM user
                 WHERE id IN (${userIds.join(",")})
             `;
             const [users] = await db.query(usersSql);
@@ -204,7 +204,7 @@ const getPendingReviews = async (req, res) => {
             const carpoolingIds = reviews.map((r) => r.carpoolingId);
             const carpoolingsSql = `
                 SELECT id, departure_address, arrival_address, departure_datetime
-                FROM Carpooling
+                FROM carpooling
                 WHERE id IN (${carpoolingIds.join(",")})
             `;
             const [carpoolings] = await db.query(carpoolingsSql);
@@ -324,7 +324,7 @@ const getReportedTrips = async (req, res) => {
 
             const usersSql = `
                 SELECT id, pseudo, email
-                FROM User
+                FROM user
                 WHERE id IN (${userIds.join(",")})
             `;
             const [users] = await db.query(usersSql);
@@ -336,7 +336,7 @@ const getReportedTrips = async (req, res) => {
             const carpoolingIds = reportedReviews.map((r) => r.carpoolingId);
             const carpoolingsSql = `
                 SELECT id, departure_address, arrival_address, departure_datetime, arrival_datetime
-                FROM Carpooling
+                FROM carpooling
                 WHERE id IN (${carpoolingIds.join(",")})
             `;
             const [carpoolings] = await db.query(carpoolingsSql);

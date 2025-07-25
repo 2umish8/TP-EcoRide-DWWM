@@ -13,8 +13,8 @@ async function cleanTestData() {
 
         // Supprimer les participations de test
         const [participations] = await db.query(`
-            DELETE p FROM Participation p
-            INNER JOIN User u ON p.passenger_id = u.id
+            DELETE p FROM participation p
+            INNER JOIN user u ON p.passenger_id = u.id
             WHERE u.email LIKE '%@test.com'
         `);
         console.log(
@@ -23,40 +23,40 @@ async function cleanTestData() {
 
         // Supprimer les covoiturages de test
         const [carpoolings] = await db.query(`
-            DELETE c FROM Carpooling c
-            INNER JOIN User u ON c.driver_id = u.id
+            DELETE c FROM carpooling c
+            INNER JOIN user u ON c.driver_id = u.id
             WHERE u.email LIKE '%@test.com'
         `);
         console.log(`   ✅ ${carpoolings.affectedRows} covoiturages supprimés`);
 
         // Supprimer les véhicules de test
         const [vehicles] = await db.query(`
-            DELETE v FROM Vehicle v
-            INNER JOIN User u ON v.user_id = u.id
+            DELETE v FROM vehicle v
+            INNER JOIN user u ON v.user_id = u.id
             WHERE u.email LIKE '%@test.com'
         `);
         console.log(`   ✅ ${vehicles.affectedRows} véhicules supprimés`);
 
         // Supprimer les marques créées pour les tests (si elles n'ont plus de véhicules)
         const [brands] = await db.query(`
-            DELETE FROM Brand 
+            DELETE FROM brand 
             WHERE name IN ('Tesla', 'BMW', 'Nissan', 'Renault', 'Peugeot') 
-            AND id NOT IN (SELECT DISTINCT brand_id FROM Vehicle WHERE brand_id IS NOT NULL)
+            AND id NOT IN (SELECT DISTINCT brand_id FROM vehicle WHERE brand_id IS NOT NULL)
         `);
         console.log(`   ✅ ${brands.affectedRows} marques nettoyées`);
 
         // Supprimer les couleurs créées pour les tests (si elles n'ont plus de véhicules)
         const [colors] = await db.query(`
-            DELETE FROM Color 
+            DELETE FROM color 
             WHERE name IN ('Blanc', 'Noir', 'Rouge', 'Bleu', 'Gris') 
-            AND id NOT IN (SELECT DISTINCT color_id FROM Vehicle WHERE color_id IS NOT NULL)
+            AND id NOT IN (SELECT DISTINCT color_id FROM vehicle WHERE color_id IS NOT NULL)
         `);
         console.log(`   ✅ ${colors.affectedRows} couleurs nettoyées`);
 
         // Supprimer les rôles utilisateur de test
         const [userRoles] = await db.query(`
-            DELETE ur FROM User_Role ur
-            INNER JOIN User u ON ur.user_id = u.id
+            DELETE ur FROM user_role ur
+            INNER JOIN user u ON ur.user_id = u.id
             WHERE u.email LIKE '%@test.com'
         `);
         console.log(
@@ -65,7 +65,7 @@ async function cleanTestData() {
 
         // Supprimer les utilisateurs de test
         const [users] = await db.query(`
-            DELETE FROM User WHERE email LIKE '%@test.com'
+            DELETE FROM user WHERE email LIKE '%@test.com'
         `);
         console.log(`   ✅ ${users.affectedRows} utilisateurs supprimés`);
 
@@ -208,15 +208,15 @@ async function checkDatabaseStatus() {
     try {
         // Vérifier MySQL
         console.log("🗃️ Statut MySQL:");
-        const [users] = await db.query("SELECT COUNT(*) as count FROM User");
+        const [users] = await db.query("SELECT COUNT(*) as count FROM user");
         const [vehicles] = await db.query(
-            "SELECT COUNT(*) as count FROM Vehicle"
+            "SELECT COUNT(*) as count FROM vehicle"
         );
         const [carpoolings] = await db.query(
-            "SELECT COUNT(*) as count FROM Carpooling"
+            "SELECT COUNT(*) as count FROM carpooling"
         );
         const [participations] = await db.query(
-            "SELECT COUNT(*) as count FROM Participation"
+            "SELECT COUNT(*) as count FROM participation"
         );
 
         console.log(`   👥 Utilisateurs: ${users[0].count}`);

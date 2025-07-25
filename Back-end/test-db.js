@@ -32,13 +32,13 @@ async function testDatabase() {
         // Test de la table Carpooling
         try {
             const [carpoolings] = await db.query(
-                "SELECT COUNT(*) as count FROM Carpooling"
+                "SELECT COUNT(*) as count FROM carpooling"
             );
             console.log("📊 Nombre de covoiturages:", carpoolings[0].count);
 
             if (carpoolings[0].count > 0) {
                 const [sample] = await db.query(
-                    "SELECT * FROM Carpooling LIMIT 1"
+                    "SELECT * FROM carpooling LIMIT 1"
                 );
                 console.log("📝 Exemple de covoiturage:", sample[0]);
             }
@@ -59,7 +59,7 @@ async function testDatabase() {
                    b.name as brand_name, 
                    col.name as color_name,
                    TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime) as duration_minutes
-            FROM Carpooling c
+            FROM carpooling c
             INNER JOIN User u ON c.driver_id = u.id
             INNER JOIN Vehicle v ON c.vehicle_id = v.id
             LEFT JOIN Brand b ON v.brand_id = b.id

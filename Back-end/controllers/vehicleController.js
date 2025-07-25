@@ -30,8 +30,8 @@ const addVehicle = async (req, res) => {
 
         // Vérifier que l'utilisateur a le rôle chauffeur
         const roleCheckSql = `
-            SELECT 1 FROM User_Role ur 
-            INNER JOIN Role r ON ur.role_id = r.id 
+            SELECT 1 FROM user_role ur 
+            INNER JOIN role r ON ur.role_id = r.id 
             WHERE ur.user_id = ? AND r.name = 'chauffeur'
         `;
         const [roleCheck] = await db.query(roleCheckSql, [userId]);
@@ -45,14 +45,14 @@ const addVehicle = async (req, res) => {
         // Obtenir ou créer l'ID de la marque
         let brandId;
         const [brandResult] = await db.query(
-            "SELECT id FROM Brand WHERE name = ?",
+            "SELECT id FROM brand WHERE name = ?",
             [brand_name]
         );
         if (brandResult.length > 0) {
             brandId = brandResult[0].id;
         } else {
             const [insertBrand] = await db.query(
-                "INSERT INTO Brand (name) VALUES (?)",
+                "INSERT INTO brand (name) VALUES (?)",
                 [brand_name]
             );
             brandId = insertBrand.insertId;
@@ -61,14 +61,14 @@ const addVehicle = async (req, res) => {
         // Obtenir ou créer l'ID de la couleur
         let colorId;
         const [colorResult] = await db.query(
-            "SELECT id FROM Color WHERE name = ?",
+            "SELECT id FROM color WHERE name = ?",
             [color_name]
         );
         if (colorResult.length > 0) {
             colorId = colorResult[0].id;
         } else {
             const [insertColor] = await db.query(
-                "INSERT INTO Color (name) VALUES (?)",
+                "INSERT INTO color (name) VALUES (?)",
                 [color_name]
             );
             colorId = insertColor.insertId;
@@ -76,7 +76,7 @@ const addVehicle = async (req, res) => {
 
         // Insérer le véhicule
         const vehicleSql = `
-            INSERT INTO Vehicle (plate_number, first_registration_date, model, seats_available, is_electric, user_id, brand_id, color_id) 
+            INSERT INTO vehicle (plate_number, first_registration_date, model, seats_available, is_electric, user_id, brand_id, color_id) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
         const [result] = await db.query(vehicleSql, [
@@ -121,9 +121,9 @@ const getUserVehicles = async (req, res) => {
 
         const sql = `
             SELECT v.*, b.name as brand_name, c.name as color_name
-            FROM Vehicle v
-            LEFT JOIN Brand b ON v.brand_id = b.id
-            LEFT JOIN Color c ON v.color_id = c.id
+            FROM vehicle v
+            LEFT JOIN brand b ON v.brand_id = b.id
+            LEFT JOIN color c ON v.color_id = c.id
             WHERE v.user_id = ?
             ORDER BY v.id DESC
         `;
@@ -154,7 +154,7 @@ const updateVehicle = async (req, res) => {
         } = req.body;
 
         // Vérifier que le véhicule appartient à l'utilisateur
-        const ownerCheckSql = "SELECT user_id FROM Vehicle WHERE id = ?";
+        const ownerCheckSql = "SELECT user_id FROM vehicle WHERE id = ?";
         const [ownerCheck] = await db.query(ownerCheckSql, [vehicleId]);
 
         if (ownerCheck.length === 0) {
@@ -171,14 +171,14 @@ const updateVehicle = async (req, res) => {
         let brandId = null;
         if (brand_name) {
             const [brandResult] = await db.query(
-                "SELECT id FROM Brand WHERE name = ?",
+                "SELECT id FROM brand WHERE name = ?",
                 [brand_name]
             );
             if (brandResult.length > 0) {
                 brandId = brandResult[0].id;
             } else {
                 const [insertBrand] = await db.query(
-                    "INSERT INTO Brand (name) VALUES (?)",
+                    "INSERT INTO brand (name) VALUES (?)",
                     [brand_name]
                 );
                 brandId = insertBrand.insertId;
@@ -189,14 +189,14 @@ const updateVehicle = async (req, res) => {
         let colorId = null;
         if (color_name) {
             const [colorResult] = await db.query(
-                "SELECT id FROM Color WHERE name = ?",
+                "SELECT id FROM color WHERE name = ?",
                 [color_name]
             );
             if (colorResult.length > 0) {
                 colorId = colorResult[0].id;
             } else {
                 const [insertColor] = await db.query(
-                    "INSERT INTO Color (name) VALUES (?)",
+                    "INSERT INTO color (name) VALUES (?)",
                     [color_name]
                 );
                 colorId = insertColor.insertId;
@@ -243,7 +243,7 @@ const updateVehicle = async (req, res) => {
         }
 
         values.push(vehicleId);
-        const updateSql = `UPDATE Vehicle SET ${updates.join(
+        const updateSql = `UPDATE vehicle SET ${updates.join(
             ", "
         )} WHERE id = ?`;
         const [result] = await db.query(updateSql, values);
@@ -278,7 +278,7 @@ const deleteVehicle = async (req, res) => {
         const vehicleId = req.params.id;
 
         // Vérifier que le véhicule appartient à l'utilisateur
-        const ownerCheckSql = "SELECT user_id FROM Vehicle WHERE id = ?";
+        const ownerCheckSql = "SELECT user_id FROM vehicle WHERE id = ?";
         const [ownerCheck] = await db.query(ownerCheckSql, [vehicleId]);
 
         if (ownerCheck.length === 0) {
@@ -293,7 +293,7 @@ const deleteVehicle = async (req, res) => {
 
         // Vérifier que le véhicule n'est pas utilisé dans des covoiturages actifs
         const activeCarpoolingSql = `
-            SELECT COUNT(*) as count FROM Carpooling 
+            SELECT COUNT(*) as count FROM carpooling 
             WHERE vehicle_id = ? AND status IN ('prévu', 'démarré')
         `;
         const [activeCheck] = await db.query(activeCarpoolingSql, [vehicleId]);
@@ -306,7 +306,7 @@ const deleteVehicle = async (req, res) => {
         }
 
         // Supprimer le véhicule
-        const deleteSql = "DELETE FROM Vehicle WHERE id = ?";
+        const deleteSql = "DELETE FROM vehicle WHERE id = ?";
         const [result] = await db.query(deleteSql, [vehicleId]);
 
         if (result.affectedRows > 0) {
@@ -329,8 +329,8 @@ const deleteVehicle = async (req, res) => {
 /* --------------------------------------------------- Obtenir toutes les marques et couleurs ------------------- */
 const getBrandsAndColors = async (req, res) => {
     try {
-        const [brands] = await db.query("SELECT * FROM Brand ORDER BY name");
-        const [colors] = await db.query("SELECT * FROM Color ORDER BY name");
+        const [brands] = await db.query("SELECT * FROM brand ORDER BY name");
+        const [colors] = await db.query("SELECT * FROM color ORDER BY name");
 
         res.status(200).json({ brands, colors });
     } catch (error) {

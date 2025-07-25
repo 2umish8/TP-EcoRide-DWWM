@@ -39,7 +39,7 @@ async function checkAndCreateDatabase() {
         await connection.changeUser({ database: process.env.DB_NAME });
 
         // Vérifier les tables importantes
-        const [tables] = await connection.execute('SHOW TABLES LIKE "User"');
+        const [tables] = await connection.execute('SHOW TABLES LIKE "user"');
 
         if (tables.length === 0) {
             console.log(
@@ -54,7 +54,7 @@ async function checkAndCreateDatabase() {
 
             // Vérifier le contenu de la table User
             const [users] = await connection.execute(
-                "SELECT COUNT(*) as count FROM User"
+                "SELECT COUNT(*) as count FROM user"
             );
             console.log(
                 `📊 Nombre d'utilisateurs dans la base: ${users[0].count}`

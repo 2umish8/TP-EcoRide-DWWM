@@ -39,7 +39,7 @@ const createCarpooling = async (req, res) => {
 
         // Vérifier que l'utilisateur est propriétaire du véhicule
         const vehicleCheckSql =
-            "SELECT user_id, seats_available FROM Vehicle WHERE id = ?";
+            "SELECT user_id, seats_available FROM vehicle WHERE id = ?";
         const [vehicleCheck] = await db.query(vehicleCheckSql, [vehicle_id]);
 
         if (vehicleCheck.length === 0) {
@@ -78,7 +78,7 @@ const createCarpooling = async (req, res) => {
 
         // Créer le covoiturage
         const carpoolingSql = `
-            INSERT INTO Carpooling (
+            INSERT INTO carpooling (
                 departure_address, arrival_address, departure_datetime, arrival_datetime,
                 price_per_passenger, initial_seats_offered, seats_remaining, driver_id, vehicle_id
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -139,11 +139,11 @@ const getAvailableCarpoolings = async (req, res) => {
                    b.name as brand_name, 
                    col.name as color_name,
                    TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime) as duration_minutes
-            FROM Carpooling c
-            INNER JOIN User u ON c.driver_id = u.id
-            INNER JOIN Vehicle v ON c.vehicle_id = v.id
-            LEFT JOIN Brand b ON v.brand_id = b.id
-            LEFT JOIN Color col ON v.color_id = col.id
+            FROM carpooling c
+            INNER JOIN user u ON c.driver_id = u.id
+            INNER JOIN vehicle v ON c.vehicle_id = v.id
+            LEFT JOIN brand b ON v.brand_id = b.id
+            LEFT JOIN color col ON v.color_id = col.id
             WHERE c.status = 'prévu' AND c.seats_remaining > 0
         `;
         const params = [];
@@ -214,7 +214,7 @@ const getAvailableCarpoolings = async (req, res) => {
         if (carpoolings.length === 0 && date) {
             const nextAvailableSql = `
                 SELECT MIN(DATE(c.departure_datetime)) as next_date
-                FROM Carpooling c
+                FROM carpooling c
                 WHERE c.status = 'prévu' AND c.seats_remaining > 0
                 AND DATE(c.departure_datetime) > ?
                 ${departure ? "AND c.departure_address LIKE ?" : ""}
@@ -255,9 +255,9 @@ const getDriverCarpoolings = async (req, res) => {
             SELECT c.*, 
                    v.model, v.plate_number,
                    COUNT(p.id) as participants_count
-            FROM Carpooling c
-            INNER JOIN Vehicle v ON c.vehicle_id = v.id
-            LEFT JOIN Participation p ON c.id = p.carpooling_id AND p.cancellation_date IS NULL
+            FROM carpooling c
+            INNER JOIN vehicle v ON c.vehicle_id = v.id
+            LEFT JOIN participation p ON c.id = p.carpooling_id AND p.cancellation_date IS NULL
             WHERE c.driver_id = ?
             GROUP BY c.id
             ORDER BY c.departure_datetime DESC
@@ -288,7 +288,7 @@ const updateCarpooling = async (req, res) => {
 
         // Vérifier que le covoiturage appartient à l'utilisateur
         const ownerCheckSql =
-            "SELECT driver_id, status, initial_seats_offered, seats_remaining FROM Carpooling WHERE id = ?";
+            "SELECT driver_id, status, initial_seats_offered, seats_remaining FROM carpooling WHERE id = ?";
         const [ownerCheck] = await db.query(ownerCheckSql, [carpoolingId]);
 
         if (ownerCheck.length === 0) {
@@ -358,7 +358,7 @@ const updateCarpooling = async (req, res) => {
         }
 
         values.push(carpoolingId);
-        const updateSql = `UPDATE Carpooling SET ${updates.join(
+        const updateSql = `UPDATE carpooling SET ${updates.join(
             ", "
         )} WHERE id = ?`;
         const [result] = await db.query(updateSql, values);
@@ -392,7 +392,7 @@ const cancelCarpooling = async (req, res) => {
         try {
             // Vérifier que le covoiturage appartient à l'utilisateur
             const carpoolingSql =
-                "SELECT driver_id, status, price_per_passenger FROM Carpooling WHERE id = ?";
+                "SELECT driver_id, status, price_per_passenger FROM carpooling WHERE id = ?";
             const [carpoolingCheck] = await db.query(carpoolingSql, [
                 carpoolingId,
             ]);
@@ -422,7 +422,7 @@ const cancelCarpooling = async (req, res) => {
             // Récupérer les participants pour les rembourser
             const participantsSql = `
                 SELECT passenger_id, credits_paid 
-                FROM Participation 
+                FROM participation 
                 WHERE carpooling_id = ? AND cancellation_date IS NULL
             `;
             const [participants] = await db.query(participantsSql, [
@@ -432,20 +432,20 @@ const cancelCarpooling = async (req, res) => {
             // Rembourser les participants
             for (const participant of participants) {
                 await db.query(
-                    "UPDATE User SET credits = credits + ? WHERE id = ?",
+                    "UPDATE user SET credits = credits + ? WHERE id = ?",
                     [participant.credits_paid, participant.passenger_id]
                 );
 
                 // Marquer la participation comme annulée
                 await db.query(
-                    "UPDATE Participation SET cancellation_date = CURRENT_TIMESTAMP WHERE passenger_id = ? AND carpooling_id = ?",
+                    "UPDATE participation SET cancellation_date = CURRENT_TIMESTAMP WHERE passenger_id = ? AND carpooling_id = ?",
                     [participant.passenger_id, carpoolingId]
                 );
             }
 
             // Marquer le covoiturage comme annulé
             await db.query(
-                "UPDATE Carpooling SET status = 'annulé' WHERE id = ?",
+                "UPDATE carpooling SET status = 'annulé' WHERE id = ?",
                 [carpoolingId]
             );
 
@@ -475,7 +475,7 @@ const startCarpooling = async (req, res) => {
 
         // Vérifier que le covoiturage appartient à l'utilisateur
         const ownerCheckSql =
-            "SELECT driver_id, status FROM Carpooling WHERE id = ?";
+            "SELECT driver_id, status FROM carpooling WHERE id = ?";
         const [ownerCheck] = await db.query(ownerCheckSql, [carpoolingId]);
 
         if (ownerCheck.length === 0) {
@@ -497,7 +497,7 @@ const startCarpooling = async (req, res) => {
 
         // Marquer le covoiturage comme démarré
         const [result] = await db.query(
-            "UPDATE Carpooling SET status = 'démarré' WHERE id = ?",
+            "UPDATE carpooling SET status = 'démarré' WHERE id = ?",
             [carpoolingId]
         );
 
@@ -530,7 +530,7 @@ const finishCarpooling = async (req, res) => {
         try {
             // Vérifier que le covoiturage appartient à l'utilisateur
             const carpoolingSql =
-                "SELECT driver_id, status, price_per_passenger, platform_commission_earned FROM Carpooling WHERE id = ?";
+                "SELECT driver_id, status, price_per_passenger, platform_commission_earned FROM carpooling WHERE id = ?";
             const [carpoolingCheck] = await db.query(carpoolingSql, [
                 carpoolingId,
             ]);
@@ -562,8 +562,8 @@ const finishCarpooling = async (req, res) => {
             const carpoolingDetailsSql = `
                 SELECT c.departure_address, c.arrival_address, c.departure_datetime,
                        u.pseudo as driver_pseudo, u.email as driver_email
-                FROM Carpooling c
-                INNER JOIN User u ON c.driver_id = u.id
+                FROM carpooling c
+                INNER JOIN user u ON c.driver_id = u.id
                 WHERE c.id = ?
             `;
             const [carpoolingDetails] = await db.query(carpoolingDetailsSql, [
@@ -575,8 +575,8 @@ const finishCarpooling = async (req, res) => {
             const participantsSql = `
                 SELECT p.passenger_id, p.credits_paid, 
                        u.pseudo as passenger_pseudo, u.email as passenger_email
-                FROM Participation p
-                INNER JOIN User u ON p.passenger_id = u.id
+                FROM participation p
+                INNER JOIN user u ON p.passenger_id = u.id
                 WHERE p.carpooling_id = ? AND p.cancellation_date IS NULL
             `;
             const [participantsResult] = await db.query(participantsSql, [
@@ -594,13 +594,13 @@ const finishCarpooling = async (req, res) => {
 
             // Créditer le chauffeur
             await db.query(
-                "UPDATE User SET credits = credits + ? WHERE id = ?",
+                "UPDATE user SET credits = credits + ? WHERE id = ?",
                 [driverEarnings, userId]
             );
 
             // Marquer le covoiturage comme terminé
             await db.query(
-                "UPDATE Carpooling SET status = 'terminé' WHERE id = ?",
+                "UPDATE carpooling SET status = 'terminé' WHERE id = ?",
                 [carpoolingId]
             );
 
@@ -700,11 +700,11 @@ const getCarpoolingById = async (req, res) => {
                    b.name as brand_name, 
                    col.name as color_name,
                    TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime) as duration_minutes
-            FROM Carpooling c
-            INNER JOIN User u ON c.driver_id = u.id
-            INNER JOIN Vehicle v ON c.vehicle_id = v.id
-            LEFT JOIN Brand b ON v.brand_id = b.id
-            LEFT JOIN Color col ON v.color_id = col.id
+            FROM carpooling c
+            INNER JOIN user u ON c.driver_id = u.id
+            INNER JOIN vehicle v ON c.vehicle_id = v.id
+            LEFT JOIN brand b ON v.brand_id = b.id
+            LEFT JOIN color col ON v.color_id = col.id
             WHERE c.id = ?
         `;
         const [results] = await db.query(sql, [id]);
