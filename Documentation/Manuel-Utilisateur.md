@@ -11,11 +11,14 @@ Ce manuel utilisateur décrit toutes les fonctionnalités que vous pouvez tester
 
 ### 🔑 Comptes de test prêts à utiliser
 
-| 👤 Rôle               | 📧 Email          | 🔐 Mot de passe | ⚡ Accès         |
+**⚠️ IMPORTANT : Ces comptes de test ne fonctionnent QUE sur le site déployé en ligne, pas en local !**
+
+| 👤 Rôle               | 👤 Pseudo         | 🔐 Mot de passe | ⚡ Accès         |
 | --------------------- | ----------------- | --------------- | ---------------- |
-| 🛡️ **Administrateur** | admin@ecoride.fr  | Admin123!       | Gestion système  |
-| 🚗 **Conducteur**     | driver@ecoride.fr | Driver123!      | Création trajets |
-| 👥 **Utilisateur**    | user@ecoride.fr   | User123!        | Participation    |
+| 🛡️ **Administrateur** | Admin             | Admin2025!       | Gestion système  |
+| 🧪 **Utilisateur**    | test              | Test2025!        | Participation&Création trajets    |
+
+*Pour tester en local, vous devrez créer vos propres comptes via l'inscription.*
 
 ---
 
@@ -27,28 +30,36 @@ EcoRide est une application web de covoiturage écologique qui permet aux utilis
 
 ### Accès à l'application
 
--   **URL de l'application** : http://localhost:5173 (développement)
--   **API Backend** : http://localhost:3000
+**🌐 Site déployé (recommandé pour les tests) :**
+- **URL de l'application** : https://ecoridetp.netlify.app/
+
+**💻 Développement local (optionnel) :**
+- **URL de l'application** : http://localhost:5173
+- **API Backend** : http://localhost:3000
 
 ## Comptes de test disponibles
 
+**📱 Ces comptes fonctionnent uniquement sur le site déployé : https://ecoridetp.netlify.app/**
+
 ### Administrateur
 
--   **Email** : admin@ecoride.fr
--   **Mot de passe** : Admin123!
+-   **Pseudo** : Admin
+-   **Mot de passe** : Admin2025!
 -   **Fonctionnalités** : Gestion complète de la plateforme
 
 ### Utilisateur standard
 
--   **Email** : user@ecoride.fr
--   **Mot de passe** : User123!
+-   **Pseudo** : test
+-   **Mot de passe** : Test2025!
 -   **Fonctionnalités** : Recherche et participation aux covoiturages
 
 ### Conducteur
 
--   **Email** : driver@ecoride.fr
--   **Mot de passe** : Driver123!
+-   **Pseudo** : test (même compte que utilisateur)
+-   **Mot de passe** : Test2025!
 -   **Fonctionnalités** : Création et gestion de trajets
+
+**💡 Pour tester en local :** Créez vos propres comptes via l'inscription sur http://localhost:5173 une fois le serveur lancé (`npm run dev`).
 
 ## Guide d'utilisation
 
@@ -213,7 +224,7 @@ Cliquez sur "Détails" pour accéder aux informations complètes :
 ### Contact
 
 -   **Email support** : support@ecoride.fr
--   **Email administrateur** : admin@ecoride.fr
+-   **Pseudo administrateur** : Admin
 
 ## Mentions légales et sécurité
 

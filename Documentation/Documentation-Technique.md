@@ -11,11 +11,10 @@ Cette documentation technique décrit l'architecture et les technologies utilis�
 
 ### 🔑 Comptes de test prêts à utiliser
 
-| 👤 Rôle               | 📧 Email          | 🔐 Mot de passe | ⚡ Accès         |
+| 👤 Rôle               | 👤 Pseudo         | 🔐 Mot de passe | ⚡ Accès         |
 | --------------------- | ----------------- | --------------- | ---------------- |
-| 🛡️ **Administrateur** | admin@ecoride.fr  | Admin123!       | Gestion système  |
-| 🚗 **Conducteur**     | driver@ecoride.fr | Driver123!      | Création trajets |
-| 👥 **Utilisateur**    | user@ecoride.fr   | User123!        | Participation    |
+| 🛡️ **Administrateur** | Admin             | Admin2025!       | Gestion système  |
+| 🧪 **Test**           | Test              | Test2025!        | Participation + Création trajets |
 
 ---
 

@@ -11,11 +11,10 @@ Vous pouvez tester toutes les fonctionnalités décrites dans ce guide directeme
 
 ### 🔑 Comptes de test prêts à utiliser
 
-| 👤 Rôle               | 📧 Email          | 🔐 Mot de passe | ⚡ Accès         |
+| 👤 Rôle               | 👤 Pseudo         | 🔐 Mot de passe | ⚡ Accès         |
 | --------------------- | ----------------- | --------------- | ---------------- |
-| 🛡️ **Administrateur** | admin@ecoride.fr  | Admin123!       | Gestion système  |
-| 🚗 **Conducteur**     | driver@ecoride.fr | Driver123!      | Création trajets |
-| 👥 **Utilisateur**    | user@ecoride.fr   | User123!        | Participation    |
+| 🛡️ **Administrateur** | Admin             | Admin2025!       | Gestion système  |
+| 🧪 **Utilisateur**    | test              | Test2025!        | Participation&Création trajets    |
 
 ---
 
@@ -70,7 +69,7 @@ cd Front-end && npm install && npm run dev
 
 #### B. Utilisateur connecté (10 min)
 
-Utiliser : **user@ecoride.fr** / **User123!**
+Utiliser : **test** / **Test2025!**
 
 -   [ ] Inscription (bonus 20 crédits)
 -   [ ] Connexion sécurisée
@@ -80,7 +79,7 @@ Utiliser : **user@ecoride.fr** / **User123!**
 
 #### C. Conducteur (10 min)
 
-Utiliser : **driver@ecoride.fr** / **Driver123!**
+Utiliser : **test** / **Test2025!**
 
 -   [ ] Ajout de véhicule (marquer comme électrique)
 -   [ ] Création d'un nouveau trajet
@@ -89,7 +88,7 @@ Utiliser : **driver@ecoride.fr** / **Driver123!**
 
 #### D. Administrateur (5 min)
 
-Utiliser : **admin@ecoride.fr** / **Admin123!**
+Utiliser : **Admin** / **Admin2025!**
 
 -   [ ] Dashboard avec statistiques
 -   [ ] Gestion des utilisateurs (CRUD)
