@@ -1,5 +1,24 @@
 # Manuel Utilisateur - EcoRide 🌱
 
+## 🌐 Application Déployée - Accès Direct
+
+**🎉 L'application EcoRide est maintenant déployée et accessible en ligne !**
+
+### 📱 Accès à l'application
+**URL : https://ecoridetp.netlify.app/**
+
+Ce manuel utilisateur décrit toutes les fonctionnalités que vous pouvez tester directement sur le site déployé.
+
+### 🔑 Comptes de test prêts à utiliser
+
+| 👤 Rôle               | 📧 Email          | 🔐 Mot de passe | ⚡ Accès         |
+| --------------------- | ----------------- | --------------- | ---------------- |
+| 🛡️ **Administrateur** | admin@ecoride.fr  | Admin123!       | Gestion système  |
+| 🚗 **Conducteur**     | driver@ecoride.fr | Driver123!      | Création trajets |
+| 👥 **Utilisateur**    | user@ecoride.fr   | User123!        | Participation    |
+
+---
+
 ## Introduction
 
 EcoRide est une application web de covoiturage écologique qui permet aux utilisateurs de partager leurs trajets en voiture, avec un accent particulier sur la mobilité durable.

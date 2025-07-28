@@ -1,4 +1,24 @@
-# .
+# EcoRide Front-end - Vue.js 3 Application
+
+## 🌐 Application Déployée - Accès Direct
+
+**🎉 L'application EcoRide est maintenant déployée et accessible en ligne !**
+
+### 📱 Accès à l'application
+**URL : https://ecoridetp.netlify.app/**
+
+Vous pouvez tester toutes les fonctionnalités directement sur le site déployé :
+- ✅ Interface utilisateur complète
+- ✅ Recherche de covoiturages
+- ✅ Gestion des profils
+- ✅ Système de crédits
+- ✅ Interface responsive
+
+---
+
+## 🚀 Développement local (optionnel)
+
+Si vous souhaitez lancer l'application en local pour le développement :
 
 This template should help get you started developing with Vue 3 in Vite.
 

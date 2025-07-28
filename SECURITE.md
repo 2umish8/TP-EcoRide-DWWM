@@ -9,8 +9,8 @@ Pour la sécurité, les fichiers suivants ont été **intentionnellement supprim
 -   `Back-end/.env` - Contenait des identifiants de base de données réels
 -   `lancer-mongodb-compass.bat` - Contenait des chaînes de connexion MongoDB avec credentials
 
-## ✅ Configuration requise pour faire fonctionner l'application
-
+## ✅ Configuration requise pour faire fonctionner l'application localement
+(Pour rappel, le site est deployé sur [ecoridetp.netlify.app](https://ecoridetp.netlify.app/))
 ### 1. Créer le fichier `.env` dans `/Back-end/`
 
 ```bash

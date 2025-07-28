@@ -1,3 +1,24 @@
+# Guide de Test - EcoRide
+
+## 🌐 Application Déployée - Accès Direct
+
+**🎉 L'application EcoRide est maintenant déployée et accessible en ligne !**
+
+### 📱 Accès à l'application
+**URL : https://ecoridetp.netlify.app/**
+
+Vous pouvez tester toutes les fonctionnalités décrites dans ce guide directement sur le site déployé.
+
+### 🔑 Comptes de test prêts à utiliser
+
+| 👤 Rôle               | 📧 Email          | 🔐 Mot de passe | ⚡ Accès         |
+| --------------------- | ----------------- | --------------- | ---------------- |
+| 🛡️ **Administrateur** | admin@ecoride.fr  | Admin123!       | Gestion système  |
+| 🚗 **Conducteur**     | driver@ecoride.fr | Driver123!      | Création trajets |
+| 👥 **Utilisateur**    | user@ecoride.fr   | User123!        | Participation    |
+
+---
+
 # ✅ GUIDE DE TEST - EcoRide
 
 ## 📋 Vérification de la livraison

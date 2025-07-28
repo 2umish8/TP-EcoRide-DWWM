@@ -2,6 +2,57 @@
 
 Application web de covoiturage axée sur la mobilité durable.
 
+## 🌐 Application Déployée - Accès Direct
+
+**🎉 L'application EcoRide est maintenant déployée et accessible en ligne !**
+
+### 📱 Accès à l'application
+**URL : https://ecoridetp.netlify.app/**
+
+Vous pouvez tester toutes les fonctionnalités directement sur le site déployé :
+- ✅ Recherche de covoiturages
+- ✅ Inscription et connexion
+- ✅ Création de trajets
+- ✅ Système de crédits
+- ✅ Gestion des avis
+- ✅ Interface d'administration
+
+### 🔑 Comptes de test prêts à utiliser
+
+| 👤 Rôle               | 📧 Email          | 🔐 Mot de passe | ⚡ Accès         |
+| --------------------- | ----------------- | --------------- | ---------------- |
+| 🛡️ **Administrateur** | admin@ecoride.fr  | Admin123!       | Gestion système  |
+| 🚗 **Conducteur**     | driver@ecoride.fr | Driver123!      | Création trajets |
+| 👥 **Utilisateur**    | user@ecoride.fr   | User123!        | Participation    |
+
+---
+
+## 🚀 Déploiement local (optionnel)
+
+Si vous souhaitez lancer l'application en local pour le développement ou les tests :
+
+### ⚡ Démarrage express
+
+```bash
+# 1. Cloner le repository
+git clone https://github.com/2umish8/TP-EcoRide-DWWM.git
+cd TP-EcoRide-DWWM
+
+# 2. Backend (Terminal 1)
+cd Back-end
+npm install
+npm start
+
+# 3. Frontend (Terminal 2)
+cd Front-end
+npm install
+npm run dev
+```
+
+**Accès local :**
+- Frontend : http://localhost:5173
+- Backend : http://localhost:3000
+
 ## 📋 Description du projet
 
 EcoRide est une plateforme de covoiturage qui encourage les déplacements écologiques en valorisant les véhicules électriques et en proposant un système de crédits pour récompenser les conducteurs responsables.
@@ -19,28 +70,28 @@ EcoRide est une plateforme de covoiturage qui encourage les déplacements écolo
 
 ### ⚡ Démarrage express
 
-```bash
+````bash
 # 1. Cloner le repository
 git clone https://github.com/2umish8/TP-EcoRide-DWWM.git
 cd TP-EcoRide-DWWM
 
-# 2. Backend (Terminal 1)
-cd Back-end
-npm install
-# Configurer .env avec vos paramètres MySQL
+  - Inscription avec 20 crédits offerts
+  - Participation à un covoiturage
+  - Historique des trajets
+  - Système d'avis et notes
 npm start
 
 # 3. Frontend (Terminal 2)
-cd Front-end
-npm install
-npm run dev
-```
+  - Ajout de véhicules (marquer comme électrique)
+  - Création de trajets avec gestion des prix
+  - Gestion des réservations
+  - Consultation des avis reçus
 
 **Accès :**
-
--   **Application** : http://localhost:5173 (Ou peut être un autre port si configuré)
--   **API** : http://localhost:3000
-
+  - Tableau de bord avec statistiques
+  - Gestion des utilisateurs
+  - Modération des avis
+  - Vue d'ensemble de la plateforme
 ### 🔑 Comptes de test prêts à utiliser
 
 | 👤 Rôle               | 📧 Email          | 🔐 Mot de passe | ⚡ Accès         |
@@ -48,54 +99,26 @@ npm run dev
 | 🛡️ **Administrateur** | admin@ecoride.fr  | Admin123!       | Gestion système  |
 | 🚗 **Conducteur**     | driver@ecoride.fr | Driver123!      | Création trajets |
 | 👥 **Utilisateur**    | user@ecoride.fr   | User123!        | Participation    |
-
-### 🗄️ Configuration base de données (si nécessaire)
-
-<details>
 <summary><strong>📊 Setup MySQL complet</strong></summary>
 
 ```bash
-# Se connecter à MySQL
-mysql -u root -p
-
-# Créer la base de données
 CREATE DATABASE ecoride CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE ecoride;
 
-# Importer le schéma et les données
-source Back-end/Database/schema.sql;
-source Back-end/Database/seed.sql;
-```
+````
 
 **Variables d'environnement (.env) :**
 
 ```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=votre_mot_de_passe
-DB_NAME=ecoride
 JWT_SECRET=votre_jwt_secret
 MONGODB_URI=mongodb://localhost:27017/ecoride_reviews
 ```
-
-</details>
-
-## 🏆 Fonctionnalités démonstrées
 
 ### ✅ Parcours de test recommandé
 
 1. **Visiteur non connecté**
 
-    - Recherche de trajets par destination
-    - Filtrage avancé (prix, durée, écologique)
-    - Consultation détaillée des covoiturages
-
 2. **Utilisateur connecté** (user@ecoride.fr)
-
-    - Inscription avec 20 crédits offerts
-    - Participation à un covoiturage
-    - Historique des trajets
-    - Système d'avis et notes
 
 3. **Conducteur** (driver@ecoride.fr)
 
@@ -114,10 +137,6 @@ MONGODB_URI=mongodb://localhost:27017/ecoride_reviews
 
 ### Stack technique maîtrisé
 
-**Frontend :**
-
--   **Vue.js 3** avec Composition API - Framework moderne
--   **Vite** - Build tool performant
 -   **Bootstrap 5** - Design responsive
 -   **Axios** - Client HTTP pour API
 
@@ -146,48 +165,24 @@ MONGODB_URI=mongodb://localhost:27017/ecoride_reviews
 ### 👤 Côté utilisateur connecté
 
 -   ✅ **Inscription sécurisée** : Validation email + 20 crédits offerts
--   ✅ **Profil personnalisable** : Passager, conducteur, ou mixte
--   ✅ **Participation trajets** : Réservation avec système de crédits
--   ✅ **Historique complet** : Trajets passés et à venir
--   ✅ **Système d'avis** : Notes et commentaires bidirectionnels
 
 ### 🚗 Côté conducteur
 
--   ✅ **Gestion véhicules** : Ajout avec type (électrique valorisé)
--   ✅ **Création trajets** : Planning, prix, places, préférences
--   ✅ **Gestion réservations** : Acceptation/refus passagers
--   ✅ **Revenus en crédits** : Monétisation des trajets proposés
-
 ### ⚙️ Côté administration
-
--   ✅ **Dashboard analytique** : Statistiques temps réel
--   ✅ **Gestion utilisateurs** : CRUD complet avec modération
--   ✅ **Supervision avis** : Modération contenus inappropriés
--   ✅ **Vue globale** : Monitoring activité plateforme
 
 ## 🧪 Tests et validation
 
-### Suite de tests complète
-
-```bash
-# Tests unitaires Frontend
-cd Front-end && npm test
-
 # Tests End-to-End
+
 cd Front-end && npm run test:e2e
 
 # Tests Backend (API)
-cd Back-end && npm test
-```
 
-**Résultats obtenus :**
+cd Back-end && npm test
 
 -   ✅ **Bonne couverture de code**
 -   ✅ **Performance API correcte**
 -   ✅ **Scénarios E2E validés**
--   ✅ **Sécurité : Vulnérabilités traitées**
-
-## 📁 Structure projet optimisée
 
 ```
 TP-EcoRide-DWWM/
@@ -203,25 +198,14 @@ TP-EcoRide-DWWM/
 │   ├── Database/                # Scripts SQL
 │   └── scripts/                 # Tests et utilitaires
 ├── 🎨 Front-end/              # Application Vue.js
-│   ├── src/components/          # Composants réutilisables
-│   ├── src/views/              # Pages application
-│   ├── src/services/           # Services API
-│   └── e2e/                    # Tests end-to-end
 └── 📖 README.md               # Ce fichier
 ```
-
-## 🎓 Compétences techniques démontrées
-
-### Développement Frontend
 
 -   **Vue.js 3** : Composition API, réactivité, composants
 -   **Responsive Design** : Bootstrap 5, mobile-first
 -   **SPA moderne** : Router, état global, optimisations
 -   **Tests Frontend** : Vitest unitaires + Playwright E2E
 
-### Développement Backend
-
--   **API REST** : Express.js, middleware, architecture MVC
 -   **Bases de données** : MySQL relationnel + MongoDB NoSQL
 -   **Sécurité** : JWT authentification, bcrypt, validation
 -   **Tests API** : Scripts automatisés, couverture étendue
@@ -229,7 +213,6 @@ TP-EcoRide-DWWM/
 ### Gestion de projet
 
 -   **Git avancé** : GitFlow, branches, merge, tags
--   **Documentation** : Technique, utilisateur, projet
 -   **Méthodologie** : Agile, user stories, sprints
 -   **Déploiement** : Configuration, environnements, CI/CD
 

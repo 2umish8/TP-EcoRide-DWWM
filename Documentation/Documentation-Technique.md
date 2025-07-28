@@ -1,5 +1,24 @@
 # Documentation Technique - EcoRide 🚀
 
+## 🌐 Application Déployée - Accès Direct
+
+**🎉 L'application EcoRide est maintenant déployée et accessible en ligne !**
+
+### 📱 Accès à l'application
+**URL : https://ecoridetp.netlify.app/**
+
+Cette documentation technique décrit l'architecture et les technologies utilisées dans l'application déployée.
+
+### 🔑 Comptes de test prêts à utiliser
+
+| 👤 Rôle               | 📧 Email          | 🔐 Mot de passe | ⚡ Accès         |
+| --------------------- | ----------------- | --------------- | ---------------- |
+| 🛡️ **Administrateur** | admin@ecoride.fr  | Admin123!       | Gestion système  |
+| 🚗 **Conducteur**     | driver@ecoride.fr | Driver123!      | Création trajets |
+| 👥 **Utilisateur**    | user@ecoride.fr   | User123!        | Participation    |
+
+---
+
 ## Architecture générale
 
 ### Vue d'ensemble
