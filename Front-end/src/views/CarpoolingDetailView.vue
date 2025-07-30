@@ -66,7 +66,7 @@
         <h3>👤 Chauffeur</h3>
         <div class="driver-card">
           <div class="driver-avatar">
-            <ClickableAvatar 
+            <ClickableAvatar
               :userId="carpooling.driver_id"
               :profilePictureUrl="carpooling.driver_photo"
               :alt="carpooling.driver_pseudo"

@@ -7,16 +7,17 @@ API REST pour la plateforme de covoiturage EcoRide développée avec Node.js, Ex
 **🎉 L'application EcoRide est maintenant déployée et accessible en ligne !**
 
 ### 📱 Accès à l'application
+
 **URL : https://ecoridetp.netlify.app/**
 
 L'API backend est également déployée et accessible via l'application frontend déployée.
 
 ### 🔑 Comptes de test prêts à utiliser
 
-| 👤 Rôle               | 👤 Pseudo         | 🔐 Mot de passe | ⚡ Accès         |
-| --------------------- | ----------------- | --------------- | ---------------- |
-| 🛡️ **Administrateur** | Admin             | Admin2025!       | Gestion système  |
-| 🧪 **Utilisateur**    | test              | Test2025!        | Participation&Création trajets    |
+| 👤 Rôle               | 👤 Pseudo | 🔐 Mot de passe | ⚡ Accès                       |
+| --------------------- | --------- | --------------- | ------------------------------ |
+| 🛡️ **Administrateur** | Admin     | Admin2025!      | Gestion système                |
+| 🧪 **Utilisateur**    | test      | Test2025!       | Participation&Création trajets |
 
 ---
 

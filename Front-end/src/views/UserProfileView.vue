@@ -2,9 +2,7 @@
   <div class="user-profile-container">
     <!-- Header avec navigation -->
     <div class="profile-header">
-      <button @click="goBack" class="back-button">
-        <span>←</span> Retour
-      </button>
+      <button @click="goBack" class="back-button"><span>←</span> Retour</button>
       <h1>Profil de {{ user?.pseudo || 'Utilisateur' }}</h1>
     </div>
 
@@ -25,17 +23,11 @@
       <!-- User info section -->
       <div class="user-info-section">
         <div class="user-avatar-container">
-          <img 
-            :src="getUserAvatar()" 
-            :alt="user.pseudo"
-            class="user-avatar"
-          />
+          <img :src="getUserAvatar()" :alt="user.pseudo" class="user-avatar" />
         </div>
         <div class="user-details">
           <h2>{{ user.pseudo }}</h2>
-          <p class="member-since">
-            Membre depuis {{ formatDate(user.created_at) }}
-          </p>
+          <p class="member-since">Membre depuis {{ formatDate(user.created_at) }}</p>
           <div class="user-stats">
             <div class="stat-item">
               <span class="stat-number">{{ userStats.totalTrips }}</span>
@@ -70,8 +62,8 @@
           <div v-for="review in reviews" :key="review.id" class="review-item">
             <div class="review-header">
               <div class="reviewer-info">
-                <img 
-                  :src="getReviewerAvatar(review.reviewer)" 
+                <img
+                  :src="getReviewerAvatar(review.reviewer)"
                   :alt="review.reviewer.pseudo"
                   class="reviewer-avatar"
                 />
@@ -106,7 +98,7 @@ const reviews = ref([])
 const userStats = ref({
   totalTrips: 0,
   rating: null,
-  reviewsCount: 0
+  reviewsCount: 0,
 })
 const loading = ref(true)
 const error = ref(null)
@@ -134,16 +126,16 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('fr-FR', {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 
 // Get role label
 const getRoleLabel = (roleName) => {
   const roleLabels = {
-    'passager': 'Passager',
-    'chauffeur': 'Chauffeur',
-    'admin': 'Administrateur'
+    passager: 'Passager',
+    chauffeur: 'Chauffeur',
+    admin: 'Administrateur',
   }
   return roleLabels[roleName] || roleName
 }
@@ -153,31 +145,31 @@ const loadUserProfile = async () => {
   try {
     loading.value = true
     error.value = null
-    
+
     const userId = route.params.userId
-    
+
     // Vérifier si l'userId est valide
     if (!userId || isNaN(userId)) {
       error.value = 'ID utilisateur invalide'
       return
     }
-    
+
     const response = await api.get(`/users/${userId}`)
-    
+
     user.value = response.data.user
     reviews.value = response.data.reviews || []
-    
+
     // Calculate stats
     userStats.value = {
       totalTrips: response.data.stats?.totalTrips || 0,
       rating: response.data.stats?.averageRating || null,
-      reviewsCount: reviews.value.length
+      reviewsCount: reviews.value.length,
     }
-    
   } catch (err) {
     console.error('Erreur lors du chargement du profil:', err)
     if (err.response?.status === 404) {
-      error.value = 'Utilisateur non trouvé. Cet utilisateur n\'existe pas dans notre base de données.'
+      error.value =
+        "Utilisateur non trouvé. Cet utilisateur n'existe pas dans notre base de données."
     } else {
       error.value = err.response?.data?.message || 'Erreur lors du chargement du profil'
     }
@@ -235,7 +227,8 @@ onMounted(() => {
   font-weight: 600;
 }
 
-.loading-container, .error-container {
+.loading-container,
+.error-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -256,8 +249,12 @@ onMounted(() => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .retry-button {
@@ -434,15 +431,15 @@ onMounted(() => {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .user-stats {
     justify-content: center;
   }
-  
+
   .review-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
 }
-</style> 
+</style>

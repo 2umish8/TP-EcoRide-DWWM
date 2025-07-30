@@ -5,9 +5,11 @@
 **🎉 L'application EcoRide est maintenant déployée et accessible en ligne !**
 
 ### 📱 Accès à l'application
+
 **URL : https://ecoridetp.netlify.app/**
 
 Vous pouvez tester toutes les fonctionnalités directement sur le site déployé :
+
 - ✅ Interface utilisateur complète
 - ✅ Recherche de covoiturages
 - ✅ Gestion des profils

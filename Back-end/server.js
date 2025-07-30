@@ -46,7 +46,10 @@ console.log("🚀 Démarrage de l'application...");
 console.log("📋 Variables d'environnement:");
 console.log("- PORT:", process.env.PORT);
 console.log("- NODE_ENV:", process.env.NODE_ENV);
-console.log("- MONGODB_URI:", process.env.MONGODB_URI ? "Définie" : "Manquante");
+console.log(
+    "- MONGODB_URI:",
+    process.env.MONGODB_URI ? "Définie" : "Manquante"
+);
 console.log("- DB_HOST:", process.env.DB_HOST);
 
 /* ****************************************************************************************************************** */
@@ -84,18 +87,18 @@ app.listen(PORT, () => {
 });
 
 // Gestion des signaux d'arrêt
-process.on('SIGTERM', () => {
-    console.log('🛑 Signal SIGTERM reçu, arrêt gracieux...');
+process.on("SIGTERM", () => {
+    console.log("🛑 Signal SIGTERM reçu, arrêt gracieux...");
     app.close(() => {
-        console.log('✅ Serveur arrêté proprement');
+        console.log("✅ Serveur arrêté proprement");
         process.exit(0);
     });
 });
 
-process.on('SIGINT', () => {
-    console.log(' Signal SIGINT reçu, arrêt gracieux...');
+process.on("SIGINT", () => {
+    console.log(" Signal SIGINT reçu, arrêt gracieux...");
     app.close(() => {
-        console.log('✅ Serveur arrêté proprement');
+        console.log("✅ Serveur arrêté proprement");
         process.exit(0);
     });
 });
@@ -104,7 +107,7 @@ process.on('SIGINT', () => {
 app.use("*", (req, res) => {
     res.status(404).json({
         message: "Route non trouvée",
-        path: req.originalUrl
+        path: req.originalUrl,
     });
 });
 
@@ -112,6 +115,6 @@ app.use("*", (req, res) => {
 app.use((error, req, res, next) => {
     console.error("Erreur serveur:", error);
     res.status(500).json({
-        message: "Erreur interne du serveur"
+        message: "Erreur interne du serveur",
     });
 });

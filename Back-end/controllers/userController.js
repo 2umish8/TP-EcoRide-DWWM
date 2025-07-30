@@ -258,7 +258,10 @@ const getUserById = async (req, res) => {
             WHERE ur.user_id = ?
         `;
         const [rolesResult] = await db.query(rolesSql, [userId]);
-        const roles = rolesResult.map((row) => ({ id: row.id, name: row.name }));
+        const roles = rolesResult.map((row) => ({
+            id: row.id,
+            name: row.name,
+        }));
 
         // Récupérer les statistiques des covoiturages (MySQL)
         const statsSql = `
@@ -276,30 +279,30 @@ const getUserById = async (req, res) => {
         // Récupérer les avis reçus depuis MongoDB
         const reviews = await Review.find({
             reviewedUserId: parseInt(userId),
-            validationStatus: "approved"
+            validationStatus: "approved",
         })
-        .sort({ createdAt: -1 })
-        .limit(10)
-        .lean();
+            .sort({ createdAt: -1 })
+            .limit(10)
+            .lean();
 
         // Récupérer les informations des reviewers depuis MySQL
-        const reviewerIds = reviews.map(review => review.reviewerId);
+        const reviewerIds = reviews.map((review) => review.reviewerId);
         let reviewerInfo = {};
-        
+
         if (reviewerIds.length > 0) {
             const reviewerSql = `
                 SELECT id, pseudo, profile_picture_url
                 FROM user
-                WHERE id IN (${reviewerIds.map(() => '?').join(',')})
+                WHERE id IN (${reviewerIds.map(() => "?").join(",")})
             `;
             const [reviewers] = await db.query(reviewerSql, reviewerIds);
-            reviewers.forEach(reviewer => {
+            reviewers.forEach((reviewer) => {
                 reviewerInfo[reviewer.id] = reviewer;
             });
         }
 
         // Formater les avis
-        const formattedReviews = reviews.map(review => ({
+        const formattedReviews = reviews.map((review) => ({
             id: review._id,
             rating: review.rating,
             comment: review.comment,
@@ -307,8 +310,8 @@ const getUserById = async (req, res) => {
             reviewer: reviewerInfo[review.reviewerId] || {
                 id: review.reviewerId,
                 pseudo: "Utilisateur supprimé",
-                profile_picture_url: null
-            }
+                profile_picture_url: null,
+            },
         }));
 
         res.status(200).json({
@@ -318,10 +321,12 @@ const getUserById = async (req, res) => {
             },
             stats: {
                 totalTrips: stats.totalTrips || 0,
-                averageRating: reviewStats.average ? reviewStats.average.toFixed(1) : null,
-                totalReviews: reviewStats.total || 0
+                averageRating: reviewStats.average
+                    ? reviewStats.average.toFixed(1)
+                    : null,
+                totalReviews: reviewStats.total || 0,
             },
-            reviews: formattedReviews
+            reviews: formattedReviews,
         });
     } catch (error) {
         console.error(error);

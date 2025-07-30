@@ -150,7 +150,7 @@
 
             <div class="trip-details">
               <div class="driver-info">
-                <ClickableAvatar 
+                <ClickableAvatar
                   :userId="trip.driverId"
                   :profilePictureUrl="trip.driver.avatar"
                   :alt="trip.driver.name"
