@@ -14,8 +14,9 @@ Cette documentation technique décrit l'architecture et les technologies utilis�
 | 👤 Rôle               | 👤 Pseudo         | 🔐 Mot de passe | ⚡ Accès         |
 | --------------------- | ----------------- | --------------- | ---------------- |
 | 🛡️ **Administrateur** | Admin             | Admin2025!       | Gestion système  |
-| 🧪 **Test**           | Test              | Test2025!        | Participation + Création trajets |
+| 🧪 **Utilisateur**    | test              | Test2025!        | Participation&Création trajets    |
 
+*Vous pouvez créer un compte utilisateur allant sur le bouton "Inscription" et en renseignant les champs requis. Vous serez par défaut passager, mais vous pouvez devenir conducteur en renseignant les champs requis.*
 ---
 
 ## Architecture générale
@@ -39,6 +40,7 @@ EcoRide est une application web full-stack composée de :
 │   Port: 5173    │    │   Port: 3000    │    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
+PS: Les ports sont pour l'accès local, l'application est déployée sur Netlify et est accessible à l'adresse https://ecoridetp.netlify.app/
 
 ## Structure des dossiers
 
@@ -377,23 +379,6 @@ cd Back-end && npm audit && npm update
 # Frontend
 cd Front-end && npm audit && npm update
 ```
-
-## Roadmap technique
-
-### V1.1 (Prochaine version)
-
--   [ ] Implémentation cache Redis
--   [ ] Optimisation requêtes MongoDB
--   [ ] Tests automatisés CI/CD
--   [ ] Monitoring APM
-
-### V2.0 (Future)
-
--   [ ] Migration vers TypeScript
--   [ ] Microservices architecture
--   [ ] Progressive Web App
--   [ ] Notifications push
-
 ---
 
 **Projet** : EcoRide - Application de Covoiturage Écologique  

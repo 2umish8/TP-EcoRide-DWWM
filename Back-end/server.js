@@ -8,9 +8,9 @@ const db = require("./Config/db.js");
 const connectMongoDB = require("./Config/mongodb.js");
 // Importer le middleware d'authentification
 const {
-    authMiddleware,
-    requireRole,
-    requireAnyRole,
+  authMiddleware,
+  requireRole,
+  requireAnyRole,
 } = require("./authMiddleware.js");
 // Importer les routes des utilisateurs
 const userRoutes = require("./routes/userRoutes");
@@ -72,5 +72,5 @@ app.use("/api/search", searchRoutes);
 
 // Démarrer le serveur
 app.listen(PORT, () => {
-    console.log(`Serveur démarré sur le port ${PORT}`);
+  console.log(`Serveur démarré sur le port ${PORT}`);
 });
