@@ -41,6 +41,14 @@ app.use(cors());
 // Middleware pour permettre à Express de traiter les données JSON
 app.use(express.json());
 
+// Afficher les variables d'environnement
+console.log("🚀 Démarrage de l'application...");
+console.log("📋 Variables d'environnement:");
+console.log("- PORT:", process.env.PORT);
+console.log("- NODE_ENV:", process.env.NODE_ENV);
+console.log("- MONGODB_URI:", process.env.MONGODB_URI ? "Définie" : "Manquante");
+console.log("- DB_HOST:", process.env.DB_HOST);
+
 /* ****************************************************************************************************************** */
 /*                                                     ROUTES                                                         */
 /* ****************************************************************************************************************** */
@@ -73,4 +81,37 @@ app.use("/api/search", searchRoutes);
 // Démarrer le serveur
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
+});
+
+// Gestion des signaux d'arrêt
+process.on('SIGTERM', () => {
+    console.log('🛑 Signal SIGTERM reçu, arrêt gracieux...');
+    app.close(() => {
+        console.log('✅ Serveur arrêté proprement');
+        process.exit(0);
+    });
+});
+
+process.on('SIGINT', () => {
+    console.log(' Signal SIGINT reçu, arrêt gracieux...');
+    app.close(() => {
+        console.log('✅ Serveur arrêté proprement');
+        process.exit(0);
+    });
+});
+
+// Gestion des erreurs 404
+app.use("*", (req, res) => {
+    res.status(404).json({
+        message: "Route non trouvée",
+        path: req.originalUrl
+    });
+});
+
+// Gestion globale des erreurs
+app.use((error, req, res, next) => {
+    console.error("Erreur serveur:", error);
+    res.status(500).json({
+        message: "Erreur interne du serveur"
+    });
 });
