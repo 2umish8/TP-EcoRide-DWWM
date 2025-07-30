@@ -68,7 +68,10 @@
           <div class="driver-avatar">
             <ClickableAvatar
               :userId="carpooling.driver_id"
-              :profilePictureUrl="carpooling.driver_photo"
+              :profilePictureUrl="
+                carpooling.driver_photo ||
+                `https://i.pravatar.cc/150?img=${carpooling.driver_id % 70}`
+              "
               :alt="carpooling.driver_pseudo"
               @click="viewDriverProfile"
             />

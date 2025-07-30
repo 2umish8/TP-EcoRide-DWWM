@@ -109,7 +109,7 @@ const getUserAvatar = () => {
     return user.value.profile_picture_url
   }
   // Avatar basé sur l'ID de l'utilisateur
-  return `https://i.pravatar.cc/150?img=${(user.value?.id % 70) + 1}`
+  return `https://i.pravatar.cc/150?img=${user.value?.id % 70}`
 }
 
 // Get reviewer avatar
@@ -117,7 +117,7 @@ const getReviewerAvatar = (reviewer) => {
   if (reviewer.profile_picture_url) {
     return reviewer.profile_picture_url
   }
-  return `https://i.pravatar.cc/150?img=${(reviewer.id % 70) + 1}`
+  return `https://i.pravatar.cc/150?img=${reviewer.id % 70}`
 }
 
 // Format date

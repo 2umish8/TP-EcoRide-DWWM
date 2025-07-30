@@ -50,7 +50,7 @@ const avatarSrc = computed(() => {
     return props.profilePictureUrl
   }
   // Avatar basé sur l'ID de l'utilisateur
-  return `https://i.pravatar.cc/150?img=${(props.userId % 70) + 1}`
+  return `https://i.pravatar.cc/150?img=${props.userId % 70}`
 })
 
 const showTooltip = computed(() => {

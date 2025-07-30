@@ -349,7 +349,8 @@ const formattedResults = computed(() => {
     driverId: carpooling.driver_id, // Ajouter l'ID du chauffeur
     driver: {
       name: carpooling.driver_pseudo,
-      avatar: carpooling.driver_photo || 'https://i.pravatar.cc/150?img=' + (carpooling.id % 70),
+      avatar:
+        carpooling.driver_photo || 'https://i.pravatar.cc/150?img=' + (carpooling.driver_id % 70),
       rating: carpooling.driver_rating ? parseFloat(carpooling.driver_rating).toFixed(1) : 'N/A',
       ridesCount: 0, // À implémenter plus tard
     },
