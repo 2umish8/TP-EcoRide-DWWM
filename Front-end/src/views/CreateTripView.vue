@@ -353,7 +353,6 @@ export default {
   background-color: #1a1a1a;
   color: #e9ecef;
   padding: 2rem 1rem;
-  padding-top: 5rem; /* Espace pour la navbar fixe */
 }
 
 /* Header */
@@ -524,7 +523,7 @@ export default {
   gap: 1rem;
   justify-content: flex-end;
   margin-top: 2rem;
-  padding-top: 1.5rem;
+
   border-top: 1px solid #4a5568;
 }
 

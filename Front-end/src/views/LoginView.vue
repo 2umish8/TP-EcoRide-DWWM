@@ -175,7 +175,6 @@ const handleLogin = async () => {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  padding-top: 80px;
 }
 
 .login-container {
@@ -399,7 +398,6 @@ const handleLogin = async () => {
 @media (max-width: 768px) {
   .login-page {
     padding: 10px;
-    padding-top: 60px;
   }
 
   .login-container {

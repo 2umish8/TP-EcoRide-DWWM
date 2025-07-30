@@ -352,7 +352,6 @@ onMounted(() => {
 
 .reviews-section {
   border-top: 1px solid #eee;
-  padding-top: 30px;
 }
 
 .reviews-section h3 {
