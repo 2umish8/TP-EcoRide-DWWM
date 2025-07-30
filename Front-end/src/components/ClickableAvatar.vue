@@ -1,10 +1,10 @@
 <template>
   <div class="clickable-avatar-container" @click="handleClick">
-    <img 
-      :src="avatarSrc" 
+    <img
+      :src="avatarSrc"
       :alt="alt"
       class="clickable-avatar"
-      :class="{ 'clickable': clickable, [size]: true }"
+      :class="{ clickable: clickable, [size]: true }"
     />
     <div v-if="showTooltip" class="tooltip">
       {{ tooltipText }}
@@ -18,28 +18,28 @@ import { computed } from 'vue'
 const props = defineProps({
   userId: {
     type: [Number, String],
-    required: true
+    required: true,
   },
   profilePictureUrl: {
     type: String,
-    default: null
+    default: null,
   },
   alt: {
     type: String,
-    default: 'Avatar utilisateur'
+    default: 'Avatar utilisateur',
   },
   clickable: {
     type: Boolean,
-    default: true
+    default: true,
   },
   tooltipText: {
     type: String,
-    default: 'Voir le profil'
+    default: 'Voir le profil',
   },
   size: {
     type: String,
-    default: 'medium' // small, medium, large
-  }
+    default: 'medium', // small, medium, large
+  },
 })
 
 const emit = defineEmits(['click'])
@@ -50,7 +50,7 @@ const avatarSrc = computed(() => {
     return props.profilePictureUrl
   }
   // Avatar basé sur l'ID de l'utilisateur
-  return `https://i.pravatar.cc/150?img=${(props.userId % 70) + 1}`
+  return `https://i.pravatar.cc/150?img=${props.userId % 70}`
 })
 
 const showTooltip = computed(() => {
@@ -135,4 +135,4 @@ const handleClick = () => {
   opacity: 1;
   visibility: visible;
 }
-</style> 
+</style>

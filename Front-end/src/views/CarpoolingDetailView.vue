@@ -66,15 +66,18 @@
         <h3>👤 Chauffeur</h3>
         <div class="driver-card">
           <div class="driver-avatar">
-            <ClickableAvatar 
+            <ClickableAvatar
               :userId="carpooling.driver_id"
-              :profilePictureUrl="carpooling.driver_photo"
+              :profilePictureUrl="
+                carpooling.driver_photo ||
+                `https://i.pravatar.cc/150?img=${carpooling.driver_id % 70}`
+              "
               :alt="carpooling.driver_pseudo"
               @click="viewDriverProfile"
             />
           </div>
           <div class="driver-details">
-            <h4 class="driver-name" @click="viewDriverProfile">
+            <h4 class="driver-name" @click="viewDriverProfile(carpooling.driver_id)">
               {{ carpooling.driver_pseudo }}
             </h4>
             <div class="rating">
@@ -1096,6 +1099,22 @@ onMounted(async () => {
   color: #888;
 }
 
+/* Driver name clickable styling */
+.driver-name {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #00ff88;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 2px;
+}
+
+.driver-name:hover {
+  color: #00cc6a;
+  text-decoration-color: #00cc6a;
+  transform: translateY(-1px);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .carpooling-detail {
@@ -1136,16 +1155,6 @@ onMounted(async () => {
   .driver-card {
     flex-direction: column;
     text-align: center;
-  }
-
-  .driver-name {
-    cursor: pointer;
-    transition: color 0.3s ease;
-  }
-
-  .driver-name:hover {
-    color: #667eea;
-    text-decoration: underline;
   }
 
   .vehicle-specs {

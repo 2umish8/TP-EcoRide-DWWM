@@ -560,7 +560,6 @@ export default {
   background-color: #1a1a1a;
   color: #e9ecef;
   padding: 20px 0;
-  padding-top: 100px;
 }
 
 .container {

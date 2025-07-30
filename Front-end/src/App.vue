@@ -12,7 +12,16 @@ const currentUser = computed(() => authStore.currentUser)
 const { modals } = useModal()
 
 const route = useRoute()
-const hideLayout = computed(() => route.name === 'Admin' || route.path === '/admin')
+const hideLayout = computed(() => {
+  // Pages qui ne doivent pas avoir la navbar et le footer
+  const pagesWithoutLayout = ['Admin', 'login', 'register', 'forgot-password']
+  return pagesWithoutLayout.includes(route.name) || route.path.startsWith('/admin')
+})
+
+// Calculer le padding-top dynamiquement
+const mainPaddingTop = computed(() => {
+  return hideLayout.value ? '0px' : '70px'
+})
 
 const logout = async () => {
   await authStore.logout()
@@ -190,7 +199,9 @@ const logout = async () => {
     </nav>
 
     <!-- Contenu principal -->
-    <RouterView />
+    <div class="main-content" :style="{ paddingTop: mainPaddingTop }">
+      <RouterView />
+    </div>
 
     <!-- Footer -->
     <footer v-if="!hideLayout" class="footer-ecoride">
@@ -246,26 +257,14 @@ body {
   padding: 0;
 }
 
-main,
-.router-view {
+.main-content {
   padding-bottom: 20px; /* Espace minimal entre contenu et footer */
-  padding-top: 70px; /* Espace pour la navbar fixe */
+  min-height: calc(100vh - 70px); /* Assurer que le contenu prend toute la hauteur disponible */
 }
 
-/* Assurer que toutes les vues principales ont l'espacement navbar */
+/* Supprimer les paddings-top individuels car ils sont maintenant gérés globalement */
 .router-view > * {
-  padding-top: 70px;
-  margin-top: -70px; /* Compenser le padding pour éviter le double espacement */
-}
-
-/* Cibler spécifiquement les vues principales */
-.my-trips,
-.home-view,
-.search-view,
-.profile-view,
-.login-view,
-.register-view {
-  padding-top: 80px !important; /* Forcer l'espacement */
+  margin-top: 0;
 }
 
 footer {

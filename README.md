@@ -7,28 +7,31 @@ Application web de covoiturage axée sur la mobilité durable.
 **🎉 L'application EcoRide est maintenant déployée et accessible en ligne !**
 
 ### 📱 Accès à l'application
+
 **URL : https://ecoridetp.netlify.app/**
 
 Vous pouvez tester toutes les fonctionnalités directement sur le site déployé :
-- ✅ Recherche de covoiturages
-- ✅ Inscription et connexion
-- ✅ Création de trajets
+
+-   ✅ Recherche de covoiturages
+-   ✅ Inscription et connexion
+-   ✅ Création de trajets
 
 Bientôt disponible :
-- 🚧 Système de crédits
-- 🚧 Espace Administrateur
-- 🚧 Espace Employé
-- 🚧 Participer à un covoiturage
-- 🚧 Démarrer et arrêter un covoiturage
+
+-   🚧 Système de crédits
+-   🚧 Espace Administrateur
+-   🚧 Espace Employé
+-   🚧 Participer à un covoiturage
+-   🚧 Démarrer et arrêter un covoiturage
 
 ### 🔑 Comptes de test prêts à utiliser
 
-| 👤 Rôle               | 📧 Pseudo          | 🔐 Mot de passe | ⚡ Accès         |
-| --------------------- | -----------------   | --------------- | ---------------- |
-| 🛡️ **Administrateur** | Admin               | Admin2025!      | Gestion système  |
-| 🚗 **Conducteur**     | test                | Test2025!       | Création trajets |
+| 👤 Rôle               | 📧 Pseudo | 🔐 Mot de passe | ⚡ Accès         |
+| --------------------- | --------- | --------------- | ---------------- |
+| 🛡️ **Administrateur** | Admin     | Admin2025!      | Gestion système  |
+| 🚗 **Conducteur**     | test      | Test2025!       | Création trajets |
 
-*Vous pouvez créer un compte utilisateur allant sur le bouton "Inscription" et en renseignant les champs requis. Vous serez par défaut passager, mais vous pouvez devenir conducteur en renseignant les champs requis.*
+_Vous pouvez créer un compte utilisateur allant sur le bouton "Inscription" et en renseignant les champs requis. Vous serez par défaut passager, mais vous pouvez devenir conducteur en renseignant les champs requis._
 
 ---
 
@@ -55,8 +58,9 @@ npm run dev
 ```
 
 **Accès local :**
-- Frontend : http://localhost:5173 (Ou peu importe le port qui est affiché dans le terminal)
-- Backend : http://localhost:3000
+
+-   Frontend : http://localhost:5173 (Ou peu importe le port qui est affiché dans le terminal)
+-   Backend : http://localhost:3000
 
 ## 📋 Description du projet
 

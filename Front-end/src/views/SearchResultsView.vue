@@ -150,7 +150,7 @@
 
             <div class="trip-details">
               <div class="driver-info">
-                <ClickableAvatar 
+                <ClickableAvatar
                   :userId="trip.driverId"
                   :profilePictureUrl="trip.driver.avatar"
                   :alt="trip.driver.name"
@@ -349,7 +349,8 @@ const formattedResults = computed(() => {
     driverId: carpooling.driver_id, // Ajouter l'ID du chauffeur
     driver: {
       name: carpooling.driver_pseudo,
-      avatar: carpooling.driver_photo || 'https://i.pravatar.cc/150?img=' + (carpooling.id % 70),
+      avatar:
+        carpooling.driver_photo || 'https://i.pravatar.cc/150?img=' + (carpooling.driver_id % 70),
       rating: carpooling.driver_rating ? parseFloat(carpooling.driver_rating).toFixed(1) : 'N/A',
       ridesCount: 0, // À implémenter plus tard
     },
@@ -516,7 +517,7 @@ onMounted(() => {
 .search-results {
   min-height: 100vh;
   background-color: #1a1a1a;
-  padding: 80px 20px 40px;
+  padding: 20px 20px 40px;
   color: white;
 }
 
@@ -660,7 +661,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
-  padding-top: 10px;
+
   border-top: 1px solid #333;
   font-size: 0.85rem;
   color: #999;

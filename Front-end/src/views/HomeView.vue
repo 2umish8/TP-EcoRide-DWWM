@@ -206,7 +206,6 @@ const scrollToAbout = () => {
   color: white;
   margin: 0;
   padding: 0;
-  padding-top: 50px; /* Espace réduit pour la navbar plus petite */
 }
 
 .hero-background {
@@ -307,7 +306,7 @@ const scrollToAbout = () => {
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  padding-top: 30px;
+
   padding-bottom: 20px;
   position: relative;
   z-index: 10; /* S'assure que le contenu reste au-dessus */
@@ -664,10 +663,6 @@ const scrollToAbout = () => {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .accueil {
-    padding-top: 50px;
-  }
-
   .hero-background {
     padding: 20px;
     min-height: calc(100vh - 50px);

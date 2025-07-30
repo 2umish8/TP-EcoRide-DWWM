@@ -290,7 +290,6 @@ const handleRegister = async () => {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  padding-top: 80px;
 }
 
 .register-container {
@@ -669,7 +668,6 @@ const handleRegister = async () => {
 @media (max-width: 768px) {
   .register-page {
     padding: 10px;
-    padding-top: 60px;
   }
 
   .register-container {

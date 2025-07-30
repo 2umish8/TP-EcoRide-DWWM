@@ -846,7 +846,7 @@ export default {
 .profile-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
-  padding: 100px 20px 40px;
+  padding: 1rem 20px 40px;
 }
 
 .profile-container {

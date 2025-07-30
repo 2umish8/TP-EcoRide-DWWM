@@ -1016,8 +1016,7 @@ export default {
   min-height: 100vh;
   background-color: #1a1a1a;
   color: #e9ecef;
-  padding: 2rem 1rem;
-  padding-top: 5rem; /* Espace pour la navbar fixe (80px) */
+  padding: 1rem 1rem;
 }
 
 /* Header */

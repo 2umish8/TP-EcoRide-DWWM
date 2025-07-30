@@ -17,7 +17,12 @@
     <!-- Liste des utilisateurs -->
     <section class="admin-section">
       <h2>Utilisateurs</h2>
-      <input v-model="search" @input="fetchUsers" placeholder="Rechercher..." class="admin-search" />
+      <input
+        v-model="search"
+        @input="fetchUsers"
+        placeholder="Rechercher..."
+        class="admin-search"
+      />
       <table class="admin-table">
         <thead>
           <tr>
@@ -133,7 +138,7 @@ onMounted(fetchUsers)
   background: #23272b;
   border-radius: 10px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
 }
 .admin-form {
   display: flex;
@@ -169,7 +174,8 @@ onMounted(fetchUsers)
   border-collapse: collapse;
   margin-top: 1rem;
 }
-.admin-table th, .admin-table td {
+.admin-table th,
+.admin-table td {
   padding: 0.7rem 0.5rem;
   border-bottom: 1px solid #333;
   text-align: left;
