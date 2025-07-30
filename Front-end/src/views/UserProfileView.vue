@@ -35,14 +35,16 @@
         </div>
         <div class="user-details">
           <h2>{{ user.pseudo }}</h2>
-          <p class="member-since">Membre depuis {{ formatDate(user.created_at) }}</p>
+          <p class="member-since">Membre depuis {{ formatDate(user.creation_date) }}</p>
           <div class="user-stats">
             <div class="stat-item">
               <span class="stat-number">{{ userStats.totalTrips }}</span>
               <span class="stat-label">Trajets</span>
             </div>
             <div class="stat-item">
-              <span class="stat-number">{{ userStats.rating || 'N/A' }}</span>
+              <span class="stat-number">{{
+                userStats.rating === '0.0' ? 'Aucune' : userStats.rating || 'N/A'
+              }}</span>
               <span class="stat-label">Note moyenne</span>
             </div>
             <div class="stat-item">
@@ -174,6 +176,7 @@ const loadUserProfile = async () => {
     }
 
     const response = await api.get(`/users/${userId}`)
+    console.log('Frontend received:', response.data)
 
     user.value = response.data.user
     reviews.value = response.data.reviews || []
@@ -184,6 +187,7 @@ const loadUserProfile = async () => {
       rating: response.data.stats?.averageRating || null,
       reviewsCount: reviews.value.length,
     }
+    console.log('User stats calculated:', userStats.value)
   } catch (err) {
     console.error('Erreur lors du chargement du profil:', err)
     if (err.response?.status === 404) {

@@ -1,7 +1,9 @@
 import axios from 'axios'
 
 // Configuration de base pour l'API
-const API_BASE_URL = 'https://tp-ecoride-dwwm-production.up.railway.app/api'
+// Utilise l'URL de Railway en production, localhost en développement
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'https://tp-ecoride-dwwm-production.up.railway.app/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,

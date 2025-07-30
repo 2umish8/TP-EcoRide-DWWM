@@ -275,6 +275,7 @@ const getUserById = async (req, res) => {
 
         // Récupérer les statistiques des avis (MongoDB)
         const reviewStats = await Review.getAverageRating(parseInt(userId));
+        console.log("Review stats for user", userId, ":", reviewStats);
 
         // Récupérer les avis reçus depuis MongoDB
         const reviews = await Review.find({
@@ -314,20 +315,23 @@ const getUserById = async (req, res) => {
             },
         }));
 
-        res.status(200).json({
+        const responseData = {
             user: {
                 ...user,
                 roles: roles,
             },
             stats: {
                 totalTrips: stats.totalTrips || 0,
-                averageRating: reviewStats.average
-                    ? reviewStats.average.toFixed(1)
-                    : null,
+                averageRating:
+                    reviewStats.total > 0
+                        ? reviewStats.average.toFixed(1)
+                        : "0.0",
                 totalReviews: reviewStats.total || 0,
             },
             reviews: formattedReviews,
-        });
+        };
+        console.log("Response data:", responseData);
+        res.status(200).json(responseData);
     } catch (error) {
         console.error(error);
         res.status(500).json({
