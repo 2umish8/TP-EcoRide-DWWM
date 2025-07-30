@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../Config/db.js");
+const Review = require("../models/Review");
 const { validateAndNormalizeEmail } = require("../utils/emailValidator.js");
 const {
     validatePassword,
@@ -259,46 +260,54 @@ const getUserById = async (req, res) => {
         const [rolesResult] = await db.query(rolesSql, [userId]);
         const roles = rolesResult.map((row) => ({ id: row.id, name: row.name }));
 
-        // Récupérer les statistiques
+        // Récupérer les statistiques des covoiturages (MySQL)
         const statsSql = `
             SELECT 
-                COUNT(DISTINCT c.id) as totalTrips,
-                AVG(r.rating) as averageRating
+                COUNT(DISTINCT c.id) as totalTrips
             FROM user u
             LEFT JOIN carpooling c ON u.id = c.driver_id
-            LEFT JOIN review r ON u.id = r.reviewed_user_id
             WHERE u.id = ?
         `;
         const [[stats]] = await db.query(statsSql, [userId]);
 
-        // Récupérer les avis reçus
-        const reviewsSql = `
-            SELECT 
-                r.id,
-                r.rating,
-                r.comment,
-                r.created_at,
-                u.id as reviewer_id,
-                u.pseudo as reviewer_pseudo,
-                u.profile_picture_url as reviewer_profile_picture_url
-            FROM review r
-            INNER JOIN user u ON r.reviewer_id = u.id
-            WHERE r.reviewed_user_id = ?
-            ORDER BY r.created_at DESC
-            LIMIT 10
-        `;
-        const [reviews] = await db.query(reviewsSql, [userId]);
+        // Récupérer les statistiques des avis (MongoDB)
+        const reviewStats = await Review.getAverageRating(parseInt(userId));
+
+        // Récupérer les avis reçus depuis MongoDB
+        const reviews = await Review.find({
+            reviewedUserId: parseInt(userId),
+            validationStatus: "approved"
+        })
+        .sort({ createdAt: -1 })
+        .limit(10)
+        .lean();
+
+        // Récupérer les informations des reviewers depuis MySQL
+        const reviewerIds = reviews.map(review => review.reviewerId);
+        let reviewerInfo = {};
+        
+        if (reviewerIds.length > 0) {
+            const reviewerSql = `
+                SELECT id, pseudo, profile_picture_url
+                FROM user
+                WHERE id IN (${reviewerIds.map(() => '?').join(',')})
+            `;
+            const [reviewers] = await db.query(reviewerSql, reviewerIds);
+            reviewers.forEach(reviewer => {
+                reviewerInfo[reviewer.id] = reviewer;
+            });
+        }
 
         // Formater les avis
         const formattedReviews = reviews.map(review => ({
-            id: review.id,
+            id: review._id,
             rating: review.rating,
             comment: review.comment,
-            created_at: review.created_at,
-            reviewer: {
-                id: review.reviewer_id,
-                pseudo: review.reviewer_pseudo,
-                profile_picture_url: review.reviewer_profile_picture_url
+            created_at: review.createdAt,
+            reviewer: reviewerInfo[review.reviewerId] || {
+                id: review.reviewerId,
+                pseudo: "Utilisateur supprimé",
+                profile_picture_url: null
             }
         }));
 
@@ -309,7 +318,8 @@ const getUserById = async (req, res) => {
             },
             stats: {
                 totalTrips: stats.totalTrips || 0,
-                averageRating: stats.averageRating ? parseFloat(stats.averageRating).toFixed(1) : null
+                averageRating: reviewStats.average ? reviewStats.average.toFixed(1) : null,
+                totalReviews: reviewStats.total || 0
             },
             reviews: formattedReviews
         });
