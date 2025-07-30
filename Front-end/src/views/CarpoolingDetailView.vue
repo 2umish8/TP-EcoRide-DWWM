@@ -66,10 +66,17 @@
         <h3>👤 Chauffeur</h3>
         <div class="driver-card">
           <div class="driver-avatar">
-            <img :src="getDriverAvatar()" :alt="carpooling.driver_pseudo" />
+            <ClickableAvatar 
+              :userId="carpooling.driver_id"
+              :profilePictureUrl="carpooling.driver_photo"
+              :alt="carpooling.driver_pseudo"
+              @click="viewDriverProfile"
+            />
           </div>
           <div class="driver-details">
-            <h4>{{ carpooling.driver_pseudo }}</h4>
+            <h4 class="driver-name" @click="viewDriverProfile">
+              {{ carpooling.driver_pseudo }}
+            </h4>
             <div class="rating">
               <span class="stars">{{ getStars(carpooling.driver_rating) }}</span>
               <span class="rating-value">{{ carpooling.driver_rating }}/5</span>
@@ -278,6 +285,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api, { participationService } from '@/services/api.js'
 import IconCredit from '@/components/icons/IconCredit.vue'
+import ClickableAvatar from '@/components/ClickableAvatar.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -339,12 +347,9 @@ const getStars = (rating) => {
   return stars
 }
 
-const getDriverAvatar = () => {
-  if (carpooling.value?.driver_photo) {
-    return carpooling.value.driver_photo
-  }
-  // Avatar par défaut basé sur l'ID du covoiturage
-  return `https://i.pravatar.cc/150?img=${(carpooling.value?.id % 70) + 1}`
+// Fonction pour naviguer vers le profil du chauffeur
+const viewDriverProfile = (userId) => {
+  router.push(`/user/${userId}`)
 }
 
 const getStatusLabel = (status) => {
@@ -1131,6 +1136,16 @@ onMounted(async () => {
   .driver-card {
     flex-direction: column;
     text-align: center;
+  }
+
+  .driver-name {
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .driver-name:hover {
+    color: #667eea;
+    text-decoration: underline;
   }
 
   .vehicle-specs {

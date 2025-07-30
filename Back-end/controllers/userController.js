@@ -235,6 +235,92 @@ const getUserProfile = async (req, res) => {
     }
 };
 
+/* --------------------------------------------------- Obtenir le profil d'un utilisateur par ID -------------------------------------- */
+const getUserById = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        // Récupérer les informations utilisateur
+        const userSql =
+            "SELECT id, pseudo, email, credits, profile_picture_url, creation_date FROM user WHERE id = ?";
+        const [[user]] = await db.query(userSql, [userId]);
+
+        if (!user) {
+            return res.status(404).json({ message: "Utilisateur non trouvé." });
+        }
+
+        // Récupérer les rôles
+        const rolesSql = `
+            SELECT r.id, r.name 
+            FROM role r 
+            INNER JOIN user_role ur ON r.id = ur.role_id 
+            WHERE ur.user_id = ?
+        `;
+        const [rolesResult] = await db.query(rolesSql, [userId]);
+        const roles = rolesResult.map((row) => ({ id: row.id, name: row.name }));
+
+        // Récupérer les statistiques
+        const statsSql = `
+            SELECT 
+                COUNT(DISTINCT c.id) as totalTrips,
+                AVG(r.rating) as averageRating
+            FROM user u
+            LEFT JOIN carpooling c ON u.id = c.driver_id
+            LEFT JOIN review r ON u.id = r.reviewed_user_id
+            WHERE u.id = ?
+        `;
+        const [[stats]] = await db.query(statsSql, [userId]);
+
+        // Récupérer les avis reçus
+        const reviewsSql = `
+            SELECT 
+                r.id,
+                r.rating,
+                r.comment,
+                r.created_at,
+                u.id as reviewer_id,
+                u.pseudo as reviewer_pseudo,
+                u.profile_picture_url as reviewer_profile_picture_url
+            FROM review r
+            INNER JOIN user u ON r.reviewer_id = u.id
+            WHERE r.reviewed_user_id = ?
+            ORDER BY r.created_at DESC
+            LIMIT 10
+        `;
+        const [reviews] = await db.query(reviewsSql, [userId]);
+
+        // Formater les avis
+        const formattedReviews = reviews.map(review => ({
+            id: review.id,
+            rating: review.rating,
+            comment: review.comment,
+            created_at: review.created_at,
+            reviewer: {
+                id: review.reviewer_id,
+                pseudo: review.reviewer_pseudo,
+                profile_picture_url: review.reviewer_profile_picture_url
+            }
+        }));
+
+        res.status(200).json({
+            user: {
+                ...user,
+                roles: roles,
+            },
+            stats: {
+                totalTrips: stats.totalTrips || 0,
+                averageRating: stats.averageRating ? parseFloat(stats.averageRating).toFixed(1) : null
+            },
+            reviews: formattedReviews
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Erreur lors de la récupération du profil.",
+        });
+    }
+};
+
 /* --------------------------------------------------- Mettre à jour le profil -------------------------------------- */
 const updateUserProfile = async (req, res) => {
     try {
@@ -372,6 +458,7 @@ module.exports = {
     loginUser,
     becomeDriver,
     getUserProfile,
+    getUserById,
     updateUserProfile,
     changePassword,
 };

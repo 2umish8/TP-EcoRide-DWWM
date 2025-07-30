@@ -7,6 +7,7 @@ const {
     loginUser,
     becomeDriver,
     getUserProfile,
+    getUserById,
     updateUserProfile,
     changePassword,
 } = require("../controllers/userController");
@@ -22,5 +23,8 @@ router.get("/profile", authMiddleware, getUserProfile);
 router.put("/profile", authMiddleware, updateUserProfile);
 router.post("/change-password", authMiddleware, changePassword);
 router.post("/become-driver", authMiddleware, becomeDriver);
+
+// Route publique pour obtenir le profil d'un utilisateur par ID (doit être en dernier)
+router.get("/:userId", getUserById);
 
 module.exports = router;

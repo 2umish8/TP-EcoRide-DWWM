@@ -95,6 +95,11 @@ const router = createRouter({
         driverId: route.query.driverId,
       }),
     },
+    {
+      path: '/user/:userId',
+      name: 'UserProfile',
+      component: () => import('../views/UserProfileView.vue'),
+    },
   ],
 })
 

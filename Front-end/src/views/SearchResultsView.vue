@@ -150,9 +150,16 @@
 
             <div class="trip-details">
               <div class="driver-info">
-                <img :src="trip.driver.avatar" :alt="trip.driver.name" class="driver-avatar" />
+                <ClickableAvatar 
+                  :userId="trip.driverId"
+                  :profilePictureUrl="trip.driver.avatar"
+                  :alt="trip.driver.name"
+                  @click="viewDriverProfile"
+                />
                 <div class="driver-details">
-                  <span class="driver-name">{{ trip.driver.name }}</span>
+                  <span class="driver-name" @click="viewDriverProfile(trip.driverId)">
+                    {{ trip.driver.name }}
+                  </span>
                   <div class="driver-rating">
                     <span class="rating">⭐ {{ trip.driver.rating }}</span>
                     <span class="rides-count" v-if="trip.driver.ridesCount > 0"
@@ -230,6 +237,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { carpoolingService } from '@/services/api.js'
 import { useAuthStore } from '@/stores/counter'
 import IconCredit from '@/components/icons/IconCredit.vue'
+import ClickableAvatar from '@/components/ClickableAvatar.vue'
 import { showAlert } from '@/composables/useModal'
 
 const route = useRoute()
@@ -452,6 +460,11 @@ const createAlert = () => {
 // Fonction pour vérifier si un trajet appartient à l'utilisateur actuel
 const isMyTrip = (trip) => {
   return authStore.currentUser && trip.driverId === authStore.currentUser.id
+}
+
+// Fonction pour naviguer vers le profil du chauffeur
+const viewDriverProfile = (userId) => {
+  router.push(`/user/${userId}`)
 }
 
 // Nouvelle recherche depuis le formulaire compact
@@ -1203,6 +1216,13 @@ onMounted(() => {
   font-weight: 600;
   color: white;
   display: block;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.driver-name:hover {
+  color: #34d399;
+  text-decoration: underline;
 }
 
 .driver-rating {
