@@ -44,10 +44,10 @@ PS: Les ports sont pour l'accès local, l'application est déployée sur Netlify
 
 ## Structure des dossiers
 
-### Backend (`/Back-end/`)
+### Backend (`/Backend/`)
 
 ```
-Back-end/
+Backend/
 ├── Config/                 # Configuration base de données
 │   ├── db.js              # Pool MySQL
 │   └── mongodb.js         # Connexion MongoDB
@@ -68,10 +68,10 @@ Back-end/
 └── package.json          # Dépendances
 ```
 
-### Frontend (`/Front-end/`)
+### Frontend (`/Frontend/`)
 
 ```
-Front-end/
+Frontend/
 ├── src/
 │   ├── components/       # Composants Vue réutilisables
 │   ├── views/           # Pages de l'application
@@ -237,20 +237,20 @@ NODE_ENV=development
 ### Tests unitaires (Vitest)
 
 ```bash
-cd Front-end
+cd Frontend
 npm test
 ```
 
 ### Tests end-to-end (Playwright)
 
 ```bash
-cd Front-end
+cd Frontend
 npm run test:e2e
 ```
 
 ### Tests API
 
-Scripts de test disponibles dans `/Back-end/scripts/` :
+Scripts de test disponibles dans `/Backend/scripts/` :
 
 -   `testAPI.js` - Tests des endpoints
 -   `testAdmin.js` - Tests fonctions admin
@@ -273,14 +273,14 @@ git clone https://github.com/2umish8/TP-EcoRide-DWWM.git
 cd TP-EcoRide-DWWM
 
 # 2. Backend
-cd Back-end
+cd Backend
 npm install
 cp .env.example .env
 # Configurer .env
 npm start
 
 # 3. Frontend
-cd ../Front-end
+cd ../Frontend
 npm install
 npm run dev
 ```
@@ -292,8 +292,8 @@ npm run dev
 CREATE DATABASE ecoride CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Import des tables et données
-SOURCE Back-end/Database/schema.sql;
-SOURCE Back-end/Database/seed.sql;
+SOURCE Backend/Database/schema.sql;
+SOURCE Backend/Database/seed.sql;
 ```
 
 ## Performance et optimisation
@@ -350,10 +350,10 @@ mongodump --db ecoride_reviews --out ./backup_mongo_$(date +%Y%m%d)
 
 ```bash
 # Backend
-cd Back-end && npm audit && npm update
+cd Backend && npm audit && npm update
 
 # Frontend
-cd Front-end && npm audit && npm update
+cd Frontend && npm audit && npm update
 ```
 ---
 

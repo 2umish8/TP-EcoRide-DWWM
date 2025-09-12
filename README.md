@@ -47,12 +47,12 @@ git clone https://github.com/2umish8/TP-EcoRide-DWWM.git
 cd TP-EcoRide-DWWM
 
 # 2. Backend (Terminal 1)
-cd Back-end
+cd Backend
 npm install
 npm run dev
 
 # 3. Frontend (Terminal 2)
-cd Front-end
+cd Frontend
 npm install
 npm run dev
 ```

@@ -34,8 +34,8 @@ Vous pouvez tester toutes les fonctionnalités décrites dans ce guide directeme
 
 ### Code source ✅
 
--   [x] **Front-end/** - Application Vue.js 3 complète
--   [x] **Back-end/** - API Node.js/Express avec base de données
+-   [x] **Frontend/** - Application Vue.js 3 complète
+-   [x] **Backend/** - API Node.js/Express avec base de données
 -   [x] **Tests** - Scripts de validation et tests automatisés
 -   [x] **.gitignore** - Fichiers sensibles exclus correctement
 
@@ -53,10 +53,10 @@ cd TP-EcoRide-DWWM
 
 ```bash
 # Terminal 1 - Backend
-cd Back-end && npm install && npm start
+cd Backend && npm install && npm start
 
 # Terminal 2 - Frontend
-cd Front-end && npm install && npm run dev
+cd Frontend && npm install && npm run dev
 ```
 
 ### 3. Tests fonctionnels (20-30 min)
@@ -100,10 +100,10 @@ Utiliser : **Admin** / **Admin2025!**
 
 ```bash
 # Tests unitaires
-cd Front-end && npm test
+cd Frontend && npm test
 
 # Tests API (optionnel)
-cd Back-end && node scripts/testAPI.js
+cd Backend && node scripts/testAPI.js
 ```
 
 ## 🎯 Points d'évaluation à observer
@@ -138,7 +138,7 @@ cd Back-end && node scripts/testAPI.js
 ## 🎯 Points d'attention
 
 1. **Configuration requise** : Suivre SECURITE.md obligatoirement
-2. **Base de données** : Scripts SQL fournis dans Back-end/Database/
+2. **Base de données** : Scripts SQL fournis dans Backend/Database/
 3. **Comptes de test** : Identifiants fournis dans README.md
 4. **Support** : Documentation technique détaillée disponible
 
