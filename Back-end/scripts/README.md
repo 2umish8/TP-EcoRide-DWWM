@@ -95,33 +95,7 @@ node scripts/cleanDatabase.js status
 
 ### Fonctionnalités testées
 
-#### Recherche basique (`/api/carpoolings/available`)
-
--   ✅ Recherche par ville de départ
--   ✅ Recherche par ville d'arrivée
--   ✅ Filtrage par date
--   ✅ Filtrage par prix maximum
--   ✅ Filtrage par véhicules électriques
--   ✅ Filtrage par durée maximum
--   ✅ Filtrage par note minimum du chauffeur
-
-#### Recherche avancée (`/api/search/advanced`)
-
--   ✅ Pagination (page, limite)
--   ✅ Tri par prix, durée, note, date de départ
--   ✅ Filtres prix min/max
--   ✅ Filtres durée min/max
--   ✅ Plage de dates (dateFrom, dateTo)
--   ✅ Inclusion des covoiturages complets
--   ✅ Statistiques enrichies
--   ✅ Métadonnées utiles (presque complet, départ imminent, éco-friendly)
-
-#### Statistiques (`/api/search/statistics`)
-
--   ✅ Destinations populaires
--   ✅ Prix moyens par route
--   ✅ Statistiques sur les véhicules électriques
--   ✅ Durées moyennes de trajet
+> Pour la liste complète des endpoints testés, voir le dictionnaire canonique : `01-Documentation/Dictionnaire de routes.md`
 
 ### Améliorations implémentées
 
@@ -184,18 +158,9 @@ node scripts/testAdvancedSearch.js
 
 ### Succès ✅
 
--   Tous les endpoints répondent correctement
--   Les filtres fonctionnent comme attendu
--   La pagination fonctionne
--   Les statistiques sont cohérentes
--   Les performances sont acceptables (< 1 seconde)
 
 ### Échecs possibles ❌
 
--   Serveur non démarré
--   Base de données inaccessible
--   Erreurs dans la configuration MongoDB
--   Problèmes de dépendances
 
 ## 🔧 Dépannage
 
@@ -232,10 +197,6 @@ node scripts/runAllTests.js
 
 Les tests mesurent automatiquement :
 
--   **Temps de réponse** de chaque endpoint
--   **Nombre de résultats** pour validation
--   **Comparaison** recherche basique vs avancée
--   **Statistiques d'utilisation** (prix moyens, trajets populaires)
 
 ## 🎉 Résultat final
 

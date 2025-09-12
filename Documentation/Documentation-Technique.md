@@ -132,49 +132,25 @@ users 1:1 preferences
 
 ### Authentification
 
-```
-POST /api/auth/register     # Inscription
-POST /api/auth/login        # Connexion
-POST /api/auth/logout       # Déconnexion
-GET  /api/auth/profile      # Profil utilisateur
-```
+La liste canonique des endpoints API (authentification, covoiturage, participations, etc.) est maintenue dans le dictionnaire des routes :
+
+`01-Documentation/Dictionnaire de routes.md`
 
 ### Recherche et covoiturage
 
-```
-GET  /api/search/advanced              # Recherche avancée
-GET  /api/carpools                     # Liste des covoiturages
-POST /api/carpools                     # Créer un covoiturage
-GET  /api/carpools/:id                 # Détails d'un covoiturage
-PUT  /api/carpools/:id                 # Modifier un covoiturage
-DELETE /api/carpools/:id               # Supprimer un covoiturage
-```
+Consultez le dictionnaire centralisé des routes pour la liste complète et à jour : `01-Documentation/Dictionnaire de routes.md`
 
 ### Participation
 
-```
-POST /api/participations               # Participer à un trajet
-GET  /api/participations/user/:id      # Participations d'un utilisateur
-PUT  /api/participations/:id           # Modifier une participation
-DELETE /api/participations/:id         # Annuler une participation
-```
+Voir le dictionnaire centralisé : `01-Documentation/Dictionnaire de routes.md`
 
 ### Avis et notes
 
-```
-POST /api/reviews                      # Laisser un avis
-GET  /api/reviews/driver/:id           # Avis d'un conducteur
-GET  /api/reviews/user/:id             # Avis reçus par un utilisateur
-```
+Voir le dictionnaire centralisé : `01-Documentation/Dictionnaire de routes.md`
 
 ### Administration
 
-```
-GET  /api/admin/users                  # Liste des utilisateurs
-PUT  /api/admin/users/:id              # Modifier un utilisateur
-DELETE /api/admin/users/:id            # Supprimer un utilisateur
-GET  /api/admin/stats                  # Statistiques plateforme
-```
+Voir le dictionnaire centralisé : `01-Documentation/Dictionnaire de routes.md`
 
 ## Technologies et dépendances
 

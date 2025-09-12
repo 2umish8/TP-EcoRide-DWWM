@@ -98,7 +98,7 @@ async function toggleSuspension(user) {
 async function handleCreateEmployee() {
   employeeCreationMsg.value = ''
   // 1. Créer le compte via l'API register
-  const res = await fetch('/api/user/register', {
+  const res = await fetch('/api/users/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authStore.token}` },
     body: JSON.stringify(newEmployee.value),

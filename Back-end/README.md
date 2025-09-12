@@ -112,14 +112,13 @@ La documentation complète de l'API est disponible dans le fichier `API_DOCUMENT
 
 ### Endpoints principaux
 
--   `POST /api/users/register` - Inscription
--   `POST /api/users/login` - Connexion
--   `GET /api/users/profile` - Profil utilisateur
--   `POST /api/vehicles` - Ajouter un véhicule
--   `GET /api/carpoolings/available` - Rechercher des covoiturages
--   `POST /api/carpoolings` - Créer un covoiturage
--   `POST /api/participations/:id/join` - Rejoindre un covoiturage
--   `GET /api/credits/balance` - Consulter ses crédits
+La liste canonique des routes API est maintenant centralisée dans :
+
+`01-Documentation/Dictionnaire de routes.md`
+
+Consultez ce fichier pour la liste complète et à jour des endpoints.
+
+Pour la liste complète, exacte et maintenue des routes API, veuillez consulter le dictionnaire centralisé : `01-Documentation/Dictionnaire de routes.md`.
 
 ## 👤 Comptes de test
 
