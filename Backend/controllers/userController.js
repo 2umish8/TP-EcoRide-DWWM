@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { PrismaClientKnownRequestError } = require("../generated/prisma");
 const db = require("../Config/db.js");
 const Review = require("../models/Review");
 const { validateAndNormalizeEmail } = require("../utils/emailValidator.js");
@@ -44,38 +45,39 @@ const registerUser = async (req, res) => {
         const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 10;
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
-        const sql =
-            "INSERT INTO user (pseudo, email, password_hash) VALUES (?, ?, ?)";
-        const [result] = await db.query(sql, [
-            pseudo,
-            normalizedEmail,
-            passwordHash,
-        ]);
+        const user = await db.user.create({
+            data: {
+                pseudo,
+                email: normalizedEmail,
+                password_hash: passwordHash,
+            },
+        });
 
-        if (result.affectedRows && result.affectedRows > 0) {
-            // Attribuer le rôle "passager" par défaut
-            const userId = result.insertId;
-            const roleSql =
-                "INSERT INTO user_role (user_id, role_id) VALUES (?, (SELECT id FROM role WHERE name = 'passager'))";
-            await db.query(roleSql, [userId]);
-
-            res.status(201).json({
-                message:
-                    "Utilisateur créé avec succès ! Veuillez vous connecter avec vos identifiants.",
-                user: {
-                    id: userId,
-                    pseudo: pseudo,
-                    email: normalizedEmail,
+        // Attribuer le rôle "passager" par défaut
+        const role = await db.role.findFirst({
+            where: { name: "passager" },
+        });
+        if (role) {
+            await db.user_Role.create({
+                data: {
+                    user_id: user.id,
+                    role_id: role.id,
                 },
             });
-        } else {
-            res.status(500).json({
-                message: "Erreur lors de la création de l'utilisateur.",
-            });
         }
+
+        res.status(201).json({
+            message:
+                "Utilisateur créé avec succès ! Veuillez vous connecter avec vos identifiants.",
+            user: {
+                id: user.id,
+                pseudo: user.pseudo,
+                email: user.email,
+            },
+        });
     } catch (error) {
         console.error(error);
-        if (error.code === "ER_DUP_ENTRY") {
+        if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
             return res.status(409).json({
                 message: "Un compte avec cet email ou ce pseudo existe déjà.",
             });
@@ -97,8 +99,14 @@ const loginUser = async (req, res) => {
             });
         }
 
-        const sql = "SELECT * FROM user WHERE email = ? OR pseudo = ?";
-        const [[user]] = await db.query(sql, [identifier, identifier]);
+        const user = await db.user.findFirst({
+            where: {
+                OR: [
+                    { email: identifier },
+                    { pseudo: identifier }
+                ]
+            }
+        });
 
         if (!user || !(await bcrypt.compare(password, user.password_hash))) {
             return res
@@ -107,14 +115,17 @@ const loginUser = async (req, res) => {
         }
 
         // Récupérer les rôles de l'utilisateur
-        const rolesSql = `
-            SELECT r.name 
-            FROM role r 
-            INNER JOIN user_role ur ON r.id = ur.role_id 
-            WHERE ur.user_id = ?
-        `;
-        const [rolesResult] = await db.query(rolesSql, [user.id]);
-        const roles = rolesResult.map((row) => row.name);
+        const userWithRoles = await db.user.findUnique({
+            where: { id: user.id },
+            include: {
+                roles: {
+                    include: {
+                        role: true
+                    }
+                }
+            }
+        });
+        const roles = userWithRoles.roles.map((ur) => ur.role.name);
 
         const token = jwt.sign(
             {
@@ -151,25 +162,25 @@ const becomeDriver = async (req, res) => {
         const userId = req.user.id;
 
         // Vérifier si l'utilisateur a déjà le rôle chauffeur
-        const checkSql = `
-            SELECT 1 FROM user_role ur 
-            INNER JOIN role r ON ur.role_id = r.id 
-            WHERE ur.user_id = ? AND r.name = 'chauffeur'
-        `;
-        const [existing] = await db.query(checkSql, [userId]);
+        const existing = await db.user_Role.findFirst({
+            where: {
+                user_id: userId,
+                role: { name: 'chauffeur' }
+            }
+        });
 
-        if (existing.length > 0) {
+        if (existing) {
             return res
                 .status(400)
                 .json({ message: "Vous êtes déjà chauffeur." });
         }
 
         // Vérifier que l'utilisateur a au moins un véhicule
-        const vehicleCheckSql =
-            "SELECT COUNT(*) as count FROM vehicle WHERE owner_id = ?";
-        const [[vehicleCount]] = await db.query(vehicleCheckSql, [userId]);
+        const vehicleCount = await db.vehicle.count({
+            where: { user_id: userId }
+        });
 
-        if (vehicleCount.count === 0) {
+        if (vehicleCount === 0) {
             return res.status(400).json({
                 message:
                     "Vous devez enregistrer au moins un véhicule pour devenir chauffeur.",
@@ -178,9 +189,15 @@ const becomeDriver = async (req, res) => {
         }
 
         // Ajouter le rôle chauffeur (permanent et définitif)
-        const sql =
-            "INSERT INTO user_role (user_id, role_id) VALUES (?, (SELECT id FROM role WHERE name = 'chauffeur'))";
-        await db.query(sql, [userId]);
+        const role = await db.role.findFirst({
+            where: { name: 'chauffeur' }
+        });
+        await db.user_Role.create({
+            data: {
+                user_id: userId,
+                role_id: role.id
+            }
+        });
 
         // Log de l'événement important
         console.log(`🚗 Nouvel chauffeur EcoRide: User ID ${userId}`);

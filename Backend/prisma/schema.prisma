@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(50)
+
+  users User_Role[]
+}
+
+model User {
+  id                   Int      @id @default(autoincrement())
+  pseudo               String   @unique @db.VarChar(50)
+  email                String   @unique @db.VarChar(255)
+  password_hash        String   @db.VarChar(255)
+  credits              Int      @default(20)
+  suspended            Boolean  @default(false)
+  profile_picture_url  String?  @db.VarChar(255)
+  creation_date        DateTime @default(now()) @db.DateTime(0)
+
+  roles         User_Role[]
+  vehicles      Vehicle[]
+  driverTrips   Carpooling[] @relation("DriverTrips")
+  participations Participation[]
+}
+
+model User_Role {
+  user_id Int
+  role_id Int
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [role_id], references: [id], onDelete: Cascade)
+
+  @@id([user_id, role_id])
+}
+
+model Brand {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(100)
+
+  vehicles Vehicle[]
+}
+
+model Color {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(50)
+
+  vehicles Vehicle[]
+}
+
+model Vehicle {
+  id                      Int       @id @default(autoincrement())
+  plate_number            String    @unique @db.VarChar(20)
+  first_registration_date DateTime? @db.Date
+  model                   String    @db.VarChar(100)
+  seats_available         Int
+  is_electric             Boolean   @default(false)
+  user_id                 Int
+  brand_id                Int?
+  color_id                Int?
+
+  user  User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  brand Brand? @relation(fields: [brand_id], references: [id])
+  color Color? @relation(fields: [color_id], references: [id])
+
+  carpools Carpooling[]
+}
+
+model Carpooling {
+  id                        Int      @id @default(autoincrement())
+  status                    String   @default("prévu") @db.VarChar(50)
+  departure_address         String   @db.VarChar(255)
+  arrival_address           String   @db.VarChar(255)
+  departure_datetime        DateTime @db.DateTime(0)
+  arrival_datetime          DateTime @db.DateTime(0)
+  price_per_passenger       Int
+  initial_seats_offered     Int
+  seats_remaining           Int
+  platform_commission_earned Int     @default(2)
+  driver_id                 Int
+  vehicle_id                Int
+
+  driver   User @relation("DriverTrips", fields: [driver_id], references: [id])
+  vehicle  Vehicle @relation(fields: [vehicle_id], references: [id])
+
+  participations Participation[]
+}
+
+model Participation {
+  id                        Int       @id @default(autoincrement())
+  passenger_id              Int
+  carpooling_id             Int
+  credits_paid              Int
+  participation_date        DateTime  @default(now()) @db.DateTime(0)
+  is_validated_by_passenger Boolean?
+  cancellation_date         DateTime? @db.DateTime(0)
+
+  passenger  User        @relation(fields: [passenger_id], references: [id])
+  carpooling Carpooling  @relation(fields: [carpooling_id], references: [id])
+}

@@ -1,9 +1,29 @@
 import axios from 'axios'
 
 // Configuration de base pour l'API
-// Utilise l'URL de Railway en production, localhost en développement
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || 'https://tp-ecoride-dwwm-production.up.railway.app/api'
+// DEBUG: Afficher les variables d'environnement
+console.log('🔧 VITE_API_URL from env:', import.meta.env.VITE_API_URL)
+console.log('🔧 Mode:', import.meta.env.MODE)
+
+// Logique intelligente pour l'URL de l'API
+const getApiUrl = () => {
+  // Si VITE_API_URL est défini dans .env, l'utiliser en priorité
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL
+  }
+
+  // Sinon, détecter automatiquement l'environnement
+  if (import.meta.env.MODE === 'development' || window.location.hostname === 'localhost') {
+    return 'http://localhost:3000/api'
+  }
+
+  // URL de production par défaut
+  return 'https://tp-ecoride-dwwm-production.up.railway.app/api'
+}
+
+const API_BASE_URL = getApiUrl()
+
+console.log('🚀 API configurée avec URL:', API_BASE_URL)
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -15,6 +35,7 @@ const api = axios.create({
 // Intercepteur pour ajouter le token JWT automatiquement
 api.interceptors.request.use(
   (config) => {
+    console.log('📤 Requête vers:', config.baseURL + config.url)
     const token = localStorage.getItem('authToken')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
@@ -30,6 +51,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.error('❌ Erreur API:', error.message, 'URL:', error.config?.url)
     if (error.response?.status === 401) {
       // Token expiré ou invalide
       localStorage.removeItem('authToken')

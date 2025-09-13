@@ -35,8 +35,37 @@ const PORT = process.env.PORT || 3000;
 // Connecter à MongoDB
 connectMongoDB();
 
-// Utiliser cors pour permettre les requêtes cross-origin
-app.use(cors());
+// Configurer CORS - Production et développement
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Permettre les requêtes sans origin (applications mobiles, etc.)
+        if (!origin) return callback(null, true);
+
+        // Liste des origines autorisées
+        const allowedOrigins = [
+            "http://localhost:5173",
+            "http://localhost:5174",
+            "http://localhost:5175",
+            "http://127.0.0.1:5173",
+            "http://127.0.0.1:5174",
+            "http://127.0.0.1:5175",
+            "https://tp-ecoride-dwwm-production.up.railway.app",
+            // Ajouter d'autres domaines de production si nécessaire
+        ];
+
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            console.log("❌ CORS blocked origin:", origin);
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
 
 // Middleware pour permettre à Express de traiter les données JSON
 app.use(express.json());
