@@ -15,7 +15,8 @@ const {
 /* --------------------------------------------------- inscription -------------------------------------------------- */
 const registerUser = async (req, res) => {
     try {
-        const { pseudo, email, password } = req.body;
+        // Use validated data from Zod middleware if present
+        const { pseudo, email, password } = req.validatedBody || req.body;
 
         if (!pseudo || !email || !password) {
             return res
@@ -97,13 +98,7 @@ const registerUser = async (req, res) => {
 /* --------------------------------------------------- connexion --------------------------------------------------- */
 const loginUser = async (req, res) => {
     try {
-        const { identifier, password } = req.body;
-
-        if (!identifier || !password) {
-            return res.status(400).json({
-                message: "Veuillez fournir un identifiant et un mot de passe.",
-            });
-        }
+        const { identifier, password } = req.validatedBody || req.body;
 
         const user = await prisma.user.findFirst({
             where: {
@@ -433,24 +428,7 @@ const updateUserProfile = async (req, res) => {
 const changePassword = async (req, res) => {
     try {
         const userId = req.user.id;
-        const { currentPassword, newPassword } = req.body;
-
-        if (!currentPassword || !newPassword) {
-            return res.status(400).json({
-                message:
-                    "Veuillez fournir l'ancien et le nouveau mot de passe.",
-            });
-        }
-
-        // Validation de la force du nouveau mot de passe
-        const passwordValidation = validatePassword(newPassword);
-        if (!passwordValidation.isValid) {
-            return res.status(400).json({
-                message: getPasswordErrorMessage(passwordValidation),
-                errors: passwordValidation.errors,
-                suggestions: passwordValidation.suggestions,
-            });
-        }
+        const { currentPassword, newPassword } = req.validatedBody || req.body;
 
         // Récupérer le mot de passe actuel
         const user = await prisma.user.findUnique({

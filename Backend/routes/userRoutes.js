@@ -15,13 +15,28 @@ const {
 const { authMiddleware, requireRole } = require("../authMiddleware");
 
 // Routes publiques (sans authentification)
-router.post("/register", registerUser);
+const { validateBody } = require("../middlewares/validate");
+const { createUserSchema } = require("../validators/userValidator");
+const {
+    loginSchema,
+    changePasswordSchema,
+} = require("../validators/authValidator");
+
+// Validation Zod pour la création d'utilisateur
+router.post("/register", validateBody(createUserSchema), registerUser);
+// Validation pour la connexion
+router.post("/login", validateBody(loginSchema), loginUser);
 router.post("/login", loginUser);
 
 // Routes protégées (nécessitent une authentification)
 router.get("/profile", authMiddleware, getUserProfile);
 router.put("/profile", authMiddleware, updateUserProfile);
-router.post("/change-password", authMiddleware, changePassword);
+router.post(
+    "/change-password",
+    authMiddleware,
+    validateBody(changePasswordSchema),
+    changePassword
+);
 router.post("/become-driver", authMiddleware, becomeDriver);
 
 // Route publique pour obtenir le profil d'un utilisateur par ID (doit être en dernier)
