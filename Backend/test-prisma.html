@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API EcoRide - Prisma</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        button { padding: 10px 15px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 3px; white-space: pre-wrap; }
+        .success { background: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test API EcoRide avec Prisma</h1>
+    
+    <div class="test-section">
+        <h3>1. Test d'inscription utilisateur</h3>
+        <button onclick="testRegister()">Tester l'inscription</button>
+        <div id="register-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Test de connexion utilisateur</h3>
+        <button onclick="testLogin()">Tester la connexion</button>
+        <div id="login-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Test du profil utilisateur</h3>
+        <button onclick="testProfile()">Tester le profil</button>
+        <div id="profile-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>4. Test des véhicules (SQL brut)</h3>
+        <button onclick="testVehicles()">Tester les véhicules</button>
+        <div id="vehicles-result" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+        let authToken = null;
+
+        function showResult(elementId, data, isSuccess = true) {
+            const element = document.getElementById(elementId);
+            element.textContent = JSON.stringify(data, null, 2);
+            element.className = `result ${isSuccess ? 'success' : 'error'}`;
+        }
+
+        async function testRegister() {
+            try {
+                const response = await fetch(`${API_BASE}/users/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        pseudo: `testuser_${Date.now()}`,
+                        email: `test_${Date.now()}@example.com`,
+                        password: 'TestPass123!'
+                    })
+                });
+                
+                const data = await response.json();
+                showResult('register-result', data, response.ok);
+            } catch (error) {
+                showResult('register-result', { error: error.message }, false);
+            }
+        }
+
+        async function testLogin() {
+            try {
+                const response = await fetch(`${API_BASE}/users/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        identifier: 'test@example.com',
+                        password: 'TestPass123!'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.token) {
+                    authToken = data.token;
+                }
+                
+                showResult('login-result', data, response.ok);
+            } catch (error) {
+                showResult('login-result', { error: error.message }, false);
+            }
+        }
+
+        async function testProfile() {
+            if (!authToken) {
+                showResult('profile-result', { error: 'Veuillez vous connecter d\'abord' }, false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/users/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                showResult('profile-result', data, response.ok);
+            } catch (error) {
+                showResult('profile-result', { error: error.message }, false);
+            }
+        }
+
+        async function testVehicles() {
+            if (!authToken) {
+                showResult('vehicles-result', { error: 'Veuillez vous connecter d\'abord' }, false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/vehicles/brands-colors`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                showResult('vehicles-result', data, response.ok);
+            } catch (error) {
+                showResult('vehicles-result', { error: error.message }, false);
+            }
+        }
+
+        // Instruction d'utilisation
+        document.addEventListener('DOMContentLoaded', function() {
+            const instructionDiv = document.createElement('div');
+            instructionDiv.className = 'test-section';
+            instructionDiv.innerHTML = `
+                <h3>📋 Instructions</h3>
+                <p><strong>Étape 1:</strong> Cliquez sur "Tester l'inscription" pour créer un utilisateur</p>
+                <p><strong>Étape 2:</strong> Modifiez l'email dans testLogin() si nécessaire et cliquez sur "Tester la connexion"</p>
+                <p><strong>Étape 3:</strong> Cliquez sur "Tester le profil" pour vérifier les requêtes Prisma</p>
+                <p><strong>Étape 4:</strong> Cliquez sur "Tester les véhicules" pour voir les endpoints encore en SQL</p>
+                <p><em>Serveur doit être démarré sur le port 3000</em></p>
+            `;
+            document.body.insertBefore(instructionDiv, document.body.firstChild.nextSibling);
+        });
+    </script>
+</body>
+</html>

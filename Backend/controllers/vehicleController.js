@@ -1,4 +1,8 @@
-const db = require("../Config/db.js");
+const {
+    PrismaClient,
+    PrismaClientKnownRequestError,
+} = require("@prisma/client");
+const prisma = new PrismaClient();
 
 /* --------------------------------------------------- Ajouter un véhicule ------------------------------------------ */
 const addVehicle = async (req, res) => {
@@ -29,80 +33,63 @@ const addVehicle = async (req, res) => {
         }
 
         // Vérifier que l'utilisateur a le rôle chauffeur
-        const roleCheckSql = `
-            SELECT 1 FROM user_role ur 
-            INNER JOIN role r ON ur.role_id = r.id 
-            WHERE ur.user_id = ? AND r.name = 'chauffeur'
-        `;
-        const [roleCheck] = await db.query(roleCheckSql, [userId]);
+        const hasDriverRole = await prisma.user_Role.findFirst({
+            where: {
+                user_id: userId,
+                role: { name: "chauffeur" },
+            },
+        });
 
-        if (roleCheck.length === 0) {
+        if (!hasDriverRole) {
             return res.status(403).json({
                 message: "Vous devez être chauffeur pour ajouter un véhicule.",
             });
         }
 
         // Obtenir ou créer l'ID de la marque
-        let brandId;
-        const [brandResult] = await db.query(
-            "SELECT id FROM brand WHERE name = ?",
-            [brand_name]
-        );
-        if (brandResult.length > 0) {
-            brandId = brandResult[0].id;
-        } else {
-            const [insertBrand] = await db.query(
-                "INSERT INTO brand (name) VALUES (?)",
-                [brand_name]
-            );
-            brandId = insertBrand.insertId;
+        let brand = await prisma.brand.findFirst({
+            where: { name: brand_name },
+        });
+        if (!brand) {
+            brand = await prisma.brand.create({
+                data: { name: brand_name },
+            });
         }
 
         // Obtenir ou créer l'ID de la couleur
-        let colorId;
-        const [colorResult] = await db.query(
-            "SELECT id FROM color WHERE name = ?",
-            [color_name]
-        );
-        if (colorResult.length > 0) {
-            colorId = colorResult[0].id;
-        } else {
-            const [insertColor] = await db.query(
-                "INSERT INTO color (name) VALUES (?)",
-                [color_name]
-            );
-            colorId = insertColor.insertId;
+        let color = await prisma.color.findFirst({
+            where: { name: color_name },
+        });
+        if (!color) {
+            color = await prisma.color.create({
+                data: { name: color_name },
+            });
         }
 
         // Insérer le véhicule
-        const vehicleSql = `
-            INSERT INTO vehicle (plate_number, first_registration_date, model, seats_available, is_electric, user_id, brand_id, color_id) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `;
-        const [result] = await db.query(vehicleSql, [
-            plate_number,
-            first_registration_date || null,
-            model,
-            seats_available,
-            is_electric || false,
-            userId,
-            brandId,
-            colorId,
-        ]);
+        const vehicle = await prisma.vehicle.create({
+            data: {
+                plate_number,
+                first_registration_date: first_registration_date || null,
+                model,
+                seats_available,
+                is_electric: is_electric || false,
+                user_id: userId,
+                brand_id: brand.id,
+                color_id: color.id,
+            },
+        });
 
-        if (result.affectedRows > 0) {
-            res.status(201).json({
-                message: "Véhicule ajouté avec succès !",
-                vehicleId: result.insertId,
-            });
-        } else {
-            res.status(500).json({
-                message: "Erreur lors de l'ajout du véhicule.",
-            });
-        }
+        res.status(201).json({
+            message: "Véhicule ajouté avec succès !",
+            vehicleId: vehicle.id,
+        });
     } catch (error) {
         console.error(error);
-        if (error.code === "ER_DUP_ENTRY") {
+        if (
+            error instanceof PrismaClientKnownRequestError &&
+            error.code === "P2002"
+        ) {
             return res.status(409).json({
                 message:
                     "Un véhicule avec cette plaque d'immatriculation existe déjà.",
@@ -119,17 +106,23 @@ const getUserVehicles = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        const sql = `
-            SELECT v.*, b.name as brand_name, c.name as color_name
-            FROM vehicle v
-            LEFT JOIN brand b ON v.brand_id = b.id
-            LEFT JOIN color c ON v.color_id = c.id
-            WHERE v.user_id = ?
-            ORDER BY v.id DESC
-        `;
-        const [vehicles] = await db.query(sql, [userId]);
+        const vehicles = await prisma.vehicle.findMany({
+            where: { user_id: userId },
+            include: {
+                brand: true,
+                color: true,
+            },
+            orderBy: { id: "desc" },
+        });
 
-        res.status(200).json({ vehicles });
+        // Formatter les données pour maintenir la compatibilité avec le frontend
+        const formattedVehicles = vehicles.map((vehicle) => ({
+            ...vehicle,
+            brand_name: vehicle.brand.name,
+            color_name: vehicle.color.name,
+        }));
+
+        res.status(200).json({ vehicles: formattedVehicles });
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -154,14 +147,16 @@ const updateVehicle = async (req, res) => {
         } = req.body;
 
         // Vérifier que le véhicule appartient à l'utilisateur
-        const ownerCheckSql = "SELECT user_id FROM vehicle WHERE id = ?";
-        const [ownerCheck] = await db.query(ownerCheckSql, [vehicleId]);
+        const vehicle = await prisma.vehicle.findUnique({
+            where: { id: parseInt(vehicleId) },
+            select: { user_id: true },
+        });
 
-        if (ownerCheck.length === 0) {
+        if (!vehicle) {
             return res.status(404).json({ message: "Véhicule non trouvé." });
         }
 
-        if (ownerCheck[0].user_id !== userId) {
+        if (vehicle.user_id !== userId) {
             return res.status(403).json({
                 message: "Vous ne pouvez modifier que vos propres véhicules.",
             });
@@ -170,96 +165,76 @@ const updateVehicle = async (req, res) => {
         // Obtenir ou créer l'ID de la marque si fournie
         let brandId = null;
         if (brand_name) {
-            const [brandResult] = await db.query(
-                "SELECT id FROM brand WHERE name = ?",
-                [brand_name]
-            );
-            if (brandResult.length > 0) {
-                brandId = brandResult[0].id;
-            } else {
-                const [insertBrand] = await db.query(
-                    "INSERT INTO brand (name) VALUES (?)",
-                    [brand_name]
-                );
-                brandId = insertBrand.insertId;
+            let brand = await prisma.brand.findFirst({
+                where: { name: brand_name },
+            });
+            if (!brand) {
+                brand = await prisma.brand.create({
+                    data: { name: brand_name },
+                });
             }
+            brandId = brand.id;
         }
 
         // Obtenir ou créer l'ID de la couleur si fournie
         let colorId = null;
         if (color_name) {
-            const [colorResult] = await db.query(
-                "SELECT id FROM color WHERE name = ?",
-                [color_name]
-            );
-            if (colorResult.length > 0) {
-                colorId = colorResult[0].id;
-            } else {
-                const [insertColor] = await db.query(
-                    "INSERT INTO color (name) VALUES (?)",
-                    [color_name]
-                );
-                colorId = insertColor.insertId;
+            let color = await prisma.color.findFirst({
+                where: { name: color_name },
+            });
+            if (!color) {
+                color = await prisma.color.create({
+                    data: { name: color_name },
+                });
             }
+            colorId = color.id;
         }
 
-        // Construire la requête de mise à jour dynamiquement
-        const updates = [];
-        const values = [];
+        // Construire l'objet de données à mettre à jour
+        const updateData = {};
 
         if (plate_number !== undefined) {
-            updates.push("plate_number = ?");
-            values.push(plate_number);
+            updateData.plate_number = plate_number;
         }
         if (first_registration_date !== undefined) {
-            updates.push("first_registration_date = ?");
-            values.push(first_registration_date);
+            updateData.first_registration_date = first_registration_date;
         }
         if (model !== undefined) {
-            updates.push("model = ?");
-            values.push(model);
+            updateData.model = model;
         }
         if (seats_available !== undefined) {
-            updates.push("seats_available = ?");
-            values.push(seats_available);
+            updateData.seats_available = seats_available;
         }
         if (is_electric !== undefined) {
-            updates.push("is_electric = ?");
-            values.push(is_electric);
+            updateData.is_electric = is_electric;
         }
         if (brandId !== null) {
-            updates.push("brand_id = ?");
-            values.push(brandId);
+            updateData.brand_id = brandId;
         }
         if (colorId !== null) {
-            updates.push("color_id = ?");
-            values.push(colorId);
+            updateData.color_id = colorId;
         }
 
-        if (updates.length === 0) {
+        if (Object.keys(updateData).length === 0) {
             return res
                 .status(400)
                 .json({ message: "Aucune donnée à mettre à jour." });
         }
 
-        values.push(vehicleId);
-        const updateSql = `UPDATE vehicle SET ${updates.join(
-            ", "
-        )} WHERE id = ?`;
-        const [result] = await db.query(updateSql, values);
+        const updatedVehicle = await prisma.vehicle.update({
+            where: { id: parseInt(vehicleId) },
+            data: updateData,
+        });
 
-        if (result.affectedRows > 0) {
-            res.status(200).json({
-                message: "Véhicule mis à jour avec succès !",
-            });
-        } else {
-            res.status(500).json({
-                message: "Erreur lors de la mise à jour du véhicule.",
-            });
-        }
+        res.status(200).json({
+            message: "Véhicule mis à jour avec succès !",
+        });
     } catch (error) {
         console.error(error);
-        if (error.code === "ER_DUP_ENTRY") {
+        if (
+            error instanceof PrismaClientKnownRequestError &&
+            error.code === "P2002"
+        ) {
             return res.status(409).json({
                 message:
                     "Un véhicule avec cette plaque d'immatriculation existe déjà.",
@@ -278,27 +253,33 @@ const deleteVehicle = async (req, res) => {
         const vehicleId = req.params.id;
 
         // Vérifier que le véhicule appartient à l'utilisateur
-        const ownerCheckSql = "SELECT user_id FROM vehicle WHERE id = ?";
-        const [ownerCheck] = await db.query(ownerCheckSql, [vehicleId]);
+        const vehicle = await prisma.vehicle.findUnique({
+            where: { id: parseInt(vehicleId) },
+            select: { user_id: true },
+        });
 
-        if (ownerCheck.length === 0) {
+        if (!vehicle) {
             return res.status(404).json({ message: "Véhicule non trouvé." });
         }
 
-        if (ownerCheck[0].user_id !== userId) {
+        if (vehicle.user_id !== userId) {
             return res.status(403).json({
                 message: "Vous ne pouvez supprimer que vos propres véhicules.",
             });
         }
 
         // Vérifier que le véhicule n'est pas utilisé dans des covoiturages actifs
-        const activeCarpoolingSql = `
-            SELECT COUNT(*) as count FROM carpooling 
-            WHERE vehicle_id = ? AND status IN ('prévu', 'démarré')
-        `;
-        const [activeCheck] = await db.query(activeCarpoolingSql, [vehicleId]);
+        const activeCarpoolings = await prisma.carpooling.findMany({
+            where: {
+                vehicle_id: parseInt(vehicleId),
+                status: {
+                    in: ["prévu", "démarré"],
+                },
+            },
+            select: { id: true },
+        });
 
-        if (activeCheck[0].count > 0) {
+        if (activeCarpoolings.length > 0) {
             return res.status(400).json({
                 message:
                     "Impossible de supprimer ce véhicule car il est utilisé dans des covoiturages actifs.",
@@ -306,18 +287,13 @@ const deleteVehicle = async (req, res) => {
         }
 
         // Supprimer le véhicule
-        const deleteSql = "DELETE FROM vehicle WHERE id = ?";
-        const [result] = await db.query(deleteSql, [vehicleId]);
+        await prisma.vehicle.delete({
+            where: { id: parseInt(vehicleId) },
+        });
 
-        if (result.affectedRows > 0) {
-            res.status(200).json({
-                message: "Véhicule supprimé avec succès !",
-            });
-        } else {
-            res.status(500).json({
-                message: "Erreur lors de la suppression du véhicule.",
-            });
-        }
+        res.status(200).json({
+            message: "Véhicule supprimé avec succès !",
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -329,8 +305,12 @@ const deleteVehicle = async (req, res) => {
 /* --------------------------------------------------- Obtenir toutes les marques et couleurs ------------------- */
 const getBrandsAndColors = async (req, res) => {
     try {
-        const [brands] = await db.query("SELECT * FROM brand ORDER BY name");
-        const [colors] = await db.query("SELECT * FROM color ORDER BY name");
+        const brands = await prisma.brand.findMany({
+            orderBy: { name: "asc" },
+        });
+        const colors = await prisma.color.findMany({
+            orderBy: { name: "asc" },
+        });
 
         res.status(200).json({ brands, colors });
     } catch (error) {

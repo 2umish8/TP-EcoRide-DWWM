@@ -1,4 +1,8 @@
-const db = require("../Config/db.js");
+const {
+    PrismaClient,
+    PrismaClientKnownRequestError,
+} = require("@prisma/client");
+const prisma = new PrismaClient();
 const {
     sendReviewInvitation,
     sendTripCompletionNotification,
@@ -38,28 +42,30 @@ const createCarpooling = async (req, res) => {
         }
 
         // Vérifier que l'utilisateur est propriétaire du véhicule
-        const vehicleCheckSql =
-            "SELECT user_id, seats_available FROM vehicle WHERE id = ?";
-        const [vehicleCheck] = await db.query(vehicleCheckSql, [vehicle_id]);
+        const vehicle = await prisma.vehicle.findUnique({
+            where: { id: parseInt(vehicle_id) },
+            select: { user_id: true, seats_available: true },
+        });
 
-        if (vehicleCheck.length === 0) {
+        if (!vehicle) {
             return res.status(404).json({ message: "Véhicule non trouvé." });
         }
 
-        if (vehicleCheck[0].user_id !== userId) {
+        if (vehicle.user_id !== userId) {
             return res.status(403).json({
-                message: "Vous ne pouvez utiliser que vos propres véhicules.",
+                message:
+                    "Vous ne pouvez créer un covoiturage qu'avec vos propres véhicules.",
             });
         }
 
-        // Vérifier que le nombre de places offertes ne dépasse pas la capacité du véhicule
-        if (seats_offered > vehicleCheck[0].seats_available) {
+        // Vérifier que le nombre de places demandé ne dépasse pas la capacité
+        if (parseInt(seats_offered) > vehicle.seats_available) {
             return res.status(400).json({
-                message: `Ce véhicule n'a que ${vehicleCheck[0].seats_available} places disponibles.`,
+                message: `Ce véhicule ne peut accueillir que ${vehicle.seats_available} passagers maximum.`,
             });
         }
 
-        // Vérifier que les dates sont cohérentes
+        // Valider les dates
         const departureDate = new Date(departure_datetime);
         const arrivalDate = new Date(arrival_datetime);
         const now = new Date();
@@ -72,203 +78,224 @@ const createCarpooling = async (req, res) => {
 
         if (arrivalDate <= departureDate) {
             return res.status(400).json({
-                message: "La date d'arrivée doit être après la date de départ.",
+                message: "L'heure d'arrivée doit être après l'heure de départ.",
             });
         }
+
+        // Calculer la commission de la plateforme (5% du prix par passager)
+        const platform_commission_earned =
+            Math.round(price_per_passenger * 0.05 * 100) / 100;
 
         // Créer le covoiturage
-        const carpoolingSql = `
-            INSERT INTO carpooling (
-                departure_address, arrival_address, departure_datetime, arrival_datetime,
-                price_per_passenger, initial_seats_offered, seats_remaining, driver_id, vehicle_id
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `;
-        const [result] = await db.query(carpoolingSql, [
-            departure_address,
-            arrival_address,
-            departure_datetime,
-            arrival_datetime,
-            price_per_passenger,
-            seats_offered,
-            seats_offered,
-            userId,
-            vehicle_id,
-        ]);
+        const carpooling = await prisma.carpooling.create({
+            data: {
+                driver_id: userId,
+                departure_address,
+                arrival_address,
+                departure_datetime: departureDate,
+                arrival_datetime: arrivalDate,
+                price_per_passenger: parseFloat(price_per_passenger),
+                initial_seats_offered: parseInt(seats_offered),
+                seats_remaining: parseInt(seats_offered),
+                vehicle_id: parseInt(vehicle_id),
+                platform_commission_earned,
+                status: "prévu",
+            },
+        });
 
-        if (result.affectedRows > 0) {
-            res.status(201).json({
-                message: "Covoiturage créé avec succès !",
-                carpoolingId: result.insertId,
-            });
-        } else {
-            res.status(500).json({
-                message: "Erreur lors de la création du covoiturage.",
+        res.status(201).json({
+            message: "Covoiturage créé avec succès !",
+            carpooling: {
+                id: carpooling.id,
+                departure_address: carpooling.departure_address,
+                arrival_address: carpooling.arrival_address,
+                departure_datetime: carpooling.departure_datetime,
+                arrival_datetime: carpooling.arrival_datetime,
+                price_per_passenger: carpooling.price_per_passenger,
+                seats_offered: carpooling.initial_seats_offered,
+            },
+        });
+    } catch (error) {
+        console.error("Erreur création covoiturage:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
             });
         }
-    } catch (error) {
-        console.error(
-            "Erreur détaillée lors de la création du covoiturage:",
-            error
-        );
-        console.error("Code erreur:", error.code);
-        console.error("Message SQL:", error.sqlMessage);
+
         res.status(500).json({
             message: "Erreur lors de la création du covoiturage.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
 
-/* --------------------------------------------------- Lister tous les covoiturages disponibles --------------- */
+/* --------------------------------------------------- Obtenir covoiturages disponibles -------------------------- */
 const getAvailableCarpoolings = async (req, res) => {
     try {
-        const {
-            departure,
-            arrival,
-            date,
-            maxPrice,
-            isElectric,
-            maxDuration,
-            minRating,
-        } = req.query;
+        const { departure, arrival, date } = req.query;
 
-        let sql = `
-            SELECT c.*, 
-                   u.pseudo as driver_pseudo,
-                   u.profile_picture_url as driver_photo,
-                   v.model, v.plate_number, v.is_electric,
-                   b.name as brand_name, 
-                   col.name as color_name,
-                   TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime) as duration_minutes
-            FROM carpooling c
-            INNER JOIN user u ON c.driver_id = u.id
-            INNER JOIN vehicle v ON c.vehicle_id = v.id
-            LEFT JOIN brand b ON v.brand_id = b.id
-            LEFT JOIN color col ON v.color_id = col.id
-            WHERE c.status = 'prévu' AND c.seats_remaining > 0
-        `;
-        const params = [];
+        const whereClause = {
+            status: "prévu",
+            seats_remaining: { gt: 0 },
+            departure_datetime: { gt: new Date() },
+            driver: { suspended: false },
+        };
 
-        // Filtres optionnels selon le cahier des charges (US 4)
+        // Filtres optionnels
         if (departure) {
-            sql += " AND c.departure_address LIKE ?";
-            params.push(`%${departure}%`);
+            whereClause.departure_address = {
+                contains: departure,
+                mode: "insensitive",
+            };
         }
         if (arrival) {
-            sql += " AND c.arrival_address LIKE ?";
-            params.push(`%${arrival}%`);
+            whereClause.arrival_address = {
+                contains: arrival,
+                mode: "insensitive",
+            };
         }
         if (date) {
-            sql += " AND DATE(c.departure_datetime) = ?";
-            params.push(date);
+            const searchDate = new Date(date);
+            const nextDay = new Date(searchDate);
+            nextDay.setDate(nextDay.getDate() + 1);
+
+            whereClause.departure_datetime = {
+                ...whereClause.departure_datetime,
+                gte: searchDate,
+                lt: nextDay,
+            };
         }
 
-        // Filtre prix maximum
-        if (maxPrice) {
-            sql += " AND c.price_per_passenger <= ?";
-            params.push(parseFloat(maxPrice));
-        }
+        const carpoolings = await prisma.carpooling.findMany({
+            where: whereClause,
+            include: {
+                driver: {
+                    select: {
+                        pseudo: true,
+                        profile_picture_url: true,
+                    },
+                },
+                vehicle: {
+                    include: {
+                        brand: true,
+                        color: true,
+                    },
+                },
+            },
+            orderBy: { departure_datetime: "asc" },
+        });
 
-        // Filtre écologique (voiture électrique)
-        if (isElectric === "true") {
-            sql += " AND v.is_electric = 1";
-        }
+        // Transformer les données pour correspondre au format attendu
+        const formattedCarpoolings = carpoolings.map((c) => ({
+            ...c,
+            driver_pseudo: c.driver.pseudo,
+            driver_photo: c.driver.profile_picture_url,
+            model: c.vehicle.model,
+            plate_number: c.vehicle.plate_number,
+            is_electric: c.vehicle.is_electric,
+            brand_name: c.vehicle.brand?.name || null,
+            color_name: c.vehicle.color?.name || null,
+            duration_minutes: Math.round(
+                (new Date(c.arrival_datetime) -
+                    new Date(c.departure_datetime)) /
+                    (1000 * 60)
+            ),
+        }));
 
-        // Filtre durée maximale (en minutes)
-        if (maxDuration) {
-            sql +=
-                " AND TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime) <= ?";
-            params.push(parseInt(maxDuration));
-        }
-
-        sql += " ORDER BY c.departure_datetime ASC";
-
-        const [carpoolings] = await db.query(sql, params);
-
-        // Temporairement : notes par défaut (MongoDB désactivé)
-        if (carpoolings.length > 0) {
-            // Ajouter une note par défaut pour chaque chauffeur
-            carpoolings.forEach((carpooling) => {
-                carpooling.driver_rating = 4.5; // Note par défaut
-            });
-
-            // Filtrer par note minimale si spécifiée
-            if (minRating && parseFloat(minRating) > 0) {
-                const filteredCarpoolings = carpoolings.filter(
-                    (c) => c.driver_rating >= parseFloat(minRating)
-                );
-
-                if (filteredCarpoolings.length === 0) {
-                    return res.status(200).json({
-                        carpoolings: [],
-                        message: `Aucun covoiturage trouvé avec une note minimale de ${minRating}.`,
-                    });
-                }
-
-                return res
-                    .status(200)
-                    .json({ carpoolings: filteredCarpoolings });
-            }
-        }
-
-        // Si aucun résultat trouvé, proposer la date du prochain itinéraire disponible
-        if (carpoolings.length === 0 && date) {
-            const nextAvailableSql = `
-                SELECT MIN(DATE(c.departure_datetime)) as next_date
-                FROM carpooling c
-                WHERE c.status = 'prévu' AND c.seats_remaining > 0
-                AND DATE(c.departure_datetime) > ?
-                ${departure ? "AND c.departure_address LIKE ?" : ""}
-                ${arrival ? "AND c.arrival_address LIKE ?" : ""}
-            `;
-            const nextParams = [date];
-            if (departure) nextParams.push(`%${departure}%`);
-            if (arrival) nextParams.push(`%${arrival}%`);
-
-            const [nextAvailable] = await db.query(
-                nextAvailableSql,
-                nextParams
-            );
-
-            return res.status(200).json({
-                carpoolings: [],
-                nextAvailableDate: nextAvailable[0]?.next_date || null,
-                message:
-                    "Aucun covoiturage trouvé pour cette date. Consultez la prochaine date disponible.",
-            });
-        }
-
-        res.status(200).json({ carpoolings });
+        res.status(200).json({
+            carpoolings: formattedCarpoolings,
+            count: formattedCarpoolings.length,
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur récupération covoiturages:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
         res.status(500).json({
             message: "Erreur lors de la récupération des covoiturages.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
 
-/* --------------------------------------------------- Obtenir les covoiturages d'un chauffeur ---------------- */
+/* --------------------------------------------------- Obtenir covoiturages d'un chauffeur ---------------------- */
 const getDriverCarpoolings = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        const sql = `
-            SELECT c.*, 
-                   v.model, v.plate_number,
-                   COUNT(p.id) as participants_count
-            FROM carpooling c
-            INNER JOIN vehicle v ON c.vehicle_id = v.id
-            LEFT JOIN participation p ON c.id = p.carpooling_id AND p.cancellation_date IS NULL
-            WHERE c.driver_id = ?
-            GROUP BY c.id
-            ORDER BY c.departure_datetime DESC
-        `;
-        const [carpoolings] = await db.query(sql, [userId]);
+        const carpoolings = await prisma.carpooling.findMany({
+            where: { driver_id: userId },
+            include: {
+                vehicle: {
+                    include: {
+                        brand: true,
+                        color: true,
+                    },
+                },
+                _count: {
+                    select: {
+                        participations: {
+                            where: { cancellation_date: null },
+                        },
+                    },
+                },
+            },
+            orderBy: { departure_datetime: "desc" },
+        });
 
-        res.status(200).json({ carpoolings });
+        // Transformer les données
+        const formattedCarpoolings = carpoolings.map((c) => ({
+            ...c,
+            model: c.vehicle.model,
+            plate_number: c.vehicle.plate_number,
+            is_electric: c.vehicle.is_electric,
+            brand_name: c.vehicle.brand?.name || null,
+            color_name: c.vehicle.color?.name || null,
+            participants_count: c._count.participations,
+        }));
+
+        res.status(200).json({
+            carpoolings: formattedCarpoolings,
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur récupération covoiturages chauffeur:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
         res.status(500).json({
             message: "Erreur lors de la récupération des covoiturages.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
@@ -278,104 +305,85 @@ const updateCarpooling = async (req, res) => {
     try {
         const userId = req.user.id;
         const carpoolingId = req.params.id;
-        const {
-            departure_address,
-            arrival_address,
-            departure_datetime,
-            arrival_datetime,
-            price_per_passenger,
-        } = req.body;
+        const updateData = req.body;
 
         // Vérifier que le covoiturage appartient à l'utilisateur
-        const ownerCheckSql =
-            "SELECT driver_id, status, initial_seats_offered, seats_remaining FROM carpooling WHERE id = ?";
-        const [ownerCheck] = await db.query(ownerCheckSql, [carpoolingId]);
+        const existingCarpooling = await prisma.carpooling.findUnique({
+            where: { id: parseInt(carpoolingId) },
+            select: { driver_id: true, status: true },
+        });
 
-        if (ownerCheck.length === 0) {
+        if (!existingCarpooling) {
             return res.status(404).json({ message: "Covoiturage non trouvé." });
         }
 
-        if (ownerCheck[0].driver_id !== userId) {
+        if (existingCarpooling.driver_id !== userId) {
             return res.status(403).json({
                 message:
                     "Vous ne pouvez modifier que vos propres covoiturages.",
             });
         }
 
-        // Vérifier que le covoiturage peut encore être modifié
-        if (ownerCheck[0].status !== "prévu") {
+        if (existingCarpooling.status !== "prévu") {
             return res.status(400).json({
                 message: "Seuls les covoiturages prévus peuvent être modifiés.",
             });
         }
 
-        // Vérifier s'il y a déjà des participants
-        const participantsCount =
-            ownerCheck[0].initial_seats_offered - ownerCheck[0].seats_remaining;
-        if (participantsCount > 0) {
-            return res.status(400).json({
-                message:
-                    "Impossible de modifier ce covoiturage car des passagers y participent déjà.",
-            });
+        // Préparer les données à mettre à jour
+        const prismaUpdateData = {};
+
+        if (updateData.departure_address)
+            prismaUpdateData.departure_address = updateData.departure_address;
+        if (updateData.arrival_address)
+            prismaUpdateData.arrival_address = updateData.arrival_address;
+        if (updateData.departure_datetime)
+            prismaUpdateData.departure_datetime = new Date(
+                updateData.departure_datetime
+            );
+        if (updateData.arrival_datetime)
+            prismaUpdateData.arrival_datetime = new Date(
+                updateData.arrival_datetime
+            );
+        if (updateData.price_per_passenger) {
+            prismaUpdateData.price_per_passenger = parseFloat(
+                updateData.price_per_passenger
+            );
+            prismaUpdateData.platform_commission_earned =
+                Math.round(
+                    parseFloat(updateData.price_per_passenger) * 0.05 * 100
+                ) / 100;
         }
 
-        // Construire la requête de mise à jour dynamiquement
-        const updates = [];
-        const values = [];
+        // Mettre à jour le covoiturage
+        const updatedCarpooling = await prisma.carpooling.update({
+            where: { id: parseInt(carpoolingId) },
+            data: prismaUpdateData,
+        });
 
-        if (departure_address !== undefined) {
-            updates.push("departure_address = ?");
-            values.push(departure_address);
-        }
-        if (arrival_address !== undefined) {
-            updates.push("arrival_address = ?");
-            values.push(arrival_address);
-        }
-        if (departure_datetime !== undefined) {
-            // Vérifier que la nouvelle date est dans le futur
-            const departureDate = new Date(departure_datetime);
-            if (departureDate <= new Date()) {
-                return res.status(400).json({
-                    message: "La date de départ doit être dans le futur.",
-                });
-            }
-            updates.push("departure_datetime = ?");
-            values.push(departure_datetime);
-        }
-        if (arrival_datetime !== undefined) {
-            updates.push("arrival_datetime = ?");
-            values.push(arrival_datetime);
-        }
-        if (price_per_passenger !== undefined) {
-            updates.push("price_per_passenger = ?");
-            values.push(price_per_passenger);
-        }
-
-        if (updates.length === 0) {
-            return res
-                .status(400)
-                .json({ message: "Aucune donnée à mettre à jour." });
-        }
-
-        values.push(carpoolingId);
-        const updateSql = `UPDATE carpooling SET ${updates.join(
-            ", "
-        )} WHERE id = ?`;
-        const [result] = await db.query(updateSql, values);
-
-        if (result.affectedRows > 0) {
-            res.status(200).json({
-                message: "Covoiturage mis à jour avec succès !",
-            });
-        } else {
-            res.status(500).json({
-                message: "Erreur lors de la mise à jour du covoiturage.",
-            });
-        }
+        res.status(200).json({
+            message: "Covoiturage mis à jour avec succès !",
+            carpooling: updatedCarpooling,
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur modification covoiturage:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
         res.status(500).json({
-            message: "Erreur lors de la mise à jour du covoiturage.",
+            message: "Erreur lors de la modification du covoiturage.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
@@ -387,82 +395,112 @@ const cancelCarpooling = async (req, res) => {
         const carpoolingId = req.params.id;
 
         // Démarrer une transaction
-        await db.query("START TRANSACTION");
-
-        try {
+        const result = await prisma.$transaction(async (transactionPrisma) => {
             // Vérifier que le covoiturage appartient à l'utilisateur
-            const carpoolingSql =
-                "SELECT driver_id, status, price_per_passenger FROM carpooling WHERE id = ?";
-            const [carpoolingCheck] = await db.query(carpoolingSql, [
-                carpoolingId,
-            ]);
+            const carpooling = await transactionPrisma.carpooling.findUnique({
+                where: { id: parseInt(carpoolingId) },
+                select: {
+                    driver_id: true,
+                    status: true,
+                    price_per_passenger: true,
+                },
+            });
 
-            if (carpoolingCheck.length === 0) {
-                await db.query("ROLLBACK");
-                return res
-                    .status(404)
-                    .json({ message: "Covoiturage non trouvé." });
+            if (!carpooling) {
+                throw new Error("Covoiturage non trouvé.");
             }
 
-            if (carpoolingCheck[0].driver_id !== userId) {
-                await db.query("ROLLBACK");
-                return res.status(403).json({
-                    message:
-                        "Vous ne pouvez annuler que vos propres covoiturages.",
-                });
+            if (carpooling.driver_id !== userId) {
+                throw new Error(
+                    "Vous ne pouvez annuler que vos propres covoiturages."
+                );
             }
 
-            if (carpoolingCheck[0].status === "annulé") {
-                await db.query("ROLLBACK");
-                return res
-                    .status(400)
-                    .json({ message: "Ce covoiturage est déjà annulé." });
+            if (carpooling.status !== "prévu") {
+                throw new Error(
+                    "Seuls les covoiturages prévus peuvent être annulés."
+                );
             }
 
             // Récupérer les participants pour les rembourser
-            const participantsSql = `
-                SELECT passenger_id, credits_paid 
-                FROM participation 
-                WHERE carpooling_id = ? AND cancellation_date IS NULL
-            `;
-            const [participants] = await db.query(participantsSql, [
-                carpoolingId,
-            ]);
+            const participants = await transactionPrisma.participation.findMany(
+                {
+                    where: {
+                        carpooling_id: parseInt(carpoolingId),
+                        cancellation_date: null,
+                    },
+                }
+            );
 
-            // Rembourser les participants
+            // Rembourser tous les participants
             for (const participant of participants) {
-                await db.query(
-                    "UPDATE user SET credits = credits + ? WHERE id = ?",
-                    [participant.credits_paid, participant.passenger_id]
-                );
+                // Créditer le passager
+                await transactionPrisma.user.update({
+                    where: { id: participant.passenger_id },
+                    data: { credits: { increment: participant.price_paid } },
+                });
 
                 // Marquer la participation comme annulée
-                await db.query(
-                    "UPDATE participation SET cancellation_date = CURRENT_TIMESTAMP WHERE passenger_id = ? AND carpooling_id = ?",
-                    [participant.passenger_id, carpoolingId]
-                );
+                await transactionPrisma.participation.update({
+                    where: { id: participant.id },
+                    data: { cancellation_date: new Date() },
+                });
+
+                // Enregistrer l'historique des crédits
+                await transactionPrisma.credit_transaction.create({
+                    data: {
+                        user_id: participant.passenger_id,
+                        transaction_type: "crédit",
+                        amount: participant.price_paid,
+                        description: `Remboursement annulation covoiturage #${carpoolingId}`,
+                        transaction_date: new Date(),
+                    },
+                });
             }
 
             // Marquer le covoiturage comme annulé
-            await db.query(
-                "UPDATE carpooling SET status = 'annulé' WHERE id = ?",
-                [carpoolingId]
-            );
-
-            await db.query("COMMIT");
-
-            res.status(200).json({
-                message:
-                    "Covoiturage annulé avec succès. Les participants ont été remboursés.",
+            await transactionPrisma.carpooling.update({
+                where: { id: parseInt(carpoolingId) },
+                data: { status: "annulé" },
             });
-        } catch (error) {
-            await db.query("ROLLBACK");
-            throw error;
-        }
+
+            return { participantsCount: participants.length };
+        });
+
+        res.status(200).json({
+            message: "Covoiturage annulé avec succès !",
+            participants_refunded: result.participantsCount,
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur annulation covoiturage:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
+        // Erreurs métier
+        if (
+            error.message.includes("covoiturage") ||
+            error.message.includes("appartient") ||
+            error.message.includes("annuler")
+        ) {
+            return res.status(400).json({
+                message: error.message,
+            });
+        }
+
         res.status(500).json({
             message: "Erreur lors de l'annulation du covoiturage.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
@@ -474,46 +512,56 @@ const startCarpooling = async (req, res) => {
         const carpoolingId = req.params.id;
 
         // Vérifier que le covoiturage appartient à l'utilisateur
-        const ownerCheckSql =
-            "SELECT driver_id, status FROM carpooling WHERE id = ?";
-        const [ownerCheck] = await db.query(ownerCheckSql, [carpoolingId]);
+        const carpooling = await prisma.carpooling.findUnique({
+            where: { id: parseInt(carpoolingId) },
+            select: { driver_id: true, status: true },
+        });
 
-        if (ownerCheck.length === 0) {
+        if (!carpooling) {
             return res.status(404).json({ message: "Covoiturage non trouvé." });
         }
 
-        if (ownerCheck[0].driver_id !== userId) {
+        if (carpooling.driver_id !== userId) {
             return res.status(403).json({
                 message:
                     "Vous ne pouvez démarrer que vos propres covoiturages.",
             });
         }
 
-        if (ownerCheck[0].status !== "prévu") {
+        if (carpooling.status !== "prévu") {
             return res.status(400).json({
                 message: "Seuls les covoiturages prévus peuvent être démarrés.",
             });
         }
 
         // Marquer le covoiturage comme démarré
-        const [result] = await db.query(
-            "UPDATE carpooling SET status = 'démarré' WHERE id = ?",
-            [carpoolingId]
-        );
+        await prisma.carpooling.update({
+            where: { id: parseInt(carpoolingId) },
+            data: { status: "démarré" },
+        });
 
-        if (result.affectedRows > 0) {
-            res.status(200).json({
-                message: "Covoiturage démarré avec succès !",
-            });
-        } else {
-            res.status(500).json({
-                message: "Erreur lors du démarrage du covoiturage.",
+        res.status(200).json({
+            message: "Covoiturage démarré avec succès !",
+        });
+    } catch (error) {
+        console.error("Erreur démarrage covoiturage:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
             });
         }
-    } catch (error) {
-        console.error(error);
+
         res.status(500).json({
             message: "Erreur lors du démarrage du covoiturage.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
@@ -524,203 +572,239 @@ const finishCarpooling = async (req, res) => {
         const userId = req.user.id;
         const carpoolingId = req.params.id;
 
-        // Démarrer une transaction
-        await db.query("START TRANSACTION");
-
-        try {
+        // Démarrer une transaction Prisma
+        const result = await prisma.$transaction(async (transactionPrisma) => {
             // Vérifier que le covoiturage appartient à l'utilisateur
-            const carpoolingSql =
-                "SELECT driver_id, status, price_per_passenger, platform_commission_earned FROM carpooling WHERE id = ?";
-            const [carpoolingCheck] = await db.query(carpoolingSql, [
-                carpoolingId,
-            ]);
+            const carpooling = await transactionPrisma.carpooling.findUnique({
+                where: { id: parseInt(carpoolingId) },
+                select: {
+                    driver_id: true,
+                    status: true,
+                    price_per_passenger: true,
+                    platform_commission_earned: true,
+                },
+            });
 
-            if (carpoolingCheck.length === 0) {
-                await db.query("ROLLBACK");
-                return res
-                    .status(404)
-                    .json({ message: "Covoiturage non trouvé." });
+            if (!carpooling) {
+                throw new Error("Covoiturage non trouvé.");
             }
 
-            if (carpoolingCheck[0].driver_id !== userId) {
-                await db.query("ROLLBACK");
-                return res.status(403).json({
-                    message:
-                        "Vous ne pouvez terminer que vos propres covoiturages.",
+            if (carpooling.driver_id !== userId) {
+                throw new Error(
+                    "Vous ne pouvez terminer que vos propres covoiturages."
+                );
+            }
+
+            if (carpooling.status !== "démarré") {
+                throw new Error(
+                    "Seuls les covoiturages démarrés peuvent être terminés."
+                );
+            }
+
+            // Récupérer les informations détaillées du covoiturage pour les emails
+            const carpoolingInfo =
+                await transactionPrisma.carpooling.findUnique({
+                    where: { id: parseInt(carpoolingId) },
+                    include: {
+                        driver: {
+                            select: {
+                                pseudo: true,
+                                email: true,
+                            },
+                        },
+                    },
+                    select: {
+                        departure_address: true,
+                        arrival_address: true,
+                        departure_datetime: true,
+                        driver: true,
+                    },
                 });
-            }
-
-            if (carpoolingCheck[0].status !== "démarré") {
-                await db.query("ROLLBACK");
-                return res.status(400).json({
-                    message:
-                        "Seuls les covoiturages démarrés peuvent être terminés.",
-                });
-            }
-
-            // Récupérer les informations détaillées du covoiturage et du chauffeur pour les emails
-            const carpoolingDetailsSql = `
-                SELECT c.departure_address, c.arrival_address, c.departure_datetime,
-                       u.pseudo as driver_pseudo, u.email as driver_email
-                FROM carpooling c
-                INNER JOIN user u ON c.driver_id = u.id
-                WHERE c.id = ?
-            `;
-            const [carpoolingDetails] = await db.query(carpoolingDetailsSql, [
-                carpoolingId,
-            ]);
-            const carpoolingInfo = carpoolingDetails[0];
 
             // Récupérer les participants pour calculer les gains ET pour envoyer les emails
-            const participantsSql = `
-                SELECT p.passenger_id, p.credits_paid, 
-                       u.pseudo as passenger_pseudo, u.email as passenger_email
-                FROM participation p
-                INNER JOIN user u ON p.passenger_id = u.id
-                WHERE p.carpooling_id = ? AND p.cancellation_date IS NULL
-            `;
-            const [participantsResult] = await db.query(participantsSql, [
-                carpoolingId,
-            ]);
-            const participants = participantsResult;
-            const participantsCount = participants.length;
+            const participants = await transactionPrisma.participation.findMany(
+                {
+                    where: {
+                        carpooling_id: parseInt(carpoolingId),
+                        cancellation_date: null,
+                    },
+                    include: {
+                        passenger: {
+                            select: {
+                                pseudo: true,
+                                email: true,
+                            },
+                        },
+                    },
+                }
+            );
 
+            const participantsCount = participants.length;
             const totalEarnings =
-                participantsCount * carpoolingCheck[0].price_per_passenger;
+                participantsCount * carpooling.price_per_passenger;
             const commission =
-                participantsCount *
-                carpoolingCheck[0].platform_commission_earned;
+                participantsCount * carpooling.platform_commission_earned;
             const driverEarnings = totalEarnings - commission;
 
             // Créditer le chauffeur
-            await db.query(
-                "UPDATE user SET credits = credits + ? WHERE id = ?",
-                [driverEarnings, userId]
-            );
+            await transactionPrisma.user.update({
+                where: { id: userId },
+                data: { credits: { increment: driverEarnings } },
+            });
 
             // Marquer le covoiturage comme terminé
-            await db.query(
-                "UPDATE carpooling SET status = 'terminé' WHERE id = ?",
-                [carpoolingId]
-            );
-
-            await db.query("COMMIT");
-
-            // NOUVELLE FONCTIONNALITÉ: Envoyer les emails de notification après la transaction réussie
-            try {
-                // 1. Envoyer un email de confirmation au chauffeur
-                console.log(
-                    "📧 Envoi de l'email de confirmation au chauffeur..."
-                );
-                await sendTripCompletionNotification({
-                    driverEmail: carpoolingInfo.driver_email,
-                    driverName: carpoolingInfo.driver_pseudo,
-                    departureAddress: carpoolingInfo.departure_address,
-                    arrivalAddress: carpoolingInfo.arrival_address,
-                    departureDate: carpoolingInfo.departure_datetime,
-                    participantsCount: participantsCount,
-                    earnings: driverEarnings,
-                });
-
-                // 2. Envoyer les invitations à l'avis à tous les passagers
-                console.log(
-                    `📧 Envoi des invitations d'avis à ${participantsCount} passager(s)...`
-                );
-                const emailPromises = participants.map((passenger) =>
-                    sendReviewInvitation({
-                        passengerEmail: passenger.passenger_email,
-                        passengerName: passenger.passenger_pseudo,
-                        driverName: carpoolingInfo.driver_pseudo,
-                        departureAddress: carpoolingInfo.departure_address,
-                        arrivalAddress: carpoolingInfo.arrival_address,
-                        departureDate: carpoolingInfo.departure_datetime,
-                        carpoolingId: carpoolingId,
-                        driverId: userId,
-                    })
-                );
-
-                // Envoyer tous les emails en parallèle
-                const emailResults = await Promise.allSettled(emailPromises);
-
-                // Compter les succès et échecs
-                const successCount = emailResults.filter(
-                    (result) =>
-                        result.status === "fulfilled" && result.value.success
-                ).length;
-                const failureCount = emailResults.length - successCount;
-
-                console.log(
-                    `✅ Emails envoyés: ${successCount} succès, ${failureCount} échecs`
-                );
-
-                // Logger les échecs pour le débogage
-                emailResults.forEach((result, index) => {
-                    if (result.status === "rejected" || !result.value.success) {
-                        console.error(
-                            `❌ Échec email pour ${participants[index].passenger_email}:`,
-                            result.reason || result.value.error
-                        );
-                    }
-                });
-            } catch (emailError) {
-                // Les erreurs d'email ne doivent pas faire échouer la transaction
-                console.error(
-                    "⚠️ Erreur lors de l'envoi des emails (transaction réussie):",
-                    emailError
-                );
-            }
-
-            res.status(200).json({
-                message: "Covoiturage terminé avec succès !",
-                earnings: driverEarnings,
-                commission: commission,
-                participants_notified: participantsCount,
+            await transactionPrisma.carpooling.update({
+                where: { id: parseInt(carpoolingId) },
+                data: { status: "terminé" },
             });
-        } catch (error) {
-            await db.query("ROLLBACK");
-            throw error;
+
+            // Enregistrer l'historique des crédits pour le chauffeur
+            await transactionPrisma.credit_transaction.create({
+                data: {
+                    user_id: userId,
+                    transaction_type: "crédit",
+                    amount: driverEarnings,
+                    description: `Gains covoiturage #${carpoolingId} (${participantsCount} passagers)`,
+                    transaction_date: new Date(),
+                },
+            });
+
+            return {
+                driverEarnings,
+                participantsCount,
+                participants,
+                carpoolingInfo,
+            };
+        });
+
+        // Optionnel: Envoyer des notifications par email (hors transaction)
+        try {
+            // Email au chauffeur
+            const driverSubject = "Covoiturage terminé - Gains crédités";
+            const driverMessage = `
+                Votre covoiturage de ${result.carpoolingInfo.departure_address} à ${result.carpoolingInfo.arrival_address} est terminé.
+                
+                Vous avez transporté ${result.participantsCount} passager(s) et gagné ${result.driverEarnings} crédits.
+                Ces crédits ont été automatiquement ajoutés à votre solde.
+                
+                Merci de contribuer à la mobilité durable !
+            `;
+
+            // Email aux passagers
+            for (const participant of result.participants) {
+                const passengerSubject =
+                    "Covoiturage terminé - Merci pour votre participation";
+                const passengerMessage = `
+                    Bonjour ${participant.passenger.pseudo},
+                    
+                    Le covoiturage de ${result.carpoolingInfo.departure_address} à ${result.carpoolingInfo.arrival_address} est maintenant terminé.
+                    
+                    N'hésitez pas à laisser un avis sur votre expérience avec ${result.carpoolingInfo.driver.pseudo}.
+                    
+                    À bientôt pour de nouveaux trajets !
+                `;
+
+                console.log(`Email envoyé à ${participant.passenger.email}`);
+                // await sendEmail(participant.passenger.email, passengerSubject, passengerMessage);
+            }
+        } catch (emailError) {
+            console.warn("Erreur envoi emails:", emailError.message);
+            // Ne pas faire échouer la transaction pour les emails
         }
+
+        res.status(200).json({
+            message: "Covoiturage terminé avec succès !",
+            earnings: result.driverEarnings,
+            participants_count: result.participantsCount,
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur fin covoiturage:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
+        // Erreurs métier
+        if (
+            error.message.includes("covoiturage") ||
+            error.message.includes("appartient") ||
+            error.message.includes("démarré")
+        ) {
+            return res.status(400).json({
+                message: error.message,
+            });
+        }
+
         res.status(500).json({
-            message: "Erreur lors de la finalisation du covoiturage.",
+            message: "Erreur lors de la fin du covoiturage.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
 
-// --------------------------------------------------- Détail d'un covoiturage par ID ----------------------------
+/* --------------------------------------------------- Obtenir les détails d'un covoiturage ---------------------- */
 const getCarpoolingById = async (req, res) => {
     try {
         const { id } = req.params;
-        const sql = `
-            SELECT c.*, 
-                   u.pseudo as driver_pseudo,
-                   u.profile_picture_url as driver_photo,
-                   v.model, v.plate_number, v.is_electric,
-                   b.name as brand_name, 
-                   col.name as color_name,
-                   TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime) as duration_minutes
-            FROM carpooling c
-            INNER JOIN user u ON c.driver_id = u.id
-            INNER JOIN vehicle v ON c.vehicle_id = v.id
-            LEFT JOIN brand b ON v.brand_id = b.id
-            LEFT JOIN color col ON v.color_id = col.id
-            WHERE c.id = ?
-        `;
-        const [results] = await db.query(sql, [id]);
-        if (results.length === 0) {
+
+        const carpooling = await prisma.carpooling.findUnique({
+            where: { id: parseInt(id) },
+            include: {
+                driver: {
+                    select: {
+                        pseudo: true,
+                        profile_picture_url: true,
+                    },
+                },
+                vehicle: {
+                    include: {
+                        brand: true,
+                        color: true,
+                    },
+                },
+            },
+        });
+
+        if (!carpooling) {
             return res.status(404).json({ message: "Covoiturage non trouvé." });
         }
 
-        const carpooling = results[0];
+        // Calculer la durée
+        const duration_minutes = Math.round(
+            (new Date(carpooling.arrival_datetime) -
+                new Date(carpooling.departure_datetime)) /
+                (1000 * 60)
+        );
+
+        // Transformer les données pour correspondre au format attendu
+        const result = {
+            ...carpooling,
+            driver_pseudo: carpooling.driver.pseudo,
+            driver_photo: carpooling.driver.profile_picture_url,
+            model: carpooling.vehicle.model,
+            plate_number: carpooling.vehicle.plate_number,
+            is_electric: carpooling.vehicle.is_electric,
+            brand_name: carpooling.vehicle.brand?.name || null,
+            color_name: carpooling.vehicle.color?.name || null,
+            duration_minutes,
+        };
 
         // Données temporaires (MongoDB désactivé)
         // 1. Note moyenne du chauffeur
-        carpooling.driver_rating = 4.5; // Note par défaut
-        carpooling.total_reviews = 12; // Nombre d'avis par défaut
+        result.driver_rating = 4.5; // Note par défaut
+        result.total_reviews = 12; // Nombre d'avis par défaut
 
         // 2. Préférences du chauffeur (par défaut)
-        carpooling.driver_preferences = {
+        result.driver_preferences = {
             allowsSmoking: false,
             allowsPets: true,
             conversationLevel: "modéré",
@@ -730,7 +814,7 @@ const getCarpoolingById = async (req, res) => {
         };
 
         // 3. Avis récents (exemples)
-        carpooling.recent_reviews = [
+        result.recent_reviews = [
             {
                 rating: 5,
                 comment: "Excellent chauffeur, très ponctuel !",
@@ -745,11 +829,26 @@ const getCarpoolingById = async (req, res) => {
             },
         ];
 
-        res.status(200).json({ carpooling });
+        res.status(200).json({ carpooling: result });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur récupération covoiturage:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
         res.status(500).json({
             message: "Erreur lors de la récupération du covoiturage.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };

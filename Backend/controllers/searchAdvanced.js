@@ -1,7 +1,11 @@
 // Script pour améliorer la logique de recherche d'itinéraires
 // Ce script ajoute des fonctionnalités avancées à la recherche
 
-const db = require("../Config/db.js");
+const {
+    PrismaClient,
+    PrismaClientKnownRequestError,
+} = require("@prisma/client");
+const prisma = new PrismaClient();
 // MongoDB models temporarily disabled
 // const Review = require("../models/Review");
 
@@ -45,143 +49,202 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
         const sortField = validSortFields.includes(sortBy)
             ? sortBy
             : "departure_datetime";
-        const order = sortOrder.toUpperCase() === "DESC" ? "DESC" : "ASC";
+        const order = sortOrder.toUpperCase() === "DESC" ? "desc" : "asc";
         const pageNum = Math.max(1, parseInt(page) || 1);
         const limitNum = Math.min(50, Math.max(1, parseInt(limit) || 20));
-        const offset = (pageNum - 1) * limitNum;
+        const skip = (pageNum - 1) * limitNum;
 
-        // Construction de la requête principale
-        let sql = `
-            SELECT c.*, 
-                   u.pseudo as driver_pseudo,
-                   u.profile_picture_url as driver_photo,
-                   v.model, v.plate_number, v.is_electric, v.seats_available as vehicle_seats,
-                   b.name as brand_name, 
-                   col.name as color_name,
-                   TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime) as duration_minutes,
-                   -- Calcul du taux d'occupation
-                   ROUND((c.initial_seats_offered - c.seats_remaining) / c.initial_seats_offered * 100, 1) as occupancy_rate
-            FROM carpooling c
-            INNER JOIN User u ON c.driver_id = u.id AND u.suspended = FALSE
-            INNER JOIN Vehicle v ON c.vehicle_id = v.id
-            LEFT JOIN Brand b ON v.brand_id = b.id
-            LEFT JOIN Color col ON v.color_id = col.id
-            WHERE c.status = 'prévu' AND c.departure_datetime > NOW()
-        `;
-        const params = [];
+        // Construction des filtres Prisma
+        const where = {
+            status: "prévu",
+            departure_datetime: {
+                gt: new Date(),
+            },
+            driver: {
+                suspended: false,
+            },
+        };
 
         // Condition sur les places disponibles
         if (includeFull !== "true") {
-            sql += " AND c.seats_remaining > 0";
+            where.seats_remaining = { gt: 0 };
         }
 
-        // Filtres de base
+        // Filtres de base avec recherche flexible
         if (departure) {
-            // Recherche flexible avec plusieurs variantes de ville
-            sql +=
-                " AND (c.departure_address LIKE ? OR c.departure_address LIKE ? OR c.departure_address LIKE ?)";
-            const departureVariants = [
-                `%${departure}%`,
-                `%${
-                    departure.charAt(0).toUpperCase() +
-                    departure.slice(1).toLowerCase()
-                }%`,
-                `%${departure.toUpperCase()}%`,
-            ];
-            params.push(...departureVariants);
+            where.departure_address = {
+                contains: departure,
+                mode: "insensitive",
+            };
         }
 
         if (arrival) {
-            sql +=
-                " AND (c.arrival_address LIKE ? OR c.arrival_address LIKE ? OR c.arrival_address LIKE ?)";
-            const arrivalVariants = [
-                `%${arrival}%`,
-                `%${
-                    arrival.charAt(0).toUpperCase() +
-                    arrival.slice(1).toLowerCase()
-                }%`,
-                `%${arrival.toUpperCase()}%`,
-            ];
-            params.push(...arrivalVariants);
+            where.arrival_address = {
+                contains: arrival,
+                mode: "insensitive",
+            };
         }
 
         // Filtres de date améliorés
         if (date) {
-            sql += " AND DATE(c.departure_datetime) = ?";
-            params.push(date);
+            const searchDate = new Date(date);
+            const nextDay = new Date(searchDate);
+            nextDay.setDate(nextDay.getDate() + 1);
+
+            where.departure_datetime = {
+                ...where.departure_datetime,
+                gte: searchDate,
+                lt: nextDay,
+            };
         } else {
             // Plage de dates
             if (dateFrom) {
-                sql += " AND DATE(c.departure_datetime) >= ?";
-                params.push(dateFrom);
+                where.departure_datetime = {
+                    ...where.departure_datetime,
+                    gte: new Date(dateFrom),
+                };
             }
             if (dateTo) {
-                sql += " AND DATE(c.departure_datetime) <= ?";
-                params.push(dateTo);
+                const endDate = new Date(dateTo);
+                endDate.setDate(endDate.getDate() + 1);
+                where.departure_datetime = {
+                    ...where.departure_datetime,
+                    lt: endDate,
+                };
             }
         }
 
         // Filtres de prix améliorés
         if (minPrice) {
-            sql += " AND c.price_per_passenger >= ?";
-            params.push(parseFloat(minPrice));
+            where.price_per_passenger = {
+                ...where.price_per_passenger,
+                gte: parseFloat(minPrice),
+            };
         }
         if (maxPrice) {
-            sql += " AND c.price_per_passenger <= ?";
-            params.push(parseFloat(maxPrice));
+            where.price_per_passenger = {
+                ...where.price_per_passenger,
+                lte: parseFloat(maxPrice),
+            };
         }
 
         // Filtre écologique
         if (isElectric === "true") {
-            sql += " AND v.is_electric = 1";
+            where.vehicle = {
+                is_electric: true,
+            };
         }
 
-        // Filtres de durée améliorés
+        // Compter le total pour pagination
+        const totalResults = await prisma.carpooling.count({ where });
+
+        // Configuration des relations incluant les calculs de durée
+        const include = {
+            driver: {
+                select: {
+                    id: true,
+                    pseudo: true,
+                    profile_picture_url: true,
+                },
+            },
+            vehicle: {
+                include: {
+                    brand: true,
+                    color: true,
+                },
+            },
+        };
+
+        // Configuration de l'ordre
+        let orderBy = {};
+
+        if (sortField === "price_per_passenger") {
+            orderBy.price_per_passenger = order;
+        } else if (sortField === "departure_datetime") {
+            orderBy.departure_datetime = order;
+        } else if (sortField === "duration_minutes") {
+            // Pour la durée, on devra trier après récupération
+            orderBy.departure_datetime = "asc";
+        } else {
+            orderBy.departure_datetime = "asc";
+        }
+
+        console.log("Prisma where:", JSON.stringify(where, null, 2));
+
+        // Récupérer les covoiturages
+        const carpoolings = await prisma.carpooling.findMany({
+            where,
+            include,
+            orderBy,
+            skip,
+            take: limitNum,
+        });
+
+        // Enrichir avec les calculs nécessaires
+        const enrichedCarpoolings = carpoolings.map((carpooling) => {
+            const duration_minutes = Math.round(
+                (new Date(carpooling.arrival_datetime) -
+                    new Date(carpooling.departure_datetime)) /
+                    (1000 * 60)
+            );
+
+            const occupancy_rate =
+                Math.round(
+                    ((carpooling.initial_seats_offered -
+                        carpooling.seats_remaining) /
+                        carpooling.initial_seats_offered) *
+                        100 *
+                        10
+                ) / 10;
+
+            return {
+                ...carpooling,
+                driver_pseudo: carpooling.driver.pseudo,
+                driver_photo: carpooling.driver.profile_picture_url,
+                model: carpooling.vehicle.model,
+                plate_number: carpooling.vehicle.plate_number,
+                is_electric: carpooling.vehicle.is_electric,
+                vehicle_seats: carpooling.vehicle.seats_available,
+                brand_name: carpooling.vehicle.brand?.name || null,
+                color_name: carpooling.vehicle.color?.name || null,
+                duration_minutes,
+                occupancy_rate,
+                driver_rating: 0, // Sera calculé avec MongoDB
+                is_almost_full: carpooling.seats_remaining <= 1,
+                is_departing_soon:
+                    new Date(carpooling.departure_datetime) - new Date() <=
+                    24 * 60 * 60 * 1000,
+                eco_friendly: carpooling.vehicle.is_electric,
+            };
+        });
+
+        // Filtrer par durée si spécifié
+        let filteredCarpoolings = enrichedCarpoolings;
         if (minDuration) {
-            sql +=
-                " AND TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime) >= ?";
-            params.push(parseInt(minDuration));
+            filteredCarpoolings = filteredCarpoolings.filter(
+                (c) => c.duration_minutes >= parseInt(minDuration)
+            );
         }
         if (maxDuration) {
-            sql +=
-                " AND TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime) <= ?";
-            params.push(parseInt(maxDuration));
+            filteredCarpoolings = filteredCarpoolings.filter(
+                (c) => c.duration_minutes <= parseInt(maxDuration)
+            );
         }
-
-        // Requête pour compter le total (pour pagination)
-        const countSql = sql.replace(
-            /SELECT c\.\*.*?FROM/,
-            "SELECT COUNT(*) as total FROM"
-        );
-        const [countResult] = await db.query(countSql, params);
-        const totalResults = countResult[0].total;
-
-        // Ajouter le tri - attention au tri par rating qui sera fait après
-        if (sortField !== "driver_rating") {
-            sql += ` ORDER BY ${sortField} ${order}`;
-        } else {
-            sql += " ORDER BY c.departure_datetime ASC"; // Tri temporaire
-        }
-
-        // Pagination
-        sql += " LIMIT ? OFFSET ?";
-        params.push(limitNum, offset);
-
-        console.log("SQL Query:", sql);
-        console.log("Params:", params);
-
-        const [carpoolings] = await db.query(sql, params);
 
         // Enrichir avec les notes MongoDB des chauffeurs
-        if (carpoolings.length > 0) {
-            const driverIds = [...new Set(carpoolings.map((c) => c.driver_id))];
+        if (filteredCarpoolings.length > 0) {
+            const driverIds = [
+                ...new Set(filteredCarpoolings.map((c) => c.driver_id)),
+            ];
 
             // Récupérer les moyennes des notes depuis MongoDB
             const driverRatings = {};
             for (const driverId of driverIds) {
                 try {
-                    const rating = await Review.getAverageRating(driverId);
-                    driverRatings[driverId] = rating.average || 0;
+                    // MongoDB Review model disabled, setting default rating
+                    driverRatings[driverId] = 0;
+                    // const rating = await Review.getAverageRating(driverId);
+                    // driverRatings[driverId] = rating.average || 0;
                 } catch (error) {
                     console.warn(
                         `Erreur récupération note chauffeur ${driverId}:`,
@@ -192,86 +255,71 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
             }
 
             // Ajouter les notes aux covoiturages
-            carpoolings.forEach((carpooling) => {
+            filteredCarpoolings.forEach((carpooling) => {
                 carpooling.driver_rating =
                     driverRatings[carpooling.driver_id] || 0;
-
-                // Ajouter des métadonnées utiles
-                carpooling.is_almost_full = carpooling.seats_remaining <= 1;
-                carpooling.is_departing_soon =
-                    new Date(carpooling.departure_datetime) - new Date() <=
-                    24 * 60 * 60 * 1000;
-                carpooling.eco_friendly = carpooling.is_electric;
             });
 
             // Filtrer par note minimale si spécifiée
-            let filteredCarpoolings = carpoolings;
             if (minRating && parseFloat(minRating) > 0) {
-                filteredCarpoolings = carpoolings.filter(
+                filteredCarpoolings = filteredCarpoolings.filter(
                     (c) => c.driver_rating >= parseFloat(minRating)
                 );
             }
 
-            // Tri par rating si demandé
+            // Tri par rating ou durée si demandé
             if (sortField === "driver_rating") {
                 filteredCarpoolings.sort((a, b) => {
                     const comparison =
                         (b.driver_rating || 0) - (a.driver_rating || 0);
-                    return order === "DESC" ? comparison : -comparison;
+                    return order === "desc" ? comparison : -comparison;
+                });
+            } else if (sortField === "duration_minutes") {
+                filteredCarpoolings.sort((a, b) => {
+                    const comparison = a.duration_minutes - b.duration_minutes;
+                    return order === "desc" ? -comparison : comparison;
                 });
             }
+        }
 
-            // Calculer les statistiques
-            const stats = {
-                total: totalResults,
-                page: pageNum,
-                totalPages: Math.ceil(totalResults / limitNum),
-                hasNext: pageNum < Math.ceil(totalResults / limitNum),
-                hasPrev: pageNum > 1,
-                averagePrice:
-                    filteredCarpoolings.length > 0
-                        ? Math.round(
-                              filteredCarpoolings.reduce(
-                                  (sum, c) => sum + c.price_per_passenger,
-                                  0
-                              ) / filteredCarpoolings.length
-                          )
-                        : 0,
-                electricCount: filteredCarpoolings.filter((c) => c.is_electric)
-                    .length,
-                departsToday: filteredCarpoolings.filter((c) => {
-                    const today = new Date().toDateString();
-                    return (
-                        new Date(c.departure_datetime).toDateString() === today
-                    );
-                }).length,
-            };
+        // Calculer les statistiques
+        const stats = {
+            total: totalResults,
+            page: pageNum,
+            totalPages: Math.ceil(totalResults / limitNum),
+            hasNext: pageNum < Math.ceil(totalResults / limitNum),
+            hasPrev: pageNum > 1,
+            averagePrice:
+                filteredCarpoolings.length > 0
+                    ? Math.round(
+                          filteredCarpoolings.reduce(
+                              (sum, c) => sum + c.price_per_passenger,
+                              0
+                          ) / filteredCarpoolings.length
+                      )
+                    : 0,
+            electricCount: filteredCarpoolings.filter((c) => c.is_electric)
+                .length,
+            departsToday: filteredCarpoolings.filter((c) => {
+                const today = new Date().toDateString();
+                return new Date(c.departure_datetime).toDateString() === today;
+            }).length,
+        };
 
-            // Si aucun résultat après filtrage par note
-            if (filteredCarpoolings.length === 0 && carpoolings.length > 0) {
-                return res.status(200).json({
-                    carpoolings: [],
-                    stats,
-                    message: `Aucun covoiturage trouvé avec une note minimale de ${minRating}. ${carpoolings.length} covoiturages disponibles sans ce filtre.`,
-                });
-            }
-
+        // Si aucun résultat après filtrage par note
+        if (
+            filteredCarpoolings.length === 0 &&
+            enrichedCarpoolings.length > 0
+        ) {
             return res.status(200).json({
-                carpoolings: filteredCarpoolings,
+                carpoolings: [],
                 stats,
-                filters: {
-                    departure,
-                    arrival,
-                    date,
-                    maxPrice,
-                    isElectric,
-                    minRating,
-                },
+                message: `Aucun covoiturage trouvé avec une note minimale de ${minRating}. ${enrichedCarpoolings.length} covoiturages disponibles sans ce filtre.`,
             });
         }
 
         // Si aucun résultat trouvé, proposer des alternatives
-        if (carpoolings.length === 0) {
+        if (filteredCarpoolings.length === 0) {
             const suggestions = await generateSearchSuggestions(req.query);
 
             return res.status(200).json({
@@ -290,17 +338,30 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
         }
 
         res.status(200).json({
-            carpoolings,
-            stats: {
-                total: totalResults,
-                page: pageNum,
-                totalPages: Math.ceil(totalResults / limitNum),
-                hasNext: pageNum < Math.ceil(totalResults / limitNum),
-                hasPrev: pageNum > 1,
+            carpoolings: filteredCarpoolings,
+            stats,
+            filters: {
+                departure,
+                arrival,
+                date,
+                maxPrice,
+                isElectric,
+                minRating,
             },
         });
     } catch (error) {
         console.error("Erreur recherche avancée:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
         res.status(500).json({
             message: "Erreur lors de la recherche de covoiturages.",
             error:
@@ -323,50 +384,69 @@ async function generateSearchSuggestions(originalQuery) {
     };
 
     try {
-        // Suggestions de dates alternatives (3 prochains jours)
+        // Suggestions de dates alternatives (5 prochains jours)
         if (originalQuery.date || originalQuery.dateFrom) {
-            const baseSql = `
-                SELECT DISTINCT DATE(departure_datetime) as suggestion_date, COUNT(*) as count
-                FROM carpooling 
-                WHERE status = 'prévu' AND seats_remaining > 0 AND departure_datetime > NOW()
-            `;
+            const baseWhere = {
+                status: "prévu",
+                seats_remaining: { gt: 0 },
+                departure_datetime: { gt: new Date() },
+            };
 
-            const dateSuggestionSql =
-                baseSql +
-                `
-                ${originalQuery.departure ? "AND departure_address LIKE ?" : ""}
-                ${originalQuery.arrival ? "AND arrival_address LIKE ?" : ""}
-                GROUP BY DATE(departure_datetime)
-                ORDER BY departure_datetime ASC
-                LIMIT 5
-            `;
+            // Ajouter filtres de lieu si présents
+            if (originalQuery.departure) {
+                baseWhere.departure_address = {
+                    contains: originalQuery.departure,
+                    mode: "insensitive",
+                };
+            }
+            if (originalQuery.arrival) {
+                baseWhere.arrival_address = {
+                    contains: originalQuery.arrival,
+                    mode: "insensitive",
+                };
+            }
 
-            const dateParams = [];
-            if (originalQuery.departure)
-                dateParams.push(`%${originalQuery.departure}%`);
-            if (originalQuery.arrival)
-                dateParams.push(`%${originalQuery.arrival}%`);
+            // Récupérer les dates avec des résultats
+            const dateResults = await prisma.carpooling.groupBy({
+                by: ["departure_datetime"],
+                where: baseWhere,
+                _count: {
+                    id: true,
+                },
+                orderBy: {
+                    departure_datetime: "asc",
+                },
+                take: 5,
+            });
 
-            const [dateResults] = await db.query(dateSuggestionSql, dateParams);
             suggestions.alternativeDates = dateResults.map((r) => ({
-                date: r.suggestion_date,
-                availableTrips: r.count,
+                date: r.departure_datetime.toISOString().split("T")[0],
+                availableTrips: r._count.id,
             }));
         }
 
         // Destinations populaires
-        const popularSql = `
-            SELECT arrival_address, COUNT(*) as trip_count
-            FROM carpooling 
-            WHERE status = 'prévu' AND seats_remaining > 0 AND departure_datetime > NOW()
-            GROUP BY arrival_address
-            ORDER BY trip_count DESC
-            LIMIT 5
-        `;
-        const [popularResults] = await db.query(popularSql);
+        const popularResults = await prisma.carpooling.groupBy({
+            by: ["arrival_address"],
+            where: {
+                status: "prévu",
+                seats_remaining: { gt: 0 },
+                departure_datetime: { gt: new Date() },
+            },
+            _count: {
+                id: true,
+            },
+            orderBy: {
+                _count: {
+                    id: "desc",
+                },
+            },
+            take: 5,
+        });
+
         suggestions.popularDestinations = popularResults.map((r) => ({
             destination: r.arrival_address,
-            availableTrips: r.trip_count,
+            availableTrips: r._count.id,
         }));
 
         // Suggestions d'ajustement de prix
@@ -411,49 +491,144 @@ const getSearchStatistics = async (req, res) => {
         const stats = {};
 
         // Destinations les plus populaires
-        const [popularDestinations] = await db.query(`
-            SELECT arrival_address, COUNT(*) as search_count
-            FROM carpooling 
-            WHERE status = 'prévu' AND departure_datetime > NOW()
-            GROUP BY arrival_address
-            ORDER BY search_count DESC
-            LIMIT 10
-        `);
-        stats.popularDestinations = popularDestinations;
+        const popularDestinations = await prisma.carpooling.groupBy({
+            by: ["arrival_address"],
+            where: {
+                status: "prévu",
+                departure_datetime: { gt: new Date() },
+            },
+            _count: {
+                id: true,
+            },
+            orderBy: {
+                _count: {
+                    id: "desc",
+                },
+            },
+            take: 10,
+        });
 
-        // Prix moyens par trajet
-        const [avgPrices] = await db.query(`
-            SELECT 
-                CONCAT(departure_address, ' → ', arrival_address) as route,
-                ROUND(AVG(price_per_passenger), 2) as avg_price,
-                COUNT(*) as trip_count
-            FROM carpooling 
-            WHERE status = 'prévu' AND departure_datetime > NOW()
-            GROUP BY departure_address, arrival_address
-            HAVING trip_count >= 2
-            ORDER BY trip_count DESC
-            LIMIT 10
-        `);
-        stats.averagePrices = avgPrices;
+        stats.popularDestinations = popularDestinations.map((dest) => ({
+            arrival_address: dest.arrival_address,
+            search_count: dest._count.id,
+        }));
 
-        // Statistiques sur les véhicules
-        const [vehicleStats] = await db.query(`
-            SELECT 
-                COUNT(*) as total_trips,
-                SUM(CASE WHEN v.is_electric = 1 THEN 1 ELSE 0 END) as electric_trips,
-                ROUND(AVG(c.price_per_passenger), 2) as avg_price,
-                ROUND(AVG(TIMESTAMPDIFF(MINUTE, c.departure_datetime, c.arrival_datetime)), 0) as avg_duration_minutes
-            FROM carpooling c
-            INNER JOIN Vehicle v ON c.vehicle_id = v.id
-            WHERE c.status = 'prévu' AND c.departure_datetime > NOW()
-        `);
-        stats.vehicleStats = vehicleStats[0];
+        // Prix moyens par trajet - requête plus complexe avec groupBy
+        const routeStats = await prisma.carpooling.groupBy({
+            by: ["departure_address", "arrival_address"],
+            where: {
+                status: "prévu",
+                departure_datetime: { gt: new Date() },
+            },
+            _avg: {
+                price_per_passenger: true,
+            },
+            _count: {
+                id: true,
+            },
+            having: {
+                id: {
+                    _count: {
+                        gte: 2,
+                    },
+                },
+            },
+            orderBy: {
+                _count: {
+                    id: "desc",
+                },
+            },
+            take: 10,
+        });
+
+        stats.averagePrices = routeStats.map((route) => ({
+            route: `${route.departure_address} → ${route.arrival_address}`,
+            avg_price:
+                Math.round((route._avg.price_per_passenger || 0) * 100) / 100,
+            trip_count: route._count.id,
+        }));
+
+        // Statistiques sur les véhicules avec agrégations
+        const vehicleStatsResult = await prisma.carpooling.aggregate({
+            where: {
+                status: "prévu",
+                departure_datetime: { gt: new Date() },
+            },
+            _count: {
+                id: true,
+            },
+            _avg: {
+                price_per_passenger: true,
+            },
+        });
+
+        // Compter les trajets électriques séparément
+        const electricTripsCount = await prisma.carpooling.count({
+            where: {
+                status: "prévu",
+                departure_datetime: { gt: new Date() },
+                vehicle: {
+                    is_electric: true,
+                },
+            },
+        });
+
+        // Calculer la durée moyenne (nécessite une approche différente avec Prisma)
+        const carpoolingsForDuration = await prisma.carpooling.findMany({
+            where: {
+                status: "prévu",
+                departure_datetime: { gt: new Date() },
+            },
+            select: {
+                departure_datetime: true,
+                arrival_datetime: true,
+            },
+        });
+
+        const avgDuration =
+            carpoolingsForDuration.length > 0
+                ? Math.round(
+                      carpoolingsForDuration.reduce((sum, c) => {
+                          const duration =
+                              (new Date(c.arrival_datetime) -
+                                  new Date(c.departure_datetime)) /
+                              (1000 * 60);
+                          return sum + duration;
+                      }, 0) / carpoolingsForDuration.length
+                  )
+                : 0;
+
+        stats.vehicleStats = {
+            total_trips: vehicleStatsResult._count.id,
+            electric_trips: electricTripsCount,
+            avg_price:
+                Math.round(
+                    (vehicleStatsResult._avg.price_per_passenger || 0) * 100
+                ) / 100,
+            avg_duration_minutes: avgDuration,
+        };
 
         res.status(200).json({ stats });
     } catch (error) {
         console.error("Erreur statistiques recherche:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message:
+                    "Erreur de base de données lors de la récupération des statistiques.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
         res.status(500).json({
             message: "Erreur lors de la récupération des statistiques.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };

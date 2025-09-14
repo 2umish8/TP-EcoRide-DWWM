@@ -1,7 +1,4 @@
-const {
-    PrismaClient,
-    PrismaClientKnownRequestError,
-} = require("@prisma/client");
+const { PrismaClient, PrismaClientKnownRequestError } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 /* --------------------------------------------------- Vérifier les conditions de participation ------------------- */
@@ -17,8 +14,8 @@ const checkParticipationConditions = async (req, res) => {
                 driver_id: true,
                 status: true,
                 price_per_passenger: true,
-                seats_remaining: true,
-            },
+                seats_remaining: true
+            }
         });
 
         if (!carpooling) {
@@ -53,8 +50,8 @@ const checkParticipationConditions = async (req, res) => {
             where: {
                 passenger_id: userId,
                 carpooling_id: parseInt(carpoolingId),
-                cancellation_date: null,
-            },
+                cancellation_date: null
+            }
         });
 
         if (existingParticipation) {
@@ -66,7 +63,7 @@ const checkParticipationConditions = async (req, res) => {
         // Vérifier que l'utilisateur a assez de crédits
         const user = await prisma.user.findUnique({
             where: { id: userId },
-            select: { credits: true },
+            select: { credits: true }
         });
 
         if (user.credits < carpooling.price_per_passenger) {
@@ -92,24 +89,18 @@ const checkParticipationConditions = async (req, res) => {
         });
     } catch (error) {
         console.error("Erreur vérification participation:", error);
-
+        
         if (error instanceof PrismaClientKnownRequestError) {
             return res.status(400).json({
                 message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
+                error: process.env.NODE_ENV === "development" ? error.message : undefined,
             });
         }
-
+        
         res.status(500).json({
             message:
                 "Erreur lors de la vérification des conditions de participation.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };
@@ -138,8 +129,8 @@ const joinCarpooling = async (req, res) => {
                     driver_id: true,
                     status: true,
                     price_per_passenger: true,
-                    seats_remaining: true,
-                },
+                    seats_remaining: true
+                }
             });
 
             if (!carpooling) {
@@ -148,9 +139,7 @@ const joinCarpooling = async (req, res) => {
 
             // Re-vérifier que l'utilisateur n'est pas le chauffeur
             if (carpooling.driver_id === userId) {
-                throw new Error(
-                    "Vous ne pouvez pas rejoindre votre propre covoiturage."
-                );
+                throw new Error("Vous ne pouvez pas rejoindre votre propre covoiturage.");
             }
 
             // Re-vérifier que le covoiturage est disponible
@@ -160,20 +149,17 @@ const joinCarpooling = async (req, res) => {
 
             // RE-VÉRIFIER qu'il reste au moins une place (crucial car d'autres ont pu participer)
             if (carpooling.seats_remaining <= 0) {
-                throw new Error(
-                    "Plus de places disponibles ! D'autres passagers ont réservé entre temps."
-                );
+                throw new Error("Plus de places disponibles ! D'autres passagers ont réservé entre temps.");
             }
 
             // Re-vérifier que l'utilisateur ne participe pas déjà
-            const existingParticipation =
-                await transactionPrisma.participation.findFirst({
-                    where: {
-                        passenger_id: userId,
-                        carpooling_id: parseInt(carpoolingId),
-                        cancellation_date: null,
-                    },
-                });
+            const existingParticipation = await transactionPrisma.participation.findFirst({
+                where: {
+                    passenger_id: userId,
+                    carpooling_id: parseInt(carpoolingId),
+                    cancellation_date: null
+                }
+            });
 
             if (existingParticipation) {
                 throw new Error("Vous participez déjà à ce covoiturage.");
@@ -182,21 +168,17 @@ const joinCarpooling = async (req, res) => {
             // RE-VÉRIFIER que l'utilisateur a assez de crédits
             const user = await transactionPrisma.user.findUnique({
                 where: { id: userId },
-                select: { credits: true },
+                select: { credits: true }
             });
 
             if (user.credits < carpooling.price_per_passenger) {
-                throw new Error(
-                    "Vous n'avez plus assez de crédits pour ce covoiturage."
-                );
+                throw new Error("Vous n'avez plus assez de crédits pour ce covoiturage.");
             }
 
             // Débiter les crédits de l'utilisateur
             await transactionPrisma.user.update({
                 where: { id: userId },
-                data: {
-                    credits: { decrement: carpooling.price_per_passenger },
-                },
+                data: { credits: { decrement: carpooling.price_per_passenger } }
             });
 
             // Créer la participation
@@ -206,31 +188,30 @@ const joinCarpooling = async (req, res) => {
                     carpooling_id: parseInt(carpoolingId),
                     price_paid: carpooling.price_per_passenger,
                     participation_date: new Date(),
-                    status: "confirmé",
-                },
+                    status: 'confirmé'
+                }
             });
 
             // Réduire le nombre de places disponibles
             await transactionPrisma.carpooling.update({
                 where: { id: parseInt(carpoolingId) },
-                data: { seats_remaining: { decrement: 1 } },
+                data: { seats_remaining: { decrement: 1 } }
             });
 
             // Enregistrer l'historique des crédits
             await transactionPrisma.credit_transaction.create({
                 data: {
                     user_id: userId,
-                    transaction_type: "débit",
+                    transaction_type: 'débit',
                     amount: carpooling.price_per_passenger,
                     description: `Participation au covoiturage #${carpoolingId}`,
-                    transaction_date: new Date(),
-                },
+                    transaction_date: new Date()
+                }
             });
 
             return {
                 participation,
-                remaining_credits:
-                    user.credits - carpooling.price_per_passenger,
+                remaining_credits: user.credits - carpooling.price_per_passenger
             };
         });
 
@@ -241,34 +222,24 @@ const joinCarpooling = async (req, res) => {
         });
     } catch (error) {
         console.error("Erreur lors de la participation:", error);
-
+        
         if (error instanceof PrismaClientKnownRequestError) {
             return res.status(400).json({
                 message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
+                error: process.env.NODE_ENV === "development" ? error.message : undefined,
             });
         }
-
+        
         // Erreurs métier de la transaction
-        if (
-            error.message.includes("covoiturage") ||
-            error.message.includes("crédits") ||
-            error.message.includes("places")
-        ) {
+        if (error.message.includes("covoiturage") || error.message.includes("crédits") || error.message.includes("places")) {
             return res.status(400).json({
                 message: error.message,
             });
         }
-
+        
         res.status(500).json({
             message: "Erreur lors de la participation au covoiturage.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };
@@ -280,43 +251,43 @@ const cancelParticipation = async (req, res) => {
         const carpoolingId = req.params.id;
 
         // Démarrer une transaction
-        const result = await prisma.$transaction(async (transactionPrisma) => {
+        await db.query("START TRANSACTION");
+
+        try {
             // Vérifier que la participation existe
-            const participation =
-                await transactionPrisma.participation.findFirst({
-                    where: {
-                        passenger_id: userId,
-                        carpooling_id: parseInt(carpoolingId),
-                        cancellation_date: null,
-                    },
-                    include: {
-                        carpooling: {
-                            select: {
-                                status: true,
-                                departure_datetime: true,
-                            },
-                        },
-                    },
+            const participationSql = `
+                SELECT p.credits_paid, c.status, c.departure_datetime
+                FROM Participation p
+                INNER JOIN Carpooling c ON p.carpooling_id = c.id
+                WHERE p.passenger_id = ? AND p.carpooling_id = ? AND p.cancellation_date IS NULL
+            `;
+            const [participationCheck] = await db.query(participationSql, [
+                userId,
+                carpoolingId,
+            ]);
+
+            if (participationCheck.length === 0) {
+                await db.query("ROLLBACK");
+                return res.status(404).json({
+                    message: "Participation non trouvée ou déjà annulée.",
                 });
-
-            if (!participation) {
-                throw new Error("Participation non trouvée ou déjà annulée.");
             }
 
-            // Vérifier que le covoiturage n'a pas encore commencé
-            if (participation.carpooling.status !== "prévu") {
-                throw new Error(
-                    "Impossible d'annuler une participation pour un covoiturage qui a déjà commencé ou est terminé."
-                );
+            const participation = participationCheck[0];
+
+            // Vérifier que le covoiturage n'a pas encore démarré
+            if (participation.status !== "prévu") {
+                await db.query("ROLLBACK");
+                return res.status(400).json({
+                    message:
+                        "Impossible d'annuler une participation à un covoiturage déjà démarré ou terminé.",
+                });
             }
 
-            // Calculer le temps jusqu'au départ
+            // Vérifier que l'annulation se fait au moins 2 heures avant le départ (politique d'annulation)
+            const departureTime = new Date(participation.departure_datetime);
             const now = new Date();
-            const departureTime = new Date(
-                participation.carpooling.departure_datetime
-            );
-            const hoursUntilDeparture =
-                (departureTime - now) / (1000 * 60 * 60);
+            const hoursUntilDeparture = (departureTime - now) / (1000 * 60 * 60);
 
             let refundAmount = participation.price_paid;
 
@@ -328,38 +299,38 @@ const cancelParticipation = async (req, res) => {
             // Rembourser l'utilisateur
             await transactionPrisma.user.update({
                 where: { id: userId },
-                data: { credits: { increment: refundAmount } },
+                data: { credits: { increment: refundAmount } }
             });
 
             // Marquer la participation comme annulée
             await transactionPrisma.participation.update({
                 where: { id: participation.id },
-                data: { cancellation_date: new Date() },
+                data: { cancellation_date: new Date() }
             });
 
             // Incrémenter le nombre de places disponibles
             await transactionPrisma.carpooling.update({
                 where: { id: parseInt(carpoolingId) },
-                data: { seats_remaining: { increment: 1 } },
+                data: { seats_remaining: { increment: 1 } }
             });
 
             // Enregistrer l'historique des crédits pour le remboursement
             await transactionPrisma.credit_transaction.create({
                 data: {
                     user_id: userId,
-                    transaction_type: "crédit",
+                    transaction_type: 'crédit',
                     amount: refundAmount,
                     description: `Remboursement annulation covoiturage #${carpoolingId}`,
-                    transaction_date: new Date(),
-                },
+                    transaction_date: new Date()
+                }
             });
 
             const penalty = participation.price_paid - refundAmount;
-
+            
             return {
                 refundAmount,
                 penalty,
-                originalAmount: participation.price_paid,
+                originalAmount: participation.price_paid
             };
         });
 
@@ -376,33 +347,24 @@ const cancelParticipation = async (req, res) => {
         });
     } catch (error) {
         console.error("Erreur annulation participation:", error);
-
+        
         if (error instanceof PrismaClientKnownRequestError) {
             return res.status(400).json({
                 message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
+                error: process.env.NODE_ENV === "development" ? error.message : undefined,
             });
         }
-
+        
         // Erreurs métier
-        if (
-            error.message.includes("Participation") ||
-            error.message.includes("covoiturage")
-        ) {
+        if (error.message.includes("Participation") || error.message.includes("covoiturage")) {
             return res.status(400).json({
                 message: error.message,
             });
         }
-
+        
         res.status(500).json({
             message: "Erreur lors de l'annulation de la participation.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };
@@ -412,70 +374,25 @@ const getUserParticipations = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        const participations = await prisma.participation.findMany({
-            where: { passenger_id: userId },
-            include: {
-                carpooling: {
-                    select: {
-                        departure_address: true,
-                        arrival_address: true,
-                        departure_datetime: true,
-                        arrival_datetime: true,
-                        status: true,
-                        driver: {
-                            select: {
-                                pseudo: true,
-                            },
-                        },
-                        vehicle: {
-                            select: {
-                                model: true,
-                                plate_number: true,
-                            },
-                        },
-                    },
-                },
-            },
-            orderBy: {
-                carpooling: {
-                    departure_datetime: "desc",
-                },
-            },
-        });
+        const sql = `
+            SELECT p.*, c.departure_address, c.arrival_address, c.departure_datetime, 
+                   c.arrival_datetime, c.status as carpooling_status,
+                   u.pseudo as driver_pseudo,
+                   v.model, v.plate_number
+            FROM Participation p
+            INNER JOIN Carpooling c ON p.carpooling_id = c.id
+            INNER JOIN User u ON c.driver_id = u.id
+            INNER JOIN Vehicle v ON c.vehicle_id = v.id
+            WHERE p.passenger_id = ?
+            ORDER BY c.departure_datetime DESC
+        `;
+        const [participations] = await db.query(sql, [userId]);
 
-        // Transformer les données pour correspondre au format attendu
-        const formattedParticipations = participations.map((p) => ({
-            ...p,
-            departure_address: p.carpooling.departure_address,
-            arrival_address: p.carpooling.arrival_address,
-            departure_datetime: p.carpooling.departure_datetime,
-            arrival_datetime: p.carpooling.arrival_datetime,
-            carpooling_status: p.carpooling.status,
-            driver_pseudo: p.carpooling.driver.pseudo,
-            model: p.carpooling.vehicle.model,
-            plate_number: p.carpooling.vehicle.plate_number,
-        }));
-
-        res.status(200).json({ participations: formattedParticipations });
+        res.status(200).json({ participations });
     } catch (error) {
-        console.error("Erreur récupération participations:", error);
-
-        if (error instanceof PrismaClientKnownRequestError) {
-            return res.status(400).json({
-                message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
-            });
-        }
-
+        console.error(error);
         res.status(500).json({
             message: "Erreur lors de la récupération des participations.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
         });
     }
 };
@@ -494,146 +411,87 @@ const validateParticipation = async (req, res) => {
         }
 
         // Vérifier que la participation existe et que le covoiturage est terminé
-        const participation = await prisma.participation.findFirst({
-            where: {
-                passenger_id: userId,
-                carpooling_id: parseInt(carpoolingId),
-                cancellation_date: null,
-            },
-            include: {
-                carpooling: {
-                    select: {
-                        status: true,
-                    },
-                },
-            },
-        });
+        const participationSql = `
+            SELECT p.id, c.status
+            FROM Participation p
+            INNER JOIN Carpooling c ON p.carpooling_id = c.id
+            WHERE p.passenger_id = ? AND p.carpooling_id = ? AND p.cancellation_date IS NULL
+        `;
+        const [participationCheck] = await db.query(participationSql, [
+            userId,
+            carpoolingId,
+        ]);
 
-        if (!participation) {
+        if (participationCheck.length === 0) {
             return res.status(404).json({
                 message: "Participation non trouvée.",
             });
         }
 
-        if (participation.carpooling.status !== "terminé") {
+        if (participationCheck[0].status !== "terminé") {
             return res.status(400).json({
-                message:
-                    "Le covoiturage doit être terminé pour valider la participation.",
+                message: "Vous ne pouvez valider qu'un covoiturage terminé.",
             });
         }
 
         // Mettre à jour la validation
-        await prisma.participation.update({
-            where: { id: participation.id },
-            data: { is_validated },
-        });
+        const [result] = await db.query(
+            "UPDATE Participation SET is_validated_by_passenger = ? WHERE passenger_id = ? AND carpooling_id = ?",
+            [is_validated, userId, carpoolingId]
+        );
 
-        res.status(200).json({
-            message: `Participation ${
-                is_validated ? "validée" : "non validée"
-            } avec succès.`,
-        });
-    } catch (error) {
-        console.error("Erreur validation participation:", error);
-
-        if (error instanceof PrismaClientKnownRequestError) {
-            return res.status(400).json({
-                message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
-            });
+        if (result.affectedRows > 0) {
+            const message = is_validated
+                ? "Covoiturage validé avec succès !"
+                : "Problème signalé sur ce covoiturage.";
+            res.status(200).json({ message });
+        } else {
+            res.status(500).json({ message: "Erreur lors de la validation." });
         }
-
+    } catch (error) {
+        console.error(error);
         res.status(500).json({
             message: "Erreur lors de la validation de la participation.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
         });
     }
 };
 
-/* --------------------------------------------------- Obtenir les participants d'un covoiturage ---------------- */
+/* --------------------------------------------------- Obtenir les participants d'un covoiturage -------------- */
 const getCarpoolingParticipants = async (req, res) => {
     try {
-        const carpoolingId = req.params.id;
         const userId = req.user.id;
+        const carpoolingId = req.params.id;
 
-        // Vérifier que l'utilisateur est le chauffeur du covoiturage
-        const carpooling = await prisma.carpooling.findUnique({
-            where: { id: parseInt(carpoolingId) },
-            select: { driver_id: true },
-        });
+        // Vérifier que l'utilisateur est le chauffeur de ce covoiturage
+        const ownerCheckSql = "SELECT driver_id FROM Carpooling WHERE id = ?";
+        const [ownerCheck] = await db.query(ownerCheckSql, [carpoolingId]);
 
-        if (!carpooling) {
-            return res.status(404).json({
-                message: "Covoiturage non trouvé.",
-            });
+        if (ownerCheck.length === 0) {
+            return res.status(404).json({ message: "Covoiturage non trouvé." });
         }
 
-        if (carpooling.driver_id !== userId) {
+        if (ownerCheck[0].driver_id !== userId) {
             return res.status(403).json({
                 message:
-                    "Vous n'êtes pas autorisé à voir les participants de ce covoiturage.",
+                    "Vous ne pouvez voir que les participants de vos propres covoiturages.",
             });
         }
 
         // Récupérer les participants
-        const participants = await prisma.participation.findMany({
-            where: {
-                carpooling_id: parseInt(carpoolingId),
-                cancellation_date: null,
-            },
-            include: {
-                passenger: {
-                    select: {
-                        pseudo: true,
-                        profile_picture_url: true,
-                        email: true,
-                    },
-                },
-            },
-            orderBy: {
-                participation_date: "asc",
-            },
-        });
+        const sql = `
+            SELECT p.*, u.pseudo, u.email, u.profile_picture_url
+            FROM Participation p
+            INNER JOIN User u ON p.passenger_id = u.id
+            WHERE p.carpooling_id = ? AND p.cancellation_date IS NULL
+            ORDER BY p.participation_date ASC
+        `;
+        const [participants] = await db.query(sql, [carpoolingId]);
 
-        // Transformer les données
-        const formattedParticipants = participants.map((p) => ({
-            participation_id: p.id,
-            passenger_id: p.passenger_id,
-            pseudo: p.passenger.pseudo,
-            profile_picture_url: p.passenger.profile_picture_url,
-            email: p.passenger.email,
-            participation_date: p.participation_date,
-            price_paid: p.price_paid,
-            status: p.status,
-            is_validated: p.is_validated,
-        }));
-
-        res.status(200).json({ participants: formattedParticipants });
+        res.status(200).json({ participants });
     } catch (error) {
-        console.error("Erreur récupération participants:", error);
-
-        if (error instanceof PrismaClientKnownRequestError) {
-            return res.status(400).json({
-                message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
-            });
-        }
-
+        console.error(error);
         res.status(500).json({
             message: "Erreur lors de la récupération des participants.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
         });
     }
 };

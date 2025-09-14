@@ -4,7 +4,7 @@ const router = express.Router();
 // Importer les fonctions du contrôleur
 const {
     getUserCredits,
-    getTransactionHistory,
+    getCreditHistory,
     purchaseCredits,
     getFinancialStats,
     transferCredits,
@@ -15,8 +15,8 @@ const { authMiddleware } = require("../authMiddleware");
 
 // Routes protégées (nécessitent une authentification)
 router.get("/balance", authMiddleware, getUserCredits);
-router.get("/history", authMiddleware, getTransactionHistory);
-router.get("/transactions", authMiddleware, getTransactionHistory); // Alias pour le frontend
+router.get("/history", authMiddleware, getCreditHistory);
+router.get("/transactions", authMiddleware, getCreditHistory); // Alias pour le frontend
 router.post("/purchase", authMiddleware, purchaseCredits);
 router.get("/stats", authMiddleware, getFinancialStats);
 router.post("/transfer", authMiddleware, transferCredits);

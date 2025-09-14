@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -16,18 +15,18 @@ model Role {
 }
 
 model User {
-  id                   Int      @id @default(autoincrement())
-  pseudo               String   @unique @db.VarChar(50)
-  email                String   @unique @db.VarChar(255)
-  password_hash        String   @db.VarChar(255)
-  credits              Int      @default(20)
-  suspended            Boolean  @default(false)
-  profile_picture_url  String?  @db.VarChar(255)
-  creation_date        DateTime @default(now()) @db.DateTime(0)
+  id                  Int      @id @default(autoincrement())
+  pseudo              String   @unique @db.VarChar(50)
+  email               String   @unique @db.VarChar(255)
+  password_hash       String   @db.VarChar(255)
+  credits             Int      @default(20)
+  suspended           Boolean  @default(false)
+  profile_picture_url String?  @db.VarChar(255)
+  creation_date       DateTime @default(now()) @db.DateTime(0)
 
-  roles         User_Role[]
-  vehicles      Vehicle[]
-  driverTrips   Carpooling[] @relation("DriverTrips")
+  roles          User_Role[]
+  vehicles       Vehicle[]
+  driverTrips    Carpooling[]    @relation("DriverTrips")
   participations Participation[]
 }
 
@@ -66,7 +65,7 @@ model Vehicle {
   brand_id                Int?
   color_id                Int?
 
-  user  User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user  User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
   brand Brand? @relation(fields: [brand_id], references: [id])
   color Color? @relation(fields: [color_id], references: [id])
 
@@ -74,21 +73,21 @@ model Vehicle {
 }
 
 model Carpooling {
-  id                        Int      @id @default(autoincrement())
-  status                    String   @default("prévu") @db.VarChar(50)
-  departure_address         String   @db.VarChar(255)
-  arrival_address           String   @db.VarChar(255)
-  departure_datetime        DateTime @db.DateTime(0)
-  arrival_datetime          DateTime @db.DateTime(0)
-  price_per_passenger       Int
-  initial_seats_offered     Int
-  seats_remaining           Int
-  platform_commission_earned Int     @default(2)
-  driver_id                 Int
-  vehicle_id                Int
+  id                         Int      @id @default(autoincrement())
+  status                     String   @default("prévu") @db.VarChar(50)
+  departure_address          String   @db.VarChar(255)
+  arrival_address            String   @db.VarChar(255)
+  departure_datetime         DateTime @db.DateTime(0)
+  arrival_datetime           DateTime @db.DateTime(0)
+  price_per_passenger        Int
+  initial_seats_offered      Int
+  seats_remaining            Int
+  platform_commission_earned Int      @default(2)
+  driver_id                  Int
+  vehicle_id                 Int
 
-  driver   User @relation("DriverTrips", fields: [driver_id], references: [id])
-  vehicle  Vehicle @relation(fields: [vehicle_id], references: [id])
+  driver  User    @relation("DriverTrips", fields: [driver_id], references: [id])
+  vehicle Vehicle @relation(fields: [vehicle_id], references: [id])
 
   participations Participation[]
 }
@@ -102,6 +101,6 @@ model Participation {
   is_validated_by_passenger Boolean?
   cancellation_date         DateTime? @db.DateTime(0)
 
-  passenger  User        @relation(fields: [passenger_id], references: [id])
-  carpooling Carpooling  @relation(fields: [carpooling_id], references: [id])
+  passenger  User       @relation(fields: [passenger_id], references: [id])
+  carpooling Carpooling @relation(fields: [carpooling_id], references: [id])
 }

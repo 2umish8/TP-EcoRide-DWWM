@@ -1,7 +1,10 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { PrismaClientKnownRequestError } = require("../generated/prisma");
-const db = require("../Config/db.js");
+const {
+    PrismaClient,
+    PrismaClientKnownRequestError,
+} = require("@prisma/client");
+const prisma = new PrismaClient();
 const Review = require("../models/Review");
 const { validateAndNormalizeEmail } = require("../utils/emailValidator.js");
 const {
@@ -45,7 +48,7 @@ const registerUser = async (req, res) => {
         const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 10;
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
-        const user = await db.user.create({
+        const user = await prisma.user.create({
             data: {
                 pseudo,
                 email: normalizedEmail,
@@ -54,11 +57,11 @@ const registerUser = async (req, res) => {
         });
 
         // Attribuer le rôle "passager" par défaut
-        const role = await db.role.findFirst({
+        const role = await prisma.role.findFirst({
             where: { name: "passager" },
         });
         if (role) {
-            await db.user_Role.create({
+            await prisma.user_Role.create({
                 data: {
                     user_id: user.id,
                     role_id: role.id,
@@ -77,7 +80,10 @@ const registerUser = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+        if (
+            error instanceof PrismaClientKnownRequestError &&
+            error.code === "P2002"
+        ) {
             return res.status(409).json({
                 message: "Un compte avec cet email ou ce pseudo existe déjà.",
             });
@@ -99,13 +105,10 @@ const loginUser = async (req, res) => {
             });
         }
 
-        const user = await db.user.findFirst({
+        const user = await prisma.user.findFirst({
             where: {
-                OR: [
-                    { email: identifier },
-                    { pseudo: identifier }
-                ]
-            }
+                OR: [{ email: identifier }, { pseudo: identifier }],
+            },
         });
 
         if (!user || !(await bcrypt.compare(password, user.password_hash))) {
@@ -115,15 +118,15 @@ const loginUser = async (req, res) => {
         }
 
         // Récupérer les rôles de l'utilisateur
-        const userWithRoles = await db.user.findUnique({
+        const userWithRoles = await prisma.user.findUnique({
             where: { id: user.id },
             include: {
                 roles: {
                     include: {
-                        role: true
-                    }
-                }
-            }
+                        role: true,
+                    },
+                },
+            },
         });
         const roles = userWithRoles.roles.map((ur) => ur.role.name);
 
@@ -162,11 +165,11 @@ const becomeDriver = async (req, res) => {
         const userId = req.user.id;
 
         // Vérifier si l'utilisateur a déjà le rôle chauffeur
-        const existing = await db.user_Role.findFirst({
+        const existing = await prisma.user_Role.findFirst({
             where: {
                 user_id: userId,
-                role: { name: 'chauffeur' }
-            }
+                role: { name: "chauffeur" },
+            },
         });
 
         if (existing) {
@@ -176,8 +179,8 @@ const becomeDriver = async (req, res) => {
         }
 
         // Vérifier que l'utilisateur a au moins un véhicule
-        const vehicleCount = await db.vehicle.count({
-            where: { user_id: userId }
+        const vehicleCount = await prisma.vehicle.count({
+            where: { user_id: userId },
         });
 
         if (vehicleCount === 0) {
@@ -189,14 +192,14 @@ const becomeDriver = async (req, res) => {
         }
 
         // Ajouter le rôle chauffeur (permanent et définitif)
-        const role = await db.role.findFirst({
-            where: { name: 'chauffeur' }
+        const role = await prisma.role.findFirst({
+            where: { name: "chauffeur" },
         });
-        await db.user_Role.create({
+        await prisma.user_Role.create({
             data: {
                 user_id: userId,
-                role_id: role.id
-            }
+                role_id: role.id,
+            },
         });
 
         // Log de l'événement important
@@ -220,24 +223,29 @@ const getUserProfile = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        // Récupérer les informations utilisateur
-        const userSql =
-            "SELECT id, pseudo, email, credits, profile_picture_url, creation_date FROM user WHERE id = ?";
-        const [[user]] = await db.query(userSql, [userId]);
+        // Récupérer les informations utilisateur avec ses rôles
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                id: true,
+                pseudo: true,
+                email: true,
+                credits: true,
+                profile_picture_url: true,
+                creation_date: true,
+                roles: {
+                    include: {
+                        role: true,
+                    },
+                },
+            },
+        });
 
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
 
-        // Récupérer les rôles
-        const rolesSql = `
-            SELECT r.name 
-            FROM role r 
-            INNER JOIN user_role ur ON r.id = ur.role_id 
-            WHERE ur.user_id = ?
-        `;
-        const [rolesResult] = await db.query(rolesSql, [userId]);
-        const roles = rolesResult.map((row) => row.name);
+        const roles = user.roles.map((ur) => ur.role.name);
 
         res.status(200).json({
             user: {
@@ -258,37 +266,37 @@ const getUserById = async (req, res) => {
     try {
         const userId = req.params.userId;
 
-        // Récupérer les informations utilisateur
-        const userSql =
-            "SELECT id, pseudo, email, credits, profile_picture_url, creation_date FROM user WHERE id = ?";
-        const [[user]] = await db.query(userSql, [userId]);
+        // Récupérer les informations utilisateur avec ses rôles
+        const user = await prisma.user.findUnique({
+            where: { id: parseInt(userId) },
+            select: {
+                id: true,
+                pseudo: true,
+                email: true,
+                credits: true,
+                profile_picture_url: true,
+                creation_date: true,
+                roles: {
+                    include: {
+                        role: true,
+                    },
+                },
+            },
+        });
 
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
 
-        // Récupérer les rôles
-        const rolesSql = `
-            SELECT r.id, r.name 
-            FROM role r 
-            INNER JOIN user_role ur ON r.id = ur.role_id 
-            WHERE ur.user_id = ?
-        `;
-        const [rolesResult] = await db.query(rolesSql, [userId]);
-        const roles = rolesResult.map((row) => ({
-            id: row.id,
-            name: row.name,
+        const roles = user.roles.map((ur) => ({
+            id: ur.role.id,
+            name: ur.role.name,
         }));
 
-        // Récupérer les statistiques des covoiturages (MySQL)
-        const statsSql = `
-            SELECT 
-                COUNT(DISTINCT c.id) as totalTrips
-            FROM user u
-            LEFT JOIN carpooling c ON u.id = c.driver_id
-            WHERE u.id = ?
-        `;
-        const [[stats]] = await db.query(statsSql, [userId]);
+        // Récupérer les statistiques des covoiturages
+        const totalTrips = await prisma.carpooling.count({
+            where: { driver_id: parseInt(userId) },
+        });
 
         // Récupérer les statistiques des avis (MongoDB)
         const reviewStats = await Review.getAverageRating(parseInt(userId));
@@ -308,14 +316,15 @@ const getUserById = async (req, res) => {
         let reviewerInfo = {};
 
         if (reviewerIds.length > 0) {
-            const reviewerSql = `
-                SELECT id, pseudo, profile_picture_url
-                FROM user
-                WHERE id IN (${reviewerIds.map(() => "?").join(",")})
-            `;
-            const [reviewers] = await db.query(reviewerSql, reviewerIds);
-            reviewers.forEach((reviewer) => {
-                reviewerInfo[reviewer.id] = reviewer;
+            const reviewers = await prisma.user.findMany({
+                where: {
+                    id: { in: reviewerIds },
+                },
+                select: {
+                    id: true,
+                    pseudo: true,
+                    profile_picture_url: true,
+                },
             });
         }
 
@@ -338,7 +347,7 @@ const getUserById = async (req, res) => {
                 roles: roles,
             },
             stats: {
-                totalTrips: stats.totalTrips || 0,
+                totalTrips: totalTrips || 0,
                 averageRating:
                     reviewStats.total > 0
                         ? reviewStats.average.toFixed(1)
@@ -363,13 +372,11 @@ const updateUserProfile = async (req, res) => {
         const userId = req.user.id;
         const { pseudo, email, profile_picture_url } = req.body;
 
-        // Construire la requête de mise à jour dynamiquement
-        const updates = [];
-        const values = [];
+        // Construire l'objet de mise à jour dynamiquement
+        const updateData = {};
 
         if (pseudo !== undefined) {
-            updates.push("pseudo = ?");
-            values.push(pseudo);
+            updateData.pseudo = pseudo;
         }
         if (email !== undefined) {
             // Validation du format d'email si l'email est fourni
@@ -380,25 +387,24 @@ const updateUserProfile = async (req, res) => {
                         "Format d'email invalide. Veuillez saisir une adresse email valide (ex: utilisateur@exemple.com).",
                 });
             }
-            updates.push("email = ?");
-            values.push(emailValidation.normalizedEmail);
+            updateData.email = emailValidation.normalizedEmail;
         }
         if (profile_picture_url !== undefined) {
-            updates.push("profile_picture_url = ?");
-            values.push(profile_picture_url);
+            updateData.profile_picture_url = profile_picture_url;
         }
 
-        if (updates.length === 0) {
+        if (Object.keys(updateData).length === 0) {
             return res
                 .status(400)
                 .json({ message: "Aucune donnée à mettre à jour." });
         }
 
-        values.push(userId);
-        const updateSql = `UPDATE user SET ${updates.join(", ")} WHERE id = ?`;
-        const [result] = await db.query(updateSql, values);
+        const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: updateData,
+        });
 
-        if (result.affectedRows > 0) {
+        if (updatedUser) {
             res.status(200).json({
                 message: "Profil mis à jour avec succès !",
             });
@@ -409,7 +415,10 @@ const updateUserProfile = async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        if (error.code === "ER_DUP_ENTRY") {
+        if (
+            error instanceof PrismaClientKnownRequestError &&
+            error.code === "P2002"
+        ) {
             return res.status(409).json({
                 message: "Ce pseudo ou cet email est déjà utilisé.",
             });
@@ -444,8 +453,10 @@ const changePassword = async (req, res) => {
         }
 
         // Récupérer le mot de passe actuel
-        const userSql = "SELECT password_hash FROM user WHERE id = ?";
-        const [[user]] = await db.query(userSql, [userId]);
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { password_hash: true },
+        });
 
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
@@ -467,12 +478,12 @@ const changePassword = async (req, res) => {
         const newPasswordHash = await bcrypt.hash(newPassword, saltRounds);
 
         // Mettre à jour le mot de passe
-        const [result] = await db.query(
-            "UPDATE user SET password_hash = ? WHERE id = ?",
-            [newPasswordHash, userId]
-        );
+        const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: { password_hash: newPasswordHash },
+        });
 
-        if (result.affectedRows > 0) {
+        if (updatedUser) {
             res.status(200).json({
                 message: "Mot de passe changé avec succès !",
             });

@@ -1,395 +1,651 @@
-const db = require("../Config/db.js");
+const {
+    PrismaClient,
+    PrismaClientKnownRequestError,
+} = require("@prisma/client");
+const prisma = new PrismaClient();
 
 /* --------------------------------------------------- Statistiques générales de la plateforme ----------------- */
 const getPlatformStats = async (req, res) => {
     try {
         // Nombre total d'utilisateurs
-        const [totalUsersResult] = await db.query(
-            "SELECT COUNT(*) as total FROM user"
-        );
-        const totalUsers = totalUsersResult[0].total;
+        const totalUsers = await prisma.user.count();
 
         // Nombre d'utilisateurs par rôle
-        const roleStatsSql = `
-            SELECT r.name, COUNT(ur.user_id) as count
-            FROM role r
-            LEFT JOIN user_role ur ON r.id = ur.role_id
-            GROUP BY r.id, r.name
-        `;
-        const [roleStats] = await db.query(roleStatsSql);
+        const roleStats = await prisma.role.findMany({
+            include: {
+                _count: {
+                    select: {
+                        user_roles: true,
+                    },
+                },
+            },
+        });
+
+        const roleStatsFormatted = roleStats.map((role) => ({
+            name: role.name,
+            count: role._count.user_roles,
+        }));
 
         // Nombre total de covoiturages
-        const [totalCarpoolingsResult] = await db.query(
-            "SELECT COUNT(*) as total FROM carpooling"
-        );
-        const totalCarpoolings = totalCarpoolingsResult[0].total;
+        const totalCarpoolings = await prisma.carpooling.count();
 
         // Covoiturages par statut
-        const carpoolingStatsSql = `
-            SELECT status, COUNT(*) as count
-            FROM carpooling
-            GROUP BY status
-        `;
-        const [carpoolingStats] = await db.query(carpoolingStatsSql);
+        const carpoolingStats = await prisma.carpooling.groupBy({
+            by: ["status"],
+            _count: {
+                status: true,
+            },
+        });
 
-        // Total des participations
-        const [totalParticipationsResult] = await db.query(
-            "SELECT COUNT(*) as total FROM participation"
-        );
-        const totalParticipations = totalParticipationsResult[0].total;
+        const carpoolingStatsFormatted = carpoolingStats.map((stat) => ({
+            status: stat.status,
+            count: stat._count.status,
+        }));
 
-        // Commission totale générée
-        const commissionSql = `
-            SELECT COALESCE(SUM(p_count.participants * c.platform_commission_earned), 0) as total_commission
-            FROM carpooling c
-            INNER JOIN (
-                SELECT carpooling_id, COUNT(*) as participants
-                FROM participation 
-                WHERE cancellation_date IS NULL
-                GROUP BY carpooling_id
-            ) p_count ON c.id = p_count.carpooling_id
-            WHERE c.status = 'terminé'
-        `;
-        const [commissionResult] = await db.query(commissionSql);
-        const totalCommission = commissionResult[0].total_commission;
+        // Nombre total de participations
+        const totalParticipations = await prisma.participation.count();
 
-        // Nombre de véhicules
-        const [totalVehiclesResult] = await db.query(
-            "SELECT COUNT(*) as total FROM vehicle"
-        );
-        const totalVehicles = totalVehiclesResult[0].total;
+        // Participations par statut
+        const participationStats = await prisma.participation.groupBy({
+            by: ["status"],
+            _count: {
+                status: true,
+            },
+        });
+
+        const participationStatsFormatted = participationStats.map((stat) => ({
+            status: stat.status,
+            count: stat._count.status,
+        }));
+
+        // Commission totale générée par la plateforme
+        const commissionResult = await prisma.carpooling.aggregate({
+            _sum: {
+                platform_commission_earned: true,
+            },
+        });
+
+        const totalCommission =
+            commissionResult._sum.platform_commission_earned || 0;
+
+        // Nombre total de véhicules
+        const totalVehicles = await prisma.vehicle.count();
+
+        // Véhicules par type (électriques vs traditionnels)
+        const electricVehicles = await prisma.vehicle.count({
+            where: { is_electric: true },
+        });
+
+        const traditionalVehicles = totalVehicles - electricVehicles;
 
         res.status(200).json({
-            totalUsers,
-            roleStats,
-            totalCarpoolings,
-            carpoolingStats,
-            totalParticipations,
-            totalCommission,
-            totalVehicles,
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: "Erreur lors de la récupération des statistiques.",
-        });
-    }
-};
-
-/* --------------------------------------------------- Lister tous les utilisateurs ----------------------------- */
-const getAllUsers = async (req, res) => {
-    try {
-        const { page = 1, limit = 20, search = "", role = "" } = req.query;
-        const offset = (page - 1) * limit;
-
-        let sql = `
-            SELECT u.id, u.pseudo, u.email, u.credits, u.suspended, u.creation_date,
-                   GROUP_CONCAT(r.name) as roles
-            FROM user u
-            LEFT JOIN user_role ur ON u.id = ur.user_id
-            LEFT JOIN role r ON ur.role_id = r.id
-        `;
-
-        const conditions = [];
-        const params = [];
-
-        if (search) {
-            conditions.push("(u.pseudo LIKE ? OR u.email LIKE ?)");
-            params.push(`%${search}%`, `%${search}%`);
-        }
-
-        if (role) {
-            conditions.push("r.name = ?");
-            params.push(role);
-        }
-
-        if (conditions.length > 0) {
-            sql += " WHERE " + conditions.join(" AND ");
-        }
-
-        sql += ` GROUP BY u.id ORDER BY u.creation_date DESC LIMIT ? OFFSET ?`;
-        params.push(parseInt(limit), parseInt(offset));
-
-        const [users] = await db.query(sql, params);
-
-        // Compter le total pour la pagination
-        let countSql = "SELECT COUNT(DISTINCT u.id) as total FROM user u";
-        if (role) {
-            countSql +=
-                " LEFT JOIN user_role ur ON u.id = ur.user_id LEFT JOIN role r ON ur.role_id = r.id";
-        }
-
-        const countParams = [];
-        if (conditions.length > 0) {
-            countSql += " WHERE " + conditions.join(" AND ");
-            if (search) {
-                countParams.push(`%${search}%`, `%${search}%`);
-            }
-            if (role) {
-                countParams.push(role);
-            }
-        }
-
-        const [countResult] = await db.query(countSql, countParams);
-        const total = countResult[0].total;
-
-        res.status(200).json({
-            users,
-            pagination: {
-                page: parseInt(page),
-                limit: parseInt(limit),
-                total,
-                pages: Math.ceil(total / limit),
+            users: {
+                total: totalUsers,
+                byRole: roleStatsFormatted,
+            },
+            carpoolings: {
+                total: totalCarpoolings,
+                byStatus: carpoolingStatsFormatted,
+            },
+            participations: {
+                total: totalParticipations,
+                byStatus: participationStatsFormatted,
+            },
+            platform: {
+                totalCommission: parseFloat(totalCommission.toFixed(2)),
+            },
+            vehicles: {
+                total: totalVehicles,
+                electric: electricVehicles,
+                traditional: traditionalVehicles,
             },
         });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur récupération statistiques:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
         res.status(500).json({
-            message: "Erreur lors de la récupération des utilisateurs.",
+            message: "Erreur lors de la récupération des statistiques.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
 
-/* --------------------------------------------------- Suspendre/Réactiver un utilisateur ---------------------- */
+/* --------------------------------------------------- Récupérer tous les utilisateurs --------------------------- */
+const getAllUsers = async (req, res) => {
+    try {
+        const {
+            page = 1,
+            limit = 20,
+            search = "",
+            role = "",
+            suspended = "",
+        } = req.query;
+
+        const pageNum = Math.max(1, parseInt(page));
+        const limitNum = Math.min(100, Math.max(1, parseInt(limit)));
+        const skip = (pageNum - 1) * limitNum;
+
+        // Construction des filtres
+        const where = {};
+
+        if (search) {
+            where.OR = [
+                { pseudo: { contains: search, mode: "insensitive" } },
+                { email: { contains: search, mode: "insensitive" } },
+                { first_name: { contains: search, mode: "insensitive" } },
+                { last_name: { contains: search, mode: "insensitive" } },
+            ];
+        }
+
+        if (suspended !== "") {
+            where.suspended = suspended === "true";
+        }
+
+        if (role) {
+            where.user_roles = {
+                some: {
+                    role: {
+                        name: role,
+                    },
+                },
+            };
+        }
+
+        // Récupérer les utilisateurs avec pagination
+        const users = await prisma.user.findMany({
+            where,
+            include: {
+                user_roles: {
+                    include: {
+                        role: true,
+                    },
+                },
+            },
+            orderBy: { created_at: "desc" },
+            skip,
+            take: limitNum,
+        });
+
+        // Compter le total pour pagination
+        const totalUsers = await prisma.user.count({ where });
+
+        // Transformer les données
+        const formattedUsers = users.map((user) => ({
+            ...user,
+            roles: user.user_roles.map((ur) => ur.role.name),
+        }));
+
+        res.status(200).json({
+            users: formattedUsers,
+            pagination: {
+                page: pageNum,
+                limit: limitNum,
+                total: totalUsers,
+                totalPages: Math.ceil(totalUsers / limitNum),
+            },
+        });
+    } catch (error) {
+        console.error("Erreur récupération utilisateurs:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
+        res.status(500).json({
+            message: "Erreur lors de la récupération des utilisateurs.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
+        });
+    }
+};
+
+/* --------------------------------------------------- Suspendre/réactiver un utilisateur -------------------- */
 const toggleUserSuspension = async (req, res) => {
     try {
         const userId = req.params.id;
-        const { suspended, reason } = req.body;
+        const { suspended, reason = "" } = req.body;
 
         if (typeof suspended !== "boolean") {
             return res.status(400).json({
-                message: "Le statut de suspension doit être true ou false.",
+                message: "Le statut de suspension doit être un booléen.",
             });
         }
 
         // Vérifier que l'utilisateur existe
-        const [userCheck] = await db.query(
-            "SELECT id, pseudo, suspended FROM user WHERE id = ?",
-            [userId]
-        );
+        const user = await prisma.user.findUnique({
+            where: { id: parseInt(userId) },
+            select: { pseudo: true, suspended: true },
+        });
 
-        if (userCheck.length === 0) {
-            return res.status(404).json({ message: "Utilisateur non trouvé." });
-        }
-
-        const user = userCheck[0];
-
-        if (user.suspended === suspended) {
-            const status = suspended ? "suspendu" : "actif";
-            return res.status(400).json({
-                message: `L'utilisateur est déjà ${status}.`,
+        if (!user) {
+            return res.status(404).json({
+                message: "Utilisateur non trouvé.",
             });
         }
 
-        // Mettre à jour le statut
-        const [result] = await db.query(
-            "UPDATE user SET suspended = ? WHERE id = ?",
-            [suspended, userId]
-        );
+        // Mettre à jour le statut de suspension
+        const updatedUser = await prisma.user.update({
+            where: { id: parseInt(userId) },
+            data: {
+                suspended,
+                suspension_reason: suspended ? reason : null,
+                suspension_date: suspended ? new Date() : null,
+            },
+        });
 
-        if (result.affectedRows > 0) {
-            const action = suspended ? "suspendu" : "réactivé";
-            res.status(200).json({
-                message: `Utilisateur ${user.pseudo} ${action} avec succès.`,
-            });
-        } else {
-            res.status(500).json({
-                message: "Erreur lors de la mise à jour du statut.",
-            });
-        }
+        const action = suspended ? "suspendu" : "réactivé";
+
+        res.status(200).json({
+            message: `Utilisateur ${action} avec succès.`,
+            user: {
+                id: updatedUser.id,
+                pseudo: updatedUser.pseudo,
+                suspended: updatedUser.suspended,
+                suspension_reason: updatedUser.suspension_reason,
+            },
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur modification suspension:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
         res.status(500).json({
-            message: "Erreur lors de la modification du statut utilisateur.",
+            message: "Erreur lors de la modification du statut de suspension.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
 
-/* --------------------------------------------------- Gérer les rôles d'un utilisateur ------------------------- */
-const manageUserRoles = async (req, res) => {
+/* --------------------------------------------------- Modifier les rôles d'un utilisateur -------------------- */
+const updateUserRoles = async (req, res) => {
     try {
         const userId = req.params.id;
-        const { roles } = req.body; // Array de noms de rôles
+        const { roleIds } = req.body; // Array des IDs de rôles
 
-        if (!Array.isArray(roles) || roles.length === 0) {
+        if (!Array.isArray(roleIds)) {
             return res.status(400).json({
-                message: "Veuillez fournir une liste de rôles valide.",
+                message:
+                    "Les rôles doivent être fournis sous forme de tableau.",
             });
         }
 
         // Vérifier que l'utilisateur existe
-        const [userCheck] = await db.query(
-            "SELECT pseudo FROM user WHERE id = ?",
-            [userId]
-        );
+        const user = await prisma.user.findUnique({
+            where: { id: parseInt(userId) },
+            select: { pseudo: true },
+        });
 
-        if (userCheck.length === 0) {
-            return res.status(404).json({ message: "Utilisateur non trouvé." });
+        if (!user) {
+            return res.status(404).json({
+                message: "Utilisateur non trouvé.",
+            });
         }
 
         // Démarrer une transaction
-        await db.query("START TRANSACTION");
-
-        try {
+        const result = await prisma.$transaction(async (transactionPrisma) => {
             // Supprimer tous les rôles actuels
-            await db.query("DELETE FROM user_role WHERE user_id = ?", [userId]);
+            await transactionPrisma.user_role.deleteMany({
+                where: { user_id: parseInt(userId) },
+            });
 
             // Ajouter les nouveaux rôles
-            for (const roleName of roles) {
-                const [roleCheck] = await db.query(
-                    "SELECT id FROM role WHERE name = ?",
-                    [roleName]
-                );
+            for (const roleId of roleIds) {
+                // Vérifier que le rôle existe
+                const role = await transactionPrisma.role.findUnique({
+                    where: { id: parseInt(roleId) },
+                });
 
-                if (roleCheck.length === 0) {
-                    await db.query("ROLLBACK");
-                    return res.status(400).json({
-                        message: `Le rôle "${roleName}" n'existe pas.`,
-                    });
+                if (!role) {
+                    throw new Error(`Rôle avec l'ID ${roleId} non trouvé.`);
                 }
 
-                await db.query(
-                    "INSERT INTO user_role (user_id, role_id) VALUES (?, ?)",
-                    [userId, roleCheck[0].id]
-                );
+                await transactionPrisma.user_role.create({
+                    data: {
+                        user_id: parseInt(userId),
+                        role_id: parseInt(roleId),
+                    },
+                });
             }
 
-            await db.query("COMMIT");
+            // Récupérer les nouveaux rôles
+            const updatedUserRoles = await transactionPrisma.user_role.findMany(
+                {
+                    where: { user_id: parseInt(userId) },
+                    include: {
+                        role: true,
+                    },
+                }
+            );
 
-            res.status(200).json({
-                message: `Rôles mis à jour avec succès pour ${userCheck[0].pseudo}.`,
-            });
-        } catch (error) {
-            await db.query("ROLLBACK");
-            throw error;
-        }
+            return updatedUserRoles.map((ur) => ur.role.name);
+        });
+
+        res.status(200).json({
+            message: "Rôles mis à jour avec succès.",
+            user: {
+                id: parseInt(userId),
+                pseudo: user.pseudo,
+                roles: result,
+            },
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur modification rôles:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
+        // Erreurs métier
+        if (error.message.includes("Rôle")) {
+            return res.status(400).json({
+                message: error.message,
+            });
+        }
+
         res.status(500).json({
-            message: "Erreur lors de la mise à jour des rôles.",
+            message: "Erreur lors de la modification des rôles.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
 
-/* --------------------------------------------------- Lister tous les covoiturages ----------------------------- */
+/* --------------------------------------------------- Récupérer tous les covoiturages pour modération -------- */
 const getAllCarpoolings = async (req, res) => {
     try {
         const { page = 1, limit = 20, status = "", search = "" } = req.query;
-        const offset = (page - 1) * limit;
 
-        let sql = `
-            SELECT c.*, u.pseudo as driver_pseudo, v.model, v.plate_number,
-                   COUNT(p.id) as participants_count
-            FROM carpooling c
-            INNER JOIN user u ON c.driver_id = u.id
-            INNER JOIN vehicle v ON c.vehicle_id = v.id
-            LEFT JOIN participation p ON c.id = p.carpooling_id AND p.cancellation_date IS NULL
-        `;
+        const pageNum = Math.max(1, parseInt(page));
+        const limitNum = Math.min(100, Math.max(1, parseInt(limit)));
+        const skip = (pageNum - 1) * limitNum;
 
-        const conditions = [];
-        const params = [];
+        // Construction des filtres
+        const where = {};
 
         if (status) {
-            conditions.push("c.status = ?");
-            params.push(status);
+            where.status = status;
         }
 
         if (search) {
-            conditions.push(
-                "(c.departure_address LIKE ? OR c.arrival_address LIKE ? OR u.pseudo LIKE ?)"
-            );
-            params.push(`%${search}%`, `%${search}%`, `%${search}%`);
+            where.OR = [
+                {
+                    departure_address: {
+                        contains: search,
+                        mode: "insensitive",
+                    },
+                },
+                { arrival_address: { contains: search, mode: "insensitive" } },
+                {
+                    driver: {
+                        pseudo: { contains: search, mode: "insensitive" },
+                    },
+                },
+            ];
         }
 
-        if (conditions.length > 0) {
-            sql += " WHERE " + conditions.join(" AND ");
-        }
+        // Récupérer les covoiturages avec pagination
+        const carpoolings = await prisma.carpooling.findMany({
+            where,
+            include: {
+                driver: {
+                    select: {
+                        pseudo: true,
+                        email: true,
+                    },
+                },
+                vehicle: {
+                    include: {
+                        brand: true,
+                    },
+                },
+                _count: {
+                    select: {
+                        participations: {
+                            where: { cancellation_date: null },
+                        },
+                    },
+                },
+            },
+            orderBy: { created_at: "desc" },
+            skip,
+            take: limitNum,
+        });
 
-        sql += ` GROUP BY c.id ORDER BY c.departure_datetime DESC LIMIT ? OFFSET ?`;
-        params.push(parseInt(limit), parseInt(offset));
+        // Compter le total pour pagination
+        const totalCarpoolings = await prisma.carpooling.count({ where });
 
-        const [carpoolings] = await db.query(sql, params);
+        // Transformer les données
+        const formattedCarpoolings = carpoolings.map((c) => ({
+            ...c,
+            driver_pseudo: c.driver.pseudo,
+            driver_email: c.driver.email,
+            vehicle_model: c.vehicle.model,
+            vehicle_brand: c.vehicle.brand?.name || "N/A",
+            participants_count: c._count.participations,
+        }));
 
-        res.status(200).json({ carpoolings });
+        res.status(200).json({
+            carpoolings: formattedCarpoolings,
+            pagination: {
+                page: pageNum,
+                limit: limitNum,
+                total: totalCarpoolings,
+                totalPages: Math.ceil(totalCarpoolings / limitNum),
+            },
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur récupération covoiturages:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
         res.status(500).json({
             message: "Erreur lors de la récupération des covoiturages.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
 
-/* --------------------------------------------------- Annuler un covoiturage (admin) --------------------------- */
-const adminCancelCarpooling = async (req, res) => {
+/* --------------------------------------------------- Modérer un covoiturage (annuler/signaler) --------------- */
+const moderateCarpooling = async (req, res) => {
     try {
         const carpoolingId = req.params.id;
-        const { reason } = req.body;
+        const { action, reason = "" } = req.body; // action: 'cancel', 'flag', 'approve'
 
-        // Utiliser la même logique que l'annulation normale mais sans vérifier le propriétaire
-        await db.query("START TRANSACTION");
+        if (!["cancel", "flag", "approve"].includes(action)) {
+            return res.status(400).json({
+                message:
+                    "Action invalide. Utilisez 'cancel', 'flag' ou 'approve'.",
+            });
+        }
 
-        try {
-            const carpoolingSql =
-                "SELECT status, price_per_passenger FROM carpooling WHERE id = ?";
-            const [carpoolingCheck] = await db.query(carpoolingSql, [
-                carpoolingId,
-            ]);
+        // Démarrer une transaction
+        const result = await prisma.$transaction(async (transactionPrisma) => {
+            // Vérifier que le covoiturage existe
+            const carpooling = await transactionPrisma.carpooling.findUnique({
+                where: { id: parseInt(carpoolingId) },
+                include: {
+                    driver: {
+                        select: { pseudo: true, email: true },
+                    },
+                    participations: {
+                        where: { cancellation_date: null },
+                        include: {
+                            passenger: {
+                                select: { pseudo: true, email: true },
+                            },
+                        },
+                    },
+                },
+            });
 
-            if (carpoolingCheck.length === 0) {
-                await db.query("ROLLBACK");
-                return res
-                    .status(404)
-                    .json({ message: "Covoiturage non trouvé." });
+            if (!carpooling) {
+                throw new Error("Covoiturage non trouvé.");
             }
 
-            if (carpoolingCheck[0].status === "annulé") {
-                await db.query("ROLLBACK");
-                return res
-                    .status(400)
-                    .json({ message: "Ce covoiturage est déjà annulé." });
+            let updateData = {};
+            let actionMessage = "";
+
+            switch (action) {
+                case "cancel":
+                    if (carpooling.status === "annulé") {
+                        throw new Error("Ce covoiturage est déjà annulé.");
+                    }
+
+                    updateData.status = "annulé";
+                    updateData.moderation_reason = reason;
+                    updateData.moderated_at = new Date();
+                    actionMessage = "annulé";
+
+                    // Rembourser tous les participants
+                    for (const participation of carpooling.participations) {
+                        await transactionPrisma.user.update({
+                            where: { id: participation.passenger_id },
+                            data: {
+                                credits: {
+                                    increment: participation.price_paid,
+                                },
+                            },
+                        });
+
+                        await transactionPrisma.participation.update({
+                            where: { id: participation.id },
+                            data: { cancellation_date: new Date() },
+                        });
+
+                        // Enregistrer l'historique des crédits
+                        await transactionPrisma.credit_transaction.create({
+                            data: {
+                                user_id: participation.passenger_id,
+                                transaction_type: "crédit",
+                                amount: participation.price_paid,
+                                description: `Remboursement modération covoiturage #${carpoolingId}`,
+                                transaction_date: new Date(),
+                            },
+                        });
+                    }
+                    break;
+
+                case "flag":
+                    updateData.flagged = true;
+                    updateData.moderation_reason = reason;
+                    updateData.moderated_at = new Date();
+                    actionMessage = "signalé";
+                    break;
+
+                case "approve":
+                    updateData.flagged = false;
+                    updateData.moderation_reason = null;
+                    updateData.moderated_at = new Date();
+                    actionMessage = "approuvé";
+                    break;
             }
 
-            // Récupérer et rembourser les participants
-            const participantsSql = `
-                SELECT passenger_id, credits_paid 
-                FROM participation 
-                WHERE carpooling_id = ? AND cancellation_date IS NULL
-            `;
-            const [participants] = await db.query(participantsSql, [
-                carpoolingId,
-            ]);
-
-            for (const participant of participants) {
-                await db.query(
-                    "UPDATE user SET credits = credits + ? WHERE id = ?",
-                    [participant.credits_paid, participant.passenger_id]
-                );
-
-                await db.query(
-                    "UPDATE participation SET cancellation_date = CURRENT_TIMESTAMP WHERE passenger_id = ? AND carpooling_id = ?",
-                    [participant.passenger_id, carpoolingId]
-                );
-            }
-
-            await db.query(
-                "UPDATE carpooling SET status = 'annulé' WHERE id = ?",
-                [carpoolingId]
+            // Mettre à jour le covoiturage
+            const updatedCarpooling = await transactionPrisma.carpooling.update(
+                {
+                    where: { id: parseInt(carpoolingId) },
+                    data: updateData,
+                }
             );
 
-            await db.query("COMMIT");
+            return {
+                updatedCarpooling,
+                actionMessage,
+                participantsCount: carpooling.participations.length,
+            };
+        });
 
-            res.status(200).json({
-                message:
-                    "Covoiturage annulé par l'administration. Les participants ont été remboursés.",
-            });
-        } catch (error) {
-            await db.query("ROLLBACK");
-            throw error;
-        }
+        res.status(200).json({
+            message: `Covoiturage ${result.actionMessage} avec succès.`,
+            carpooling: {
+                id: result.updatedCarpooling.id,
+                status: result.updatedCarpooling.status,
+                flagged: result.updatedCarpooling.flagged,
+                moderation_reason: result.updatedCarpooling.moderation_reason,
+            },
+            participants_affected:
+                action === "cancel" ? result.participantsCount : 0,
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur modération covoiturage:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
+        // Erreurs métier
+        if (
+            error.message.includes("covoiturage") ||
+            error.message.includes("annulé")
+        ) {
+            return res.status(400).json({
+                message: error.message,
+            });
+        }
+
         res.status(500).json({
-            message: "Erreur lors de l'annulation du covoiturage.",
+            message: "Erreur lors de la modération du covoiturage.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
@@ -398,7 +654,7 @@ module.exports = {
     getPlatformStats,
     getAllUsers,
     toggleUserSuspension,
-    manageUserRoles,
+    updateUserRoles,
     getAllCarpoolings,
-    adminCancelCarpooling,
+    moderateCarpooling,
 };

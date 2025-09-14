@@ -1,9 +1,6 @@
 const Review = require("../models/Review");
-const {
-    PrismaClient,
-    PrismaClientKnownRequestError,
-} = require("@prisma/client");
-const prisma = new PrismaClient();
+const db = require("../Config/db.js");
+const { PrismaClientKnownRequestError } = require('../generated/prisma');
 
 /* --------------------------------------------------- Créer un avis ---------------------------------- */
 const createReview = async (req, res) => {
@@ -18,21 +15,21 @@ const createReview = async (req, res) => {
             reportReason,
         } = req.body;
 
-        // Vérifier que l'utilisateur a participé à ce covoiturage avec Prisma
-        const participation = await prisma.participation.findFirst({
+        // Vérifier que l'utilisateur a participé à ce covoiturage
+        const participation = await db.participation.findFirst({
             where: {
                 passenger_id: reviewerId,
                 carpooling_id: parseInt(carpoolingId),
-                cancellation_date: null,
+                cancellation_date: null
             },
             include: {
                 carpooling: {
                     select: {
                         driver_id: true,
-                        status: true,
-                    },
-                },
-            },
+                        status: true
+                    }
+                }
+            }
         });
 
         if (!participation) {
@@ -58,7 +55,7 @@ const createReview = async (req, res) => {
             });
         }
 
-        // Vérifier qu'un avis n'existe pas déjà (MongoDB)
+        // Vérifier qu'un avis n'existe pas déjà
         const existingReview = await Review.findOne({
             reviewerId,
             carpoolingId,
@@ -70,7 +67,7 @@ const createReview = async (req, res) => {
             });
         }
 
-        // Créer le nouvel avis (MongoDB)
+        // Créer le nouvel avis
         const reviewData = {
             reviewerId,
             reviewedUserId,
@@ -96,24 +93,9 @@ const createReview = async (req, res) => {
             },
         });
     } catch (error) {
-        console.error("Erreur création avis:", error);
-
-        if (error instanceof PrismaClientKnownRequestError) {
-            return res.status(400).json({
-                message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
-            });
-        }
-
+        console.error(error);
         res.status(500).json({
             message: "Erreur lors de la création de l'avis.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
         });
     }
 };
@@ -124,7 +106,7 @@ const getDriverReviews = async (req, res) => {
         const driverId = parseInt(req.params.driverId);
         const { page = 1, limit = 10 } = req.query;
 
-        // Récupérer les avis approuvés uniquement (MongoDB)
+        // Récupérer les avis approuvés uniquement
         const reviews = await Review.find({
             reviewedUserId: driverId,
             validationStatus: "approved",
@@ -133,23 +115,15 @@ const getDriverReviews = async (req, res) => {
             .limit(limit * 1)
             .skip((page - 1) * limit);
 
-        // Obtenir les informations des reviewers avec Prisma
+        // Obtenir les informations des reviewers depuis MySQL
         if (reviews.length > 0) {
             const reviewerIds = reviews.map((review) => review.reviewerId);
-
-            const reviewers = await prisma.user.findMany({
-                where: {
-                    id: {
-                        in: reviewerIds,
-                    },
-                },
-                select: {
-                    id: true,
-                    pseudo: true,
-                    profile_picture_url: true,
-                },
-            });
-
+            const reviewersSql = `
+                SELECT id, pseudo, profile_picture_url
+                FROM user
+                WHERE id IN (${reviewerIds.join(",")})
+            `;
+            const [reviewers] = await db.query(reviewersSql);
             const reviewersMap = reviewers.reduce((map, reviewer) => {
                 map[reviewer.id] = reviewer;
                 return map;
@@ -170,7 +144,7 @@ const getDriverReviews = async (req, res) => {
                 },
             }));
 
-            // Obtenir la moyenne et le total (MongoDB)
+            // Obtenir la moyenne et le total
             const stats = await Review.getAverageRating(driverId);
 
             res.status(200).json({
@@ -194,24 +168,9 @@ const getDriverReviews = async (req, res) => {
             });
         }
     } catch (error) {
-        console.error("Erreur récupération avis:", error);
-
-        if (error instanceof PrismaClientKnownRequestError) {
-            return res.status(400).json({
-                message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
-            });
-        }
-
+        console.error(error);
         res.status(500).json({
             message: "Erreur lors de la récupération des avis.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
         });
     }
 };
@@ -221,14 +180,13 @@ const getPendingReviews = async (req, res) => {
     try {
         const { page = 1, limit = 20 } = req.query;
 
-        // Récupérer les avis en attente (MongoDB)
         const reviews = await Review.find({ validationStatus: "pending" })
             .sort({ createdAt: -1 })
             .limit(limit * 1)
             .skip((page - 1) * limit);
 
         if (reviews.length > 0) {
-            // Récupérer les informations des utilisateurs avec Prisma
+            // Récupérer les informations des utilisateurs depuis MySQL
             const userIds = [
                 ...new Set([
                     ...reviews.map((r) => r.reviewerId),
@@ -236,41 +194,25 @@ const getPendingReviews = async (req, res) => {
                 ]),
             ];
 
-            const users = await prisma.user.findMany({
-                where: {
-                    id: {
-                        in: userIds,
-                    },
-                },
-                select: {
-                    id: true,
-                    pseudo: true,
-                    profile_picture_url: true,
-                },
-            });
-
+            const usersSql = `
+                SELECT id, pseudo, profile_picture_url
+                FROM user
+                WHERE id IN (${userIds.join(",")})
+            `;
+            const [users] = await db.query(usersSql);
             const usersMap = users.reduce((map, user) => {
                 map[user.id] = user;
                 return map;
             }, {});
 
-            // Récupérer les informations des covoiturages avec Prisma
+            // Récupérer les informations des covoiturages
             const carpoolingIds = reviews.map((r) => r.carpoolingId);
-
-            const carpoolings = await prisma.carpooling.findMany({
-                where: {
-                    id: {
-                        in: carpoolingIds,
-                    },
-                },
-                select: {
-                    id: true,
-                    departure_address: true,
-                    arrival_address: true,
-                    departure_datetime: true,
-                },
-            });
-
+            const carpoolingsSql = `
+                SELECT id, departure_address, arrival_address, departure_datetime
+                FROM carpooling
+                WHERE id IN (${carpoolingIds.join(",")})
+            `;
+            const [carpoolings] = await db.query(carpoolingsSql);
             const carpoolingsMap = carpoolings.reduce((map, carpooling) => {
                 map[carpooling.id] = carpooling;
                 return map;
@@ -315,24 +257,9 @@ const getPendingReviews = async (req, res) => {
             });
         }
     } catch (error) {
-        console.error("Erreur récupération avis en attente:", error);
-
-        if (error instanceof PrismaClientKnownRequestError) {
-            return res.status(400).json({
-                message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
-            });
-        }
-
+        console.error(error);
         res.status(500).json({
             message: "Erreur lors de la récupération des avis en attente.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
         });
     }
 };
@@ -350,7 +277,6 @@ const validateReview = async (req, res) => {
             });
         }
 
-        // MongoDB - validation des avis
         const review = await Review.findById(reviewId);
         if (!review) {
             return res.status(404).json({
@@ -380,13 +306,9 @@ const validateReview = async (req, res) => {
             },
         });
     } catch (error) {
-        console.error("Erreur validation avis:", error);
+        console.error(error);
         res.status(500).json({
             message: "Erreur lors de la validation de l'avis.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
         });
     }
 };
@@ -394,11 +316,10 @@ const validateReview = async (req, res) => {
 /* --------------------------------------------------- Obtenir les signalements ---------------------------------- */
 const getReportedTrips = async (req, res) => {
     try {
-        // Récupérer les avis signalés (MongoDB)
         const reportedReviews = await Review.getReportedTrips();
 
         if (reportedReviews.length > 0) {
-            // Enrichir avec les données Prisma
+            // Enrichir avec les données MySQL
             const userIds = [
                 ...new Set([
                     ...reportedReviews.map((r) => r.reviewerId),
@@ -406,41 +327,24 @@ const getReportedTrips = async (req, res) => {
                 ]),
             ];
 
-            const users = await prisma.user.findMany({
-                where: {
-                    id: {
-                        in: userIds,
-                    },
-                },
-                select: {
-                    id: true,
-                    pseudo: true,
-                    email: true,
-                },
-            });
-
+            const usersSql = `
+                SELECT id, pseudo, email
+                FROM user
+                WHERE id IN (${userIds.join(",")})
+            `;
+            const [users] = await db.query(usersSql);
             const usersMap = users.reduce((map, user) => {
                 map[user.id] = user;
                 return map;
             }, {});
 
             const carpoolingIds = reportedReviews.map((r) => r.carpoolingId);
-
-            const carpoolings = await prisma.carpooling.findMany({
-                where: {
-                    id: {
-                        in: carpoolingIds,
-                    },
-                },
-                select: {
-                    id: true,
-                    departure_address: true,
-                    arrival_address: true,
-                    departure_datetime: true,
-                    arrival_datetime: true,
-                },
-            });
-
+            const carpoolingsSql = `
+                SELECT id, departure_address, arrival_address, departure_datetime, arrival_datetime
+                FROM carpooling
+                WHERE id IN (${carpoolingIds.join(",")})
+            `;
+            const [carpoolings] = await db.query(carpoolingsSql);
             const carpoolingsMap = carpoolings.reduce((map, carpooling) => {
                 map[carpooling.id] = carpooling;
                 return map;
@@ -468,24 +372,9 @@ const getReportedTrips = async (req, res) => {
             res.status(200).json({ reports: [] });
         }
     } catch (error) {
-        console.error("Erreur récupération signalements:", error);
-
-        if (error instanceof PrismaClientKnownRequestError) {
-            return res.status(400).json({
-                message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
-            });
-        }
-
+        console.error(error);
         res.status(500).json({
             message: "Erreur lors de la récupération des signalements.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
         });
     }
 };

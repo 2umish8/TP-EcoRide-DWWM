@@ -1,135 +1,227 @@
-const db = require("../Config/db.js");
+const {
+    PrismaClient,
+    PrismaClientKnownRequestError,
+} = require("@prisma/client");
+const prisma = new PrismaClient();
 
 /* --------------------------------------------------- Obtenir le solde de crédits ------------------------------- */
 const getUserCredits = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        const sql = "SELECT credits FROM User WHERE id = ?";
-        const [[user]] = await db.query(sql, [userId]);
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { credits: true },
+        });
 
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
 
-        res.status(200).json({ credits: user.credits });
+        res.status(200).json({
+            credits: user.credits,
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur récupération crédits:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
         res.status(500).json({
-            message: "Erreur lors de la récupération du solde.",
+            message: "Erreur lors de la récupération des crédits.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
 
 /* --------------------------------------------------- Historique des transactions ------------------------------- */
-const getTransactionHistory = async (req, res) => {
+const getCreditHistory = async (req, res) => {
     try {
         const userId = req.user.id;
+        const { page = 1, limit = 20 } = req.query;
 
-        // Récupérer l'historique des participations (débits)
-        const participationsSql = `
-            SELECT 
-                'participation' as type,
-                -p.credits_paid as amount,
-                p.participation_date as date,
-                CONCAT('Participation covoiturage: ', c.departure_address, ' → ', c.arrival_address) as description,
-                c.id as carpooling_id
-            FROM Participation p
-            INNER JOIN Carpooling c ON p.carpooling_id = c.id
-            WHERE p.passenger_id = ?
-        `;
+        const pageNum = Math.max(1, parseInt(page));
+        const limitNum = Math.min(100, Math.max(1, parseInt(limit)));
+        const skip = (pageNum - 1) * limitNum;
 
-        // Récupérer l'historique des gains de covoiturage (crédits)
-        const earningsSql = `
-            SELECT 
-                'earning' as type,
-                (p_count.participants * c.price_per_passenger - p_count.participants * c.platform_commission_earned) as amount,
-                c.departure_datetime as date,
-                CONCAT('Gains covoiturage: ', c.departure_address, ' → ', c.arrival_address) as description,
-                c.id as carpooling_id
-            FROM Carpooling c
-            INNER JOIN (
-                SELECT carpooling_id, COUNT(*) as participants
-                FROM Participation 
-                WHERE cancellation_date IS NULL
-                GROUP BY carpooling_id
-            ) p_count ON c.id = p_count.carpooling_id
-            WHERE c.driver_id = ? AND c.status = 'terminé'
-        `;
+        const transactions = await prisma.credit_transaction.findMany({
+            where: { user_id: userId },
+            orderBy: { transaction_date: "desc" },
+            skip,
+            take: limitNum,
+            select: {
+                id: true,
+                transaction_type: true,
+                amount: true,
+                description: true,
+                transaction_date: true,
+            },
+        });
 
-        // Récupérer l'historique des remboursements
-        const refundsSql = `
-            SELECT 
-                'refund' as type,
-                p.credits_paid as amount,
-                p.cancellation_date as date,
-                CONCAT('Remboursement: ', c.departure_address, ' → ', c.arrival_address) as description,
-                c.id as carpooling_id
-            FROM Participation p
-            INNER JOIN Carpooling c ON p.carpooling_id = c.id
-            WHERE p.passenger_id = ? AND p.cancellation_date IS NOT NULL
-        `;
+        const totalTransactions = await prisma.credit_transaction.count({
+            where: { user_id: userId },
+        });
 
-        const [participations] = await db.query(participationsSql, [userId]);
-        const [earnings] = await db.query(earningsSql, [userId]);
-        const [refunds] = await db.query(refundsSql, [userId]);
-
-        // Combiner tous les historiques et trier par date
-        const allTransactions = [
-            ...participations,
-            ...earnings,
-            ...refunds,
-        ].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        res.status(200).json({ transactions: allTransactions });
+        res.status(200).json({
+            transactions,
+            pagination: {
+                page: pageNum,
+                limit: limitNum,
+                total: totalTransactions,
+                totalPages: Math.ceil(totalTransactions / limitNum),
+            },
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur historique crédits:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
         res.status(500).json({
             message: "Erreur lors de la récupération de l'historique.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
 
-/* --------------------------------------------------- Acheter des crédits (simulation) ------------------------- */
+/* --------------------------------------------------- Historique détaillé avec covoiturages ------------------------------- */
+const getDetailedCreditHistory = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { page = 1, limit = 20 } = req.query;
+
+        const pageNum = Math.max(1, parseInt(page));
+        const limitNum = Math.min(100, Math.max(1, parseInt(limit)));
+        const skip = (pageNum - 1) * limitNum;
+
+        const transactions = await prisma.credit_transaction.findMany({
+            where: { user_id: userId },
+            orderBy: { transaction_date: "desc" },
+            skip,
+            take: limitNum,
+            select: {
+                id: true,
+                transaction_type: true,
+                amount: true,
+                description: true,
+                transaction_date: true,
+            },
+        });
+
+        const totalTransactions = await prisma.credit_transaction.count({
+            where: { user_id: userId },
+        });
+
+        res.status(200).json({
+            transactions,
+            pagination: {
+                page: pageNum,
+                limit: limitNum,
+                total: totalTransactions,
+                totalPages: Math.ceil(totalTransactions / limitNum),
+            },
+        });
+    } catch (error) {
+        console.error("Erreur historique détaillé:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
+        res.status(500).json({
+            message: "Erreur lors de la récupération de l'historique détaillé.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
+        });
+    }
+};
+
+/* --------------------------------------------------- Acheter des crédits ------------------------------- */
 const purchaseCredits = async (req, res) => {
     try {
         const userId = req.user.id;
         const { amount } = req.body;
 
-        // Validation du montant
-        if (!amount || amount <= 0 || amount > 1000) {
+        if (!amount || amount <= 0) {
             return res.status(400).json({
-                message: "Le montant doit être entre 1 et 1000 crédits.",
+                message: "Le montant doit être positif.",
             });
         }
 
-        // Dans un vrai système, ici on intégrerait un système de paiement (Stripe, PayPal, etc.)
-        // Pour la simulation, on ajoute directement les crédits
-
-        const [result] = await db.query(
-            "UPDATE User SET credits = credits + ? WHERE id = ?",
-            [amount, userId]
-        );
-
-        if (result.affectedRows > 0) {
-            // Récupérer le nouveau solde
-            const [[user]] = await db.query(
-                "SELECT credits FROM User WHERE id = ?",
-                [userId]
-            );
-
-            res.status(200).json({
-                message: `${amount} crédits ajoutés avec succès !`,
-                newBalance: user.credits,
+        const result = await prisma.$transaction(async (transactionPrisma) => {
+            // Mettre à jour le solde utilisateur
+            const updatedUser = await transactionPrisma.user.update({
+                where: { id: userId },
+                data: { credits: { increment: amount } },
+                select: { credits: true },
             });
-        } else {
-            res.status(500).json({
-                message: "Erreur lors de l'achat de crédits.",
+
+            // Enregistrer la transaction
+            await transactionPrisma.credit_transaction.create({
+                data: {
+                    user_id: userId,
+                    transaction_type: "crédit",
+                    amount: amount,
+                    description: `Achat de ${amount} crédits`,
+                    transaction_date: new Date(),
+                },
             });
-        }
+
+            return updatedUser;
+        });
+
+        res.status(200).json({
+            message: "Crédits achetés avec succès.",
+            newBalance: result.credits,
+        });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Erreur lors de l'achat de crédits." });
+        console.error("Erreur achat crédits:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
+        res.status(500).json({
+            message: "Erreur lors de l'achat de crédits.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
+        });
     }
 };
 
@@ -138,164 +230,211 @@ const getFinancialStats = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        // Total dépensé en participations
-        const spentSql = `
-            SELECT COALESCE(SUM(credits_paid), 0) as total_spent
-            FROM Participation 
-            WHERE passenger_id = ?
-        `;
-        const [[spentResult]] = await db.query(spentSql, [userId]);
+        // Total dépensé en participations - convertir avec Prisma
+        const totalSpent = await prisma.participation.aggregate({
+            where: {
+                passenger_id: userId,
+                cancellation_date: null,
+            },
+            _sum: { credits_paid: true },
+        });
 
-        // Total gagné en tant que chauffeur
-        const earnedSql = `
-            SELECT COALESCE(SUM(
-                (p_count.participants * c.price_per_passenger) - 
-                (p_count.participants * c.platform_commission_earned)
-            ), 0) as total_earned
-            FROM Carpooling c
-            INNER JOIN (
-                SELECT carpooling_id, COUNT(*) as participants
-                FROM Participation 
-                WHERE cancellation_date IS NULL
-                GROUP BY carpooling_id
-            ) p_count ON c.id = p_count.carpooling_id
-            WHERE c.driver_id = ? AND c.status = 'terminé'
-        `;
-        const [[earnedResult]] = await db.query(earnedSql, [userId]);
+        // Total gagné en tant que chauffeur avec commission
+        const earnedStats = await prisma.carpooling.findMany({
+            where: {
+                driver_id: userId,
+                status: "terminé",
+            },
+            include: {
+                participations: {
+                    where: { cancellation_date: null },
+                    select: { credits_paid: true },
+                },
+            },
+        });
+
+        let totalEarned = 0;
+        let totalCommission = 0;
+
+        earnedStats.forEach((carpooling) => {
+            const participationEarnings = carpooling.participations.reduce(
+                (sum, p) => sum + p.credits_paid,
+                0
+            );
+            totalEarned += participationEarnings;
+            totalCommission += carpooling.platform_commission_earned || 0;
+        });
 
         // Nombre de covoiturages créés
-        const createdCarpoolingsSql = `
-            SELECT COUNT(*) as created_carpoolings
-            FROM Carpooling 
-            WHERE driver_id = ?
-        `;
-        const [[createdResult]] = await db.query(createdCarpoolingsSql, [
-            userId,
-        ]);
+        const createdCarpoolings = await prisma.carpooling.count({
+            where: { driver_id: userId },
+        });
 
         // Nombre de participations
-        const participationsSql = `
-            SELECT COUNT(*) as total_participations
-            FROM Participation 
-            WHERE passenger_id = ?
-        `;
-        const [[participationsResult]] = await db.query(participationsSql, [
-            userId,
-        ]);
-
-        // Commission totale générée pour la plateforme
-        const commissionSql = `
-            SELECT COALESCE(SUM(p_count.participants * c.platform_commission_earned), 0) as total_commission
-            FROM Carpooling c
-            INNER JOIN (
-                SELECT carpooling_id, COUNT(*) as participants
-                FROM Participation 
-                WHERE cancellation_date IS NULL
-                GROUP BY carpooling_id
-            ) p_count ON c.id = p_count.carpooling_id
-            WHERE c.driver_id = ? AND c.status = 'terminé'
-        `;
-        const [[commissionResult]] = await db.query(commissionSql, [userId]);
+        const totalParticipations = await prisma.participation.count({
+            where: {
+                passenger_id: userId,
+                cancellation_date: null,
+            },
+        });
 
         res.status(200).json({
-            totalSpent: spentResult.total_spent,
-            totalEarned: earnedResult.total_earned,
-            createdCarpoolings: createdResult.created_carpoolings,
-            totalParticipations: participationsResult.total_participations,
-            platformCommission: commissionResult.total_commission,
-            netBalance: earnedResult.total_earned - spentResult.total_spent,
+            totalSpent: totalSpent._sum.credits_paid || 0,
+            totalEarned: parseFloat(totalEarned.toFixed(2)),
+            totalCommission: parseFloat(totalCommission.toFixed(2)),
+            createdCarpoolings,
+            totalParticipations,
         });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur statistiques financières:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
         res.status(500).json({
             message: "Erreur lors de la récupération des statistiques.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
 
-/* --------------------------------------------------- Transfert de crédits (entre utilisateurs) -------------- */
+/* --------------------------------------------------- Transférer des crédits ------------------------------- */
 const transferCredits = async (req, res) => {
     try {
-        const userId = req.user.id;
-        const { recipient_email, amount, message } = req.body;
+        const senderId = req.user.id;
+        const { recipientId, amount } = req.body;
 
-        // Validation
-        if (!recipient_email || !amount || amount <= 0) {
+        if (!recipientId || !amount || amount <= 0) {
             return res.status(400).json({
-                message:
-                    "Veuillez fournir un email destinataire et un montant valide.",
+                message: "ID du destinataire et montant valides requis.",
             });
         }
 
-        // Démarrer une transaction
-        await db.query("START TRANSACTION");
+        if (senderId === recipientId) {
+            return res.status(400).json({
+                message:
+                    "Vous ne pouvez pas transférer des crédits à vous-même.",
+            });
+        }
 
-        try {
-            // Vérifier que l'expéditeur a assez de crédits
-            const [[sender]] = await db.query(
-                "SELECT credits FROM User WHERE id = ?",
-                [userId]
-            );
+        const result = await prisma.$transaction(async (transactionPrisma) => {
+            // Vérifier le solde de l'expéditeur
+            const sender = await transactionPrisma.user.findUnique({
+                where: { id: senderId },
+                select: { credits: true, pseudo: true },
+            });
+
+            if (!sender) {
+                throw new Error("Expéditeur non trouvé.");
+            }
 
             if (sender.credits < amount) {
-                await db.query("ROLLBACK");
-                return res.status(400).json({
-                    message:
-                        "Vous n'avez pas assez de crédits pour ce transfert.",
-                });
+                throw new Error(
+                    "Solde insuffisant pour effectuer ce transfert."
+                );
             }
 
             // Vérifier que le destinataire existe
-            const [[recipient]] = await db.query(
-                "SELECT id, pseudo FROM User WHERE email = ?",
-                [recipient_email]
-            );
+            const recipient = await transactionPrisma.user.findUnique({
+                where: { id: recipientId },
+                select: { pseudo: true },
+            });
 
             if (!recipient) {
-                await db.query("ROLLBACK");
-                return res.status(404).json({
-                    message: "Utilisateur destinataire non trouvé.",
-                });
-            }
-
-            if (recipient.id === userId) {
-                await db.query("ROLLBACK");
-                return res.status(400).json({
-                    message:
-                        "Vous ne pouvez pas vous transférer des crédits à vous-même.",
-                });
+                throw new Error("Destinataire non trouvé.");
             }
 
             // Effectuer le transfert
-            await db.query(
-                "UPDATE User SET credits = credits - ? WHERE id = ?",
-                [amount, userId]
-            );
-            await db.query(
-                "UPDATE User SET credits = credits + ? WHERE id = ?",
-                [amount, recipient.id]
-            );
-
-            await db.query("COMMIT");
-
-            res.status(200).json({
-                message: `Transfert de ${amount} crédits effectué avec succès vers ${recipient.pseudo} !`,
+            const updatedSender = await transactionPrisma.user.update({
+                where: { id: senderId },
+                data: { credits: { decrement: amount } },
+                select: { credits: true },
             });
-        } catch (error) {
-            await db.query("ROLLBACK");
-            throw error;
-        }
+
+            await transactionPrisma.user.update({
+                where: { id: recipientId },
+                data: { credits: { increment: amount } },
+            });
+
+            // Enregistrer les transactions
+            await transactionPrisma.credit_transaction.create({
+                data: {
+                    user_id: senderId,
+                    transaction_type: "débit",
+                    amount: amount,
+                    description: `Transfert vers ${recipient.pseudo}`,
+                    transaction_date: new Date(),
+                },
+            });
+
+            await transactionPrisma.credit_transaction.create({
+                data: {
+                    user_id: recipientId,
+                    transaction_type: "crédit",
+                    amount: amount,
+                    description: `Transfert de ${sender.pseudo}`,
+                    transaction_date: new Date(),
+                },
+            });
+
+            return {
+                senderBalance: updatedSender.credits,
+                recipientPseudo: recipient.pseudo,
+            };
+        });
+
+        res.status(200).json({
+            message: `Transfert de ${amount} crédits vers ${result.recipientPseudo} effectué avec succès.`,
+            newBalance: result.senderBalance,
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Erreur transfert crédits:", error);
+
+        if (error instanceof PrismaClientKnownRequestError) {
+            return res.status(400).json({
+                message: "Erreur de base de données.",
+                error:
+                    process.env.NODE_ENV === "development"
+                        ? error.message
+                        : undefined,
+            });
+        }
+
+        // Erreurs métier
+        if (
+            error.message.includes("Solde insuffisant") ||
+            error.message.includes("non trouvé") ||
+            error.message.includes("vous-même")
+        ) {
+            return res.status(400).json({
+                message: error.message,
+            });
+        }
+
         res.status(500).json({
             message: "Erreur lors du transfert de crédits.",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
 
 module.exports = {
     getUserCredits,
-    getTransactionHistory,
+    getCreditHistory,
+    getDetailedCreditHistory,
     purchaseCredits,
     getFinancialStats,
     transferCredits,

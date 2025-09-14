@@ -6,9 +6,9 @@ const {
     getPlatformStats,
     getAllUsers,
     toggleUserSuspension,
-    manageUserRoles,
+    updateUserRoles,
     getAllCarpoolings,
-    adminCancelCarpooling,
+    moderateCarpooling,
 } = require("../controllers/adminController");
 
 // Importer les middlewares d'authentification
@@ -37,7 +37,7 @@ router.put(
     "/users/:id/roles",
     authMiddleware,
     requireRole(["administrateur"]),
-    manageUserRoles
+    updateUserRoles
 );
 router.get(
     "/carpoolings",
@@ -49,7 +49,7 @@ router.post(
     "/carpoolings/:id/cancel",
     authMiddleware,
     requireRole(["administrateur", "employe"]),
-    adminCancelCarpooling
+    moderateCarpooling
 );
 
 module.exports = router;
