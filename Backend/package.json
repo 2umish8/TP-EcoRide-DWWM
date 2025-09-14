@@ -5,7 +5,9 @@
     "scripts": {
         "test": "node scripts/testAPI.js",
         "start": "node server.js",
+        "predev": "npx prisma generate",
         "dev": "nodemon server.js",
+        "postinstall": "npx prisma generate",
         "setup": "node scripts/generatePasswords.js",
         "check": "node scripts/checkProject.js",
         "db:create": "node -e \"console.log('Exécutez les scripts SQL dans l\\'ordre: creation_base_de_donnees.sql puis insertion_donnees.sql')\"",
@@ -18,7 +20,9 @@
         "test:all": "node scripts/runAllTests.js",
         "db:clean": "node scripts/cleanDatabase.js clean",
         "db:reset": "node scripts/cleanDatabase.js reset",
-        "db:status": "node scripts/cleanDatabase.js status"
+        "db:status": "node scripts/cleanDatabase.js status",
+        "ts:check": "tsc --noEmit",
+        "ts:demo": "tsc -p tsconfig.json"
     },
     "keywords": [],
     "author": "",
@@ -39,6 +43,11 @@
     "devDependencies": {
         "axios": "^1.10.0",
         "nodemon": "^3.1.10",
-        "prisma": "^6.16.1"
+        "prisma": "^6.16.1",
+        "typescript": "^5.5.0",
+        "ts-node": "^10.9.1",
+        "@types/node": "^20.5.1",
+        "@types/express": "^4.17.20",
+        "@types/jsonwebtoken": "^9.0.2"
     }
 }
