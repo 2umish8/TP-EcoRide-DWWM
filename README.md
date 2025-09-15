@@ -1,6 +1,7 @@
 # EcoRide - Application de Covoiturage Écologique 🌱🚗
 
 Application web de covoiturage axée sur la mobilité durable.
+Gestion de la base MySQL via Prisma ORM pour une architecture moderne et sécurisée.
 
 ## 🌐 Application Déployée - Accès Direct
 
@@ -26,10 +27,10 @@ Bientôt disponible :
 
 ### 🔑 Comptes de test prêts à utiliser
 
-| 👤 Rôle               | 📧 Pseudo | 🔐 Mot de passe | ⚡ Accès         |
-| --------------------- | --------- | --------------- | ---------------- |
-| 🛡️ **Administrateur** | Admin     | Admin2025!      | Gestion système  |
-| 🚗 **Conducteur**     | test      | Test2025!       | Création trajets |
+| 👤 Rôle               | 📧 Pseudo | 🔐 Mot de passe | ⚡ Accès          |
+| -------------------- | -------- | -------------- | ---------------- |
+| 🛡️ **Administrateur** | Admin    | Admin2025!     | Gestion système  |
+| 🚗 **Conducteur**     | test     | Test2025!      | Création trajets |
 
 _Vous pouvez créer un compte utilisateur allant sur le bouton "Inscription" et en renseignant les champs requis. Vous serez par défaut passager, mais vous pouvez devenir conducteur en renseignant les champs requis._
 
@@ -49,7 +50,10 @@ cd TP-EcoRide-DWWM
 # 2. Backend (Terminal 1)
 cd Backend
 npm install
-npm run dev
+cp .env.example .env  # Configurer vos variables locales
+npx prisma generate    # Générer le client Prisma
+npx prisma db push     # Appliquer le schéma Prisma à la base MySQL
+npm run dev            # Démarrer le serveur en mode développement
 
 # 3. Frontend (Terminal 2)
 cd Frontend
@@ -65,3 +69,10 @@ npm run dev
 ## 📋 Description du projet
 
 EcoRide est une plateforme de covoiturage qui encourage les déplacements écologiques en valorisant les véhicules électriques et en proposant un système de crédits pour récompenser les conducteurs responsables.
+
+### 🛠️ Technologies principales
+- **Frontend** : Vue.js 3, Vite
+- **Backend** : Node.js, Express.js
+- **Base de données** : MySQL (gérée via Prisma), MongoDB (pour les avis et préférences)
+- **ORM** : Prisma (MySQL)
+- **Sécurité** : JWT, bcrypt

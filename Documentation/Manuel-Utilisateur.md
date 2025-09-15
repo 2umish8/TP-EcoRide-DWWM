@@ -25,6 +25,7 @@ Ce manuel utilisateur décrit toutes les fonctionnalités que vous pouvez tester
 ## Introduction
 
 EcoRide est une application web de covoiturage écologique qui permet aux utilisateurs de partager leurs trajets en voiture, avec un accent particulier sur la mobilité durable.
+La gestion des données principales (utilisateurs, trajets, véhicules, crédits) se fait via MySQL et Prisma ORM pour une sécurité et une évolutivité accrues.
 
 ## Démarrage rapide
 
@@ -36,6 +37,7 @@ EcoRide est une application web de covoiturage écologique qui permet aux utilis
 **💻 Développement local (optionnel) :**
 - **URL de l'application** : http://localhost:5173
 - **API Backend** : http://localhost:3000
+- **Base de données MySQL gérée via Prisma ORM**
 
 ## Comptes de test disponibles
 
@@ -59,7 +61,11 @@ EcoRide est une application web de covoiturage écologique qui permet aux utilis
 -   **Mot de passe** : Test2025!
 -   **Fonctionnalités** : Création et gestion de trajets
 
-**💡 Pour tester en local :** Créez vos propres comptes via l'inscription sur http://localhost:5173 une fois le serveur lancé (`npm run dev`).
+**💡 Pour tester en local :**
+- Créez vos propres comptes via l'inscription sur http://localhost:5173 une fois le serveur lancé (`npm run dev`).
+- Assurez-vous d'avoir configuré la base MySQL et lancé les commandes Prisma :
+    - `npx prisma generate` pour générer le client Prisma
+    - `npx prisma db push` pour appliquer le schéma à la base MySQL
 
 ## Guide d'utilisation
 

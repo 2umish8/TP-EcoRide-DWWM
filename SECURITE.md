@@ -1,14 +1,5 @@
 # ⚠️ SÉCURITÉ - Configuration requise
 
-## Fichiers de configuration sensibles supprimés
-
-Pour la sécurité, les fichiers suivants ont été **intentionnellement supprimés** du repository public :
-
-### ❌ Fichiers supprimés
-
--   `Backend/.env` - Contenait des identifiants de base de données réels
--   `lancer-mongodb-compass.bat` - Contenait des chaînes de connexion MongoDB avec credentials
-
 ## ✅ Configuration requise pour faire fonctionner l'application localement
 (Pour rappel, le site est deployé sur [ecoridetp.netlify.app](https://ecoridetp.netlify.app/))
 ### 1. Créer le fichier `.env` dans `/Backend/`

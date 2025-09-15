@@ -12,10 +12,10 @@ Vous pouvez tester toutes les fonctionnalités décrites dans ce guide directeme
 
 ### 🔑 Comptes de test prêts à utiliser
 
-| 👤 Rôle               | 👤 Pseudo | 🔐 Mot de passe | ⚡ Accès                       |
-| --------------------- | --------- | --------------- | ------------------------------ |
-| 🛡️ **Administrateur** | Admin     | Admin2025!      | Gestion système                |
-| 🧪 **Utilisateur**    | test      | Test2025!       | Participation&Création trajets |
+| 👤 Rôle               | 👤 Pseudo | 🔐 Mot de passe | ⚡ Accès                        |
+| -------------------- | -------- | -------------- | ------------------------------ |
+| 🛡️ **Administrateur** | Admin    | Admin2025!     | Gestion système                |
+| 🧪 **Utilisateur**    | test     | Test2025!      | Participation&Création trajets |
 
 ---
 

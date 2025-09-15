@@ -27,7 +27,8 @@ EcoRide est une application web full-stack composée de :
 
 -   **Frontend** : Vue.js 3 avec Composition API
 -   **Backend** : Node.js avec Express.js
--   **Base de données** : MySQL (principale) + MongoDB (avis et notes)
+-   **Base de données** : MySQL (principale, gérée via Prisma ORM) + MongoDB (avis et notes)
+-   **ORM** : Prisma pour la gestion du schéma MySQL
 -   **Authentification** : JWT avec bcrypt
 
 ### Diagramme d'architecture
@@ -49,7 +50,7 @@ PS: Les ports sont pour l'accès local, l'application est déployée sur Netlify
 ```
 Backend/
 ├── Config/                 # Configuration base de données
-│   ├── db.js              # Pool MySQL
+│   ├── db.js              # Connexion MySQL via Prisma
 │   └── mongodb.js         # Connexion MongoDB
 ├── controllers/           # Logique métier
 │   ├── adminController.js
@@ -60,6 +61,7 @@ Backend/
 │   ├── reviewController.js
 │   └── searchAdvanced.js
 ├── models/               # Modèles de données
+├── prisma/               # Schéma Prisma (schema.prisma)
 ├── routes/               # Routes API
 ├── scripts/              # Scripts de test et utilitaires
 ├── utils/                # Fonctions utilitaires
@@ -87,9 +89,9 @@ Frontend/
 
 ## Base de données
 
-### MySQL - Données principales
+### MySQL - Données principales (gérées via Prisma)
 
-**Tables principales :**
+**Tables principales (modélisées dans `prisma/schema.prisma`) :**
 
 -   `users` - Utilisateurs de la plateforme
 -   `vehicles` - Véhicules des conducteurs
@@ -100,11 +102,15 @@ Frontend/
 
 **Relations clés :**
 
-```sql
-users 1:N vehicles
-users 1:N carpools (comme conducteur)
-users N:M carpools (comme passager via participations)
-users 1:1 preferences
+```prisma
+model User {
+    id           Int      @id @default(autoincrement())
+    vehicles     Vehicle[]
+    driverTrips  Carpool[] @relation("DriverTrips")
+    participations Participation[]
+    preferences  Preferences?
+}
+// ...voir schema.prisma pour la modélisation complète
 ```
 
 ### MongoDB - Système d'avis
@@ -159,6 +165,8 @@ Voir le dictionnaire centralisé : `01-Documentation/Dictionnaire de routes.md`
 ```json
 {
     "express": "^4.18.2",
+    "@prisma/client": "^5.x.x",
+    "prisma": "^5.x.x",
     "mysql2": "^3.6.0",
     "mongodb": "^5.7.0",
     "jsonwebtoken": "^9.0.2",
@@ -277,6 +285,8 @@ cd Backend
 npm install
 cp .env.example .env
 # Configurer .env
+npx prisma generate    # Générer le client Prisma
+npx prisma db push     # Appliquer le schéma Prisma à la base MySQL
 npm start
 
 # 3. Frontend
@@ -288,13 +298,18 @@ npm run dev
 ### Configuration base de données MySQL
 
 ```sql
--- Création de la base
+-- Création de la base (si non existante)
 CREATE DATABASE ecoride CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- Import des tables et données
-SOURCE Backend/Database/schema.sql;
-SOURCE Backend/Database/seed.sql;
 ```
+
+La gestion du schéma et des migrations se fait via Prisma :
+
+```bash
+npx prisma generate    # Générer le client Prisma
+npx prisma db push     # Appliquer le schéma défini dans prisma/schema.prisma
+```
+
+Les scripts SQL dans `Backend/Database/` sont optionnels pour l'initialisation manuelle ou le peuplement de données de test.
 
 ## Performance et optimisation
 
