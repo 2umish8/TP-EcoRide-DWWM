@@ -101,7 +101,7 @@ if (allFilesExist) {
     console.log("- POST /api/preferences (préférences chauffeur)");
     console.log("- GET /api/preferences/driver/:id (voir préférences)");
 
-    console.log("\n✅ Votre projet est PRÊT pour le déploiement ce soir !");
+    console.log("\n✅ Le projet est PRÊT pour le déploiement !");
 } else {
     console.log("❌ PROBLÈME: Certains fichiers MongoDB sont manquants");
     console.log("Veuillez vérifier l'intégration avant de continuer.");

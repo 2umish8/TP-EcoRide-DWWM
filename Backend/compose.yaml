@@ -1,0 +1,59 @@
+services:
+    server:
+        build: .
+        environment:
+            NODE_ENV: production
+            # Percent-encode special characters in the password (e.g. '!' -> '%21')
+            # Add authSource=admin so the driver authenticates using the admin database
+            MONGODB_URI: mongodb://admin:7gX%21p2QzLm9R@mongodb:27017/ecoride_db?authSource=admin
+            DATABASE_URL: mysql://ecoride_user:9vT!e2QpLx7R@mysql:3306/ecoride_db
+        ports:
+            - 3000:3000
+        depends_on:
+            mysql:
+                condition: service_started
+            mongodb:
+                condition: service_healthy
+
+    mysql:
+        image: mysql:latest
+        container_name: mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: s8Qw3z!pLk2V # unused but useful for debugging
+            MYSQL_DATABASE: ecoride_db
+            MYSQL_USER: ecoride_user
+            MYSQL_PASSWORD: 9vT!e2QpLx7R
+        ports:
+            - 3306:3306
+        volumes:
+            - mysql-data:/var/lib/mysql
+
+    mongodb:
+        image: mongo:latest
+        container_name: mongodb
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: admin
+            MONGO_INITDB_ROOT_PASSWORD: 7gX!p2QzLm9R
+            MONGO_INITDB_DATABASE: ecoride_db
+        ports:
+            - 27017:27017
+        volumes:
+            - mongodb-data:/data/db
+        healthcheck:
+            # Use authentication in the healthcheck since the container is initialized with a root user
+            # Use mongosh (modern shell) instead of the legacy 'mongo' binary which may not be present
+            # Ensure the shell expands the password variable: do NOT wrap the $${...} expansion in single quotes
+            test:
+                [
+                    "CMD-SHELL",
+                    'mongosh --username $${MONGO_INITDB_ROOT_USERNAME:-admin} --password "$${MONGO_INITDB_ROOT_PASSWORD:-7gX!p2QzLm9R}" --authenticationDatabase admin --eval "db.adminCommand(''ping'')" --quiet || exit 1',
+                ]
+            interval: 10s
+            timeout: 5s
+            retries: 8
+            start_period: 30s
+volumes:
+    mysql-data:
+    mongodb-data:
