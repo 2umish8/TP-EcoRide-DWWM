@@ -1,0 +1,40 @@
+# Development Docker Compose Override
+# This file extends the main compose.yaml for development purposes
+# Usage: docker compose -f compose.yaml -f compose.dev.yaml up
+
+services:
+    # Frontend development configuration
+    frontend:
+        build:
+            target: base # Use development stage if available
+        volumes:
+            - ./Frontend/src:/usr/src/app/src:ro
+            - ./Frontend/public:/usr/src/app/public:ro
+        environment:
+            - NODE_ENV=development
+            - VITE_API_URL=http://localhost:3000/api
+        command: npm run dev
+        ports:
+            - "5173:5173" # Vite dev server port
+
+    # Backend development configuration
+    backend:
+        build:
+            target: base # Use development stage if available
+        volumes:
+            - ./Backend:/usr/src/app:delegated
+            - /usr/src/app/node_modules
+        environment:
+            - NODE_ENV=development
+            - DEBUG=ecoride:*
+        command: npm run dev
+        ports:
+            - "3000:3000"
+            - "9229:9229" # Node.js debug port
+
+    # Enable development tools
+    adminer:
+        profiles: [] # Remove profile restriction
+
+    mongo-express:
+        profiles: [] # Remove profile restriction

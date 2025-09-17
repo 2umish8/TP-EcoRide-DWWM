@@ -1,23 +1,80 @@
-# Include any files or directories that you don't want to be copied to your
-# container here (e.g., local build artifacts, temporary files, etc.).
-#
-# For more help, visit the .dockerignore file reference guide at
-# https://docs.docker.com/go/build-context-dockerignore/
+# EcoRide Backend - Docker ignore file
+# Exclude files and directories that shouldn't be copied to the container
 
-**/.classpath
-**/.dockerignore
+# Dependencies
+node_modules
+npm-debug.log*
+package-lock.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Logs
+logs
+*.log
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# Environment variables
 **/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+
+# Development and build files
 **/.git
 **/.gitignore
-**/.project
-**/.settings
-**/.toolstarget
-**/.vs
+**/.dockerignore
+**/Dockerfile*
+**/compose*.yaml
+**/compose*.yml
+README*.md
+
+# IDE and editor files
 **/.vscode
-**/.next
-**/.cache
-**/*.*proj.user
+**/.idea
+**/.vs
+**/.settings
+**/.project
+**/.classpath
+**/.toolstarget
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
 **/*.dbmdl
+**/*.*proj.user
+
+# Test files and scripts
+scripts/test*
+scripts/run*
+scripts/check*
+__tests__
+test/
+*.test.js
+*.spec.js
+
+# Documentation
+docs/
+Documentation/
+
+# Database files
+*.sqlite
+*.db
+
+# Temporary files
+tmp/
+temp/
+.cache
+.next
 **/*.jfm
 **/charts
 **/docker-compose*

@@ -92,6 +92,38 @@ app.use("/api/credits", creditsRoutes);
 // Routes d'administration
 app.use("/api/admin", adminRoutes);
 
+// Health check endpoint for Docker and monitoring
+app.get("/api/health", async (req, res) => {
+    try {
+        // Test MySQL connection via Prisma
+        const { PrismaClient } = require("@prisma/client");
+        const prisma = new PrismaClient();
+        await prisma.$queryRaw`SELECT 1`;
+        await prisma.$disconnect();
+
+        // Test MongoDB connection
+        const mongoose = require("mongoose");
+        const mongoStatus =
+            mongoose.connection.readyState === 1 ? "connected" : "disconnected";
+
+        res.status(200).json({
+            status: "ok",
+            timestamp: new Date().toISOString(),
+            database: "connected",
+            mongodb: mongoStatus,
+            version: process.env.npm_package_version || "1.0.0",
+            environment: process.env.NODE_ENV || "development",
+        });
+    } catch (error) {
+        console.error("Health check failed:", error);
+        res.status(503).json({
+            status: "error",
+            timestamp: new Date().toISOString(),
+            error: "Database connection failed",
+        });
+    }
+});
+
 // Routes MongoDB - Avis et préférences
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/preferences", preferencesRoutes);

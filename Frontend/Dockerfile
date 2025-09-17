@@ -1,63 +1,105 @@
 # syntax=docker/dockerfile:1
-
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Dockerfile reference guide at
-# https://docs.docker.com/go/dockerfile-reference/
-
-# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
+# EcoRide Frontend - Vue.js application served by nginx
+# Multi-stage Docker build for optimized production deployment
 
 ARG NODE_VERSION=22.12.0
 
 ################################################################################
-# Use node image for base image for all stages.
+# Base stage - Common setup for all stages
 FROM node:${NODE_VERSION}-alpine AS base
 
-# Set working directory for all build stages.
+# Install system dependencies
+RUN apk add --no-cache \
+    curl \
+    dumb-init \
+    && rm -rf /var/cache/apk/*
+
+# Set working directory for all build stages
 WORKDIR /usr/src/app
 
-
 ################################################################################
-# Create a stage for installing production dependecies.
+# Dependencies stage - Install production dependencies
 FROM base AS deps
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.npm to speed up subsequent builds.
-# Leverage bind mounts to package.json and package-lock.json to avoid having to copy them
-# into this layer.
+# Download dependencies as a separate step to take advantage of Docker's caching
+# Leverage a cache mount to /root/.npm to speed up subsequent builds
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \
     --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
+    npm ci --omit=dev --no-audit --no-fund
 
 ################################################################################
-# Create a stage for building the application.
-FROM deps AS build
+# Development stage - For development with hot reload
+FROM base AS development
 
-# Download additional development dependencies before building, as some projects require
-# "devDependencies" to be installed to build. If you don't need this, remove this step.
+# Install all dependencies (including dev)
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \
     --mount=type=cache,target=/root/.npm \
-    npm ci
+    npm ci --no-audit --no-fund
 
-# Copy the rest of the source files into the image.
+# Copy source code
 COPY . .
-# Run the build script.
+
+# Create non-root user
+RUN addgroup -S appgroup \
+    && adduser -S appuser -G appgroup \
+    && chown -R appuser:appgroup /usr/src/app
+
+USER appuser
+
+EXPOSE 5173
+
+# Use Vite dev server for development
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+
+################################################################################
+# Build stage - Create production build
+FROM base AS build
+
+# Download additional development dependencies before building
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=cache,target=/root/.npm \
+    npm ci --no-audit --no-fund
+
+# Copy the rest of the source files into the image
+COPY . .
+
+# Build the application
 RUN npm run build
 
 ################################################################################
-# Create a new final stage that uses nginx to serve the built static files.
-FROM nginx:stable-alpine AS final
+# Production stage - Serve built static files with nginx
+FROM nginx:stable-alpine AS production
 
-# Remove default nginx content and copy built files from the build stage.
+# Install curl for health checks
+RUN apk add --no-cache curl
+
+# Remove default nginx content and copy built files from the build stage
 RUN rm -rf /usr/share/nginx/html/*
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
-# Optional: copy a custom nginx config
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose HTTP port
-EXPOSE 80
+# Create non-root user for nginx
+RUN addgroup -S nginx \
+    && adduser -S nginx -G nginx \
+    && chown -R nginx:nginx /usr/share/nginx/html \
+    && chown -R nginx:nginx /var/cache/nginx \
+    && chown -R nginx:nginx /var/log/nginx \
+    && chown -R nginx:nginx /etc/nginx/conf.d
 
-# Run the application.
+# Switch to non-root user
+USER nginx
+
+# Expose HTTP and HTTPS ports
+EXPOSE 80 443
+
+# Add health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:80/ || exit 1
+
+# Run nginx
 CMD ["nginx", "-g", "daemon off;"]
