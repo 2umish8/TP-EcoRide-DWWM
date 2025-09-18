@@ -1,12 +1,8 @@
-# Guide de Développement EcoRide
+# Guide de Développement EcoRide 🚀
 
 Configuration complète de l'environnement de développement avec Docker et développement natif.
 
-## Développement avec Docker (Recommandé)de de Développement EcoRide 🚀
-
-Configuration complète de l'environnement de développement avec Docker et développement natif.
-
-## Développement avec Docker (Recommandé)
+## � Développement avec Docker (Recommandé)
 
 ### Démarrage rapide avec Docker Compose
 
@@ -72,7 +68,7 @@ volumes:
   - /usr/src/app/node_modules
 ```
 
-## Développement Natif (Alternative)
+## ⚡ Développement Natif (Alternative)
 
 ### Prérequis
 
@@ -133,7 +129,7 @@ mongod
 MONGODB_URI="mongodb+srv://user:pass@cluster.mongodb.net/ecoride_db"
 ```
 
-## Variables d'Environnement
+## 🔧 Variables d'Environnement
 
 ### Backend (.env)
 
@@ -191,7 +187,7 @@ MONGO_INITDB_ROOT_PASSWORD=dev_mongo_password
 JWT_SECRET=development-docker-secret
 ```
 
-## Tests & Validation
+## 🧪 Tests & Validation
 
 ### Tests Backend
 
@@ -234,7 +230,7 @@ docker compose exec backend npm run test:full
 docker compose exec frontend npm run test:unit
 ```
 
-## Commandes de Développement
+## 🛠️ Commandes de Développement
 
 ### Backend
 
@@ -280,7 +276,7 @@ npm run lint             # ESLint
 npm run format           # Prettier
 ```
 
-## Architecture de Développement
+## 🏗️ Architecture de Développement
 
 ### Structure des projets
 
@@ -327,7 +323,7 @@ graph TD
 | Adminer       | 8080       | 8080        | Interface MySQL   |
 | Mongo Express | 8081       | 8081        | Interface MongoDB |
 
-## Workflow Git
+## 🔄 Workflow Git
 
 ### Branches recommandées
 
@@ -363,7 +359,7 @@ git commit -m "fix(docker): correct nginx configuration"
 git commit -m "docs(api): update endpoint documentation"
 ```
 
-## Debugging
+## � Debugging
 
 ### Logs Docker
 
@@ -401,7 +397,7 @@ services:
 DEBUG=vite:* npm run dev
 ```
 
-## Optimisations Performance
+## 🚀 Optimisations Performance
 
 ### Développement
 
@@ -430,7 +426,7 @@ npm run build -- --report
 docker stats
 ```
 
-## Ressources
+## 📚 Ressources
 
 ### Documentation officielle
 - [Vue.js 3](https://vuejs.org/)
@@ -446,4 +442,4 @@ docker stats
 
 ---
 
-**Happy Coding! Développement EcoRide simplifié avec Docker**
+**Happy Coding! 🚀 Développement EcoRide simplifié avec Docker**

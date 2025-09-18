@@ -224,7 +224,7 @@ npm run ts:check
 npm run ts:demo
 ```
 
-## API Documentation
+## � API Documentation
 
 ### Endpoints principaux
 

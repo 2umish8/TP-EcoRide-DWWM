@@ -12,12 +12,22 @@ const getApiUrl = () => {
     return import.meta.env.VITE_API_URL
   }
 
-  // Sinon, détecter automatiquement l'environnement
+  // En production (mode production), utiliser l'URL relative pour nginx proxy
+  if (import.meta.env.MODE === 'production') {
+    return '/api'
+  }
+
+  // En développement, détecter si on est sur localhost
   if (import.meta.env.MODE === 'development' || window.location.hostname === 'localhost') {
+    // Si on est sur le port 80 (nginx/Docker), utiliser le proxy
+    if (window.location.port === '' || window.location.port === '80') {
+      return '/api'
+    }
+    // Sinon, connexion directe au backend (dev local)
     return 'http://localhost:3000/api'
   }
 
-  // URL de production par défaut
+  // URL de production par défaut (fallback)
   return 'https://tp-ecoride-dwwm-production.up.railway.app/api'
 }
 

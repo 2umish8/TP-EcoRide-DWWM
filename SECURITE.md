@@ -1,16 +1,14 @@
-# Sécurité EcoRide - Guide Complet
+# 🔒 Sécurité EcoRide - Guide Complet
 
 Configuration sécurisée pour l'application EcoRide avec Docker et développement natif.
 
-## Sécurité avec Docker (Recommandé)
+## 🐳 Sécurité avec Docker (Recommandé)
 
 ### Configuration sécurisée avec Docker Compose
 
 ```bash
 # 1. Cloner et configurer
-git clone https://## Checklist Sécurité
-
-### Configuration initialehub.com/2umish8/TP-EcoRide-DWWM.git
+git clone https://github.com/2umish8/TP-EcoRide-DWWM.git
 cd TP-EcoRide-DWWM
 
 # 2. Configuration sécurisée des variables
@@ -114,7 +112,7 @@ networks:
         - subnet: 172.20.0.0/16
 ```
 
-## Sécurité Application
+## 🛡️ Sécurité Application
 
 ### 1. Authentification & Autorisation
 
@@ -241,7 +239,7 @@ const corsOptions = {
 };
 ```
 
-## Audit de Sécurité
+## 🔍 Audit de Sécurité
 
 ### Outils d'analyse
 
@@ -273,7 +271,7 @@ curl -X POST http://localhost:3000/api/users/login \
   -d '{"email":"admin'\'' OR 1=1 --","password":"anything"}'
 ```
 
-## Checklist Sécurité
+## � Checklist Sécurité
 
 ### Configuration initiale
 
@@ -307,7 +305,7 @@ curl -X POST http://localhost:3000/api/users/login \
 - [ ] **Backups** - Sauvegardes régulières des données
 - [ ] **Recovery** - Plan de récupération testé
 
-## Niveaux de Sécurité
+## 📊 Niveaux de Sécurité
 
 ### Développement
 
@@ -340,7 +338,7 @@ SSL_ENABLED=true
 CSP_STRICT=true
 ```
 
-## Ressources Sécurité
+## 🔗 Ressources Sécurité
 
 ### Standards & Guides
 
@@ -355,7 +353,7 @@ CSP_STRICT=true
 - **Trivy** - Scanner de sécurité containers
 - **OWASP ZAP** - Tests de pénétration web
 
-## En cas d'incident
+## 🆘 En cas d'incident
 
 ### Procédure d'urgence
 
@@ -381,6 +379,6 @@ docker compose logs --since="1h" > incident_logs_$(date +%Y%m%d_%H%M%S).log
 
 ---
 
-**La sécurité est un processus continu, pas un état final**
+**🛡️ La sécurité est un processus continu, pas un état final**
 
 *Mise à jour régulière de cette documentation recommandée*

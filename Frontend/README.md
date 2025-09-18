@@ -76,7 +76,7 @@ curl http://localhost/health
 - **Vitest** - Tests unitaires ultra-rapides
 - **Playwright** - Tests E2E automatisés
 
-## Prérequis (Développement Local)
+## � Prérequis (Développement Local)
 
 - Node.js 18+ et npm
 - Git
