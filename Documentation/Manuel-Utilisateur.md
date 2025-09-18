@@ -1,22 +1,22 @@
-# Manuel Utilisateur - EcoRide 🌱
+# Manuel Utilisateur - EcoRide
 
-## 🌐 Application Déployée - Accès Direct
+## Application Déployée - Accès Direct
 
-**🎉 L'application EcoRide est maintenant déployée et accessible en ligne !**
+**L'application EcoRide est maintenant déployée et accessible en ligne !**
 
-### 📱 Accès à l'application
+### Accès à l'application
 **URL : https://ecoridetp.netlify.app/**
 
 Ce manuel utilisateur décrit toutes les fonctionnalités que vous pouvez tester directement sur le site déployé.
 
-### 🔑 Comptes de test prêts à utiliser
+### Comptes de test prêts à utiliser
 
-**⚠️ IMPORTANT : Ces comptes de test ne fonctionnent QUE sur le site déployé en ligne, pas en local !**
+**IMPORTANT : Ces comptes de test ne fonctionnent QUE sur le site déployé en ligne, pas en local !**
 
-| 👤 Rôle               | 👤 Pseudo         | 🔐 Mot de passe | ⚡ Accès         |
+| Rôle               | Pseudo         | Mot de passe | Accès         |
 | --------------------- | ----------------- | --------------- | ---------------- |
-| 🛡️ **Administrateur** | Admin             | Admin2025!       | Gestion système  |
-| 🧪 **Utilisateur**    | test              | Test2025!        | Participation&Création trajets    |
+| **Administrateur** | Admin             | Admin2025!       | Gestion système  |
+| **Utilisateur**    | test              | Test2025!        | Participation&Création trajets    |
 
 *Pour tester en local, vous devrez créer vos propres comptes via l'inscription.*
 
@@ -31,17 +31,17 @@ La gestion des données principales (utilisateurs, trajets, véhicules, crédits
 
 ### Accès à l'application
 
-**🌐 Site déployé (recommandé pour les tests) :**
+**Site déployé (recommandé pour les tests) :**
 - **URL de l'application** : https://ecoridetp.netlify.app/
 
-**💻 Développement local (optionnel) :**
+**Développement local (optionnel) :**
 - **URL de l'application** : http://localhost:5173
 - **API Backend** : http://localhost:3000
 - **Base de données MySQL gérée via Prisma ORM**
 
 ## Comptes de test disponibles
 
-**📱 Ces comptes fonctionnent uniquement sur le site déployé : https://ecoridetp.netlify.app/**
+**Ces comptes fonctionnent uniquement sur le site déployé : https://ecoridetp.netlify.app/**
 
 ### Administrateur
 
@@ -61,7 +61,7 @@ La gestion des données principales (utilisateurs, trajets, véhicules, crédits
 -   **Mot de passe** : Test2025!
 -   **Fonctionnalités** : Création et gestion de trajets
 
-**💡 Pour tester en local :**
+**Pour tester en local :**
 - Créez vos propres comptes via l'inscription sur http://localhost:5173 une fois le serveur lancé (`npm run dev`).
 - Assurez-vous d'avoir configuré la base MySQL et lancé les commandes Prisma :
     - `npx prisma generate` pour générer le client Prisma

@@ -1,8 +1,8 @@
-# 🚀 Guide de Déploiement EcoRide
+# Guide de Déploiement EcoRide
 
 Guide complet pour déployer l'application EcoRide en production avec Docker.
 
-## 📋 Table des matières
+## Table des matières
 
 - [Prérequis](#prérequis)
 - [Déploiement Local](#déploiement-local)
@@ -11,7 +11,7 @@ Guide complet pour déployer l'application EcoRide en production avec Docker.
 - [Maintenance](#maintenance)
 - [Troubleshooting](#troubleshooting)
 
-## 🔧 Prérequis
+## Prérequis
 
 ### Système requis
 
@@ -80,7 +80,7 @@ docker --version
 docker compose --version
 ```
 
-## 🏠 Déploiement Local
+## Déploiement Local
 
 ### 1. Clonage et configuration
 
@@ -148,7 +148,7 @@ curl http://localhost:3000/api/health
 # Mongo Express: http://localhost:8081
 ```
 
-## 🌐 Déploiement Production
+## Déploiement Production
 
 ### 1. Serveur Cloud (AWS/GCP/Azure)
 
@@ -266,7 +266,7 @@ volumes:
 
 set -e
 
-echo "🚀 Déploiement EcoRide Production"
+echo "Déploiement EcoRide Production"
 
 # Variables
 REPO_URL="https://github.com/2umish8/TP-EcoRide-DWWM.git"
@@ -274,29 +274,29 @@ DEPLOY_DIR="/opt/ecoride"
 BACKUP_DIR="/opt/ecoride-backups"
 
 # Sauvegarde des données
-echo "📦 Sauvegarde des données..."
+echo "Sauvegarde des données..."
 mkdir -p $BACKUP_DIR/$(date +%Y%m%d_%H%M%S)
 docker compose exec mysql mysqldump -u root -p$MYSQL_ROOT_PASSWORD --all-databases > $BACKUP_DIR/$(date +%Y%m%d_%H%M%S)/mysql_backup.sql
 
 # Mise à jour du code
-echo "📥 Mise à jour du code..."
+echo "Mise à jour du code..."
 cd $DEPLOY_DIR
 git pull origin main
 
 # Reconstruction des images
-echo "🔨 Reconstruction des containers..."
+echo "Reconstruction des containers..."
 docker compose down
 docker compose pull
 docker compose build --no-cache
 docker compose up -d
 
 # Vérification de la santé
-echo "🔍 Vérification de la santé..."
+echo "Vérification de la santé..."
 sleep 30
 curl -f http://localhost/health || exit 1
 curl -f http://localhost:3000/api/health || exit 1
 
-echo "✅ Déploiement terminé avec succès!"
+echo "Déploiement terminé avec succès!"
 ```
 
 #### GitHub Actions CI/CD
@@ -328,7 +328,7 @@ jobs:
           ./deploy.sh
 ```
 
-## 📊 Monitoring
+## Monitoring
 
 ### 1. Health Checks
 
@@ -342,9 +342,9 @@ check_service() {
     local url=$2
     
     if curl -f -s $url > /dev/null; then
-        echo "✅ $service: OK"
+        echo "OK $service: OK"
     else
-        echo "❌ $service: FAIL"
+        echo "FAIL $service: FAIL"
         # Alertes (email, Slack, etc.)
     fi
 }
@@ -419,7 +419,7 @@ volumes:
   grafana-data:
 ```
 
-## 🛠️ Maintenance
+## Maintenance
 
 ### 1. Sauvegardes automatiques
 
@@ -449,7 +449,7 @@ rm -rf $DATE/
 # Nettoyage (garder seulement les 30 derniers jours)
 find $BACKUP_DIR -name "*.tar.gz" -mtime +$RETENTION_DAYS -delete
 
-echo "✅ Sauvegarde terminée: $BACKUP_DIR/$DATE.tar.gz"
+echo "Sauvegarde terminée: $BACKUP_DIR/$DATE.tar.gz"
 ```
 
 ### 2. Mises à jour automatiques
@@ -481,7 +481,7 @@ docker compose exec mysql mysql -u root -p -e "OPTIMIZE TABLE ecoride_db.*;"
 docker compose logs --since="24h" | grep -i error
 ```
 
-## 🚨 Troubleshooting
+## Troubleshooting
 
 ### 1. Problèmes courants
 
@@ -551,7 +551,7 @@ Level 3: Escalation management
 Level 4: Contacte éditeur/support
 ```
 
-## 📈 Optimisations Production
+## Optimisations Production
 
 ### 1. Performance
 
@@ -605,7 +605,7 @@ services:
 
 ---
 
-## 📚 Ressources additionnelles
+## Ressources additionnelles
 
 - [Documentation Docker](https://docs.docker.com/)
 - [Guide sécurité containers](https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html)
@@ -614,4 +614,4 @@ services:
 
 ---
 
-**🚀 Bon déploiement! L'équipe EcoRide vous souhaite une mise en production réussie.**
+**Bon déploiement! L'équipe EcoRide vous souhaite une mise en production réussie.**

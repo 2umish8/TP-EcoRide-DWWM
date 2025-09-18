@@ -1,21 +1,21 @@
 # Documentation API - EcoRide
 
-## 🌐 Application Déployée - Accès Direct
+## Application Déployée - Accès Direct
 
-**🎉 L'application EcoRide est maintenant déployée et accessible en ligne !**
+**L'application EcoRide est maintenant déployée et accessible en ligne !**
 
-### 📱 Accès à l'application
+### Accès à l'application
 
 **URL : https://ecoridetp.netlify.app/**
 
 L'API backend est également déployée et accessible via l'application frontend déployée.
 
-### 🔑 Comptes de test prêts à utiliser
+### Comptes de test prêts à utiliser
 
-| 👤 Rôle               | 👤 Pseudo | 🔐 Mot de passe | ⚡ Accès                       |
+| Rôle               | Pseudo | Mot de passe | Accès                       |
 | --------------------- | --------- | --------------- | ------------------------------ |
-| 🛡️ **Administrateur** | Admin     | Admin2025!      | Gestion système                |
-| 🧪 **Utilisateur**    | test      | Test2025!       | Participation&Création trajets |
+| **Administrateur** | Admin     | Admin2025!      | Gestion système                |
+| **Utilisateur**    | test      | Test2025!       | Participation&Création trajets |
 
 ---
 
@@ -35,7 +35,7 @@ Authorization: Bearer <token>
 
 ---
 
-## 👤 Utilisateurs (/users)
+## Utilisateurs (/users)
 
 ### POST /users/register
 
@@ -92,11 +92,11 @@ Connexion utilisateur
 }
 ```
 
-### GET /users/profile 🔒
+### GET /users/profile (auth requise)
 
 Récupérer le profil utilisateur
 
-### PUT /users/profile 🔒
+### PUT /users/profile (auth requise)
 
 Mettre à jour le profil
 
@@ -108,7 +108,7 @@ Mettre à jour le profil
 }
 ```
 
-### POST /users/change-password 🔒
+### POST /users/change-password (auth requise)
 
 Changer le mot de passe
 
@@ -119,15 +119,15 @@ Changer le mot de passe
 }
 ```
 
-### POST /users/become-driver 🔒
+### POST /users/become-driver (auth requise)
 
 Devenir chauffeur (ajouter le rôle)
 
 ---
 
-## 🚗 Véhicules (/vehicles)
+## Véhicules (/vehicles)
 
-### POST /vehicles 🔒👨‍✈️
+### POST /vehicles (auth requise, rôle chauffeur)
 
 Ajouter un véhicule (rôle chauffeur requis)
 
@@ -143,15 +143,15 @@ Ajouter un véhicule (rôle chauffeur requis)
 }
 ```
 
-### GET /vehicles/my-vehicles 🔒
+### GET /vehicles/my-vehicles (auth requise)
 
 Lister mes véhicules
 
-### PUT /vehicles/:id 🔒
+### PUT /vehicles/:id (auth requise)
 
 Modifier un véhicule
 
-### DELETE /vehicles/:id 🔒
+### DELETE /vehicles/:id (auth requise)
 
 Supprimer un véhicule
 
@@ -161,7 +161,7 @@ Obtenir les marques et couleurs disponibles
 
 ---
 
-## 🛣️ Covoiturages (/carpoolings)
+## Covoiturages (/carpoolings)
 
 ### GET /carpoolings/available
 
@@ -171,7 +171,7 @@ Rechercher des covoiturages disponibles
 Query params: ?departure=Paris&arrival=Lyon&date=2024-01-15
 ```
 
-### POST /carpoolings 🔒👨‍✈️
+### POST /carpoolings (auth requise, rôle chauffeur)
 
 Créer un covoiturage (rôle chauffeur requis)
 
@@ -187,43 +187,43 @@ Créer un covoiturage (rôle chauffeur requis)
 }
 ```
 
-### GET /carpoolings/my-carpoolings 🔒
+### GET /carpoolings/my-carpoolings (auth requise)
 
 Lister mes covoiturages en tant que chauffeur
 
-### PUT /carpoolings/:id 🔒
+### PUT /carpoolings/:id (auth requise)
 
 Modifier un covoiturage
 
-### POST /carpoolings/:id/cancel 🔒
+### POST /carpoolings/:id/cancel (auth requise)
 
 Annuler un covoiturage
 
-### POST /carpoolings/:id/start 🔒
+### POST /carpoolings/:id/start (auth requise)
 
 Démarrer un covoiturage
 
-### POST /carpoolings/:id/finish 🔒
+### POST /carpoolings/:id/finish (auth requise)
 
 Terminer un covoiturage
 
 ---
 
-## 🎫 Participations (/participations)
+## Participations (/participations)
 
-### POST /participations/:id/join 🔒
+### POST /participations/:id/join (auth requise)
 
 Rejoindre un covoiturage
 
-### POST /participations/:id/cancel 🔒
+### POST /participations/:id/cancel (auth requise)
 
 Annuler sa participation
 
-### GET /participations/my-participations 🔒
+### GET /participations/my-participations (auth requise)
 
 Lister mes participations
 
-### POST /participations/:id/validate 🔒
+### POST /participations/:id/validate (auth requise)
 
 Valider un covoiturage terminé
 
@@ -233,23 +233,23 @@ Valider un covoiturage terminé
 }
 ```
 
-### GET /participations/:id/participants 🔒
+### GET /participations/:id/participants (auth requise)
 
 Voir les participants d'un covoiturage (chauffeur uniquement)
 
 ---
 
-## 💰 Crédits (/credits)
+## Crédits (/credits)
 
-### GET /credits/balance 🔒
+### GET /credits/balance (auth requise)
 
 Consulter son solde de crédits
 
-### GET /credits/history 🔒
+### GET /credits/history (auth requise)
 
 Historique des transactions
 
-### POST /credits/purchase 🔒
+### POST /credits/purchase (auth requise)
 
 Acheter des crédits (simulation)
 
@@ -259,11 +259,11 @@ Acheter des crédits (simulation)
 }
 ```
 
-### GET /credits/stats 🔒
+### GET /credits/stats (auth requise)
 
 Statistiques financières personnelles
 
-### POST /credits/transfer 🔒
+### POST /credits/transfer (auth requise)
 
 Transférer des crédits à un autre utilisateur
 
@@ -277,13 +277,13 @@ Transférer des crédits à un autre utilisateur
 
 ---
 
-## 👨‍💼 Administration (/admin)
+## Administration (/admin)
 
-### GET /admin/stats 🔒👨‍💼
+### GET /admin/stats (auth requise, rôle admin/employé)
 
 Statistiques de la plateforme (admin/employé)
 
-### GET /admin/users 🔒👨‍💼
+### GET /admin/users (auth requise, rôle admin/employé)
 
 Lister tous les utilisateurs (admin/employé)
 
@@ -291,7 +291,7 @@ Lister tous les utilisateurs (admin/employé)
 Query params: ?page=1&limit=20&search=john&role=chauffeur
 ```
 
-### PUT /admin/users/:id/suspension 🔒👨‍💼
+### PUT /admin/users/:id/suspension (auth requise, rôle admin/employé)
 
 Suspendre/réactiver un utilisateur (admin/employé)
 
@@ -302,7 +302,7 @@ Suspendre/réactiver un utilisateur (admin/employé)
 }
 ```
 
-### PUT /admin/users/:id/roles 🔒👑
+### PUT /admin/users/:id/roles (auth requise, rôle admin)
 
 Gérer les rôles d'un utilisateur (admin uniquement)
 
@@ -312,11 +312,11 @@ Gérer les rôles d'un utilisateur (admin uniquement)
 }
 ```
 
-### GET /admin/carpoolings 🔒👨‍💼
+### GET /admin/carpoolings (auth requise, rôle admin/employé)
 
 Lister tous les covoiturages (admin/employé)
 
-### POST /admin/carpoolings/:id/cancel 🔒👨‍💼
+### POST /admin/carpoolings/:id/cancel (auth requise, rôle admin/employé)
 
 Annuler un covoiturage (admin/employé)
 
@@ -330,10 +330,10 @@ Annuler un covoiturage (admin/employé)
 
 ## Légendes
 
--   🔒 Authentification requise
--   👨‍✈️ Rôle chauffeur requis
--   👨‍💼 Rôle admin ou employé requis
--   👑 Rôle admin uniquement
+-   Authentification requise
+-   Rôle chauffeur requis
+-   Rôle admin ou employé requis
+-   Rôle admin uniquement
 
 ## Codes de statut HTTP
 

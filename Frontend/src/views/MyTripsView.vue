@@ -450,7 +450,7 @@
             v-if="filteredAndSortedParticipations.length === 0 && selectedStatus"
             class="no-trips-status"
           >
-            <div class="no-trips-icon">�</div>
+            <div class="no-trips-icon">🚧</div>
             <h3>Aucune participation {{ getStatusEmptyMessage(selectedStatus) }}</h3>
             <p>
               Découvrez les
@@ -477,7 +477,7 @@
                     {{ getStatusLabel(participation.carpooling_status) }}
                   </span>
                   <span v-if="participation.cancellation_date" class="cancellation-badge">
-                    � Annulée
+                    Annulée
                   </span>
                 </div>
                 <div class="trip-actions">

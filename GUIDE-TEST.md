@@ -1,29 +1,29 @@
 # Guide de Test - EcoRide
 
-## 🌐 Application Déployée - Accès Direct
+## Application Déployée - Accès Direct
 
-**🎉 L'application EcoRide est maintenant déployée et accessible en ligne !**
+**L'application EcoRide est maintenant déployée et accessible en ligne !**
 
-### 📱 Accès à l'application
+### Accès à l'application
 
 **URL : https://ecoridetp.netlify.app/**
 
 Vous pouvez tester toutes les fonctionnalités décrites dans ce guide directement sur le site déployé.
 
-### 🔑 Comptes de test prêts à utiliser
+### Comptes de test prêts à utiliser
 
-| 👤 Rôle               | 👤 Pseudo | 🔐 Mot de passe | ⚡ Accès                        |
+| Rôle               | Pseudo | Mot de passe | Accès                        |
 | -------------------- | -------- | -------------- | ------------------------------ |
-| 🛡️ **Administrateur** | Admin    | Admin2025!     | Gestion système                |
-| 🧪 **Utilisateur**    | test     | Test2025!      | Participation&Création trajets |
+| **Administrateur** | Admin    | Admin2025!     | Gestion système                |
+| **Utilisateur**    | test     | Test2025!      | Participation&Création trajets |
 
 ---
 
-# ✅ GUIDE DE TEST - EcoRide
+# GUIDE DE TEST - EcoRide
 
-## 📋 Vérification de la livraison
+## Vérification de la livraison
 
-### Documents fournis ✅
+### Documents fournis
 
 -   [x] **README.md** - Documentation principale et démarrage
 -   [x] **SECURITE.md** - Instructions de configuration sécurisée
@@ -32,14 +32,14 @@ Vous pouvez tester toutes les fonctionnalités décrites dans ce guide directeme
 -   [x] **Documentation/Gestion-de-Projet.md** - Méthodologie et planning
 -   [x] **Documentation/Charte Graphique_finale.pdf** - Design system
 
-### Code source ✅
+### Code source
 
 -   [x] **Frontend/** - Application Vue.js 3 complète
 -   [x] **Backend/** - API Node.js/Express avec base de données
 -   [x] **Tests** - Scripts de validation et tests automatisés
 -   [x] **.gitignore** - Fichiers sensibles exclus correctement
 
-## 🚀 Procédure de test recommandée (30-45 min)
+## Procédure de test recommandée (30-45 min)
 
 ### 1. Configuration initiale (5 min)
 
@@ -106,7 +106,7 @@ cd Frontend && npm test
 cd Backend && node scripts/testAPI.js
 ```
 
-## 🎯 Points d'évaluation à observer
+## Points d'évaluation à observer
 
 ### Compétences Frontend
 
@@ -135,23 +135,23 @@ cd Backend && node scripts/testAPI.js
 -   **Aspect écologique** : Valorisation véhicules électriques
 -   **Expérience utilisateur** : Parcours fluides et intuitifs
 
-## 🎯 Points d'attention
+## Points d'attention
 
 1. **Configuration requise** : Suivre SECURITE.md obligatoirement
 2. **Base de données** : Scripts SQL fournis dans Backend/Database/
 3. **Comptes de test** : Identifiants fournis dans README.md
 4. **Support** : Documentation technique détaillée disponible
 
-## 🏆 Résultats attendus
+## Résultats attendus
 
 À la fin du test, vous aurez pu constater :
 
-✅ **Application web full-stack fonctionnelle**  
-✅ **Utilisation des technologies modernes** (Vue.js 3, Node.js, MySQL)  
-✅ **Sécurité implémentée** (JWT, bcrypt, validation)  
-✅ **Tests automatisés** et documentation fournie  
-✅ **Fonctionnalités écologiques** avec aspect concret  
-✅ **Gestion de projet** méthodique
+**Application web full-stack fonctionnelle**  
+**Utilisation des technologies modernes** (Vue.js 3, Node.js, MySQL)  
+**Sécurité implémentée** (JWT, bcrypt, validation)  
+**Tests automatisés** et documentation fournie  
+**Fonctionnalités écologiques** avec aspect concret  
+**Gestion de projet** méthodique
 
 ---
 

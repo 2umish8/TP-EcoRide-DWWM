@@ -1,20 +1,20 @@
-# Documentation Technique - EcoRide 🚀
+# Documentation Technique - EcoRide
 
-## 🌐 Application Déployée - Accès Direct
+## Application Déployée - Accès Direct
 
-**🎉 L'application EcoRide est maintenant déployée et accessible en ligne !**
+**L'application EcoRide est maintenant déployée et accessible en ligne !**
 
-### 📱 Accès à l'application
+### Accès à l'application
 **URL : https://ecoridetp.netlify.app/**
 
 Cette documentation technique décrit l'architecture et les technologies utilisées dans l'application déployée.
 
-### 🔑 Comptes de test prêts à utiliser
+### Comptes de test prêts à utiliser
 
-| 👤 Rôle               | 👤 Pseudo         | 🔐 Mot de passe | ⚡ Accès         |
+| Rôle               | Pseudo         | Mot de passe | Accès         |
 | --------------------- | ----------------- | --------------- | ---------------- |
-| 🛡️ **Administrateur** | Admin             | Admin2025!       | Gestion système  |
-| 🧪 **Utilisateur**    | test              | Test2025!        | Participation&Création trajets    |
+| **Administrateur** | Admin             | Admin2025!       | Gestion système  |
+| **Utilisateur**    | test              | Test2025!        | Participation&Création trajets    |
 
 *Vous pouvez créer un compte utilisateur allant sur le bouton "Inscription" et en renseignant les champs requis. Vous serez par défaut passager, mais vous pouvez devenir conducteur en renseignant les champs requis.*
 ---
