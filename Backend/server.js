@@ -29,6 +29,8 @@ const searchRoutes = require("./routes/searchRoutes");
 const cors = require("cors");
 // Importer helmet pour sécuriser les en-têtes HTTP
 const helmet = require("helmet");
+// Importer express-rate-limit pour la limitation de débit
+const rateLimit = require("express-rate-limit");
 
 // Créer l'application Express
 const app = express();
@@ -38,6 +40,18 @@ const PORT = process.env.PORT || 3000;
 connectMongoDB();
 
 app.use(helmet());
+
+// Appliquer une limitation de débit globale à toutes les requêtes /api/*
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limite chaque IP à 100 requêtes par fenêtre de 15 minutes
+    standardHeaders: true, // Retourne les informations de limite dans les en-têtes `RateLimit-*`
+    legacyHeaders: false, // Désactive les en-têtes `X-RateLimit-*` (obsolètes)
+    message:
+        "Trop de requêtes envoyées depuis cette IP, veuillez réessayer après 15 minutes.",
+});
+
+app.use("/api", apiLimiter);
 
 // Configurer CORS - Production et développement
 const corsOptions = {
