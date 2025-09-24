@@ -25,4 +25,4 @@
 # Optional: set production environment variables here or configure them
 # in the Netlify UI. Uncomment and adjust if you want defaults in the repo.
 [context.production.environment]
-#  VITE_API_URL = "https://tp-ecoride-dwwm-production.up.railway.app/api"
+  VITE_API_URL = "https://tp-ecoride-dwwm.onrender.com/api"

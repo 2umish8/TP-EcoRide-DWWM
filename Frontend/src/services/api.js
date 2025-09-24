@@ -28,7 +28,7 @@ const getApiUrl = () => {
   }
 
   // URL de production par défaut (fallback)
-  return 'https://tp-ecoride-dwwm-production.up.railway.app/api'
+  return 'https://tp-ecoride-dwwm.onrender.com/api'
 }
 
 const API_BASE_URL = getApiUrl()
