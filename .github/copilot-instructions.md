@@ -10,14 +10,21 @@ EcoRide is a full-stack carpooling platform developed as part of a DWWM (Dévelo
 
 ## Academic Conventions & Best Practices
 
-### Code Quality Standards
+### Documentation Standards
 
--   **Documentation**: All functions and classes must include clear JSDoc comments
--   **Naming Conventions**: Use descriptive, meaningful variable and function names
--   **Error Handling**: Implement comprehensive error handling with appropriate HTTP status codes
--   **Security**: Follow OWASP guidelines for authentication and data protection
--   **Testing**: Write unit tests for critical business logic functions
--   **Code Reviews**: All changes should be reviewed for adherence to project standards
+-   **No Emojis**: Do not use emojis in any documentation files (README.md, DEPLOYMENT.md, etc.)
+-   **Professional Style**: Maintain a professional and technical tone in all documentation
+-   **Clear Structure**: Use proper Markdown formatting with clear headings and sections
+-   **Accuracy**: Always verify information against current project state before writing documentation
+
+### Assistant todo-list (appliquée par l'assistant)
+
+-   Vérifier les fichiers clés avant de modifier la documentation: `netlify.toml`, `Frontend/package.json`, `Backend/package.json`, `Backend/server.js`, `compose.yaml`, `compose.dev.yaml`, `README.md`.
+-   Ne jamais ajouter d'emojis aux fichiers de documentation.
+-   Après modification, relire le dépôt pour confirmer les valeurs : base directory Netlify, build commands, publish directory, endpoint health du backend.
+-   Mettre à jour `DEPLOYMENT.md` uniquement si les informations correspondent au dépôt.
+
+Note: l'assistant doit appliquer cette checklist à chaque modification de documentation pour éviter les informations obsolètes.
 
 ### Development Methodology
 
