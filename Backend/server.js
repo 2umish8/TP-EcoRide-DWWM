@@ -27,6 +27,8 @@ const preferencesRoutes = require("./routes/preferencesRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 // Importer cors pour gérer les requêtes cross-origin
 const cors = require("cors");
+// Importer helmet pour sécuriser les en-têtes HTTP
+const helmet = require("helmet");
 
 // Créer l'application Express
 const app = express();
@@ -34,6 +36,8 @@ const PORT = process.env.PORT || 3000;
 
 // Connecter à MongoDB
 connectMongoDB();
+
+app.use(helmet());
 
 // Configurer CORS - Production et développement
 const corsOptions = {
