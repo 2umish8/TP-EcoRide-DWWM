@@ -1,22 +1,25 @@
-### Building and running your application
+# Frontend - Docker
 
-When you're ready, start your application by running:
-`docker compose up --build`.
+Ce fichier explique comment construire et exécuter l'image Docker du frontend.
 
-Your application will be available at http://localhost:80.
+## Build image (production)
 
-### Deploying your application to the cloud
+```powershell
+cd Frontend
+docker build -t ecoride-frontend .
+```
 
-First, build your image, e.g.: `docker build -t myapp .`.
-If your cloud uses a different CPU architecture than your development
-machine (e.g., you are on a Mac M1 and your cloud provider is amd64),
-you'll want to build the image for that platform, e.g.:
-`docker build --platform=linux/amd64 -t myapp .`.
+## Exécuter le conteneur
 
-Then, push it to your registry, e.g. `docker push myregistry.com/myapp`.
+```powershell
+docker run -p 80:80 ecoride-frontend
+```
 
-Consult Docker's [getting started](https://docs.docker.com/go/get-started-sharing/)
-docs for more detail on building and pushing.
+## Stack de déploiement
 
-### References
-* [Docker's Node.js guide](https://docs.docker.com/language/nodejs/)
+- Hébergement recommandé : Netlify (pour les sites statiques)
+- Backend : Render
+- MySQL : Aiven (MySQL managé)
+- MongoDB : MongoDB Atlas
+
+Si vous déployez un conteneur sur une autre plateforme, assurez-vous de configurer les mêmes variables d'environnement que pour Netlify.

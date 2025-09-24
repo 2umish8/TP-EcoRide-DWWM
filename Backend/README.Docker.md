@@ -1,22 +1,29 @@
-### Building and running your application
+Backend - Docker
 
-When you're ready, start your application by running:
-`docker compose up --build`.
+Construire et exécuter l'image Docker du backend.
 
-Your application will be available at http://localhost:3000.
+Build
 
-### Deploying your application to the cloud
+```powershell
+cd Backend
+docker build -t ecoride-backend .
+```
 
-First, build your image, e.g.: `docker build -t myapp .`.
-If your cloud uses a different CPU architecture than your development
-machine (e.g., you are on a Mac M1 and your cloud provider is amd64),
-you'll want to build the image for that platform, e.g.:
-`docker build --platform=linux/amd64 -t myapp .`.
+Exécution (exemple avec variables d'environnement)
 
-Then, push it to your registry, e.g. `docker push myregistry.com/myapp`.
+```powershell
+docker run -p 3000:3000 \
+  -e DATABASE_URL="mysql://user:pass@mysql-host:3306/ecoride_db" \
+  -e MONGODB_URI="mongodb+srv://user:pass@cluster.mongodb.net/ecoride_db" \
+  ecoride-backend
+```
 
-Consult Docker's [getting started](https://docs.docker.com/go/get-started-sharing/)
-docs for more detail on building and pushing.
+Stack de déploiement
+--------------------
 
-### References
-* [Docker's Node.js guide](https://docs.docker.com/language/nodejs/)
+- Backend : Render
+- MySQL : Aiven (MySQL managé)
+- MongoDB : MongoDB Atlas
+- Frontend : Netlify
+
+Si vous utilisez des images Docker sur d'autres plateformes, préférez des bases de données managées (Aiven/Atlas) et évitez d'embarquer des secrets dans l'image.
