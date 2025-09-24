@@ -53,7 +53,7 @@ const corsOptions = {
             "http://127.0.0.1:5173",
             "http://127.0.0.1:5174",
             "http://127.0.0.1:5175",
-            "https://tp-ecoride-dwwm-production.up.railway.app",
+            "https://ecoridetp.netlify.app", // Production frontend on Netlify
             // Ajouter d'autres domaines de production si nécessaire
         ];
 
