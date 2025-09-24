@@ -7,11 +7,8 @@ API REST pour la plateforme de covoiturage EcoRide développée avec Node.js, Ex
 ### 🚀 Démarrage rapide avec Docker Compose
 
 ```bash
-# Depuis la racine du projet
-docker compose up --build
-
-# Mode développement avec hot reload
-docker compose -f compose.yaml -f compose.dev.yaml up --build
+# Depuis la racine du projet - starts frontend + backend only (DBs are external)
+docker compose -f ../compose.yaml -f ../compose.dev.yaml up --build
 ```
 
 ### 🔧 Build et run du backend seul
@@ -20,10 +17,10 @@ docker compose -f compose.yaml -f compose.dev.yaml up --build
 # Build l'image Docker
 docker build -t ecoride-backend .
 
-# Run le container (nécessite MySQL et MongoDB)
+# Run the container pointing to external DB services (set the appropriate env vars)
 docker run -p 3000:3000 \
-  -e DATABASE_URL="mysql://user:pass@mysql:3306/ecoride_db" \
-  -e MONGODB_URI="mongodb://admin:pass@mongodb:27017/ecoride_db?authSource=admin" \
+  -e DATABASE_URL="mysql://user:pass@your-mysql-host:3306/ecoride_db" \
+  -e MONGODB_URI="mongodb+srv://user:pass@cluster.mongodb.net/ecoride_db" \
   ecoride-backend
 ```
 
@@ -71,12 +68,16 @@ curl http://localhost:3000/api/health
 -   **Mongoose** - ODM pour MongoDB
 -   **Winston** - Logging structuré
 
-## 📋 Prérequis (Développement Local)
+## 📋 Prérequis
 
--   Node.js 18+ et npm
--   MySQL Server 8.0+
--   MongoDB 4.4+
--   Redis (optionnel)
+- Node.js 18+ et npm
+- External DB services (MySQL and MongoDB) accessible from your development environment or deployment platform
+
+Important: In this project databases are provided as DBaaS. If you need
+access to the hosted databases for development or testing, please request
+access directly from the repository owner/maintainer. If you prefer to run
+databases locally instead, install MySQL/MongoDB/Redis on your machine and
+configure the connection strings in `Backend/.env` (see the examples below).
 
 ## ⚙️ Installation (Développement Local)
 
@@ -117,17 +118,19 @@ NODE_ENV=development
 
 4. **Configurer les bases de données**
 
-```bash
-# MySQL - Exécuter les scripts SQL
-mysql -u root -p < Database/creation_base_de_donnees.sql
-mysql -u root -p < Database/insertion_donnees.sql
+This project expects databases to be provided by external services (DBaaS). Use
+your provider's GUI or CLI to create the MySQL and MongoDB instances, then set
+the connection variables in `./.env` or in your container orchestration platform.
 
-# Générer le client Prisma
+After provisioning MySQL, you can apply the Prisma schema from your development
+machine (the command will connect to the external MySQL using `DATABASE_URL`):
+
+```bash
+# Ensure DATABASE_URL points to your external MySQL
 npx prisma generate
 npx prisma db push
-
-# MongoDB - Démarrer le service
-mongod
+# (Optional) Run SQL scripts against your external MySQL
+# mysql -h <host> -u <user> -p <database> < Database/insertion_donnees.sql
 ```
 
 5. **Tests de connectivité**

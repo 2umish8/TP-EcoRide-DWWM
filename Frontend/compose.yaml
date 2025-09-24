@@ -15,6 +15,9 @@ services:
       NODE_ENV: production
     ports:
       - 80:80
+# Note: Databases (MySQL, MongoDB, Redis) are expected to be provided by external DBaaS
+# The local compose files do not start DB containers. Set `VITE_API_URL` or other
+# environment variables to point the frontend/backend to your deployed services.
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to

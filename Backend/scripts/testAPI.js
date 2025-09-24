@@ -1,4 +1,6 @@
 const axios = require("axios");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 // Configuration de base
 const BASE_URL = "http://localhost:3000/api";
@@ -21,10 +23,12 @@ async function runTests() {
     try {
         // Test 1: Inscription d'un nouvel utilisateur
         console.log("📝 Test 1: Inscription utilisateur");
+        const uniqueSuffix = Date.now();
         const newUser = {
-            pseudo: "testeur_api",
-            email: "testeur@api.com",
-            password: "test123",
+            pseudo: `testeur_api_${uniqueSuffix}`,
+            email: `testeur+${uniqueSuffix}@api.com`,
+            // Strong password to satisfy Zod validator: min 8 chars, uppercase, digit, special
+            password: "Test123!",
         };
 
         const registerResponse = await axios.post(
@@ -36,8 +40,9 @@ async function runTests() {
         // Test 2: Connexion
         console.log("\n🔐 Test 2: Connexion");
         const loginResponse = await axios.post(`${BASE_URL}/users/login`, {
-            identifier: "testeur@api.com",
-            password: "test123",
+            identifier: newUser.email,
+            // Must match the registration password above
+            password: newUser.password,
         });
         authToken = loginResponse.data.token;
         console.log("✅ Connexion réussie:", loginResponse.data.message);
@@ -51,7 +56,44 @@ async function runTests() {
         console.log("✅ Profil récupéré:", profileResponse.data.user.pseudo);
 
         // Test 4: Devenir chauffeur
-        console.log("\n🚗 Test 4: Devenir chauffeur");
+        // Create a vehicle directly in the database for this user (bypass API role restriction)
+        console.log("\n🚙 Test 4: Créer un véhicule en base pour l'utilisateur (Prisma)");
+        const userId = profileResponse.data.user.id;
+        // Ensure brand exists (upsert)
+        const brandName = "Renault";
+        let brand = await prisma.brand.findFirst({ where: { name: brandName } });
+        if (!brand) {
+            brand = await prisma.brand.create({ data: { name: brandName } });
+        }
+
+        // Ensure color exists (upsert)
+        const colorName = "Rouge";
+        let color = await prisma.color.findFirst({ where: { name: colorName } });
+        if (!color) {
+            color = await prisma.color.create({ data: { name: colorName } });
+        }
+
+        const vehicleData = {
+            plate_number: `TEST-${uniqueSuffix}`,
+            model: "Clio",
+            seats_available: 4,
+            is_electric: false,
+            user_id: userId,
+            brand_id: brand.id,
+            color_id: color.id,
+        };
+        const createdVehicle = await prisma.vehicle.create({ data: vehicleData });
+        console.log("✅ Véhicule créé en base (Prisma):", createdVehicle.plate_number);
+
+        // Now attempt to become driver
+        console.log("\n�🚗 Test 5: Devenir chauffeur");
+        // Ensure the 'chauffeur' role exists in the database
+        let chauffeurRole = await prisma.role.findFirst({ where: { name: "chauffeur" } });
+        if (!chauffeurRole) {
+            chauffeurRole = await prisma.role.create({ data: { name: "chauffeur" } });
+            console.log("✅ Role 'chauffeur' créé en base pour les tests.");
+        }
+
         const driverResponse = await axios.post(
             `${BASE_URL}/users/become-driver`,
             {},
@@ -59,10 +101,22 @@ async function runTests() {
         );
         console.log("✅ Rôle chauffeur ajouté:", driverResponse.data.message);
 
+        // Re-login to obtain a fresh token that includes the new 'chauffeur' role
+        console.log("\n🔁 Re-authentification pour récupérer le token mis à jour...");
+        const relogin = await axios.post(`${BASE_URL}/users/login`, {
+            identifier: newUser.email,
+            password: newUser.password,
+        });
+        authToken = relogin.data.token;
+        console.log("✅ Token mis à jour avec rôles: ", relogin.data.user.roles);
+
+        // Disconnect Prisma client used for direct DB writes
+        await prisma.$disconnect();
+
         // Test 5: Ajouter un véhicule
         console.log("\n🚙 Test 5: Ajouter un véhicule");
         const vehicle = {
-            plate_number: "TEST-001",
+            plate_number: `API-${uniqueSuffix}`,
             model: "Clio",
             seats_available: 4,
             is_electric: false,

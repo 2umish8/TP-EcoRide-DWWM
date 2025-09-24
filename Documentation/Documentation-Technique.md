@@ -11,10 +11,10 @@ Cette documentation technique décrit l'architecture et les technologies utilis�
 
 ### Comptes de test prêts à utiliser
 
-| Rôle               | Pseudo         | Mot de passe | Accès         |
-| --------------------- | ----------------- | --------------- | ---------------- |
-| **Administrateur** | Admin             | Admin2025!       | Gestion système  |
-| **Utilisateur**    | test              | Test2025!        | Participation&Création trajets    |
+| Rôle               | Pseudo | Mot de passe | Accès                          |
+| ------------------ | ------ | ------------ | ------------------------------ |
+| **Administrateur** | Admin  | Admin2025!   | Gestion système                |
+| **Utilisateur**    | test   | Test2025!    | Participation&Création trajets |
 
 *Vous pouvez créer un compte utilisateur allant sur le bouton "Inscription" et en renseignant les champs requis. Vous serez par défaut passager, mais vous pouvez devenir conducteur en renseignant les champs requis.*
 ---

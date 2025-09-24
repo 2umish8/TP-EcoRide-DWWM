@@ -1,8 +1,8 @@
-# Guide de Développement EcoRide 🚀
+# Guide de Développement EcoRide
 
 Configuration complète de l'environnement de développement avec Docker et développement natif.
 
-## � Développement avec Docker (Recommandé)
+## Développement avec Docker (Recommandé)
 
 ### Démarrage rapide avec Docker Compose
 
@@ -14,10 +14,15 @@ cd TP-EcoRide-DWWM
 # Copier le fichier d'environnement
 cp .env.example .env
 
-# Lancer l'environnement complet
-docker compose up --build
+# IMPORTANT: This repository does not start database containers.
+# Databases are provided via external DBaaS in our setup.
+# If you need access to the project's DB instances, please contact the
+# repository owner/maintainer directly to request credentials and access.
+# Alternatively, if you prefer to run databases locally for development, set
+# them up yourself and configure connection strings in `Backend/.env` (see
+# the Backend README for examples).
 
-# Mode développement avec hot reload
+# Lancer les services (frontend + backend)
 docker compose -f compose.yaml -f compose.dev.yaml up --build
 ```
 
@@ -27,8 +32,8 @@ docker compose -f compose.yaml -f compose.dev.yaml up --build
 | ------------- | --------------------- | ----------------------- |
 | Frontend      | http://localhost      | Interface utilisateur   |
 | Backend API   | http://localhost:3000 | API REST                |
-| Adminer       | http://localhost:8080 | Interface admin MySQL   |
-| Mongo Express | http://localhost:8081 | Interface admin MongoDB |
+| Adminer       | (removed)             | Use your DBaaS admin UI |
+| Mongo Express | (removed)             | Use your DBaaS admin UI |
 
 ### Gestion des containers
 
@@ -73,9 +78,7 @@ volumes:
 ### Prérequis
 
 - **Node.js** 18+ et npm
-- **MySQL** 8.0+
-- **MongoDB** 4.4+
-- **Redis** 7+ (optionnel)
+- Access to external database services (DBaaS): MySQL, MongoDB. Redis optional.
 - **Git**
 
 ### Installation
@@ -121,11 +124,12 @@ mysql -u root -p ecoride_db < Database/insertion_donnees.sql
 
 #### MongoDB
 
-```bash
-# Démarrer MongoDB local
-mongod
+This project expects MongoDB to be provided by a DBaaS (e.g., Atlas). Set the
+`MONGODB_URI` environment variable in your `Backend/.env` or deployment platform.
 
-# Ou utiliser MongoDB Atlas (cloud)
+Example:
+
+```env
 MONGODB_URI="mongodb+srv://user:pass@cluster.mongodb.net/ecoride_db"
 ```
 
@@ -174,14 +178,11 @@ VITE_DEBUG=true
 # === Projet ===
 COMPOSE_PROJECT_NAME=ecoride
 
-# === Base de données ===
-MYSQL_ROOT_PASSWORD=dev_root_password
-MYSQL_DATABASE=ecoride_db
-MYSQL_USER=ecoride_user
-MYSQL_PASSWORD=dev_user_password
-
-MONGO_INITDB_ROOT_USERNAME=admin
-MONGO_INITDB_ROOT_PASSWORD=dev_mongo_password
+# NOTE: Database credentials are not used by local containers in this repo.
+# Provide production or development DB connection strings via the Backend .env
+# Example (Backend/.env):
+# DATABASE_URL=mysql://user:pass@mysql-host:3306/ecoride_db
+# MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/ecoride_db
 
 # === Sécurité ===
 JWT_SECRET=development-docker-secret
@@ -225,7 +226,10 @@ npm run lint
 ### Tests avec Docker
 
 ```bash
-# Lancer les tests dans les containers
+# Start services (frontend + backend) with DB connection env vars set
+docker compose -f compose.yaml -f compose.dev.yaml up --build
+
+# Run tests inside the backend container (backend must have DB access via env)
 docker compose exec backend npm run test:full
 docker compose exec frontend npm run test:unit
 ```

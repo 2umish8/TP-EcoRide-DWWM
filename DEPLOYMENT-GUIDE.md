@@ -328,7 +328,7 @@ jobs:
           ./deploy.sh
 ```
 
-## 📊 Monitoring
+## Monitoring
 
 ### 1. Health Checks
 
@@ -419,7 +419,7 @@ volumes:
   grafana-data:
 ```
 
-## 🛠️ Maintenance
+## Maintenance
 
 ### 1. Sauvegardes automatiques
 
@@ -481,7 +481,7 @@ docker compose exec mysql mysql -u root -p -e "OPTIMIZE TABLE ecoride_db.*;"
 docker compose logs --since="24h" | grep -i error
 ```
 
-## 🚨 Troubleshooting
+## Troubleshooting
 
 ### 1. Problèmes courants
 
@@ -551,7 +551,7 @@ Level 3: Escalation management
 Level 4: Contacte éditeur/support
 ```
 
-## 📈 Optimisations Production
+## Optimisations Production
 
 ### 1. Performance
 
@@ -605,7 +605,7 @@ services:
 
 ---
 
-## 📚 Ressources additionnelles
+## Ressources additionnelles
 
 - [Documentation Docker](https://docs.docker.com/)
 - [Guide sécurité containers](https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html)
@@ -614,4 +614,4 @@ services:
 
 ---
 
-**🚀 Bon déploiement! L'équipe EcoRide vous souhaite une mise en production réussie.**
+**Bon déploiement! L'équipe EcoRide vous souhaite une mise en production réussie.**

@@ -152,15 +152,15 @@ const getAvailableCarpoolings = async (req, res) => {
 
         // Filtres optionnels
         if (departure) {
+            // Prisma 'mode' option was causing validation errors in the current Prisma client.
+            // Remove 'mode' to use default behavior (case-sensitive). For case-insensitive
             whereClause.departure_address = {
                 contains: departure,
-                mode: "insensitive",
             };
         }
         if (arrival) {
             whereClause.arrival_address = {
                 contains: arrival,
-                mode: "insensitive",
             };
         }
         if (date) {

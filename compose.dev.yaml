@@ -32,9 +32,6 @@ services:
             - "3000:3000"
             - "9229:9229" # Node.js debug port
 
-    # Enable development tools
-    adminer:
-        profiles: [] # Remove profile restriction
 
-    mongo-express:
-        profiles: [] # Remove profile restriction
+    # Note: adminer and mongo-express are not used; database admin tools should
+    # be provided by your DBaaS provider if needed.

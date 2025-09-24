@@ -605,7 +605,7 @@ const corsOptions = {
 
 ### Database Deployment
 
--   **MySQL**: Railway MySQL service
+-   **MySQL**: Aiven MySQL service
 -   **MongoDB**: MongoDB Atlas cloud service
 -   **Backup**: Automatic database backups
 -   **Migration**: Prisma migration scripts for schema updates

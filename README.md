@@ -16,18 +16,22 @@ cd TP-EcoRide-DWWM
 # 2. Copier le fichier d'environnement
 cp .env.example .env
 
-# 3. Lancer l'application complète
-docker compose up --build
+# 3. Lancer les services frontend + backend (databases must be provided externally)
+docker compose -f compose.yaml -f compose.dev.yaml up --build
 
 # Pour lancer en mode détaché (arrière-plan)
-docker compose up --build -d
+docker compose -f compose.yaml -f compose.dev.yaml up --build -d
 ```
 
 **🌐 Accès à l'application :**
 - **Frontend** : http://localhost (port 80)
 - **Backend API** : http://localhost:3000
-- **Adminer (DB Admin)** : http://localhost:8080
-- **Mongo Express** : http://localhost:8081
+
+Note: Adminer and Mongo Express are not started by the compose stack; use your
+DBaaS provider's admin UI to manage databases. If you need credentials/access
+to the project's DB instances, please contact the repository owner/maintainer
+directly. If you prefer to run databases locally, set up MySQL/MongoDB/Redis
+on your machine and configure the connection strings in `Backend/.env`.
 
 ### 🔧 Mode Développement avec Docker
 
@@ -76,24 +80,22 @@ docker compose restart backend
 - **🎨 Frontend** : Vue.js 3 + Vite + Bootstrap 5
 - **⚙️ Backend** : Node.js + Express.js + Prisma ORM
 - **💾 Bases de données** : 
-  - MySQL 8.0 (données principales)
-  - MongoDB 7.0 (avis et préférences)
-  - Redis 7 (cache et sessions)
+  - MySQL 8.0 (données principales) - provided externally
+  - MongoDB 7.0 (avis et préférences) - provided externally
+  - Redis 7 (cache et sessions) - optional, provided externally
 - **🐳 Containerisation** : Docker + Docker Compose
 - **🔒 Sécurité** : JWT + bcrypt + Helmet
 - **🌐 Proxy** : Nginx (production)
 
 ### 📦 Services Docker
 
-| Service         | Description              | Port   | Accès                 |
-| --------------- | ------------------------ | ------ | --------------------- |
-| `frontend`      | Interface Vue.js + Nginx | 80/443 | http://localhost      |
-| `backend`       | API Node.js/Express      | 3000   | http://localhost:3000 |
-| `mysql`         | Base de données MySQL    | 3306   | localhost:3306        |
-| `mongodb`       | Base de données MongoDB  | 27017  | localhost:27017       |
-| `redis`         | Cache Redis              | 6379   | localhost:6379        |
-| `adminer`       | Interface admin MySQL    | 8080   | http://localhost:8080 |
-| `mongo-express` | Interface admin MongoDB  | 8081   | http://localhost:8081 |
+| Service    | Description              | Port   | Accès                       |
+| ---------- | ------------------------ | ------ | --------------------------- |
+| `frontend` | Interface Vue.js + Nginx | 80/443 | http://localhost            |
+| `backend`  | API Node.js/Express      | 3000   | http://localhost:3000       |
+| (external) | MySQL (DBaaS)            | -      | Provided by your DB host    |
+| (external) | MongoDB (DBaaS)          | -      | Provided by your DB host    |
+| (external) | Redis (optional)         | -      | Provided by your cache host |
 
 ## ⚡ Démarrage local (développement natif)
 

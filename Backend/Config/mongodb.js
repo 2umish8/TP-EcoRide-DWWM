@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 // Configuration de la connexion MongoDB
 // Connect to MongoDB with retry/backoff to avoid exiting the container
 const connectMongoDB = async () => {
-    const mongoURI =
-        process.env.MONGODB_URI || "mongodb://localhost:27017/ecoride_reviews";
+    const mongoURI = process.env.MONGODB_URI;
 
     const MAX_RETRIES = parseInt(
         process.env.MONGO_CONNECT_MAX_RETRIES || "6",
