@@ -1,0 +1,28 @@
+# Netlify configuration for the EcoRide frontend
+# This fixes the base directory issue seen in Netlify builds where the UI
+# was configured to use an absolute path like `/opt/build` that doesn't
+# exist in the repository. We set the base to the `Frontend` folder so
+# Netlify runs install/build from there.
+
+[build]
+  # Directory inside the repository where the frontend lives
+  base = "Frontend"
+
+  # Build command — runs inside the `base` directory
+  # `npm ci` is preferred in CI for reproducible installs; Netlify will still
+  # use the project's `package.json` inside `Frontend`.
+  command = "npm ci && npm run build"
+
+  # Publish directory relative to the `base` directory
+  publish = "dist"
+
+# Redirect all routes to index.html for a SPA (Vue router in history mode)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Optional: set production environment variables here or configure them
+# in the Netlify UI. Uncomment and adjust if you want defaults in the repo.
+[context.production.environment]
+#  VITE_API_URL = "https://tp-ecoride-dwwm-production.up.railway.app/api"
