@@ -82,12 +82,27 @@ Configuration recommandée pour la production :
 
 Avant le déploiement, configurez les variables d'environnement nécessaires sur la plateforme choisie (par exemple `DATABASE_URL`, `MONGODB_URI`, `JWT_SECRET`, `BCRYPT_SALT_ROUNDS`, `PORT`).
 
-Documentation supplémentaire
----------------------------
+Documentation Complète
+-----------------------
 
-- Guide de développement : `README-DEV.md`
-- Documentation API : `Documentation/API_DOCUMENTATION.md`
-- Sécurité : `SECURITE.md`
+**Toute la documentation est organisée dans le dossier `Documentation/`** pour une meilleure lisibilité et navigation.
+
+👉 **[Commencez par le Documentation/INDEX.md](./Documentation/INDEX.md)** pour un guide complet de navigation.
+
+**Raccourcis rapides :**
+
+Pour les **développeurs** voulant reproduire le projet :
+- [RESUME_EXECUTIF.md](./Documentation/LEARNING/RESUME_EXECUTIF.md) - Plan de maîtrise (👈 COMMENCEZ ICI)
+- [PATTERNS_CLÉS.md](./Documentation/LEARNING/PATTERNS_CLÉS.md) - Les 9 patterns essentiels
+- [GUIDE_PRATIQUE_NOUVEAU_PROJET.md](./Documentation/GETTING-STARTED/GUIDE_PRATIQUE_NOUVEAU_PROJET.md) - Instructions pas à pas
+
+Pour les **architects/DevOps** :
+- [DEPLOYMENT-GUIDE.md](./Documentation/TECHNICAL/DEPLOYMENT-GUIDE.md) - Déploiement complet
+- [SECURITE.md](./Documentation/TECHNICAL/SECURITE.md) - Sécurité et bonnes pratiques
+- [API_DOCUMENTATION.md](./Documentation/TECHNICAL/API_DOCUMENTATION.md) - Spécification API
+
+Pour les **utilisateurs finaux** :
+- [Manuel-Utilisateur.md](./Documentation/USER/Manuel-Utilisateur.md) - Guide utilisateur
 
 Licence
 -------

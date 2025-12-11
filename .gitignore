@@ -159,3 +159,4 @@ temp_fix.txt
 # Fichiers de sauvegarde et temporaires
 *_backup.*
 MyTripsView_backup.vue
+.github/
