@@ -8,15 +8,15 @@
 
 ## 📊 Progress Global
 
-| Phase | Tâche | Statut | Détails |
-|-------|-------|--------|---------|
-| **1** | Console.log debug (Frontend) | ✅ DONE | 4 console.log supprimés dans api.js |
-| **2** | Fichiers orphelins (Backend/Frontend) | ✅ DONE | 4 fichiers supprimés |
-| **3** | Mise à jour documentation | ✅ DONE | 2 fichiers corrigés (counter.js → auth.js) |
-| **4** | Composants & Routes de démo Vite | ✅ DONE | 12 fichiers supprimés, 8 icones supprimées |
-| **5** | Imports inutilisés (Frontend) | 🔄 EN COURS | À commencer |
-| **6** | CSS inutilisé | ⏳ À FAIRE | Après phase 5 |
-| **7** | Backend console.log cleanup | ⏳ À FAIRE | Non-urgent (sauf debug) |
+| Phase | Tâche                                 | Statut     | Détails                                    |
+| ----- | ------------------------------------- | ---------- | ------------------------------------------ |
+| **1** | Console.log debug (Frontend)          | ✅ DONE     | 4 console.log supprimés dans api.js        |
+| **2** | Fichiers orphelins (Backend/Frontend) | ✅ DONE     | 4 fichiers supprimés                       |
+| **3** | Mise à jour documentation             | ✅ DONE     | 2 fichiers corrigés (counter.js → auth.js) |
+| **4** | Composants & Routes de démo Vite      | ✅ DONE     | 12 fichiers supprimés, 8 icones supprimées |
+| **5** | Imports inutilisés (Frontend)         | 🔄 EN COURS | À commencer                                |
+| **6** | CSS inutilisé                         | ⏳ À FAIRE  | Après phase 5                              |
+| **7** | Backend console.log cleanup           | ⏳ À FAIRE  | Non-urgent (sauf debug)                    |
 
 ---
 
@@ -138,13 +138,13 @@ const isLoggedIn = computed(() => ...)
 ## 📈 Statistiques Finales (À Jour)
 
 ### Files & Code Removed
-| Catégorie | Nombre | Détails |
-|-----------|--------|---------|
-| Fichiers supprimés | 17 | 4 code + 5 vues + 5 icones + 3 tests |
-| Console.log supprimés | 4 | Frontend api.js |
-| Routes supprimées | 2 | /test, /forgot-password |
-| Imports à nettoyer | TBD | Phase 5 |
-| CSS à nettoyer | TBD | Phase 6 |
+| Catégorie             | Nombre | Détails                              |
+| --------------------- | ------ | ------------------------------------ |
+| Fichiers supprimés    | 17     | 4 code + 5 vues + 5 icones + 3 tests |
+| Console.log supprimés | 4      | Frontend api.js                      |
+| Routes supprimées     | 2      | /test, /forgot-password              |
+| Imports à nettoyer    | TBD    | Phase 5                              |
+| CSS à nettoyer        | TBD    | Phase 6                              |
 
 ### Impact
 - **Code propre:** Sans démo Vite, sans fichiers orphelins

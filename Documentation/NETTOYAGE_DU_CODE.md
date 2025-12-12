@@ -10,14 +10,14 @@
 
 ### Progress Global
 
-| Phase | Description | Statut | Détails |
-|-------|-------------|--------|---------|
-| **PHASE 1** | Console.log debug | ✅ DONE | 4 console.log supprimés |
-| **PHASE 2** | Fichiers orphelins | ✅ DONE | 4 fichiers supprimés |
-| **PHASE 3** | Documentation | ✅ DONE | 2 fichiers mis à jour |
-| **PHASE 4** | Composants & Routes démo | ✅ DONE | 12 fichiers supprimés |
-| **PHASE 5** | Imports inutilisés | 🔄 EN COURS | À commencer |
-| **PHASE 6** | CSS inutilisé | ⏳ À FAIRE | Après phase 5 |
+| Phase       | Description              | Statut     | Détails                 |
+| ----------- | ------------------------ | ---------- | ----------------------- |
+| **PHASE 1** | Console.log debug        | ✅ DONE     | 4 console.log supprimés |
+| **PHASE 2** | Fichiers orphelins       | ✅ DONE     | 4 fichiers supprimés    |
+| **PHASE 3** | Documentation            | ✅ DONE     | 2 fichiers mis à jour   |
+| **PHASE 4** | Composants & Routes démo | ✅ DONE     | 12 fichiers supprimés   |
+| **PHASE 5** | Imports inutilisés       | 🔄 EN COURS | À commencer             |
+| **PHASE 6** | CSS inutilisé            | ⏳ À FAIRE  | Après phase 5           |
 
 ---
 
