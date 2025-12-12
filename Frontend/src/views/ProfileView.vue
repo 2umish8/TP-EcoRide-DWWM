@@ -491,10 +491,8 @@ export default {
     // Charger les véhicules de l'utilisateur
     const loadUserVehicles = async () => {
       try {
-        console.log('Chargement des véhicules...')
         const response = await vehicleService.getUserVehicles()
         vehicles.value = response.vehicles || []
-        console.log('Véhicules chargés:', vehicles.value)
       } catch (error) {
         console.error('Erreur lors du chargement des véhicules:', error)
         vehicles.value = []
@@ -504,9 +502,7 @@ export default {
     // Charger le profil utilisateur
     const loadUserProfile = async () => {
       try {
-        console.log('Chargement du profil utilisateur...')
         const profileData = await authService.getProfile()
-        console.log('Profil récupéré:', profileData)
 
         // Initialiser les rôles selon les données de l'API
         const userRoles = ['passager'] // Tous les utilisateurs sont passagers par défaut
@@ -514,11 +510,9 @@ export default {
         // Vérifier si l'utilisateur est chauffeur en cherchant dans le tableau des rôles
         if (profileData.user.roles && profileData.user.roles.includes('chauffeur')) {
           userRoles.push('chauffeur')
-          console.log('Utilisateur déjà chauffeur')
         }
 
         selectedRoles.value = userRoles
-        console.log('Rôles initialisés:', userRoles)
 
         // Si l'utilisateur est chauffeur, charger ses véhicules
         if (userRoles.includes('chauffeur')) {
@@ -544,8 +538,6 @@ export default {
 
     // Méthodes
     const updateRole = async () => {
-      console.log('Rôles sélectionnés:', JSON.stringify(selectedRoles.value))
-
       // Si l'utilisateur sélectionne le rôle chauffeur et n'était pas déjà chauffeur
       if (selectedRoles.value.includes('chauffeur')) {
         try {
@@ -555,9 +547,7 @@ export default {
             profileData.user.roles && profileData.user.roles.includes('chauffeur')
 
           if (!isAlreadyDriver) {
-            console.log("Tentative d'appel API becomeDriver...")
             await authService.becomeDriver()
-            console.log('Utilisateur maintenant chauffeur')
 
             // Message informatif et redirection pour un nouveau token
             notificationStore.notificationStore.showSuccess(
@@ -567,7 +557,6 @@ export default {
             window.location.href = '/login'
             return
           } else {
-            console.log('Utilisateur déjà chauffeur, chargement des véhicules...')
             // Charger les véhicules si pas déjà fait
             if (vehicles.value.length === 0) {
               await loadUserVehicles()
@@ -587,7 +576,6 @@ export default {
 
           // Si l'utilisateur est déjà chauffeur, ne pas afficher d'erreur
           if (error.response?.data?.message?.includes('déjà chauffeur')) {
-            console.log("Utilisateur déjà chauffeur, pas d'erreur à afficher")
             return
           }
 
@@ -604,7 +592,6 @@ export default {
     }
 
     const updatePreferences = () => {
-      console.log('Préférences mises à jour:', JSON.stringify(driverPreferences.value))
       // TODO: Envoyer au backend
     }
 
@@ -612,8 +599,6 @@ export default {
       isSubmitting.value = true
 
       try {
-        console.log("Ajout d'un nouveau véhicule:", newVehicle.value)
-
         // Préparer les données selon le format attendu par l'API
         const vehicleData = {
           plate_number: newVehicle.value.plate_number,
@@ -624,8 +609,6 @@ export default {
           color_name: newVehicle.value.color, // L'API attend color_name
           first_registration_date: null, // Optionnel selon l'API
         }
-
-        console.log("Données envoyées à l'API:", vehicleData)
 
         // Appel API pour ajouter le véhicule
         await vehicleService.addVehicle(vehicleData)
@@ -644,7 +627,6 @@ export default {
         }
 
         showAddVehicle.value = false
-        console.log('Véhicule ajouté avec succès')
       } catch (error) {
         console.error("Erreur lors de l'ajout du véhicule:", error)
         notificationStore.showError(
@@ -657,15 +639,12 @@ export default {
 
     const removeVehicle = async (vehicleId) => {
       try {
-        console.log('Suppression du véhicule:', vehicleId)
 
         // Appel API pour supprimer le véhicule
         await vehicleService.removeVehicle(vehicleId)
 
         // Recharger la liste des véhicules
         await loadUserVehicles()
-
-        console.log('Véhicule supprimé avec succès')
       } catch (error) {
         console.error('Erreur lors de la suppression du véhicule:', error)
         notificationStore.showError(
@@ -677,7 +656,6 @@ export default {
 
     const proposeRide = async () => {
       try {
-        console.log('Nouveau trajet proposé:', JSON.stringify(newRide.value))
 
         // Construire les dates et heures complètes
         const departureDateTime = `${newRide.value.date}T${newRide.value.time}:00`
@@ -698,10 +676,6 @@ export default {
         }
 
         const arrivalDateTime = formatDateTime(arrivalDate)
-
-        console.log('Dates formatées:')
-        console.log('Départ:', departureDateTime)
-        console.log('Arrivée:', arrivalDateTime)
 
         // Validation des dates côté frontend
         if (departureDate <= new Date()) {
@@ -758,7 +732,6 @@ export default {
           // Rediriger vers la page de recherche pour voir le trajet
           window.open('/search', '_blank')
         }
-        console.log('Réponse API:', response)
       } catch (error) {
         console.error('Erreur lors de la proposition du trajet:', error)
         notificationStore.showError(
@@ -798,10 +771,6 @@ export default {
 
     onMounted(async () => {
       // Vérifier l'état de l'authentification au montage
-      console.log("=== État de l'authentification au montage ===")
-      console.log('Store isAuthenticated:', authStore.isAuthenticated)
-      console.log('Store user:', authStore.currentUser)
-      console.log('Token localStorage:', !!localStorage.getItem('authToken'))
 
       // Si pas authentifié, rediriger vers login
       if (!authStore.isAuthenticated) {

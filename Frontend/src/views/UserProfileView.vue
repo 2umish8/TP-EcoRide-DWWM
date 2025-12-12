@@ -176,7 +176,6 @@ const loadUserProfile = async () => {
     }
 
     const response = await api.get(`/users/${userId}`)
-    console.log('Frontend received:', response.data)
 
     user.value = response.data.user
     reviews.value = response.data.reviews || []
@@ -187,7 +186,6 @@ const loadUserProfile = async () => {
       rating: response.data.stats?.averageRating || null,
       reviewsCount: reviews.value.length,
     }
-    console.log('User stats calculated:', userStats.value)
   } catch (err) {
     console.error('Erreur lors du chargement du profil:', err)
     if (err.response?.status === 404) {

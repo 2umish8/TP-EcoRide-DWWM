@@ -265,7 +265,6 @@ const submitReview = async () => {
     await reviewService.createReview(reviewData)
 
     submitted.value = true
-    console.log('✅ Avis soumis avec succès')
   } catch (err) {
     console.error("Erreur lors de la soumission de l'avis:", err)
     error.value = err.response?.data?.message || "Erreur lors de la soumission de l'avis"

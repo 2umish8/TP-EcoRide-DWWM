@@ -492,7 +492,6 @@ export default {
       try {
         // 1. Ajouter le véhicule
         const vehicleResponse = await vehicleService.addVehicle(vehicleData.value)
-        console.log('Véhicule ajouté:', vehicleResponse.data.vehicleId)
 
         // 2. Devenir chauffeur
         const driverResponse = await fetch('/api/users/become-driver', {
@@ -510,9 +509,8 @@ export default {
         // 3. Sauvegarder les préférences
         try {
           await preferencesService.createPreferences(preferencesData.value)
-          console.log('Préférences sauvegardées')
         } catch (prefError) {
-          console.log('Préférences non sauvegardées (optionnel):', prefError.message)
+          // Les préférences sont optionnelles
         }
 
         // 4. Succès !
