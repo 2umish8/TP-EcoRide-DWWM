@@ -73,9 +73,9 @@ const router = createRouter({
       component: () => import('../views/CreditsView.vue'),
     },
     {
-      path: '/test-modals',
-      name: 'TestModals',
-      component: () => import('../views/TestModalView.vue'),
+      path: '/test',
+      name: 'Test',
+      component: () => import('../views/TestView.vue'),
     },
     {
       path: '/review/:carpoolingId',

@@ -1,68 +1,15 @@
 <template>
   <div v-if="isVisible" class="modal-overlay" @click="handleOverlayClick">
-    <div class="modal-content" @click.stop>
-      <div class="modal-header" :class="`modal-header--${type}`">
+    <div class="modal-content" :style="{ '--modal-color': colorMap[type] }" @click.stop>
+      <div class="modal-header">
         <h3 class="modal-title">
-          <span class="modal-icon" :class="`modal-icon--${type}`">
-            <svg v-if="type === 'success'" width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <svg
-              v-else-if="type === 'error'"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <svg
-              v-else-if="type === 'confirm'"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path
-                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </span>
+          <svg class="modal-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <component :is="iconPaths[type]" />
+          </svg>
           {{ title }}
         </h3>
-        <button v-if="!hideCloseButton" @click="close" class="close-button">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+        <button v-if="!hideCloseButton" @click="close" class="close-button" aria-label="Fermer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
               d="M18 6L6 18M6 6L18 18"
               stroke="currentColor"
@@ -82,13 +29,7 @@
         <button v-if="type === 'confirm'" @click="handleCancel" class="btn btn-secondary">
           {{ cancelText }}
         </button>
-        <button
-          @click="handleConfirm"
-          class="btn"
-          :class="
-            type === 'alert' ? 'btn-primary' : type === 'error' ? 'btn-danger' : 'btn-success'
-          "
-        >
+        <button @click="handleConfirm" class="btn" :class="buttonClass">
           {{ confirmText }}
         </button>
       </div>
@@ -106,7 +47,7 @@ export default {
     },
     type: {
       type: String,
-      default: 'alert', // 'alert', 'confirm', 'error', 'success'
+      default: 'alert',
       validator: (value) => ['alert', 'confirm', 'error', 'success'].includes(value),
     },
     title: {
@@ -135,6 +76,53 @@ export default {
     },
   },
   emits: ['confirm', 'cancel', 'close'],
+  computed: {
+    colorMap() {
+      return {
+        success: '#8fbc8f',
+        error: '#ff6b6b',
+        confirm: '#34d399',
+        alert: '#87ceeb',
+      }
+    },
+    buttonClass() {
+      const buttonClasses = {
+        alert: 'btn-primary',
+        error: 'btn-danger',
+        confirm: 'btn-success',
+        success: 'btn-success',
+      }
+      return buttonClasses[this.type] || 'btn-primary'
+    },
+    iconPaths() {
+      return {
+        success: this.SuccessIcon,
+        error: this.ErrorIcon,
+        confirm: this.ConfirmIcon,
+        alert: this.AlertIcon,
+      }
+    },
+    SuccessIcon() {
+      return {
+        template: `<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />`,
+      }
+    },
+    ErrorIcon() {
+      return {
+        template: `<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />`,
+      }
+    },
+    ConfirmIcon() {
+      return {
+        template: `<path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />`,
+      }
+    },
+    AlertIcon() {
+      return {
+        template: `<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />`,
+      }
+    },
+  },
   methods: {
     handleConfirm() {
       this.$emit('confirm')
@@ -157,6 +145,7 @@ export default {
 </script>
 
 <style scoped>
+/* Layout */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -175,14 +164,16 @@ export default {
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 2px solid;
+  border-color: var(--modal-color, #34d399);
   max-width: 500px;
   width: 90%;
   max-height: 80vh;
   overflow-y: auto;
   animation: slideIn 0.3s ease-out;
-  border: 1px solid rgba(52, 211, 153, 0.2);
 }
 
+/* Header */
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -193,63 +184,14 @@ export default {
   position: relative;
 }
 
-.modal-header--success {
-  border-bottom-color: rgba(143, 188, 143, 0.3);
-}
-
-.modal-header--success::before {
+.modal-header::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #8fbc8f, #7fb87f);
-  border-radius: 12px 12px 0 0;
-}
-
-.modal-header--error {
-  border-bottom-color: rgba(255, 107, 107, 0.3);
-}
-
-.modal-header--error::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #ff6b6b, #ff5252);
-  border-radius: 12px 12px 0 0;
-}
-
-.modal-header--confirm {
-  border-bottom-color: rgba(52, 211, 153, 0.3);
-}
-
-.modal-header--confirm::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #34d399, #22c55e);
-  border-radius: 12px 12px 0 0;
-}
-
-.modal-header--alert {
-  border-bottom-color: rgba(135, 206, 235, 0.3);
-}
-
-.modal-header--alert::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #87ceeb, #6bb6dd);
+  background: var(--modal-color, #34d399);
   border-radius: 12px 12px 0 0;
 }
 
@@ -271,28 +213,11 @@ export default {
   height: 24px;
   border-radius: 50%;
   flex-shrink: 0;
-}
-
-.modal-icon--success {
-  color: #8fbc8f;
-  background-color: rgba(143, 188, 143, 0.2);
-}
-
-.modal-icon--error {
-  color: #ff6b6b;
-  background-color: rgba(255, 107, 107, 0.2);
-}
-
-.modal-icon--confirm {
-  color: #34d399;
+  color: var(--modal-color, #34d399);
   background-color: rgba(52, 211, 153, 0.2);
 }
 
-.modal-icon--alert {
-  color: #87ceeb;
-  background-color: rgba(135, 206, 235, 0.2);
-}
-
+/* Close button */
 .close-button {
   background: none;
   border: none;
@@ -305,9 +230,10 @@ export default {
 
 .close-button:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  color: #34d399;
+  color: var(--modal-color, #34d399);
 }
 
+/* Body */
 .modal-body {
   padding: 0 24px 20px 24px;
 }
@@ -319,6 +245,7 @@ export default {
   font-size: 1rem;
 }
 
+/* Footer */
 .modal-footer {
   display: flex;
   justify-content: flex-end;
@@ -327,6 +254,7 @@ export default {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Buttons */
 .btn {
   padding: 10px 20px;
   border: none;
@@ -376,6 +304,7 @@ export default {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -396,7 +325,7 @@ export default {
   }
 }
 
-/* Style pour mobile */
+/* Mobile */
 @media (max-width: 480px) {
   .modal-content {
     width: 95%;
