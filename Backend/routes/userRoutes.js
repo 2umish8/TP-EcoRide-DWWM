@@ -12,7 +12,7 @@ const {
     changePassword,
 } = require("../controllers/userController");
 // Importer les middlewares d'authentification
-const { authMiddleware, requireRole } = require("../authMiddleware");
+const { authMiddleware } = require("../authMiddleware");
 
 // Routes publiques (sans authentification)
 const { validateBody } = require("../middlewares/validate");
@@ -26,7 +26,6 @@ const {
 router.post("/register", validateBody(createUserSchema), registerUser);
 // Validation pour la connexion
 router.post("/login", validateBody(loginSchema), loginUser);
-router.post("/login", loginUser);
 
 // Routes protégées (nécessitent une authentification)
 router.get("/profile", authMiddleware, getUserProfile);
