@@ -704,7 +704,6 @@ const finishCarpooling = async (req, res) => {
                     À bientôt pour de nouveaux trajets !
                 `;
 
-                console.log(`Email envoyé à ${participant.passenger.email}`);
                 // await sendEmail(participant.passenger.email, passengerSubject, passengerMessage);
             }
         } catch (emailError) {

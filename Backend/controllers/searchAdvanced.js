@@ -169,8 +169,6 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
             orderBy.departure_datetime = "asc";
         }
 
-        console.log("Prisma where:", JSON.stringify(where, null, 2));
-
         // Récupérer les covoiturages
         const carpoolings = await prisma.carpooling.findMany({
             where,

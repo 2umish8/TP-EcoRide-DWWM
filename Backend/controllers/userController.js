@@ -197,9 +197,6 @@ const becomeDriver = async (req, res) => {
             },
         });
 
-        // Log de l'événement important
-        console.log(`🚗 Nouvel chauffeur EcoRide: User ID ${userId}`);
-
         res.status(200).json({
             message:
                 "Félicitations ! Vous êtes maintenant chauffeur EcoRide. Ce statut est permanent.",
@@ -295,7 +292,6 @@ const getUserById = async (req, res) => {
 
         // Récupérer les statistiques des avis (MongoDB)
         const reviewStats = await Review.getAverageRating(parseInt(userId));
-        console.log("Review stats for user", userId, ":", reviewStats);
 
         // Récupérer les avis reçus depuis MongoDB
         const reviews = await Review.find({
@@ -350,10 +346,9 @@ const getUserById = async (req, res) => {
                 totalReviews: reviewStats.total || 0,
             },
             reviews: formattedReviews,
+            reviews: formattedReviews,
         };
-        console.log("Response data:", responseData);
         res.status(200).json(responseData);
-    } catch (error) {
         console.error(error);
         res.status(500).json({
             message: "Erreur lors de la récupération du profil.",
