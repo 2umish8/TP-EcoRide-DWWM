@@ -235,7 +235,7 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { carpoolingService } from '@/services/api.js'
-import { useAuthStore } from '@/stores/counter'
+import { useAuthStore } from '@/stores/auth'
 import IconCredit from '@/components/icons/IconCredit.vue'
 import ClickableAvatar from '@/components/ClickableAvatar.vue'
 import { useNotificationStore } from '@/stores/notification'

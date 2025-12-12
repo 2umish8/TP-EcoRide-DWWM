@@ -58,7 +58,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useAuthStore } from '../stores/counter'
+import { useAuthStore } from '@/stores/auth'
 
 const users = ref([])
 const search = ref('')

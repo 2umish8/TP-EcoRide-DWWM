@@ -392,7 +392,7 @@
 
 <script>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useAuthStore } from '../stores/counter'
+import { useAuthStore } from '@/stores/auth'
 import { carpoolingService, authService, vehicleService } from '../services/api'
 import { useNotificationStore } from '@/stores/notification'
 

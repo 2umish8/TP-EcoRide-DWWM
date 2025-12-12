@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useAuthStore } from '@/stores/counter'
+import { useAuthStore } from '@/stores/auth'
 import GlassButton from './GlassButton.vue'
 
 const authStore = useAuthStore()

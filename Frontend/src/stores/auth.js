@@ -10,7 +10,6 @@ export const useAuthStore = defineStore('auth', {
   getters: {
     isLoggedIn: (state) => state.isAuthenticated,
     currentUser: (state) => state.user,
-    userRole: (state) => state.user?.role || null,
   },
 
   actions: {
@@ -37,27 +36,6 @@ export const useAuthStore = defineStore('auth', {
 
       localStorage.removeItem('authToken')
       localStorage.removeItem('user')
-    },
-
-    async loadUserProfile() {
-      if (!this.isAuthenticated) return
-
-      try {
-        // Récupérer les données du localStorage
-        const userData = JSON.parse(localStorage.getItem('user') || 'null')
-        const token = localStorage.getItem('authToken')
-
-        if (userData && token) {
-          this.user = userData
-          this.token = token
-        } else {
-          // Si pas de données valides, déconnecter
-          this.logout()
-        }
-      } catch (error) {
-        console.error('Erreur lors du chargement du profil:', error)
-        this.logout()
-      }
     },
   },
 })

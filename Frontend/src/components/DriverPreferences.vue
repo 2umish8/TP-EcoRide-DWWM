@@ -154,7 +154,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { preferencesService } from '@/services/mongoServices.js'
-import { useUserStore } from '@/stores/user'
+import { useAuthStore } from '@/stores/auth'
 
 const props = defineProps({
   driverId: {
@@ -163,7 +163,7 @@ const props = defineProps({
   },
 })
 
-const userStore = useUserStore()
+const authStore = useAuthStore()
 
 // État réactif
 const preferences = ref({})
@@ -182,7 +182,7 @@ const form = ref({
 
 // Computed
 const isOwnProfile = computed(() => {
-  return userStore.user?.id === props.driverId
+  return authStore.currentUser?.id === props.driverId
 })
 
 const hasPreferences = computed(() => {

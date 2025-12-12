@@ -32,11 +32,6 @@ export const useNotificationStore = defineStore('notification', () => {
   const showError = (message) => show(message, 'error', 5000)
   const showWarning = (message) => show(message, 'warning', 4000)
 
-  // Reset manuel
-  const clear = () => {
-    current.value = null
-  }
-
   return {
     current,
     show,
@@ -44,6 +39,5 @@ export const useNotificationStore = defineStore('notification', () => {
     showSuccess,
     showError,
     showWarning,
-    clear,
   }
 })

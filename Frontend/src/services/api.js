@@ -63,10 +63,16 @@ api.interceptors.response.use(
   (error) => {
     console.error('❌ Erreur API:', error.message, 'URL:', error.config?.url)
     if (error.response?.status === 401) {
-      // Token expiré ou invalide
-      localStorage.removeItem('authToken')
-      localStorage.removeItem('user')
-      window.location.href = '/login'
+      // 401 UNIQUEMENT sur les requêtes protégées (pas /login)
+      // Ne pas rediriger si on est déjà en train d'essayer de se connecter
+      const isLoginRoute = error.config?.url?.includes('/users/login')
+
+      if (!isLoginRoute) {
+        // Token expiré ou invalide sur une route protégée
+        localStorage.removeItem('authToken')
+        localStorage.removeItem('user')
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   },
