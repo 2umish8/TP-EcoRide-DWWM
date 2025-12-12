@@ -59,10 +59,11 @@ Guides étape-par-étape pour créer et tester votre projet.
   - Configuration initiale
   - Code de base prêt à copier/coller
 
-- **[README-DEV.md](./GETTING-STARTED/README-DEV.md)** - Guide développeur
-  - Environnement de développement
+- **[../SETUP_LOCAL_GUIDE.md](../SETUP_LOCAL_GUIDE.md)** - Guide développement local (racine)
+  - Environnement de développement sans Docker
   - Scripts npm disponibles
   - Workflow de développement local
+  - Troubleshooting
 
 - **[GUIDE-TEST.md](./GETTING-STARTED/GUIDE-TEST.md)** - Guide de test
   - Comment tester votre application
@@ -76,15 +77,12 @@ Guides étape-par-étape pour créer et tester votre projet.
 
 Documentation détaillée pour la production et l'architecture technique.
 
-- **[DEPLOYMENT.md](./TECHNICAL/DEPLOYMENT.md)** - Guide de déploiement
+- **[DEPLOYMENT.md](./TECHNICAL/DEPLOYMENT.md)** - Guide de déploiement complet
   - Frontend sur Netlify
   - Backend sur Render
   - Configuration des variables d'environnement
   - Base de données cloud (MySQL Aiven, MongoDB Atlas)
-
-- **[DEPLOYMENT-GUIDE.md](./TECHNICAL/DEPLOYMENT-GUIDE.md)** - Guide complet du déploiement
-  - Étapes détaillées
-  - Checklist de production
+  - Étapes détaillées et checklist de production
   - Monitoring et logs
 
 - **[Documentation-Technique.md](./TECHNICAL/Documentation-Technique.md)** - Architecture technique
@@ -137,12 +135,12 @@ Documentation pour les utilisateurs finaux de l'application.
 
 **Déploiement**
 1. Lire `DEPLOYMENT.md`
-2. Suivre `DEPLOYMENT-GUIDE.md`
+2. Suivre `DEPLOYMENT.md`
 3. Vérifier `SECURITE.md`
 
 ### Pour les DevOps / Architects
 
-1. `DEPLOYMENT-GUIDE.md`
+1. `DEPLOYMENT.md`
 2. `Documentation-Technique.md`
 3. `SECURITE.md`
 4. `API_DOCUMENTATION.md`
@@ -167,12 +165,11 @@ Documentation pour les utilisateurs finaux de l'application.
 │
 ├── 📁 GETTING-STARTED/             ← Démarrage pratique
 │   ├── GUIDE_PRATIQUE_NOUVEAU_PROJET.md
-│   ├── README-DEV.md
 │   └── GUIDE-TEST.md
+│   └── ../SETUP_LOCAL_GUIDE.md     ← Guide développement local (racine)
 │
 ├── 📁 TECHNICAL/                   ← Production et déploiement
-│   ├── DEPLOYMENT.md
-│   ├── DEPLOYMENT-GUIDE.md
+│   ├── DEPLOYMENT.md               ← Guide complet de déploiement
 │   ├── Documentation-Technique.md
 │   ├── API_DOCUMENTATION.md
 │   └── SECURITE.md
@@ -204,7 +201,7 @@ A: Utilisez `REFERENCE_RAPIDE.md` pour des snippets et `GUIDE_PRATIQUE_NOUVEAU_P
 A: Utilisez `CHECKLIST_APPRENTISSAGE.md` et cochez les boxes au fur et à mesure.
 
 **Q: J'ai besoin de déployer rapidement**
-A: Lisez `DEPLOYMENT-GUIDE.md` puis `SECURITE.md`.
+A: Lisez `DEPLOYMENT.md` puis `SECURITE.md`.
 
 **Q: Je ne comprends pas un pattern**
 A: Référez-vous au pattern spécifique dans `PATTERNS_CLÉS.md` avec tous les exemples.

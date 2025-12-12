@@ -1,6 +1,7 @@
 // Importer Express
 const express = require("express");
 // Importer et configurer dotenv pour les variables d'environnement
+// Charge automatiquement depuis Backend/.env (ou Backend/.env.local en développement)
 require("dotenv").config();
 // Importer la connexion à la base de données MySQL
 const db = require("./Config/db.js");

@@ -21,7 +21,14 @@ Démarrage rapide (Docker - recommandé pour le développement)
 2. Copier les fichiers d'environnement
 
     ```powershell
+    # Backend
+    cd Backend
     copy .env.example .env
+    
+    # Frontend
+    cd ../Frontend
+    copy .env.example .env.local
+    cd ..
     ```
 
 3. Lancer les services (frontend + backend)
