@@ -1,10 +1,5 @@
 import axios from 'axios'
 
-// Configuration de base pour l'API
-// DEBUG: Afficher les variables d'environnement
-console.log('🔧 VITE_API_URL from env:', import.meta.env.VITE_API_URL)
-console.log('🔧 Mode:', import.meta.env.MODE)
-
 // Logique intelligente pour l'URL de l'API
 const getApiUrl = () => {
   // Si VITE_API_URL est défini dans .env, l'utiliser en priorité
@@ -33,8 +28,6 @@ const getApiUrl = () => {
 
 const API_BASE_URL = getApiUrl()
 
-console.log('🚀 API configurée avec URL:', API_BASE_URL)
-
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -45,7 +38,6 @@ const api = axios.create({
 // Intercepteur pour ajouter le token JWT automatiquement
 api.interceptors.request.use(
   (config) => {
-    console.log('📤 Requête vers:', config.baseURL + config.url)
     const token = localStorage.getItem('authToken')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`

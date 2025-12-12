@@ -497,7 +497,7 @@ router.push({ path: '/search', query: { departure: 'Paris' } })
 **À maîtriser pour EcoRide :**
 
 ```javascript
-// stores/counter.js
+// stores/auth.js
 import { defineStore } from 'pinia'
 import api from '@/services/api'
 

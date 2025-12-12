@@ -278,10 +278,9 @@ Une fois qu'on a:
 1. **Vérifier que tout marche localement**
 2. **Commencer nettoyage CSS** (`src/assets/main.css` → `eco-variables.css`)
 3. **Nettoyer `services/api.js`** (supprimer console.log)
-4. **Renommer stores** (`counter.js` → `auth.js`)
-5. **Supprimer composants inutiles** (HelloWorld, etc.)
-6. **Tester après CHAQUE changement** pour s'assurer que ça marche
-7. **Commit souvent** pour sauvegarder vos progrès
+4. **Supprimer composants inutiles** (HelloWorld, etc.)
+5. **Tester après CHAQUE changement** pour s'assurer que ça marche
+6. **Commit souvent** pour sauvegarder vos progrès
 
 **Après nettoyage complet**: Docker peut être nettoyé/testé aussi
 
