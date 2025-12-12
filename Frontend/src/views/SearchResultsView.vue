@@ -238,7 +238,7 @@ import { carpoolingService } from '@/services/api.js'
 import { useAuthStore } from '@/stores/counter'
 import IconCredit from '@/components/icons/IconCredit.vue'
 import ClickableAvatar from '@/components/ClickableAvatar.vue'
-import { showAlert } from '@/composables/useModal'
+import { useNotificationStore } from '@/stores/notification'
 
 const route = useRoute()
 const router = useRouter()

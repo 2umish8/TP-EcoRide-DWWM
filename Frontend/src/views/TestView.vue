@@ -1,84 +1,113 @@
 <template>
   <div class="test-container">
     <div class="test-header">
-      <h1>🧪 Page de Test - Modales</h1>
-      <p>Teste les différents types de modales CustomModal ici</p>
+      <h1>🧪 Page de Test - Notifications</h1>
+      <p>Teste les différents types de notifications ici</p>
     </div>
 
     <div class="test-grid">
-      <!-- Test Alert -->
+      <!-- Test Info -->
       <div class="test-card">
-        <h3>Alert</h3>
-        <p>Modale d'information simple</p>
-        <button @click="testAlert" class="test-btn test-btn-info">Afficher Alert</button>
+        <h3>Info</h3>
+        <p>Notification d'information simple</p>
+        <button @click="testInfo" class="test-btn test-btn-info">Afficher Info</button>
       </div>
 
       <!-- Test Success -->
       <div class="test-card">
         <h3>Success</h3>
-        <p>Modale de succès (opération réussie)</p>
+        <p>Notification de succès (opération réussie)</p>
         <button @click="testSuccess" class="test-btn test-btn-success">Afficher Success</button>
       </div>
 
       <!-- Test Error -->
       <div class="test-card">
         <h3>Error</h3>
-        <p>Modale d'erreur (problème détecté)</p>
+        <p>Notification d'erreur (problème détecté)</p>
         <button @click="testError" class="test-btn test-btn-error">Afficher Error</button>
       </div>
 
-      <!-- Test Confirm -->
+      <!-- Test Warning -->
       <div class="test-card">
-        <h3>Confirm</h3>
-        <p>Modale de confirmation (Oui/Non)</p>
-        <button @click="testConfirm" class="test-btn test-btn-confirm">Afficher Confirm</button>
+        <h3>Warning</h3>
+        <p>Notification d'avertissement (attention requise)</p>
+        <button @click="testWarning" class="test-btn test-btn-warning">Afficher Warning</button>
       </div>
     </div>
 
     <div class="test-info">
-      <h2>Informations</h2>
-      <p>Cette page utilise le composable <code>useModal</code> pour afficher les modales.</p>
-      <p>Les modales sont :</p>
+      <h3>À propos du système simplifié</h3>
+      <p>
+        Cette page utilise le store Pinia <code>useNotificationStore</code> pour afficher les
+        notifications.
+      </p>
+
+      <h3>Caractéristiques :</h3>
       <ul>
         <li>✅ Personnalisées (design dark mode)</li>
         <li>✅ Non-bloquantes (l'app continue de fonctionner)</li>
         <li>✅ Avec icônes</li>
         <li>✅ Responsives (mobile-friendly)</li>
         <li>✅ Avec animations</li>
+        <li>✅ Auto-fermeture après 3-5 secondes</li>
       </ul>
-      <p>
-        Le composable <code>useModal</code> est défini dans <code>src/composables/useModal.js</code>
-      </p>
+
+      <h3>Architecture :</h3>
+      <ul>
+        <li>📁 <code>stores/notification.js</code> - Store Pinia (gère l'état + actions)</li>
+        <li>📁 <code>components/Notification.vue</code> - Composant d'affichage simple</li>
+        <li>📁 <code>App.vue</code> - Affiche le composant Notification</li>
+      </ul>
+
+      <h3>Avantages de cette approche :</h3>
+      <ul>
+        <li>🎯 Architecture Pinia native (standard Vue 3)</li>
+        <li>🚀 Performance optimale</li>
+        <li>📚 Facile à expliquer à l'oral</li>
+        <li>🔧 Facile à maintenir et modifier</li>
+        <li>🔗 Séparation claire : état (store) + présentation (composant)</li>
+      </ul>
+
+      <h3>Utilisation dans le code :</h3>
+      <pre><code>import { useNotificationStore } from '@/stores/notification'
+
+// Dans un composant setup :
+const notificationStore = useNotificationStore()
+
+const handleSuccess = () => {
+  notificationStore.showSuccess('Opération réussie !')
+}
+
+const handleError = () => {
+  notificationStore.showError('Une erreur est survenue')
+}</code></pre>
     </div>
   </div>
 </template>
 
 <script setup>
-import { showAlert, showSuccess, showError, showConfirm } from '@/composables/useModal'
+import { useNotificationStore } from '@/stores/notification'
 
-// Test Alert
-const testAlert = () => {
-  showAlert("Ceci est une alerte d'information", 'Alerte')
+const notificationStore = useNotificationStore()
+
+// Test Info
+const testInfo = () => {
+  notificationStore.showInfo("Ceci est une notification d'information")
 }
 
 // Test Success
 const testSuccess = () => {
-  showSuccess("L'opération a réussi !", 'Succès')
+  notificationStore.showSuccess("L'opération a réussi !")
 }
 
 // Test Error
 const testError = () => {
-  showError("Une erreur s'est produite", 'Erreur')
+  notificationStore.showError("Une erreur s'est produite")
 }
 
-// Test Confirm
-const testConfirm = async () => {
-  const result = await showConfirm('Es-tu sûr de vouloir continuer ?', 'Confirmation')
-  if (result) {
-    showSuccess('Tu as cliqué OUI', 'Réponse')
-  } else {
-    showAlert('Tu as cliqué NON', 'Réponse')
-  }
+// Test Warning
+const testWarning = () => {
+  notificationStore.showWarning('Attention : action importante')
 }
 </script>
 
@@ -182,15 +211,15 @@ const testConfirm = async () => {
   box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 }
 
-.test-btn-confirm {
-  background-color: #34d399;
+.test-btn-warning {
+  background-color: #fbbf24;
   color: white;
 }
 
-.test-btn-confirm:hover {
-  background-color: #22c55e;
+.test-btn-warning:hover {
+  background-color: #f59e0b;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
 }
 
 .test-info {
@@ -206,6 +235,12 @@ const testConfirm = async () => {
   color: #f5f5f5;
 }
 
+.test-info h3 {
+  margin: 20px 0 12px 0;
+  font-size: 1.1rem;
+  color: #d1d5db;
+}
+
 .test-info p {
   margin: 0 0 12px 0;
   color: #d1d5db;
@@ -218,6 +253,24 @@ const testConfirm = async () => {
   padding: 2px 6px;
   border-radius: 4px;
   font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+.test-info pre {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.test-info pre code {
+  background: none;
+  padding: 0;
+  color: #d1d5db;
+  font-size: 0.85rem;
+  line-height: 1.5;
 }
 
 .test-info ul {

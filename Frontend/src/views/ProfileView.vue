@@ -394,12 +394,13 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useAuthStore } from '../stores/counter'
 import { carpoolingService, authService, vehicleService } from '../services/api'
-import { showAlert, showError } from '@/composables/useModal'
+import { useNotificationStore } from '@/stores/notification'
 
 export default {
   name: 'ProfileView',
   setup() {
     const authStore = useAuthStore()
+    const notificationStore = useNotificationStore()
     const currentUser = computed(() => authStore.currentUser)
 
     // États
@@ -528,7 +529,7 @@ export default {
 
         // Si erreur d'authentification, rediriger vers login
         if (error.response?.status === 401 || error.response?.status === 403) {
-          showError('Session expirée. Veuillez vous reconnecter.')
+          notificationStore.showError('Session expirée. Veuillez vous reconnecter.')
           authStore.logout()
           window.location.href = '/login'
           return
@@ -559,9 +560,8 @@ export default {
             console.log('Utilisateur maintenant chauffeur')
 
             // Message informatif et redirection pour un nouveau token
-            showAlert(
+            notificationStore.notificationStore.showSuccess(
               'Félicitations ! Vous êtes maintenant chauffeur. Reconnectez-vous pour accéder à toutes les fonctionnalités de chauffeur.',
-              'Félicitations !',
             )
             authStore.logout()
             window.location.href = '/login'
@@ -579,7 +579,7 @@ export default {
 
           // Si erreur d'authentification, rediriger vers login
           if (error.response?.status === 401 || error.response?.status === 403) {
-            showError('Session expirée. Veuillez vous reconnecter.')
+            notificationStore.showError('Session expirée. Veuillez vous reconnecter.')
             authStore.logout()
             window.location.href = '/login'
             return
@@ -592,7 +592,7 @@ export default {
           }
 
           // Pour les autres erreurs, afficher le message
-          showError(
+          notificationStore.showError(
             'Erreur lors de la mise à jour du rôle: ' +
               (error.response?.data?.message || error.message),
           )
@@ -647,7 +647,7 @@ export default {
         console.log('Véhicule ajouté avec succès')
       } catch (error) {
         console.error("Erreur lors de l'ajout du véhicule:", error)
-        showError(
+        notificationStore.showError(
           "Erreur lors de l'ajout du véhicule: " + (error.response?.data?.message || error.message),
         )
       } finally {
@@ -668,7 +668,7 @@ export default {
         console.log('Véhicule supprimé avec succès')
       } catch (error) {
         console.error('Erreur lors de la suppression du véhicule:', error)
-        showError(
+        notificationStore.showError(
           'Erreur lors de la suppression du véhicule: ' +
             (error.response?.data?.message || error.message),
         )
@@ -705,12 +705,12 @@ export default {
 
         // Validation des dates côté frontend
         if (departureDate <= new Date()) {
-          showError('La date de départ doit être dans le futur.')
+          notificationStore.showError('La date de départ doit être dans le futur.')
           return
         }
 
         if (arrivalDate <= departureDate) {
-          showError('Erreur de calcul des dates. Veuillez réessayer.')
+          notificationStore.showError('Erreur de calcul des dates. Veuillez réessayer.')
           return
         }
 
@@ -761,7 +761,7 @@ export default {
         console.log('Réponse API:', response)
       } catch (error) {
         console.error('Erreur lors de la proposition du trajet:', error)
-        showError(
+        notificationStore.showError(
           'Erreur lors de la proposition du trajet: ' +
             (error.response?.data?.message || error.message),
         )

@@ -209,11 +209,12 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { carpoolingService } from '@/services/api'
-import { showAlert, showError } from '@/composables/useModal'
+import { useNotificationStore } from '@/stores/notification'
 
 export default {
   name: 'CreateTripView',
   setup() {
+    const notificationStore = useNotificationStore()
     const router = useRouter()
     const loading = ref(false)
 
@@ -289,12 +290,12 @@ export default {
 
         // Validation basique
         if (!tripData.value.departure_address || !tripData.value.arrival_address) {
-          showError('Veuillez renseigner le départ et la destination')
+          notificationStore.showError('Veuillez renseigner le départ et la destination')
           return
         }
 
         if (!tripData.value.departure_datetime) {
-          showError("Veuillez renseigner la date et l'heure de départ")
+          notificationStore.showError("Veuillez renseigner la date et l'heure de départ")
           return
         }
 
@@ -310,11 +311,11 @@ export default {
         await carpoolingService.createTrip(submitData)
 
         // Redirection vers la liste des trajets
-        showAlert('Trajet créé avec succès !', 'Succès')
+        notificationStore.notificationStore.showInfo('Trajet créé avec succès !', 'Succès')
         router.push('/my-trips?tab=driver')
       } catch (error) {
         console.error('Erreur lors de la création du trajet:', error)
-        showError(
+        notificationStore.showError(
           'Erreur lors de la création du trajet : ' +
             (error.response?.data?.message || error.message),
         )

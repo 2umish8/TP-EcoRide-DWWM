@@ -595,11 +595,12 @@
 <script>
 import { ref, computed, onMounted } from 'vue'
 import { carpoolingService, participationService } from '@/services/api'
-import { showAlert, showConfirm, showError } from '@/composables/useModal'
+import { useNotificationStore } from '@/stores/notification'
 
 export default {
   name: 'MyTripsView',
   setup() {
+    const notificationStore = useNotificationStore()
     const trips = ref([])
     const participations = ref([])
     const loading = ref(true)
@@ -843,54 +844,38 @@ export default {
 
     // Actions sur les trajets
     const startTrip = async (tripId) => {
-      const confirmed = await showConfirm(
-        'Êtes-vous sûr de vouloir démarrer ce trajet ?',
-        'Démarrer le trajet',
-      )
-      if (confirmed) {
-        try {
-          await carpoolingService.startTrip(tripId)
-          await loadTrips() // Recharger la liste
-        } catch (err) {
-          showError(
-            'Erreur lors du démarrage du trajet : ' + (err.response?.data?.message || err.message),
-          )
-        }
+      notificationStore.showInfo('Démarrage du trajet...')
+      try {
+        await carpoolingService.startTrip(tripId)
+        await loadTrips() // Recharger la liste
+      } catch (err) {
+        notificationStore.showError(
+          'Erreur lors du démarrage du trajet : ' + (err.response?.data?.message || err.message),
+        )
       }
     }
 
     const finishTrip = async (tripId) => {
-      const confirmed = await showConfirm(
-        'Êtes-vous sûr de vouloir terminer ce trajet ?',
-        'Terminer le trajet',
-      )
-      if (confirmed) {
-        try {
-          await carpoolingService.finishTrip(tripId)
-          await loadTrips() // Recharger la liste
-        } catch (err) {
-          showError(
-            'Erreur lors de la fin du trajet : ' + (err.response?.data?.message || err.message),
-          )
-        }
+      notificationStore.showInfo('Fin du trajet...')
+      try {
+        await carpoolingService.finishTrip(tripId)
+        await loadTrips() // Recharger la liste
+      } catch (err) {
+        notificationStore.showError(
+          'Erreur lors de la fin du trajet : ' + (err.response?.data?.message || err.message),
+        )
       }
     }
 
     const cancelTrip = async (tripId) => {
-      const confirmed = await showConfirm(
-        'Êtes-vous sûr de vouloir annuler ce trajet ? Cette action est irréversible.',
-        'Annuler le trajet',
-      )
-      if (confirmed) {
-        try {
-          await carpoolingService.cancelTrip(tripId)
-          await loadTrips() // Recharger la liste
-        } catch (err) {
-          showError(
-            "Erreur lors de l'annulation du trajet : " +
-              (err.response?.data?.message || err.message),
-          )
-        }
+      notificationStore.showInfo('Annulation du trajet...')
+      try {
+        await carpoolingService.cancelTrip(tripId)
+        await loadTrips() // Recharger la liste
+      } catch (err) {
+        notificationStore.showError(
+          "Erreur lors de l'annulation du trajet : " + (err.response?.data?.message || err.message),
+        )
       }
     }
 
@@ -911,31 +896,25 @@ export default {
 
     // Annuler une participation
     const cancelParticipation = async (carpoolingId) => {
-      const confirmed = await showConfirm(
-        "Êtes-vous sûr de vouloir annuler votre participation ? Vous serez remboursé selon la politique d'annulation.",
-        'Annuler la participation',
-      )
-      if (confirmed) {
-        try {
-          const result = await participationService.cancelParticipation(carpoolingId)
-          await loadParticipations() // Recharger la liste
+      try {
+        const result = await participationService.cancelParticipation(carpoolingId)
+        await loadParticipations() // Recharger la liste
 
-          // Afficher le message de succès avec les détails du remboursement
-          let message = result.message
-          if (result.creditsRefunded !== undefined) {
-            message += `\n💰 Crédits remboursés: ${result.creditsRefunded}`
-          }
-          if (result.penalty && result.penalty > 0) {
-            message += `\n⚠️ Pénalité appliquée: ${result.penalty} crédits`
-          }
-
-          showAlert(message, 'Participation annulée')
-        } catch (err) {
-          showError(
-            "Erreur lors de l'annulation de la participation : " +
-              (err.response?.data?.message || err.message),
-          )
+        // Afficher le message de succès avec les détails du remboursement
+        let message = result.message
+        if (result.creditsRefunded !== undefined) {
+          message += `\n💰 Crédits remboursés: ${result.creditsRefunded}`
         }
+        if (result.penalty && result.penalty > 0) {
+          message += `\n⚠️ Pénalité appliquée: ${result.penalty} crédits`
+        }
+
+        notificationStore.showSuccess(message)
+      } catch (err) {
+        notificationStore.showError(
+          "Erreur lors de l'annulation de la participation : " +
+            (err.response?.data?.message || err.message),
+        )
       }
     }
 

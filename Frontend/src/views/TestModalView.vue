@@ -20,54 +20,43 @@
 </template>
 
 <script>
-import { showAlert, showSuccess, showError, showConfirm, showInfo } from '@/composables/useModal'
+import { useNotificationStore } from '@/stores/notification'
 
 export default {
   name: 'TestModalPage',
+  setup() {
+    const notificationStore = useNotificationStore()
+    return { notificationStore }
+  },
   methods: {
     async testInfo() {
-      await showInfo(
+      this.notificationStore.showInfo(
         "Ceci est un message d'information avec l'icône et les couleurs EcoRide. Parfait pour les notifications neutres.",
-        'Information EcoRide',
       )
     },
 
     async testAlert() {
-      await showAlert(
+      this.notificationStore.showInfo(
         "Ceci est un message d'alerte standard. Les popins utilisent maintenant les couleurs de votre thème EcoRide.",
-        'Alerte EcoRide',
       )
     },
 
     async testSuccess() {
-      await showSuccess(
+      this.notificationStore.showSuccess(
         'Votre action a été effectuée avec succès ! Cette popin affiche les messages de réussite.',
-        'Opération réussie',
       )
     },
 
     async testError() {
-      await showError(
+      this.notificationStore.showError(
         "Une erreur s'est produite. Cette popin affiche les messages d'erreur de manière plus claire.",
-        'Erreur détectée',
       )
     },
 
     async testConfirm() {
-      const result = await showConfirm(
-        'Voulez-vous vraiment effectuer cette action ? Cette popin remplace les confirm() natifs.',
-        "Confirmer l'action",
-        {
-          confirmText: 'Oui, continuer',
-          cancelText: 'Non, annuler',
-        },
+      this.notificationStore.showWarning(
+        "Voulez-vous vraiment effectuer cette action ? Ceci est une notification d'avertissement.",
       )
-
-      if (result) {
-        await showSuccess("Vous avez confirmé l'action !", 'Action confirmée')
-      } else {
-        await showAlert("Vous avez annulé l'action.", 'Action annulée')
-      }
     },
   },
 }

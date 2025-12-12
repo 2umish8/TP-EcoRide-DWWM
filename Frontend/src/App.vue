@@ -3,11 +3,11 @@ import { computed } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import AppNavbar from './components/AppNavbar.vue'
 import AppFooter from './components/AppFooter.vue'
-import CustomModal from './components/CustomModal.vue'
-import { useModal } from './composables/useModal'
+import Notification from './components/Notification.vue'
+import { useNotificationStore } from './stores/notification'
 
 const route = useRoute()
-const { modals } = useModal()
+const notificationStore = useNotificationStore()
 
 const hideLayout = computed(() => {
   // Pages qui ne doivent pas avoir la navbar et le footer
@@ -33,22 +33,8 @@ const mainPaddingTop = computed(() => {
     <!-- Footer -->
     <AppFooter v-if="!hideLayout" />
 
-    <!-- Modales globales -->
-    <CustomModal
-      v-for="modal in modals"
-      :key="modal.id"
-      :is-visible="modal.isVisible"
-      :type="modal.type"
-      :title="modal.title"
-      :message="modal.message"
-      :confirm-text="modal.confirmText"
-      :cancel-text="modal.cancelText"
-      :hide-close-button="modal.hideCloseButton"
-      :close-on-overlay="modal.closeOnOverlay"
-      @confirm="modal.onConfirm"
-      @cancel="modal.onCancel"
-      @close="modal.onClose"
-    />
+    <!-- Notification globale -->
+    <Notification :notification="notificationStore.current" />
   </div>
 </template>
 
