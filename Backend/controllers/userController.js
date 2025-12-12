@@ -1,16 +1,10 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const {
-    PrismaClient,
-    PrismaClientKnownRequestError,
-} = require("@prisma/client");
+const { PrismaClient, PrismaClientKnownRequestError } = require("@prisma/client");
 const prisma = new PrismaClient();
 const Review = require("../models/Review");
 const { validateAndNormalizeEmail } = require("../utils/emailValidator.js");
-const {
-    validatePassword,
-    getPasswordErrorMessage,
-} = require("../utils/passwordValidator.js");
+const { validatePassword, getPasswordErrorMessage } = require("../utils/passwordValidator.js");
 
 /* --------------------------------------------------- inscription -------------------------------------------------- */
 const registerUser = async (req, res) => {
@@ -19,9 +13,7 @@ const registerUser = async (req, res) => {
         const { pseudo, email, password } = req.validatedBody || req.body;
 
         if (!pseudo || !email || !password) {
-            return res
-                .status(400)
-                .json({ message: "Veuillez fournir toutes les informations." });
+            return res.status(400).json({ message: "Veuillez fournir toutes les informations." });
         }
 
         // Validation du format d'email
@@ -81,10 +73,7 @@ const registerUser = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        if (
-            error instanceof PrismaClientKnownRequestError &&
-            error.code === "P2002"
-        ) {
+        if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
             return res.status(409).json({
                 message: "Un compte avec cet email ou ce pseudo existe déjà.",
             });
@@ -107,9 +96,7 @@ const loginUser = async (req, res) => {
         });
 
         if (!user || !(await bcrypt.compare(password, user.password_hash))) {
-            return res
-                .status(401)
-                .json({ message: "Identifiant ou mot de passe incorrect." });
+            return res.status(401).json({ message: "Identifiant ou mot de passe incorrect." });
         }
 
         // Récupérer les rôles de l'utilisateur
@@ -168,9 +155,7 @@ const becomeDriver = async (req, res) => {
         });
 
         if (existing) {
-            return res
-                .status(400)
-                .json({ message: "Vous êtes déjà chauffeur." });
+            return res.status(400).json({ message: "Vous êtes déjà chauffeur." });
         }
 
         // Vérifier que l'utilisateur a au moins un véhicule
@@ -180,8 +165,7 @@ const becomeDriver = async (req, res) => {
 
         if (vehicleCount === 0) {
             return res.status(400).json({
-                message:
-                    "Vous devez enregistrer au moins un véhicule pour devenir chauffeur.",
+                message: "Vous devez enregistrer au moins un véhicule pour devenir chauffeur.",
                 code: "VEHICLE_REQUIRED",
             });
         }
@@ -339,16 +323,13 @@ const getUserById = async (req, res) => {
             },
             stats: {
                 totalTrips: totalTrips || 0,
-                averageRating:
-                    reviewStats.total > 0
-                        ? reviewStats.average.toFixed(1)
-                        : "0.0",
+                averageRating: reviewStats.total > 0 ? reviewStats.average.toFixed(1) : "0.0",
                 totalReviews: reviewStats.total || 0,
             },
             reviews: formattedReviews,
-            reviews: formattedReviews,
         };
         res.status(200).json(responseData);
+    } catch (error) {
         console.error(error);
         res.status(500).json({
             message: "Erreur lors de la récupération du profil.",
@@ -384,9 +365,7 @@ const updateUserProfile = async (req, res) => {
         }
 
         if (Object.keys(updateData).length === 0) {
-            return res
-                .status(400)
-                .json({ message: "Aucune donnée à mettre à jour." });
+            return res.status(400).json({ message: "Aucune donnée à mettre à jour." });
         }
 
         const updatedUser = await prisma.user.update({
@@ -405,10 +384,7 @@ const updateUserProfile = async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        if (
-            error instanceof PrismaClientKnownRequestError &&
-            error.code === "P2002"
-        ) {
+        if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
             return res.status(409).json({
                 message: "Ce pseudo ou cet email est déjà utilisé.",
             });
@@ -436,14 +412,9 @@ const changePassword = async (req, res) => {
         }
 
         // Vérifier l'ancien mot de passe
-        const isCurrentPasswordValid = await bcrypt.compare(
-            currentPassword,
-            user.password_hash
-        );
+        const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password_hash);
         if (!isCurrentPasswordValid) {
-            return res
-                .status(400)
-                .json({ message: "Mot de passe actuel incorrect." });
+            return res.status(400).json({ message: "Mot de passe actuel incorrect." });
         }
 
         // Hasher le nouveau mot de passe

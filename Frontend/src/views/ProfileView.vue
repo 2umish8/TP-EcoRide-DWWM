@@ -639,7 +639,6 @@ export default {
 
     const removeVehicle = async (vehicleId) => {
       try {
-
         // Appel API pour supprimer le véhicule
         await vehicleService.removeVehicle(vehicleId)
 
@@ -656,7 +655,6 @@ export default {
 
     const proposeRide = async () => {
       try {
-
         // Construire les dates et heures complètes
         const departureDateTime = `${newRide.value.date}T${newRide.value.time}:00`
 
@@ -700,7 +698,7 @@ export default {
         }
 
         // Appel API
-        const response = await carpoolingService.createTrip(tripData)
+        await carpoolingService.createTrip(tripData)
 
         // Sauvegarder les données du trajet créé pour le modal
         lastCreatedTrip.value = {

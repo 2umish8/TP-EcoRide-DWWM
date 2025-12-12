@@ -491,7 +491,7 @@ export default {
 
       try {
         // 1. Ajouter le véhicule
-        const vehicleResponse = await vehicleService.addVehicle(vehicleData.value)
+        await vehicleService.addVehicle(vehicleData.value)
 
         // 2. Devenir chauffeur
         const driverResponse = await fetch('/api/users/become-driver', {
@@ -509,7 +509,7 @@ export default {
         // 3. Sauvegarder les préférences
         try {
           await preferencesService.createPreferences(preferencesData.value)
-        } catch (prefError) {
+        } catch {
           // Les préférences sont optionnelles
         }
 

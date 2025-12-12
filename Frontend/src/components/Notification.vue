@@ -63,6 +63,10 @@
 </template>
 
 <script setup>
+defineOptions({
+  name: 'NotificationAlert',
+})
+
 defineProps({
   notification: {
     type: Object,

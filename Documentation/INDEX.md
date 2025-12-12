@@ -117,6 +117,59 @@ Documentation pour les utilisateurs finaux de l'application.
 
 ---
 
+## 🧹 NETTOYAGE - Cleanup du Code (Production-Ready)
+
+Documentation pour le nettoyage et optimisation du code EcoRide.
+
+- **[NETTOYAGE_DU_CODE.md](./NETTOYAGE_DU_CODE.md)** - Analyse complète et détaillée ⭐
+  - 8 phases de nettoyage structurées
+  - PHASE 5 ✅ COMPLÉTÉE: 33 console.log supprimés
+  - PHASE 6 🔄 EN COURS: Imports inutilisés
+  - Tout ce qui a été supprimé et pourquoi
+  - **IMPORTANT: 20 console.error gardés pour production**
+
+- **[NETTOYAGE_DU_CODE_PROGRESS.md](./NETTOYAGE_DU_CODE_PROGRESS.md)** - Progress tracker
+  - Status de chaque phase
+  - Statistiques finales
+  - Commits effectués
+  - Prochaines étapes
+
+- **[RESUME_COURT.md](./RESUME_COURT.md)** - Résumé rapide
+  - Vue d'ensemble du nettoyage
+  - Ce qui reste à faire
+  - Impact global (37 console.log supprimés)
+
+- **[CONSOLE_ERROR_IMPORTANT.md](./CONSOLE_ERROR_IMPORTANT.md)** - 🔴 CRITICAL
+  - **POURQUOI console.error DOIT RESTER**
+  - **Liste complète des 20 console.error à préserver**
+  - **Règles à suivre absolument**
+  - **Pour la sécurité et le monitoring en production**
+
+- **[PHASE5_QUICK_REFERENCE.md](./PHASE5_QUICK_REFERENCE.md)** - Quick Guide Phase 5 ✅
+  - 33 console.log supprimés (détails)
+  - 20 console.error gardés (détails)
+  - Commit message
+  - Vérification post-nettoyage
+
+---
+
+## ⚠️ RÈGLE D'OR DU NETTOYAGE
+
+```
+SUPPRIMER: console.log()      ✂️  Debug inutile
+GARDER:    console.error()    ✅  CRITIQUE POUR PRODUCTION
+GARDER:    console.warn()     ✅  Alertes importantes
+```
+
+**NE PAS SUPPRIMER LES console.error!**  
+Ils sont essentiels pour:
+- ✅ Détecter les bugs en production
+- ✅ Monitorer les erreurs d'API
+- ✅ Déboguer les crashs utilisateurs
+- ✅ Tracer les problèmes d'authentification
+
+---
+
 ## 📖 Flux de Lecture Recommandé
 
 ### Pour les Développeurs (Vous voulez reproduire le projet)
@@ -162,6 +215,13 @@ Documentation pour les utilisateurs finaux de l'application.
 │   ├── COMPETENCES_REQUISES.md     ← Détails complets
 │   ├── CHECKLIST_APPRENTISSAGE.md  ← Suivi progression
 │   └── REFERENCE_RAPIDE.md         ← Snippets et commandes
+│
+├── 📁 NETTOYAGE/                   ← Code Cleanup (Production-Ready) 🧹
+│   ├── NETTOYAGE_DU_CODE.md        ← Analyse complète ⭐
+│   ├── NETTOYAGE_DU_CODE_PROGRESS.md ← Progress tracker
+│   ├── RESUME_COURT.md             ← Résumé rapide
+│   ├── CONSOLE_ERROR_IMPORTANT.md  ← 🔴 CRITICAL: Garder console.error
+│   └── PHASE5_QUICK_REFERENCE.md   ← ✅ Phase 5 completed
 │
 ├── 📁 GETTING-STARTED/             ← Démarrage pratique
 │   ├── GUIDE_PRATIQUE_NOUVEAU_PROJET.md
