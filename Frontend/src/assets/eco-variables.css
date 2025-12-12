@@ -123,31 +123,7 @@
   outline-offset: 2px;
 }
 
-/* ===== VARIANTES DE COULEURS ===== */
 
-.eco-button--primary {
-  background-color: var(--eco-green);
-}
-
-.eco-button--primary:hover {
-  background-color: var(--eco-green-hover);
-}
-
-.eco-button--secondary {
-  background-color: var(--eco-blue);
-}
-
-.eco-button--secondary:hover {
-  background-color: var(--eco-blue-hover);
-}
-
-.eco-button--neutral {
-  background-color: var(--eco-beige);
-}
-
-.eco-button--neutral:hover {
-  background-color: #edd5a3;
-}
 
 /* ===== TAILLES ===== */
 
@@ -162,40 +138,7 @@
 }
 
 /* ====================================
-   📝 Classes Textes Standards
-   ==================================== */
-
-.text-important {
-  color: var(--text-primary);
-  text-shadow: var(--text-shadow-inset);
-  border: 1px solid var(--border-color);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-input);
-}
-
-.text-eco-shadow {
-  text-shadow: var(--text-shadow-inset);
-}
-
-/* ====================================
    🃏 Classes Cartes Standards
-   ==================================== */
-
-.eco-card {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
-  transition: var(--transition-standard);
-}
-
-.eco-card:hover {
-  box-shadow: var(--shadow-card-hover);
-  transform: translateY(-1px);
-}
-
-/* ====================================
-   📱 Responsive
    ==================================== */
 
 @media (max-width: 640px) {
@@ -203,100 +146,4 @@
     padding: 12px 20px;
     font-size: var(--font-size-sm);
   }
-
-  .eco-button--lg {
-    padding: 15px 25px;
-    font-size: var(--font-size-base);
-  }
-
-  .text-important {
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: var(--font-size-sm);
-  }
-}
-
-/* ====================================
-   🎨 Classes Utilitaires Couleurs
-   ==================================== */
-
-.text-eco-green {
-  color: var(--eco-green);
-}
-.text-eco-blue {
-  color: var(--eco-blue);
-}
-.text-eco-beige {
-  color: var(--eco-beige);
-}
-
-.bg-eco-green {
-  background-color: var(--eco-green);
-}
-.bg-eco-blue {
-  background-color: var(--eco-blue);
-}
-.bg-eco-beige {
-  background-color: var(--eco-beige);
-}
-
-.border-eco-green {
-  border-color: var(--eco-green);
-}
-.border-eco-blue {
-  border-color: var(--eco-blue);
-}
-.border-eco-beige {
-  border-color: var(--eco-beige);
-}
-
-/* ====================================
-   💡 Classes États
-   ==================================== */
-
-.status-success {
-  color: var(--color-success);
-  background-color: rgba(143, 188, 143, 0.1);
-  border-color: var(--color-success);
-}
-
-.status-warning {
-  color: var(--color-warning);
-  background-color: rgba(244, 164, 96, 0.1);
-  border-color: var(--color-warning);
-}
-
-.status-error {
-  color: var(--color-error);
-  background-color: rgba(205, 92, 92, 0.1);
-  border-color: var(--color-error);
-}
-
-.status-info {
-  color: var(--color-info);
-  background-color: rgba(135, 206, 235, 0.1);
-  border-color: var(--color-info);
-}
-
-/* ====================================
-   🔧 Classes Utilitaires
-   ==================================== */
-
-.shadow-eco {
-  box-shadow: var(--shadow-card);
-}
-.shadow-eco-hover {
-  box-shadow: var(--shadow-card-hover);
-}
-.transition-eco {
-  transition: var(--transition-standard);
-}
-
-.radius-button {
-  border-radius: var(--radius-button);
-}
-.radius-card {
-  border-radius: var(--radius-card);
-}
-.radius-input {
-  border-radius: var(--radius-input);
 }
