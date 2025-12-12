@@ -3,12 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "overrides": {
+    "json5": "2.2.3"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "test:unit": "vitest",
     "test:e2e": "playwright test",
+    "playwright:install": "npx playwright install --with-deps",
+    "playwright:seed": "node ./e2e/global-setup.js",
+    "audit:fix": "npm audit fix",
+    "audit": "npm audit --json > audit-report.json || true",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"
   },
@@ -20,7 +27,6 @@
     "bootstrap": "^5.3.7",
     "pinia": "^3.0.3",
     "vue": "^3.5.17",
-    "vue-icons": "^2.0.0",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
@@ -36,8 +42,7 @@
     "globals": "^16.2.0",
     "jsdom": "^26.1.0",
     "prettier": "3.5.3",
-    "vite": "^7.0.0",
-    "vite-plugin-vue-devtools": "^7.7.7",
+    "vite": "^7.0.8",
     "vitest": "^3.2.4"
   }
 }

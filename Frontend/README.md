@@ -49,6 +49,67 @@ Conserver `netlify.toml` dans le dépôt permet à Netlify de détecter le bon r
 - Tests E2E : `npm run test:e2e`
 - Lint : `npm run lint`
 
+### Security: audit & remediation
+
+Following an `npm audit`, you may encounter transitive vulnerabilities (e.g., json5). Recommended steps:
+
+```powershell
+cd Frontend
+# Refresh lockfile
+rm -r node_modules package-lock.json
+npm ci
+
+# Try the automatic fixes for compatible updates
+npm run audit:fix
+
+# If some vulnerabilities remain (no fix available), you can attempt to force safe versions
+# - We added an `overrides` entry in package.json to force `json5` to 2.2.3, which should remove the high vulnerability
+# - After edits, regenerate lock and run audit again
+npm ci
+npm run audit
+```
+
+If you still see high or critical vulnerabilities, inspect the package tree to find the responsible package and either update or replace it:
+
+```powershell
+# Find the package pulling the vulnerable dependency
+npm ls json5
+
+# Find who depends on loader-utils or callback-loader
+npm ls loader-utils
+npm ls callback-loader
+```
+
+If the dependency is unused (like `vue-icons` in older branches), we remove it from `package.json` to avoid transitive vulnerabilities; otherwise consider replacing it by an actively maintained alternative (e.g., `@heroicons/vue`, Font Awesome, or custom SVG components).
+
+Note: We removed `vite-plugin-vue-devtools` from devDependencies because it depended on `vite-plugin-inspect` with a peer requiring Vite <= 6, creating peer conflicts with Vite 7. If you used the devtools plugin, you can re-add a compatible alternative or update the plugin once a Vite 7-compatible version is available.
+
+### Playwright E2E
+
+- Lancer les tests E2E (nécessite le backend en cours d'exécution) :
+
+```powershell
+# 1. Démarrer le backend (dans un terminal séparé) :
+cd Backend
+npm run dev
+
+# 2. Dans le frontend, installer les dépendances et lancer les tests :
+cd Frontend
+npm ci
+npm run test:e2e
+```
+
+- En CI (GitHub Actions) une workflow `playwright-e2e.yml` est inclus au chemin `.github/workflows/playwright-e2e.yml`.
+
+Si vous voulez re-seeder la base avant de lancer les tests localement, utilisez:
+
+```powershell
+cd Frontend
+npm run playwright:seed
+```
+
+Note: Assurez-vous que le backend est en cours d'exécution sur `http://localhost:3000` avant de lancer le script de seed et/ou les tests Playwright.
+
 ## Documentation
 
 Consultez `../Documentation/API_DOCUMENTATION.md` et `../README.md` pour la documentation générale du projet.

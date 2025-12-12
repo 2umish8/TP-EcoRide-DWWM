@@ -11,6 +11,7 @@ import { defineConfig, devices } from '@playwright/test'
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+  globalSetup: './e2e/global-setup.js',
   testDir: './e2e',
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
