@@ -57,9 +57,6 @@
               <span class="checkmark"></span>
               Se souvenir de moi
             </label>
-            <router-link to="/forgot-password" class="forgot-password">
-              Mot de passe oublié ?
-            </router-link>
           </div>
 
           <!-- Message d'erreur -->
@@ -305,18 +302,6 @@ const handleLogin = async () => {
 
 .remember-me input[type='checkbox'] {
   accent-color: #34d399;
-}
-
-.forgot-password {
-  color: #34d399;
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-.forgot-password:hover {
-  color: #22c55e;
 }
 
 .error-message {

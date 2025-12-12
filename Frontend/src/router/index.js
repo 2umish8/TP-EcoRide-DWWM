@@ -33,11 +33,6 @@ const router = createRouter({
       component: () => import('../views/RegisterView.vue'),
     },
     {
-      path: '/forgot-password',
-      name: 'forgot-password',
-      component: () => import('../views/ForgotPasswordView.vue'),
-    },
-    {
       path: '/admin',
       name: 'Admin',
       component: () => import('../views/AdminView.vue'),
@@ -71,11 +66,6 @@ const router = createRouter({
       path: '/credits',
       name: 'Credits',
       component: () => import('../views/CreditsView.vue'),
-    },
-    {
-      path: '/test',
-      name: 'Test',
-      component: () => import('../views/TestView.vue'),
     },
     {
       path: '/review/:carpoolingId',
