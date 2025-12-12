@@ -190,6 +190,13 @@ console.log("=== État de l'authentification au montage ===")
 
 **Commit:** `Feat: Remove all debug console.log statements from Vue components`
 
+### Corrections récentes (12 Décembre 2025)
+
+- ✅ `ProfileView.vue` : Correction de l'usage du store de notification (`notificationStore.notificationStore.showSuccess` → `notificationStore.showSuccess`) et remplacement de `console.warn` par `notificationStore.showError` + `logout` + redirection.
+- ✅ `CreateTripView.vue` : Correction de `notificationStore.notificationStore.showInfo` → `notificationStore.showInfo`.
+
+Ces corrections réduisent le risque d'erreurs runtime liées à une double référence au store et améliorent le retour utilisateur.
+
 ### Vérification Post-Phase 5
 - ✅ Aucun console.log restant
 - ✅ console.error préservés

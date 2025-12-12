@@ -550,7 +550,8 @@ export default {
             await authService.becomeDriver()
 
             // Message informatif et redirection pour un nouveau token
-            notificationStore.notificationStore.showSuccess(
+            // Utilisation correcte du store de notifications
+            notificationStore.showSuccess(
               'Félicitations ! Vous êtes maintenant chauffeur. Reconnectez-vous pour accéder à toutes les fonctionnalités de chauffeur.',
             )
             authStore.logout()
@@ -772,7 +773,9 @@ export default {
 
       // Si pas authentifié, rediriger vers login
       if (!authStore.isAuthenticated) {
-        console.warn('Utilisateur non authentifié, redirection vers login')
+        // Afficher une notification utilisateur plutôt qu'un console.warn
+        notificationStore.showError('Utilisateur non authentifié. Veuillez vous reconnecter.')
+        authStore.logout()
         window.location.href = '/login'
         return
       }

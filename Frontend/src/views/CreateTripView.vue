@@ -311,7 +311,8 @@ export default {
         await carpoolingService.createTrip(submitData)
 
         // Redirection vers la liste des trajets
-        notificationStore.notificationStore.showInfo('Trajet créé avec succès !', 'Succès')
+        // Utilisation correcte du store de notifications
+        notificationStore.showInfo('Trajet créé avec succès !', 'Succès')
         router.push('/my-trips?tab=driver')
       } catch (error) {
         console.error('Erreur lors de la création du trajet:', error)
