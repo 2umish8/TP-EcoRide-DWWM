@@ -575,7 +575,7 @@ const handleRegister = async () => {
 }
 
 .link:hover {
-  color: #22c55e;
+  color: var(--bs-primary);
   text-decoration: underline;
 }
 
@@ -621,7 +621,8 @@ const handleRegister = async () => {
 }
 
 .register-btn:hover:not(:disabled) {
-  background: #22c55e;
+  background: var(--bs-primary);
+  color: #fff;
   transform: translateY(-1px);
 }
 
@@ -664,8 +665,8 @@ const handleRegister = async () => {
 }
 
 .login-btn-link:hover {
-  background: #1a2e1a;
-  color: #22c55e;
+  background: var(--bs-primary);
+  color: #fff;
 }
 
 /* Responsive */

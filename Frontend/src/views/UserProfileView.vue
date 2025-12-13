@@ -248,7 +248,7 @@ onMounted(() => {
 
 .back-button:hover {
   background: #333;
-  border-color: #34d399;
+  border-color: var(--bs-primary);
   transform: translateX(-2px);
 }
 
@@ -273,7 +273,7 @@ onMounted(() => {
   width: 50px;
   height: 50px;
   border: 3px solid #333;
-  border-top: 3px solid #34d399;
+  border-top: 3px solid var(--bs-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 20px;
@@ -318,7 +318,8 @@ onMounted(() => {
 }
 
 .retry-button:hover {
-  background: #22c55e;
+  background: var(--bs-primary);
+  color: #fff;
   transform: translateY(-1px);
 }
 
@@ -340,7 +341,7 @@ onMounted(() => {
 }
 
 .user-info-card:hover {
-  border-color: #34d399;
+  border-color: var(--bs-primary);
   transform: translateY(-2px);
 }
 
@@ -415,8 +416,9 @@ onMounted(() => {
 }
 
 .role-badge:hover {
-  background: #22c55e;
-  border-color: #22c55e;
+  background: var(--bs-primary);
+  border-color: var(--bs-primary);
+  color: #fff;
   transform: translateY(-1px);
 }
 

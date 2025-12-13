@@ -1130,8 +1130,8 @@ onMounted(async () => {
 }
 
 .driver-name:hover {
-  color: #00cc6a;
-  text-decoration-color: #00cc6a;
+  color: var(--bs-primary);
+  text-decoration-color: var(--bs-primary);
   transform: translateY(-1px);
 }
 

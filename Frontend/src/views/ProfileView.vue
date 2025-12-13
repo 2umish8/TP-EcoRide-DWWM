@@ -1028,7 +1028,7 @@ export default {
 }
 
 .add-btn:hover {
-  background: #22c55e;
+  background: var(--bs-primary);
   transform: translateY(-1px);
 }
 
@@ -1165,8 +1165,8 @@ export default {
 .form-input:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: #34d399;
-  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2);
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.18);
 }
 
 .custom-rules {
@@ -1300,7 +1300,8 @@ export default {
 }
 
 .submit-btn:hover:not(:disabled) {
-  background: #22c55e;
+  background: var(--bs-primary);
+  color: #fff;
   transform: translateY(-1px);
 }
 
@@ -1343,7 +1344,7 @@ export default {
 
 .propose-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(52, 211, 153, 0.4);
+  box-shadow: 0 6px 20px rgba(var(--bs-primary-rgb), 0.4);
 }
 
 .propose-btn:disabled {

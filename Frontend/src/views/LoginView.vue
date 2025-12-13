@@ -254,9 +254,9 @@ const handleLogin = async () => {
 
 .form-input:focus {
   outline: none;
-  border-color: #34d399;
+  border-color: var(--bs-primary);
   background: #2a2a2a;
-  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2);
+  box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.18);
 }
 
 .form-input::placeholder {
@@ -350,7 +350,8 @@ const handleLogin = async () => {
 }
 
 .login-btn:hover:not(:disabled) {
-  background: #22c55e;
+  background: var(--bs-primary);
+  color: #fff;
   transform: translateY(-1px);
 }
 
@@ -380,8 +381,8 @@ const handleLogin = async () => {
 }
 
 .signup-btn:hover {
-  background: #1a2e1a;
-  color: #22c55e;
+  background: var(--bs-primary);
+  color: #fff;
 }
 
 /* Responsive */

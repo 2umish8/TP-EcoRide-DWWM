@@ -580,7 +580,7 @@ onMounted(() => {
 
 .search-input-compact:focus {
   outline: none;
-  border-color: #34d399;
+  border-color: var(--bs-primary);
 }
 
 .search-btn-compact {
@@ -597,7 +597,8 @@ onMounted(() => {
 }
 
 .search-btn-compact:hover {
-  background: #22c55e;
+  background: var(--bs-primary);
+  color: #fff;
 }
 
 /* États de chargement et d'erreur */
@@ -613,7 +614,7 @@ onMounted(() => {
   width: 40px;
   height: 40px;
   border: 3px solid #444;
-  border-top: 3px solid #34d399;
+  border-top: 3px solid var(--bs-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 20px;
@@ -649,6 +650,11 @@ onMounted(() => {
   border-radius: 8px;
   cursor: pointer;
   margin-top: 15px;
+}
+.retry-btn:hover {
+  background: var(--bs-primary);
+  color: #fff;
+  transform: translateY(-1px);
 }
 
 /* Alternative pour aucun résultat */
@@ -877,7 +883,8 @@ onMounted(() => {
 }
 
 .btn-primary:hover {
-  background: #22c55e;
+  background: var(--bs-primary);
+  color: #fff;
 }
 
 .btn-secondary {
@@ -892,8 +899,8 @@ onMounted(() => {
 }
 
 .btn-secondary:hover {
-  background: #34d399;
-  color: #1a1a1a;
+  background: var(--bs-primary);
+  color: #fff;
 }
 
 /* Responsive */
@@ -1056,20 +1063,20 @@ onMounted(() => {
 .trip-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  border-color: #34d399;
+  border-color: var(--bs-primary);
 }
 
 /* Style spécial pour les trajets de l'utilisateur actuel */
 .trip-card.my-trip {
   border: 2px solid #34d399;
-  background: linear-gradient(135deg, #1a1a1a 0%, rgba(52, 211, 153, 0.1) 100%);
-  box-shadow: 0 4px 20px rgba(52, 211, 153, 0.2);
+  background: linear-gradient(135deg, #1a1a1a 0%, rgba(var(--bs-primary-rgb), 0.08) 100%);
+  box-shadow: 0 4px 20px rgba(var(--bs-primary-rgb), 0.2);
 }
 
 .trip-card.my-trip:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 25px rgba(52, 211, 153, 0.4);
-  border-color: #22c55e;
+  box-shadow: 0 6px 25px rgba(var(--bs-primary-rgb), 0.4);
+  border-color: var(--bs-primary);
 }
 
 /* Style spécial pour les trajets écologiques */
@@ -1232,7 +1239,7 @@ onMounted(() => {
 }
 
 .driver-name:hover {
-  color: #34d399;
+  color: var(--bs-primary);
   text-decoration: underline;
 }
 

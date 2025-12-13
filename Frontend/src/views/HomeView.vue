@@ -323,9 +323,9 @@ const scrollToAbout = () => {
 }
 
 .scroll-icon:hover {
-  color: #34d399;
+  color: var(--bs-primary);
   transform: scale(1.1);
-  background-color: rgba(52, 211, 153, 0.1);
+  background-color: rgba(var(--bs-primary-rgb), 0.08);
 }
 
 .scroll-svg {
@@ -464,7 +464,8 @@ const scrollToAbout = () => {
 }
 
 .search-btn:hover {
-  background: #22c55e;
+  background: var(--bs-primary);
+  color: #fff;
 }
 
 .search-icon {
@@ -495,8 +496,8 @@ const scrollToAbout = () => {
 }
 
 .browse-all-btn:hover {
-  background: #34d399;
-  color: #1a1a1a;
+  background: var(--bs-primary);
+  color: #fff;
   transform: translateY(-2px);
 }
 

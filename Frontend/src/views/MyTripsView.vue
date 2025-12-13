@@ -1108,16 +1108,16 @@ export default {
 }
 
 .tab-btn:hover {
-  border-color: #28a745;
-  color: #28a745;
+  border-color: var(--bs-primary);
+  color: var(--bs-primary);
   background: #374151;
 }
 
 .tab-btn.active {
-  border-color: #28a745;
-  background: #28a745;
+  border-color: var(--bs-primary);
+  background: var(--bs-primary);
   color: white;
-  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 2px 8px rgba(var(--bs-primary-rgb), 0.28);
 }
 
 .tab-content {
@@ -1277,7 +1277,7 @@ export default {
 
 .become-driver-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 4px 12px rgba(var(--bs-primary-rgb), 0.22);
 }
 
 .learn-more-btn {
@@ -1297,15 +1297,15 @@ export default {
 
 .learn-more-btn:hover {
   background: #374151;
-  border-color: #28a745;
-  color: #28a745;
+  border-color: var(--bs-primary);
+  color: var(--bs-primary);
 }
 
 .loading-spinner {
   width: 40px;
   height: 40px;
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #28a745;
+  border-top: 4px solid var(--bs-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 1rem;
@@ -1534,16 +1534,16 @@ export default {
 }
 
 .status-btn:hover {
-  border-color: #28a745;
-  color: #28a745;
+  border-color: var(--bs-primary);
+  color: var(--bs-primary);
   background: #2d3748;
 }
 
 .status-btn.active {
-  border-color: #28a745;
-  background: #28a745;
+  border-color: var(--bs-primary);
+  background: var(--bs-primary);
   color: white;
-  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 2px 4px rgba(var(--bs-primary-rgb), 0.3);
 }
 
 /* Message aucun trajet pour statut */
@@ -1572,8 +1572,8 @@ export default {
 }
 
 .invite-link:hover {
-  color: #20c997;
-  text-shadow: 0 0 8px rgba(40, 167, 69, 0.5);
+  color: var(--bs-primary);
+  text-shadow: 0 0 8px rgba(var(--bs-primary-rgb), 0.45);
 }
 
 .invite-link::after {
@@ -1583,7 +1583,7 @@ export default {
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, #28a745, #20c997);
+  background: linear-gradient(90deg, rgba(var(--bs-primary-rgb),1), rgba(var(--bs-primary-rgb),0.85));
   transition: width 0.3s ease;
 }
 

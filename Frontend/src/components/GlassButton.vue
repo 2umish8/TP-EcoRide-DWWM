@@ -61,8 +61,9 @@ defineProps({
 }
 
 .eco-button--connexion:hover {
-  /* Légère intensification au survol */
-  background: #7fb87f;
+  /* Légère intensification au survol -> use primary blue for hover */
+  background: var(--bs-primary);
+  color: #fff;
 
   /* Ombre plus prononcée - NOIRE */
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
