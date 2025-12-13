@@ -265,6 +265,19 @@ npm install
 Une fois qu'on a:
 - [ ] Backend tourne: `npm run dev` → affiche "Serveur en écoute sur le port 3000"
 - [ ] Frontend tourne: `npm run dev` → affiche "VITE vX.X.X ready"
+
+Sur Windows, pour lancer les serveurs en arrière-plan (et continuer à utiliser la même fenêtre), utilisez les scripts PowerShell fournis dans le répertoire `scripts` :
+
+```powershell
+PowerShell -File .\scripts\start-backend-dev.ps1
+PowerShell -File .\scripts\start-frontend-dev.ps1
+```
+
+Pour arrêter un serveur démarré par ces scripts utilisez :
+
+```powershell
+PowerShell -File .\scripts\stop-dev-by-pid.ps1 -PidFile .\scripts\backend.pid
+```
 - [ ] Navigateur accessible: http://localhost:5173
 - [ ] Login fonctionne: test/Test2025!
 - [ ] Pas d'erreurs console

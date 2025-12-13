@@ -1,8 +1,7 @@
 /* global process */
 import axios from 'axios'
-import { execSync, execFileSync } from 'node:child_process'
+// child_process execSync removed - not needed in global setup
 import path from 'path'
-import { pathToFileURL } from 'node:url'
 import fs from 'fs'
 
 const BASE_URL = process.env.CI ? 'http://localhost:3000/api' : 'http://localhost:3000/api'
@@ -25,8 +24,8 @@ async function waitForBackend(url, timeout = 30000) {
 export default async function globalSetup() {
   console.log('\n🔧 Playwright globalSetup - seeding backend for E2E tests')
 
-  const backendScriptsDir = path.resolve(process.cwd(), '..', 'Backend', 'scripts')
-  const cleanScript = path.join(backendScriptsDir, 'cleanDatabase.js')
+  // const backendScriptsDir = path.resolve(process.cwd(), '..', 'Backend', 'scripts')
+  // const cleanScript = path.join(backendScriptsDir, 'cleanDatabase.js')
 
   try {
     // Skip running the backend clean script inside Playwright context due to environment differences

@@ -13,6 +13,12 @@ copy .env.example .env.local
 npm run dev
 ```
 
+On Windows, to start the dev server in the background (so you can continue using the terminal), you can use the provided helper script:
+
+```powershell
+PowerShell -File ..\scripts\start-frontend-dev.ps1
+```
+
 ## Build production
 
 ```powershell

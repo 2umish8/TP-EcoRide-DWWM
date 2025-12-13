@@ -28,8 +28,7 @@ test('can login with test credentials', async ({ page }) => {
   const userDropdown = page.locator(
     'button.user-dropdown-toggle, .user-dropdown-toggle, .dropdown-toggle',
   )
-  if ((await userDropdown.count()) > 0) {
-    await userDropdown.first().click()
-  }
+  await expect(userDropdown.first()).toBeVisible()
+  await userDropdown.first().click()
   await expect(page.locator('text=Déconnexion')).toBeVisible()
 })

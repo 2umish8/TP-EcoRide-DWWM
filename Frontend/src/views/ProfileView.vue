@@ -203,69 +203,16 @@
           </div>
         </div>
 
-        <!-- Préférences du chauffeur -->
-        <div class="preferences-card">
-          <h3 class="card-title">Mes Préférences de Conduite</h3>
-          <div class="preferences-grid">
-            <label class="preference-item">
-              <input
-                type="checkbox"
-                v-model="driverPreferences.allowsSmoking"
-                @change="updatePreferences"
-              />
-              <span class="preference-label">🚬 Fumeur autorisé</span>
-            </label>
-
-            <label class="preference-item">
-              <input
-                type="checkbox"
-                v-model="driverPreferences.allowsPets"
-                @change="updatePreferences"
-              />
-              <span class="preference-label">🐕 Animaux autorisés</span>
-            </label>
-
-            <div class="preference-select">
-              <label class="form-label">🎵 Genre musical préféré</label>
-              <select
-                v-model="driverPreferences.preferredMusicGenre"
-                @change="updatePreferences"
-                class="form-select"
-              >
-                <option value="">Aucune préférence</option>
-                <option value="pop">Pop</option>
-                <option value="rock">Rock</option>
-                <option value="jazz">Jazz</option>
-                <option value="classique">Classique</option>
-                <option value="electronic">Électronique</option>
-                <option value="rap">Rap</option>
-              </select>
-            </div>
-
-            <div class="preference-select">
-              <label class="form-label">💬 Niveau de conversation</label>
-              <select
-                v-model="driverPreferences.conversationLevel"
-                @change="updatePreferences"
-                class="form-select"
-              >
-                <option value="silencieux">Silencieux</option>
-                <option value="modéré">Modéré</option>
-                <option value="bavard">Bavard</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="custom-rules">
-            <textarea
-              v-model="driverPreferences.specialRules"
-              @input="updatePreferences"
-              class="form-textarea"
-              placeholder="Règles spéciales (ex: pas de musique, climatisation à 22°C...)"
-              rows="3"
-            ></textarea>
-          </div>
-        </div>
+        <!-- Préférences du chauffeur (composant) -->
+        <DriverPreferencesSection
+          :preferences="driverPreferences"
+          @update="
+            (newPrefs) => {
+              driverPreferences.value = newPrefs
+              updatePreferences()
+            }
+          "
+        />
       </div>
     </div>
 
@@ -393,11 +340,16 @@
 <script>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { carpoolingService, authService, vehicleService } from '../services/api'
+import { carpoolingService, authService, vehicleService } from '@/services/api'
+import { preferencesService } from '@/services/mongoServices'
+import DriverPreferencesSection from '@/components/DriverPreferencesSection.vue'
 import { useNotificationStore } from '@/stores/notification'
 
 export default {
   name: 'ProfileView',
+  components: {
+    DriverPreferencesSection,
+  },
   setup() {
     const authStore = useAuthStore()
     const notificationStore = useNotificationStore()
@@ -514,9 +466,36 @@ export default {
 
         selectedRoles.value = userRoles
 
-        // Si l'utilisateur est chauffeur, charger ses véhicules
+        // Si l'utilisateur est chauffeur, charger ses véhicules et préférences
         if (userRoles.includes('chauffeur')) {
           await loadUserVehicles()
+          try {
+            const prefsResp = await preferencesService.getMyPreferences()
+            const prefs = prefsResp.preferences || prefsResp || {}
+
+            // Map server keys (snake_case) to frontend structure if needed
+            driverPreferences.value = {
+              allowsSmoking:
+                prefs.allowsSmoking ??
+                prefs.allows_smoking ??
+                driverPreferences.value.allowsSmoking,
+              allowsPets:
+                prefs.allowsPets ?? prefs.allows_pets ?? driverPreferences.value.allowsPets,
+              conversationLevel:
+                prefs.conversationLevel ??
+                prefs.conversation_level ??
+                driverPreferences.value.conversationLevel,
+              preferredMusicGenre:
+                prefs.preferredMusicGenre ??
+                prefs.preferred_music_genre ??
+                driverPreferences.value.preferredMusicGenre,
+              specialRules:
+                prefs.specialRules ?? prefs.special_rules ?? driverPreferences.value.specialRules,
+            }
+          } catch (err) {
+            // Silently ignore preference load errors but log for debugging
+            console.error('Erreur lors du chargement des préférences:', err)
+          }
         }
       } catch (error) {
         console.error('Erreur lors du chargement du profil:', error)
@@ -592,8 +571,24 @@ export default {
       }
     }
 
-    const updatePreferences = () => {
-      // TODO: Envoyer au backend
+    const updatePreferences = async () => {
+      try {
+        await preferencesService.updatePreferences({
+          allowsSmoking: driverPreferences.value.allowsSmoking,
+          allowsPets: driverPreferences.value.allowsPets,
+          conversationLevel: driverPreferences.value.conversationLevel,
+          preferredMusicGenre: driverPreferences.value.preferredMusicGenre,
+          specialRules: driverPreferences.value.specialRules,
+        })
+
+        notificationStore.showSuccess('Préférences mises à jour.')
+      } catch (err) {
+        console.error('Erreur lors de la mise à jour des préférences:', err)
+        notificationStore.showError(
+          'Impossible de mettre à jour les préférences: ' +
+            (err.response?.data?.message || err.message),
+        )
+      }
     }
 
     const addVehicle = async () => {

@@ -66,6 +66,12 @@ copy .env.example .env.local
 npm run dev
 ```
 
+On Windows you can also start the frontend in background using the helper script:
+
+```powershell
+PowerShell -File .\scripts\start-frontend-dev.ps1
+```
+
 Tests
 -----
 

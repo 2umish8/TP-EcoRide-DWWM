@@ -71,9 +71,8 @@ test('covoiturage critical flow: login error, login succeed, add vehicle, delete
   const userDropdown = page.locator(
     'button.user-dropdown-toggle, .user-dropdown-toggle, .dropdown-toggle',
   )
-  if ((await userDropdown.count()) > 0) {
-    await userDropdown.first().click()
-  }
+  await expect(userDropdown.first()).toBeVisible()
+  await userDropdown.first().click()
   const logoutBtn = page.locator('text=Déconnexion')
   await expect(logoutBtn).toBeVisible()
 
@@ -83,18 +82,11 @@ test('covoiturage critical flow: login error, login succeed, add vehicle, delete
   // Ensure we have become a chauffeur (backend globalSetup did add the role), but the UI may require toggle
   // If the 'Ajouter un véhicule' button isn't visible, attempt to set chauffeur role by interacting with the role checkbox
   const addVehicleBtn = page.locator('button.add-btn', { hasText: 'Ajouter un véhicule' })
-  if (!(await addVehicleBtn.isVisible())) {
-    // toggle role to 'chauffeur'
-    const chauffeurCheckbox = page
-      .locator('label.role-option', { hasText: 'Chauffeur' })
-      .locator('input[type=checkbox]')
-    if ((await chauffeurCheckbox.count()) > 0) {
-      await chauffeurCheckbox.first().click()
-      // wait for the element
-      await page.waitForSelector('button.add-btn')
-    }
-  }
-
+  // Ensure the chauffeur checkbox is checked, then expect add vehicle to be visible
+  const chauffeurCheckbox = page
+    .locator('label.role-option', { hasText: 'Chauffeur' })
+    .locator('input[type=checkbox]')
+  await chauffeurCheckbox.first().check()
   await expect(addVehicleBtn).toBeVisible()
   await addVehicleBtn.click()
 
@@ -124,21 +116,20 @@ test('covoiturage critical flow: login error, login succeed, add vehicle, delete
     removeBtn.click(),
   ])
 
-  // Confirm the vehicle disappears - refresh to ensure the list is updated
-  await page.waitForLoadState('networkidle')
-  await expect(page.locator('.vehicle-item', { hasText: vehiclePlate })).toHaveCount(0)
+  // Confirm the vehicle disappears - wait for the item to be gone
+  await expect(page.locator('.vehicle-item', { hasText: vehiclePlate })).toHaveCount(0, {
+    timeout: 5000,
+  })
 
   // 5) Logout using the dropdown menu
   // Click dropdown toggle again
   const dropdownToggle = page.locator(
     'button.user-dropdown-toggle, .user-dropdown-toggle, .dropdown-toggle',
   )
-  if ((await dropdownToggle.count()) > 0) {
-    await dropdownToggle.first().click()
-  }
+  await expect(dropdownToggle.first()).toBeVisible()
+  await dropdownToggle.first().click()
   await page.locator('text=Déconnexion').click()
 
   // Expect user to be redirected or logged out - confirm by presence of login link in navbar
-  await page.waitForLoadState('networkidle')
-  await expect(page.locator('a[href="/login"]')).toBeVisible()
+  await expect(page.locator('a[href="/login"]')).toBeVisible({ timeout: 5000 })
 })
