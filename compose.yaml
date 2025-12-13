@@ -30,6 +30,9 @@ services:
         container_name: ecoride-backend
         ports:
             - "3000:3000"
+        # Use env_file to avoid committing secrets in the compose file
+        env_file:
+            - .env
         environment:
             - NODE_ENV=production
             - PORT=3000
@@ -37,7 +40,8 @@ services:
             # Example: DATABASE_URL=mysql://user:pass@host:3306/ecoride_db
             #          MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/ecoride_db
             # Security
-            - JWT_SECRET=ecoride-super-secret-jwt-key-2025-production
+            # Reads the JWT_SECRET from env (recommended) - set in .env or secret manager
+            - JWT_SECRET=${JWT_SECRET}
             - JWT_EXPIRATION=24h
             - BCRYPT_SALT_ROUNDS=12
             # CORS
