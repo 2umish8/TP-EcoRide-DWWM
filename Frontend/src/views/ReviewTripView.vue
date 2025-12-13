@@ -446,7 +446,9 @@ onMounted(() => {
   border: none;
   font-size: 2rem;
   cursor: pointer;
-  transition: transform 0.2s, color 0.2s;
+  transition:
+    transform 0.2s,
+    color 0.2s;
   color: #6c757d;
 }
 

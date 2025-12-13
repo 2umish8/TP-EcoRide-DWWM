@@ -204,7 +204,6 @@ const goToCarpooling = () => {
   transition: filter 0.3s ease;
 }
 
-
 .en-savoir-plus {
   font-family: 'Inter', sans-serif;
   font-size: 1.5rem;

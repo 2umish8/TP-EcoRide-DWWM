@@ -1040,54 +1040,9 @@ onMounted(() => {
   gap: 24px;
 }
 
+/* Use global .trip-card styles from assets/css/_cards.css */
 .trip-card {
-  background: #2a2a2a;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 1px solid #444;
-  position: relative;
-}
-
-.trip-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  border-color: var(--bs-primary);
-}
-
-/* Style spécial pour les trajets de l'utilisateur actuel */
-.trip-card.my-trip {
-  border: 2px solid #34d399;
-  background: linear-gradient(135deg, #1a1a1a 0%, rgba(var(--bs-primary-rgb), 0.08) 100%);
-  box-shadow: 0 4px 20px rgba(var(--bs-primary-rgb), 0.2);
-}
-
-.trip-card.my-trip:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 25px rgba(var(--bs-primary-rgb), 0.4);
-  border-color: var(--bs-primary);
-}
-
-/* Style spécial pour les trajets écologiques */
-.trip-card.eco-trip {
-  border: 1px solid #22c55e;
-  background: linear-gradient(135deg, #1a1a1a 0%, rgba(34, 197, 94, 0.08) 100%);
-  box-shadow: 0 2px 12px rgba(34, 197, 94, 0.15);
-}
-
-.trip-card.eco-trip:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.25);
-  border-color: #16a34a;
-}
-
-/* Gestion du cas où un trajet est à la fois "mon trajet" ET écologique */
-.trip-card.my-trip.eco-trip {
-  border: 2px solid #34d399;
-  background: linear-gradient(135deg, #1a1a1a 0%, rgba(52, 211, 153, 0.1) 100%);
-  box-shadow: 0 4px 20px rgba(52, 211, 153, 0.2);
+  /* layout-specific rules retained in media queries above */
 }
 
 /* Styles pour les badges */
@@ -1108,23 +1063,7 @@ onMounted(() => {
   justify-content: flex-end;
 }
 
-.badge {
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 4px 12px;
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.eco-badge {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  border-radius: 8px 0 12px 0;
-}
-
-.my-trip-badge {
-  background: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
-  border-radius: 0 8px 0 12px;
-}
+/* Badge styles moved to assets/css/_utilities.css */
 
 /* Suppression des anciens styles du badge */
 

@@ -604,15 +604,10 @@ onMounted(async () => {
   text-align: center;
 }
 
+/* eco-badge moved to global utilities — override here if necessary */
 .eco-badge {
-  display: inline-block;
-  background: linear-gradient(135deg, #00ff88, #00cc6a);
-  color: #000;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
   margin-top: 8px;
+  display: inline-block;
 }
 
 .datetime-info {
@@ -898,19 +893,7 @@ onMounted(async () => {
   border-color: #666;
 }
 
-/* Modal de confirmation */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
+/* Use global modal-overlay from assets/css/_modals.css */
 
 .confirmation-modal {
   background: #1a1a1a;

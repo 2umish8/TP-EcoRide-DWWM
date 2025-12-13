@@ -130,6 +130,15 @@ import { computed } from 'vue'  // Utilisé dans le setup
 const isLoggedIn = computed(() => ...)
 ```
 
+## 🔧 Actions récentes — Centralisation des badges (2025-12-13)
+
+- **But**: réduire les styles dupliqués pour les badges et migrer les définitions globales dans `Frontend/src/assets/css/_utilities.css`.
+- **Actions**:
+	- Déplacement des classes globales `.badge`, `.eco-badge` et `.my-trip-badge` dans `_utilities.css`.
+	- Suppression des définitions locales dans `SearchResultsView.vue`, `ProfileView.vue`, et `CarpoolingDetailView.vue`, qui remplacent maintenant les styles par une importation globale.
+
+**Prochaine étape**: vérifier les autres occurrences de `badge` et centraliser si possible.
+
 ---
 
 ## ✅ PHASE 5 ✅ : Console.log Vue Components (COMPLÉTÉE)

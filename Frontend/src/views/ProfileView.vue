@@ -1069,13 +1069,8 @@ export default {
   font-size: 0.9rem;
 }
 
+/* eco-badge moved to global utilities — override here if needed */
 .eco-badge {
-  background: #34d399;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
   margin-left: 10px;
 }
 
@@ -1171,19 +1166,9 @@ export default {
   max-width: 600px;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
+/* Use global modal-overlay from assets/css/_modals.css */
 
+/* View-specific modal overrides */
 .modal-content {
   background: #1a1a1a;
   border-radius: 20px;
@@ -1196,9 +1181,6 @@ export default {
 }
 
 .modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 25px;
 }
 

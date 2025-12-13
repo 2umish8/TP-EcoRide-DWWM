@@ -64,7 +64,11 @@
       <div class="reviews-section">
         <h3>Avis reçus ({{ reviews.length }})</h3>
         <div v-if="reviews.length === 0" class="no-reviews">
-          <font-awesome-icon :icon="['fas', 'comment']" class="no-reviews-icon" aria-hidden="true" />
+          <font-awesome-icon
+            :icon="['fas', 'comment']"
+            class="no-reviews-icon"
+            aria-hidden="true"
+          />
           <p>Aucun avis reçu pour le moment.</p>
         </div>
         <div v-else class="reviews-list">

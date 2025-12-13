@@ -33,3 +33,29 @@ a {
     background-color: hsla(160, 100%, 37%, 0.2);
   }
 }
+
+/* Common spinner utility */
+.loading-spinner,
+.spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+/* Badges (generic) */
+.badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.eco-badge {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  border-radius: 8px 0 12px 0;
+}
+
+.my-trip-badge {
+  background: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
+  border-radius: 0 8px 0 12px;
+}

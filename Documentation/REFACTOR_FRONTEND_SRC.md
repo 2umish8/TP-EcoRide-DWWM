@@ -80,4 +80,11 @@ Si tu veux je peux: faire un audit automatique (lister tous les fichiers du `src
 	- Réordonnancement des imports CSS dans `Frontend/src/main.js` pour charger `bootstrap` avant les partials et restauration du thème sombre initial via une classe `force-dark` ajoutée au `body`.
 	- Ajout d'un logging minimal pour la migration (voir PR pour détails) et création de placeholders pour les styles centralisés.
 
+- **Refactor CSS - TripCard & Modals (2025-12-13)**
+	- `TripCard.vue` : extraction complète des styles globaux liés à la carte (header, route, details, footer, status-badges) vers `Frontend/src/assets/css/_cards.css`. Le SFC conserve une petite zone `style scoped` pour overrides spécifiques.
+	- `SearchResultsView.vue` : suppression des styles `.trip-card` et `.trip-card` variants (moved to `_cards.css`); kept layout responsive tweaks in media queries.
+	- `ProfileView.vue` & `CarpoolingDetailView.vue` : removed duplicated `.modal-overlay` style and rely on `Frontend/src/assets/css/_modals.css`; kept minimal, view-specific modal overrides locally (background color, radius, etc.).
+
+**Etat**: en cours — next steps: search for other duplicated modal/views and extract selectors into `_modals.css` or scoped overrides as needed.
+
 **Etat**: en cours — certains composants (SFC) contiennent toujours des styles scéniques qui seront extraits progressivement.

@@ -1,11 +1,18 @@
 /* Global typography styles */
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--color-heading);
   margin: 0 0 8px 0;
   font-weight: var(--font-weight-semibold);
 }
 
-p, span, label {
+p,
+span,
+label {
   color: var(--color-text);
 }
