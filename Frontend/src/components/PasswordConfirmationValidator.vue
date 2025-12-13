@@ -8,8 +8,12 @@
         'password-confirmation-error': !confirmationResult.isValid,
       }"
     >
-      <span v-if="confirmationResult.isValid">✅ Les mots de passe correspondent</span>
-      <span v-else>❌ {{ confirmationResult.error }}</span>
+      <span v-if="confirmationResult.isValid"
+        ><font-awesome-icon :icon="['fas', 'circle-check']" /> Les mots de passe correspondent</span
+      >
+      <span v-else
+        ><font-awesome-icon :icon="['fas', 'xmark']" /> {{ confirmationResult.error }}</span
+      >
     </div>
   </div>
 </template>

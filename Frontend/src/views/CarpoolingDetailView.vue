@@ -13,7 +13,7 @@
     </div>
 
     <div v-else-if="error" class="error">
-      <p>❌ {{ error }}</p>
+      <p><font-awesome-icon :icon="['fas', 'xmark']" /> {{ error }}</p>
       <button @click="$router.go(-1)" class="retry-btn">Retourner à la recherche</button>
     </div>
 
@@ -24,10 +24,12 @@
         <div class="route-header">
           <div class="route">
             <h2>{{ carpooling.departure_address }} → {{ carpooling.arrival_address }}</h2>
-            <div class="eco-badge" v-if="carpooling.is_electric">🌱 Voyage écologique</div>
+            <div class="eco-badge" v-if="carpooling.is_electric">
+              <font-awesome-icon :icon="['fas', 'leaf']" /> Voyage écologique
+            </div>
           </div>
           <div class="duration-info">
-            <span class="icon">⏱️</span>
+            <font-awesome-icon :icon="['fas', 'clock-rotate-left']" class="icon" />
             <span class="duration-value">{{ formatDuration(carpooling.duration_minutes) }}</span>
             <span class="duration-label">de trajet</span>
           </div>
@@ -48,13 +50,13 @@
 
         <div class="trip-details">
           <div class="detail-item">
-            <span class="icon">💰</span>
+            <font-awesome-icon :icon="['fas', 'coins']" class="icon" />
             <span class="value">{{ carpooling.price_per_passenger }}</span>
             <IconCredit class="credit-icon" />
             <span class="label">par personne</span>
           </div>
           <div class="detail-item">
-            <span class="icon">👥</span>
+            <font-awesome-icon :icon="['fas', 'user-group']" class="icon" />
             <span class="value">{{ carpooling.seats_remaining }}</span>
             <span class="label">places restantes</span>
           </div>
@@ -63,7 +65,7 @@
 
       <!-- Informations du chauffeur -->
       <div class="driver-info card">
-        <h3>👤 Chauffeur</h3>
+        <h3><font-awesome-icon :icon="['fas', 'user']" /> Chauffeur</h3>
         <div class="driver-card">
           <div class="driver-avatar">
             <ClickableAvatar
@@ -91,7 +93,7 @@
 
       <!-- Informations du véhicule -->
       <div class="vehicle-info card">
-        <h3>🚗 Véhicule</h3>
+        <h3><font-awesome-icon :icon="['fas', 'car']" /> Véhicule</h3>
         <div class="vehicle-details">
           <div class="vehicle-main">
             <h4>{{ carpooling.brand_name }} {{ carpooling.model }}</h4>
@@ -105,7 +107,9 @@
                 <span class="spec-value">{{ carpooling.plate_number }}</span>
               </span>
               <span class="spec-item" v-if="carpooling.is_electric">
-                <span class="eco-vehicle">⚡ Véhicule électrique</span>
+                <span class="eco-vehicle"
+                  ><font-awesome-icon :icon="['fas', 'bolt']" /> Véhicule électrique</span
+                >
               </span>
             </div>
           </div>
@@ -114,31 +118,31 @@
 
       <!-- Préférences du chauffeur -->
       <div class="preferences-info card">
-        <h3>⚙️ Préférences du chauffeur</h3>
+        <h3><font-awesome-icon :icon="['fas', 'gear']" /> Préférences du chauffeur</h3>
         <div class="preferences-grid">
           <div class="preference-item">
-            <span class="pref-icon">🚬</span>
+            <font-awesome-icon :icon="['fas', 'smoking']" class="pref-icon" />
             <span class="pref-label">Fumeur:</span>
             <span class="pref-value">{{
               carpooling.driver_preferences?.allowsSmoking ? 'Autorisé' : 'Non autorisé'
             }}</span>
           </div>
           <div class="preference-item">
-            <span class="pref-icon">🐕</span>
+            <font-awesome-icon :icon="['fas', 'paw']" class="pref-icon" />
             <span class="pref-label">Animaux:</span>
             <span class="pref-value">{{
               carpooling.driver_preferences?.allowsPets ? 'Autorisés' : 'Non autorisés'
             }}</span>
           </div>
           <div class="preference-item">
-            <span class="pref-icon">💬</span>
+            <font-awesome-icon :icon="['fas', 'comment']" class="pref-icon" />
             <span class="pref-label">Conversation:</span>
             <span class="pref-value">{{
               carpooling.driver_preferences?.conversationLevel || 'Modérée'
             }}</span>
           </div>
           <div class="preference-item" v-if="carpooling.driver_preferences?.specialRules">
-            <span class="pref-icon">📋</span>
+            <font-awesome-icon :icon="['fas', 'clipboard-list']" class="pref-icon" />
             <span class="pref-label">Règles spéciales:</span>
             <span class="pref-value">{{ carpooling.driver_preferences.specialRules }}</span>
           </div>
@@ -147,7 +151,7 @@
 
       <!-- Avis récents -->
       <div class="reviews-info card">
-        <h3>💬 Avis récents (placeholder)</h3>
+        <h3><font-awesome-icon :icon="['fas', 'comment']" /> Avis récents (placeholder)</h3>
         <div class="reviews-list">
           <div v-if="carpooling.recent_reviews && carpooling.recent_reviews.length > 0">
             <div
@@ -176,17 +180,27 @@
           :disabled="carpooling.seats_remaining <= 0 || isParticipating"
           @click="initiateParticipation"
         >
-          <span v-if="isParticipating">⏳ Vérification...</span>
-          <span v-else>{{ carpooling.seats_remaining > 0 ? '🎫 Participer' : '❌ Complet' }}</span>
+          <span v-if="isParticipating">
+            <font-awesome-icon :icon="['fas', 'hourglass-half']" /> Vérification...</span
+          >
+          <span v-else>
+            <template v-if="carpooling.seats_remaining > 0">
+              <font-awesome-icon :icon="['fas', 'ticket']" /> Participer
+            </template>
+            <template v-else> <font-awesome-icon :icon="['fas', 'xmark']" /> Complet </template>
+          </span>
         </button>
         <button class="details-btn" @click="showMoreDetails = !showMoreDetails">
-          {{ showMoreDetails ? '📄 Moins de détails' : '📄 Plus de détails' }}
+          <span v-if="showMoreDetails"
+            ><font-awesome-icon :icon="['fas', 'file-lines']" /> Moins de détails</span
+          >
+          <span v-else><font-awesome-icon :icon="['fas', 'file-lines']" /> Plus de détails</span>
         </button>
       </div>
 
       <!-- Détails supplémentaires (expandable) -->
       <div v-if="showMoreDetails" class="additional-details card">
-        <h3>ℹ️ Informations complémentaires</h3>
+        <h3><font-awesome-icon :icon="['fas', 'circle-info']" /> Informations complémentaires</h3>
         <div class="extra-info">
           <p><strong>ID du covoiturage:</strong> {{ carpooling.id }}</p>
           <p><strong>Statut:</strong> {{ getStatusLabel(carpooling.status) }}</p>
@@ -205,7 +219,7 @@
     <div v-if="showConfirmationModal" class="modal-overlay" @click="closeConfirmationModal">
       <div class="confirmation-modal" @click.stop>
         <div class="modal-header">
-          <h3>🎫 Confirmer votre participation</h3>
+          <h3><font-awesome-icon :icon="['fas', 'ticket']" /> Confirmer votre participation</h3>
         </div>
 
         <div class="modal-content">
@@ -254,30 +268,36 @@
 
           <div class="confirmation-warning">
             <p>
-              ⚠️ <strong>Attention :</strong> Une fois confirmée, votre participation sera
-              définitive et vos crédits seront immédiatement débités.
+              <font-awesome-icon :icon="['fas', 'triangle-exclamation']" />
+              <strong>Attention :</strong> Une fois confirmée, votre participation sera définitive
+              et vos crédits seront immédiatement débités.
             </p>
             <p>
-              ✅ Cette participation vous donne accès à une place dans le véhicule pour le trajet
-              spécifié.
+              <font-awesome-icon :icon="['fas', 'circle-check']" /> Cette participation vous donne
+              accès à une place dans le véhicule pour le trajet spécifié.
             </p>
           </div>
         </div>
 
         <div class="modal-actions">
           <button class="cancel-btn" @click="closeConfirmationModal" :disabled="isConfirming">
-            ❌ Annuler
+            <font-awesome-icon :icon="['fas', 'xmark']" /> Annuler
           </button>
           <button class="confirm-btn" @click="confirmParticipation" :disabled="isConfirming">
-            <span v-if="isConfirming">⏳ Confirmation...</span>
-            <span v-else>✅ Confirmer ma participation</span>
+            <span v-if="isConfirming"
+              ><font-awesome-icon :icon="['fas', 'hourglass-half']" /> Confirmation...</span
+            >
+            <span v-else
+              ><font-awesome-icon :icon="['fas', 'circle-check']" /> Confirmer ma
+              participation</span
+            >
           </button>
         </div>
       </div>
     </div>
 
     <div v-else class="not-found">
-      <p>🔍 Aucun covoiturage trouvé.</p>
+      <p><font-awesome-icon :icon="['fas', 'magnifying-glass']" /> Aucun covoiturage trouvé.</p>
       <button @click="$router.push('/search')" class="search-btn">Retourner à la recherche</button>
     </div>
   </div>
@@ -357,10 +377,10 @@ const viewDriverProfile = (userId) => {
 
 const getStatusLabel = (status) => {
   const statusLabels = {
-    prévu: '📅 Prévu',
-    démarré: '🚗 En cours',
-    terminé: '✅ Terminé',
-    annulé: '❌ Annulé',
+    prévu: 'Prévu',
+    démarré: 'En cours',
+    terminé: 'Terminé',
+    annulé: 'Annulé',
   }
   return statusLabels[status] || status
 }
@@ -399,7 +419,7 @@ const confirmParticipation = async () => {
 
     // Afficher un message de succès et rediriger vers les voyages
     alert(
-      `✅ ${result.message}\n💰 ${result.creditsDebited} crédits débités\n🏦 Crédits restants: ${result.remainingCredits}`,
+      `${result.message}\nCrédits débités: ${result.creditsDebited}\nCrédits restants: ${result.remainingCredits}`,
     )
 
     // Rediriger vers la page "Mes voyages"

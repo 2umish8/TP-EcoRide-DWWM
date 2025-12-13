@@ -44,8 +44,8 @@
                 class="password-toggle"
                 :disabled="isLoading"
               >
-                <i v-if="showPassword" class="fas fa-eye"></i>
-                <i v-else class="fas fa-eye-slash"></i>
+                <font-awesome-icon v-if="showPassword" :icon="['fas', 'eye']" />
+                <font-awesome-icon v-else :icon="['fas', 'eye-slash']" />
               </button>
             </div>
           </div>
@@ -61,19 +61,24 @@
 
           <!-- Message d'erreur -->
           <div v-if="errorMessage" class="error-message">
-            <i class="fas fa-exclamation-triangle error-icon"></i>
+            <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="error-icon" />
             {{ errorMessage }}
           </div>
 
           <!-- Message de succès -->
           <div v-if="successMessage" class="success-message">
-            <i class="fas fa-check-circle success-icon"></i>
+            <font-awesome-icon :icon="['fas', 'circle-check']" class="success-icon" />
             {{ successMessage }}
           </div>
 
           <!-- Bouton de connexion -->
           <button type="submit" class="login-btn" :disabled="isLoading || !isFormValid">
-            <i v-if="isLoading" class="fas fa-spinner fa-spin loading-spinner"></i>
+            <font-awesome-icon
+              v-if="isLoading"
+              :icon="['fas', 'spinner']"
+              spin
+              class="loading-spinner"
+            />
             <span v-else>Se connecter</span>
           </button>
         </form>

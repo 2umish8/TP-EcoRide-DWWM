@@ -78,8 +78,8 @@
                   class="password-toggle"
                   :disabled="isLoading"
                 >
-                  <span v-if="showPassword">👁️</span>
-                  <span v-else>🙈</span>
+                  <font-awesome-icon v-if="showPassword" :icon="['fas', 'eye']" />
+                  <font-awesome-icon v-else :icon="['fas', 'eye-slash']" />
                 </button>
                 <!-- Tooltip personnalisé -->
                 <div class="password-tooltip" v-show="showTooltip">
@@ -130,19 +130,23 @@
 
           <!-- Message d'erreur -->
           <div v-if="errorMessage" class="error-message">
-            <span class="error-icon">⚠️</span>
+            <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="error-icon" />
             {{ errorMessage }}
           </div>
 
           <!-- Message de succès -->
           <div v-if="successMessage" class="success-message">
-            <span class="success-icon">✅</span>
+            <font-awesome-icon :icon="['fas', 'circle-check']" class="success-icon" />
             {{ successMessage }}
           </div>
 
           <!-- Bouton d'inscription -->
           <button type="submit" class="register-btn" :disabled="isLoading || !isFormValid">
-            <span v-if="isLoading" class="loading-spinner">⏳</span>
+            <font-awesome-icon
+              v-if="isLoading"
+              :icon="['fas', 'hourglass-half']"
+              class="loading-spinner"
+            />
             <span v-else>Créer mon compte</span>
           </button>
         </form>

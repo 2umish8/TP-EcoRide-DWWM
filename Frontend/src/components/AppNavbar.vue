@@ -34,47 +34,19 @@ const logout = async () => {
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
             <RouterLink class="nav-link" to="/">
-              <svg
-                class="nav-icon me-1"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-              </svg>
+              <font-awesome-icon :icon="['fas', 'house']" class="nav-icon me-1" />
               Accueil
             </RouterLink>
           </li>
           <li class="nav-item">
             <RouterLink class="nav-link" to="/search">
-              <svg
-                class="nav-icon me-1"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path
-                  d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-                />
-              </svg>
+              <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="nav-icon me-1" />
               Rechercher
             </RouterLink>
           </li>
           <li class="nav-item" v-if="isLoggedIn">
             <RouterLink class="nav-link" to="/my-trips">
-              <svg
-                class="nav-icon me-1"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path
-                  d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"
-                />
-              </svg>
+              <font-awesome-icon :icon="['fas', 'person-walking-luggage']" class="nav-icon me-1" />
               Mes trajets
             </RouterLink>
           </li>
@@ -84,33 +56,16 @@ const logout = async () => {
           <template v-if="!isLoggedIn">
             <li class="nav-item">
               <GlassButton to="/login" variant="connexion">
-                <svg
+                <font-awesome-icon
+                  :icon="['fas', 'arrow-right-to-bracket']"
                   class="nav-icon me-1"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v12z"
-                  />
-                </svg>
+                />
                 Connexion
               </GlassButton>
             </li>
             <li class="nav-item">
               <GlassButton to="/register" variant="inscription">
-                <svg
-                  class="nav-icon me-1"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-                  />
-                </svg>
+                <font-awesome-icon :icon="['fas', 'user-plus']" class="nav-icon me-1" />
                 Inscription
               </GlassButton>
             </li>
@@ -124,52 +79,26 @@ const logout = async () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <svg
-                  class="user-icon me-1"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M12 2C14.2 2 16 3.8 16 6C16 8.2 14.2 10 12 10C9.8 10 8 8.2 8 6C8 3.8 9.8 2 12 2ZM12 11C16.4 11 20 13.3 20 16V18C20 19.1 19.1 20 18 20H6C4.9 20 4 19.1 4 18V16C4 13.3 7.6 11 12 11Z"
-                  />
-                </svg>
+                <font-awesome-icon :icon="['fas', 'user']" class="user-icon me-1" />
                 {{ currentUser?.pseudo || currentUser?.prenom || 'Utilisateur' }}
               </a>
               <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu">
                 <li>
                   <RouterLink class="dropdown-item" to="/profile">
-                    <i class="fas fa-user dropdown-icon"></i>
+                    <font-awesome-icon :icon="['fas', 'user']" class="dropdown-icon" />
                     Mon profil
                   </RouterLink>
                 </li>
                 <li>
                   <RouterLink class="dropdown-item" to="/credits">
-                    <i class="fas fa-credit-card dropdown-icon"></i>
+                    <font-awesome-icon :icon="['fas', 'coins']" class="dropdown-icon" />
                     Mes crédits
                   </RouterLink>
                 </li>
                 <li><hr class="dropdown-divider" /></li>
                 <li>
                   <a class="dropdown-item" href="#" @click.prevent="logout">
-                    <svg
-                      class="dropdown-icon"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM13 17h-2v-6h2v6zm0-8h-2V7h2v2z"
-                      />
-                      <path
-                        d="M2 2l20 20"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                      />
-                    </svg>
+                    <font-awesome-icon :icon="['fas', 'user-xmark']" class="dropdown-icon" />
                     Déconnexion
                   </a>
                 </li>

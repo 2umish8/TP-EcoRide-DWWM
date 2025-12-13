@@ -8,7 +8,9 @@
           :checked="preferences.allowsSmoking"
           @change="onChange({ ...preferences, allowsSmoking: $event.target.checked })"
         />
-        <span class="preference-label">🚬 Fumeur autorisé</span>
+        <span class="preference-label"
+          ><font-awesome-icon :icon="['fas', 'smoking']" /> Fumeur autorisé</span
+        >
       </label>
 
       <label class="preference-item">
@@ -17,11 +19,15 @@
           :checked="preferences.allowsPets"
           @change="onChange({ ...preferences, allowsPets: $event.target.checked })"
         />
-        <span class="preference-label">🐕 Animaux autorisés</span>
+        <span class="preference-label"
+          ><font-awesome-icon :icon="['fas', 'paw']" /> Animaux autorisés</span
+        >
       </label>
 
       <div class="preference-select">
-        <label class="form-label">🎵 Genre musical préféré</label>
+        <label class="form-label"
+          ><font-awesome-icon :icon="['fas', 'music']" /> Genre musical préféré</label
+        >
         <select
           :value="preferences.preferredMusicGenre"
           @change="onChange({ ...preferences, preferredMusicGenre: $event.target.value })"
@@ -38,7 +44,9 @@
       </div>
 
       <div class="preference-select">
-        <label class="form-label">💬 Niveau de conversation</label>
+        <label class="form-label"
+          ><font-awesome-icon :icon="['fas', 'comment']" /> Niveau de conversation</label
+        >
         <select
           :value="preferences.conversationLevel"
           @change="onChange({ ...preferences, conversationLevel: $event.target.value })"

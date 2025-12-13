@@ -19,11 +19,11 @@
             :class="['tab-btn', { active: activeTab === 'passenger' }]"
           >
             <span v-if="activeTab === 'passenger'" class="tab-content action-mode">
-              <span class="icon">🔍</span>
+              <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="icon" />
               Rechercher un EcoRide
             </span>
             <span v-else class="tab-content normal-mode">
-              <span class="icon">📅</span>
+              <font-awesome-icon :icon="['fas', 'calendar']" class="icon" />
               Voir mes réservations
             </span>
           </button>
@@ -32,11 +32,11 @@
         <div class="tab-wrapper">
           <button @click="handleDriverTab" :class="['tab-btn', { active: activeTab === 'driver' }]">
             <span v-if="activeTab === 'driver'" class="tab-content action-mode">
-              <span class="icon">➕</span>
+              <font-awesome-icon :icon="['fas', 'plus']" class="icon" />
               Proposer un nouvel EcoRide
             </span>
             <span v-else class="tab-content normal-mode">
-              <span class="icon">🚗</span>
+              <font-awesome-icon :icon="['fas', 'car']" class="icon" />
               Voir mes EcoRides proposés
             </span>
           </button>
@@ -56,30 +56,55 @@
       <div v-if="activeTab === 'driver'" class="driver-content">
         <!-- Vérification si l'utilisateur est conducteur -->
         <div v-if="!isDriver" class="become-driver-state">
-          <div class="become-driver-icon">🚗</div>
+          <div class="become-driver-icon">
+            <font-awesome-icon :icon="['fas', 'car']" />
+          </div>
           <h3>Devenez conducteur EcoRide</h3>
           <p>Vous n'êtes pas encore conducteur sur EcoRide.</p>
           <p class="become-driver-description">En devenant conducteur, vous pourrez :</p>
           <ul class="benefit-list">
-            <li>🎯 Proposer vos trajets à la communauté</li>
-            <li>💰 Gagner des crédits en partageant vos frais</li>
-            <li>🌱 Réduire votre empreinte carbone</li>
-            <li>🤝 Rencontrer de nouvelles personnes</li>
-            <li>⭐ Recevoir des avis de vos passagers</li>
+            <li>
+              <font-awesome-icon :icon="['fas', 'bullseye']" /> Proposer vos trajets à la communauté
+            </li>
+            <li>
+              <font-awesome-icon :icon="['fas', 'coins']" /> Gagner des crédits en partageant vos
+              frais
+            </li>
+            <li><font-awesome-icon :icon="['fas', 'leaf']" /> Réduire votre empreinte carbone</li>
+            <li>
+              <font-awesome-icon :icon="['fas', 'handshake']" /> Rencontrer de nouvelles personnes
+            </li>
+            <li>
+              <font-awesome-icon :icon="['fas', 'star']" /> Recevoir des avis de vos passagers
+            </li>
           </ul>
           <div class="become-driver-notice">
-            <p><strong>📋 Processus d'inscription requis :</strong></p>
+            <p>
+              <strong
+                ><font-awesome-icon :icon="['fas', 'clipboard-list']" /> Processus d'inscription
+                requis :</strong
+              >
+            </p>
             <ul>
-              <li>✅ Informations de votre véhicule</li>
-              <li>✅ Vos préférences de conduite</li>
-              <li>✅ Engagement de conduite responsable</li>
+              <li>
+                <font-awesome-icon :icon="['fas', 'circle-check']" /> Informations de votre véhicule
+              </li>
+              <li>
+                <font-awesome-icon :icon="['fas', 'circle-check']" /> Vos préférences de conduite
+              </li>
+              <li>
+                <font-awesome-icon :icon="['fas', 'circle-check']" /> Engagement de conduite
+                responsable
+              </li>
             </ul>
           </div>
           <div class="become-driver-actions">
             <router-link to="/become-driver" class="become-driver-btn">
-              🚗 Commencer l'inscription chauffeur
+              <font-awesome-icon :icon="['fas', 'car']" /> Commencer l'inscription chauffeur
             </router-link>
-            <router-link to="/help" class="learn-more-btn"> 📚 En savoir plus </router-link>
+            <router-link to="/help" class="learn-more-btn">
+              <font-awesome-icon :icon="['fas', 'book']" /> En savoir plus
+            </router-link>
           </div>
         </div>
 
@@ -93,7 +118,9 @@
 
           <!-- État d'erreur -->
           <div v-else-if="error" class="error-state">
-            <div class="error-icon">❌</div>
+            <div class="error-icon">
+              <font-awesome-icon :icon="['fas', 'xmark']" />
+            </div>
             <h3>Erreur de chargement</h3>
             <p>{{ error }}</p>
             <button @click="loadTrips" class="retry-btn">Réessayer</button>
@@ -101,7 +128,9 @@
 
           <!-- Aucun trajet -->
           <div v-else-if="trips.length === 0" class="empty-state">
-            <div class="empty-icon">🚗</div>
+            <div class="empty-icon">
+              <font-awesome-icon :icon="['fas', 'car']" />
+            </div>
             <h3>Aucun EcoRide trouvé</h3>
             <p>
               Vous n'avez pas encore créé de covoiturage. Commencez par proposer votre premier
@@ -139,7 +168,9 @@
               <div class="stat-card eco-impact">
                 <span class="stat-number">{{ getCarbonSaved() }}</span>
                 <span class="stat-label">kg CO₂ économisés</span>
-                <span class="stat-subtext">🌱 Impact écologique</span>
+                <span class="stat-subtext"
+                  ><font-awesome-icon :icon="['fas', 'leaf']" /> Impact écologique</span
+                >
               </div>
             </div>
 
@@ -158,25 +189,25 @@
                     @click="selectedStatus = 'prévu'"
                     :class="['status-btn', { active: selectedStatus === 'prévu' }]"
                   >
-                    📅 Prévus
+                    <font-awesome-icon :icon="['fas', 'calendar']" /> Prévus
                   </button>
                   <button
                     @click="selectedStatus = 'démarré'"
                     :class="['status-btn', { active: selectedStatus === 'démarré' }]"
                   >
-                    🚗 En cours
+                    <font-awesome-icon :icon="['fas', 'car']" /> En cours
                   </button>
                   <button
                     @click="selectedStatus = 'terminé'"
                     :class="['status-btn', { active: selectedStatus === 'terminé' }]"
                   >
-                    ✅ Terminés
+                    <font-awesome-icon :icon="['fas', 'circle-check']" /> Terminés
                   </button>
                   <button
                     @click="selectedStatus = 'annulé'"
                     :class="['status-btn', { active: selectedStatus === 'annulé' }]"
                   >
-                    ❌ Annulés
+                    <font-awesome-icon :icon="['fas', 'xmark']" /> Annulés
                   </button>
                 </div>
               </div>
@@ -195,7 +226,7 @@
               v-if="filteredAndSortedTrips.length === 0 && selectedStatus"
               class="no-trips-status"
             >
-              <div class="no-trips-icon">📭</div>
+              <div class="no-trips-icon"><font-awesome-icon :icon="['fas', 'inbox']" /></div>
               <h3>Aucun EcoRide {{ getStatusEmptyMessage(selectedStatus) }}</h3>
               <p>
                 Réduisez les embouteillages et
@@ -236,7 +267,7 @@
                       class="action-btn-small finish"
                       title="Terminer le trajet"
                     >
-                      🏁
+                      <font-awesome-icon :icon="['fas', 'flag-checkered']" />
                     </button>
                     <button
                       v-if="['prévu', 'démarré'].includes(trip.status)"
@@ -244,14 +275,14 @@
                       class="action-btn-small cancel"
                       title="Annuler le trajet"
                     >
-                      ❌
+                      <font-awesome-icon :icon="['fas', 'xmark']" />
                     </button>
                     <router-link
                       :to="`/carpoolings/${trip.id}`"
                       class="action-btn-small view"
                       title="Voir les détails"
                     >
-                      👁️
+                      <font-awesome-icon :icon="['fas', 'eye']" />
                     </router-link>
                   </div>
                 </div>
@@ -259,16 +290,22 @@
                 <!-- Itinéraire -->
                 <div class="trip-route">
                   <div class="route-info">
-                    <span class="departure">📍 {{ trip.departure_address }}</span>
+                    <span class="departure"
+                      ><font-awesome-icon :icon="['fas', 'location-dot']" />
+                      {{ trip.departure_address }}</span
+                    >
                     <div class="route-arrow">→</div>
-                    <span class="destination">🎯 {{ trip.arrival_address }}</span>
+                    <span class="destination"
+                      ><font-awesome-icon :icon="['fas', 'bullseye']" />
+                      {{ trip.arrival_address }}</span
+                    >
                   </div>
                 </div>
 
                 <!-- Détails du voyage -->
                 <div class="trip-details">
                   <div class="detail-item">
-                    <span class="detail-icon">📅</span>
+                    <font-awesome-icon :icon="['fas', 'calendar']" class="detail-icon" />
                     <div class="detail-content">
                       <span class="detail-label">Date de départ</span>
                       <span class="detail-value">{{ formatDate(trip.departure_datetime) }}</span>
@@ -277,7 +314,7 @@
                   </div>
 
                   <div class="detail-item">
-                    <span class="detail-icon">⏱️</span>
+                    <font-awesome-icon :icon="['fas', 'clock-rotate-left']" class="detail-icon" />
                     <div class="detail-content">
                       <span class="detail-label">Durée estimée</span>
                       <span class="detail-value">{{
@@ -287,7 +324,7 @@
                   </div>
 
                   <div class="detail-item">
-                    <span class="detail-icon">💰</span>
+                    <font-awesome-icon :icon="['fas', 'coins']" class="detail-icon" />
                     <div class="detail-content">
                       <span class="detail-label">Prix par personne</span>
                       <span class="detail-value">{{ trip.price_per_passenger }} crédits</span>
@@ -295,7 +332,7 @@
                   </div>
 
                   <div class="detail-item">
-                    <span class="detail-icon">👥</span>
+                    <font-awesome-icon :icon="['fas', 'user-group']" class="detail-icon" />
                     <div class="detail-content">
                       <span class="detail-label">Participants</span>
                       <span class="detail-value">
@@ -312,7 +349,7 @@
 
                 <!-- Véhicule -->
                 <div class="trip-vehicle" v-if="trip.model">
-                  <span class="vehicle-icon">🚗</span>
+                  <font-awesome-icon :icon="['fas', 'car']" class="vehicle-icon" />
                   <span class="vehicle-info">{{ trip.model }} ({{ trip.plate_number }})</span>
                 </div>
 
@@ -322,7 +359,7 @@
                     class="trip-earnings"
                     v-if="trip.status === 'terminé' && trip.participants_count > 0"
                   >
-                    <span class="earnings-icon">💵</span>
+                    <font-awesome-icon :icon="['fas', 'coins']" class="earnings-icon" />
                     <span class="earnings-text">
                       Revenus estimés : {{ calculateEarnings(trip) }} crédits
                     </span>
@@ -348,7 +385,9 @@
 
         <!-- État d'erreur -->
         <div v-else-if="error" class="error-state">
-          <div class="error-icon">❌</div>
+          <div class="error-icon">
+            <font-awesome-icon :icon="['fas', 'xmark']" />
+          </div>
           <h3>Erreur de chargement</h3>
           <p>{{ error }}</p>
           <button @click="loadParticipations" class="retry-btn">Réessayer</button>
@@ -356,7 +395,9 @@
 
         <!-- Aucune participation -->
         <div v-else-if="participations.length === 0" class="empty-state">
-          <div class="empty-icon">🎫</div>
+          <div class="empty-icon">
+            <font-awesome-icon :icon="['fas', 'ticket']" />
+          </div>
           <h3>Aucune participation trouvée</h3>
           <p>
             Vous n'avez pas encore participé à un covoiturage. Découvrez les EcoRides disponibles !
@@ -394,7 +435,9 @@
                   participations.length > 1 ? 'es' : 'e'
                 }}</span
               >
-              <span class="stat-subtext">🎫 Historique complet</span>
+              <span class="stat-subtext"
+                ><font-awesome-icon :icon="['fas', 'ticket']" /> Historique complet</span
+              >
             </div>
           </div>
 
@@ -413,25 +456,25 @@
                   @click="selectedStatus = 'prévu'"
                   :class="['status-btn', { active: selectedStatus === 'prévu' }]"
                 >
-                  📅 Prévus
+                  <font-awesome-icon :icon="['fas', 'calendar']" /> Prévus
                 </button>
                 <button
                   @click="selectedStatus = 'démarré'"
                   :class="['status-btn', { active: selectedStatus === 'démarré' }]"
                 >
-                  🚗 En cours
+                  <font-awesome-icon :icon="['fas', 'car']" /> En cours
                 </button>
                 <button
                   @click="selectedStatus = 'terminé'"
                   :class="['status-btn', { active: selectedStatus === 'terminé' }]"
                 >
-                  ✅ Terminés
+                  <font-awesome-icon :icon="['fas', 'circle-check']" /> Terminés
                 </button>
                 <button
                   @click="selectedStatus = 'annulé'"
                   :class="['status-btn', { active: selectedStatus === 'annulé' }]"
                 >
-                  ❌ Annulés
+                  <font-awesome-icon :icon="['fas', 'xmark']" /> Annulés
                 </button>
               </div>
             </div>
@@ -450,7 +493,7 @@
             v-if="filteredAndSortedParticipations.length === 0 && selectedStatus"
             class="no-trips-status"
           >
-            <div class="no-trips-icon">🚧</div>
+            <div class="no-trips-icon"><font-awesome-icon :icon="['fas', 'road']" /></div>
             <h3>Aucune participation {{ getStatusEmptyMessage(selectedStatus) }}</h3>
             <p>
               Découvrez les
@@ -486,7 +529,7 @@
                     class="action-btn-small view"
                     title="Voir les détails"
                   >
-                    👁️
+                    <font-awesome-icon :icon="['fas', 'eye']" />
                   </router-link>
                   <button
                     v-if="canCancelParticipation(participation)"
@@ -494,7 +537,7 @@
                     class="action-btn-small cancel"
                     title="Annuler la participation"
                   >
-                    ❌
+                    <font-awesome-icon :icon="['fas', 'xmark']" />
                   </button>
                 </div>
               </div>
@@ -504,14 +547,14 @@
                 <div class="route-info">
                   <div class="route-addresses">
                     <div class="departure">
-                      <span class="icon">🟢</span>
+                      <font-awesome-icon :icon="['fas', 'check']" class="icon" />
                       <span class="address">{{ participation.departure_address }}</span>
                     </div>
                     <div class="route-arrow">
                       <span class="arrow">↓</span>
                     </div>
                     <div class="arrival">
-                      <span class="icon">🔴</span>
+                      <font-awesome-icon :icon="['fas', 'check']" class="icon" />
                       <span class="address">{{ participation.arrival_address }}</span>
                     </div>
                   </div>
@@ -522,20 +565,26 @@
               <div class="trip-details">
                 <div class="trip-schedule">
                   <div class="schedule-item">
-                    <span class="schedule-label">📅 Date :</span>
+                    <span class="schedule-label"
+                      ><font-awesome-icon :icon="['fas', 'calendar']" /> Date :</span
+                    >
                     <span class="schedule-value">{{
                       formatDate(participation.departure_datetime)
                     }}</span>
                   </div>
                   <div class="schedule-item">
-                    <span class="schedule-label">🕒 Heure :</span>
+                    <span class="schedule-label"
+                      ><font-awesome-icon :icon="['fas', 'clock']" /> Heure :</span
+                    >
                     <span class="schedule-value">
                       {{ formatTime(participation.departure_datetime) }} -
                       {{ formatTime(participation.arrival_datetime) }}
                     </span>
                   </div>
                   <div class="schedule-item">
-                    <span class="schedule-label">⏱️ Durée :</span>
+                    <span class="schedule-label"
+                      ><font-awesome-icon :icon="['fas', 'clock-rotate-left']" /> Durée :</span
+                    >
                     <span class="schedule-value">
                       {{
                         formatDuration(
@@ -549,27 +598,37 @@
 
                 <div class="trip-info">
                   <div class="info-item driver-info">
-                    <span class="info-label">👨‍✈️ Conducteur :</span>
+                    <span class="info-label"
+                      ><font-awesome-icon :icon="['fas', 'user']" /> Conducteur :</span
+                    >
                     <span class="info-value">{{ participation.driver_pseudo }}</span>
                   </div>
                   <div class="info-item vehicle-info">
-                    <span class="info-label">🚗 Véhicule :</span>
+                    <span class="info-label"
+                      ><font-awesome-icon :icon="['fas', 'car']" /> Véhicule :</span
+                    >
                     <span class="info-value"
                       >{{ participation.model }} ({{ participation.plate_number }})</span
                     >
                   </div>
                   <div class="info-item price-info">
-                    <span class="info-label">💰 Prix payé :</span>
+                    <span class="info-label"
+                      ><font-awesome-icon :icon="['fas', 'coins']" /> Prix payé :</span
+                    >
                     <span class="info-value price">{{ participation.credits_paid }} crédits</span>
                   </div>
                   <div v-if="participation.participation_date" class="info-item date-info">
-                    <span class="info-label">📝 Réservé le :</span>
+                    <span class="info-label"
+                      ><font-awesome-icon :icon="['fas', 'pen']" /> Réservé le :</span
+                    >
                     <span class="info-value">{{
                       formatDate(participation.participation_date)
                     }}</span>
                   </div>
                   <div v-if="participation.cancellation_date" class="info-item cancellation-info">
-                    <span class="info-label">❌ Annulé le :</span>
+                    <span class="info-label"
+                      ><font-awesome-icon :icon="['fas', 'xmark']" /> Annulé le :</span
+                    >
                     <span class="info-value">{{
                       formatDate(participation.cancellation_date)
                     }}</span>
@@ -775,13 +834,14 @@ export default {
     }
 
     const getStatusIcon = (status) => {
+      // Status icons now rendered with FontAwesome components in template
       const icons = {
-        prévu: '📅',
-        démarré: '🚗',
-        terminé: '✅',
-        annulé: '❌',
+        prévu: 'calendar',
+        démarré: 'car',
+        terminé: 'circle-check',
+        annulé: 'xmark',
       }
-      return icons[status] || '❓'
+      return icons[status] || 'question'
     }
 
     const getStatusLabel = (status) => {
@@ -903,10 +963,10 @@ export default {
         // Afficher le message de succès avec les détails du remboursement
         let message = result.message
         if (result.creditsRefunded !== undefined) {
-          message += `\n💰 Crédits remboursés: ${result.creditsRefunded}`
+          message += `\nCrédits remboursés: ${result.creditsRefunded}`
         }
         if (result.penalty && result.penalty > 0) {
-          message += `\n⚠️ Pénalité appliquée: ${result.penalty} crédits`
+          message += `\nPénalité appliquée: ${result.penalty} crédits`
         }
 
         notificationStore.showSuccess(message)

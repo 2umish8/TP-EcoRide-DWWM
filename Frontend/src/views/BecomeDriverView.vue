@@ -5,7 +5,7 @@
       <div class="page-header">
         <div class="header-content">
           <div class="title-section">
-            <h1>🚗 Devenir Chauffeur EcoRide</h1>
+            <h1><font-awesome-icon :icon="['fas', 'car']" /> Devenir Chauffeur EcoRide</h1>
             <p>Rejoignez notre communauté de conducteurs responsables</p>
           </div>
         </div>
@@ -32,7 +32,7 @@
       <!-- Étape 1: Informations véhicule -->
       <div v-if="currentStep === 1" class="step-content">
         <div class="form-card">
-          <h3>🚙 Informations du véhicule</h3>
+          <h3><font-awesome-icon :icon="['fas', 'car']" /> Informations du véhicule</h3>
           <p class="step-description">
             Pour garantir la sécurité de nos utilisateurs, nous devons enregistrer les informations
             de votre véhicule.
@@ -119,14 +119,19 @@
                   class="form-checkbox"
                 />
                 <label for="electric" class="checkbox-label">
-                  ⚡ Véhicule électrique (bonus écologique !)
+                  <font-awesome-icon :icon="['fas', 'bolt']" /> Véhicule électrique (bonus
+                  écologique !)
                 </label>
               </div>
             </div>
 
             <div class="form-actions">
-              <router-link to="/my-trips" class="btn btn-secondary">❌ Annuler</router-link>
-              <button type="submit" class="btn btn-primary">Suivant: Préférences ➡️</button>
+              <router-link to="/my-trips" class="btn btn-secondary"
+                ><font-awesome-icon :icon="['fas', 'xmark']" /> Annuler</router-link
+              >
+              <button type="submit" class="btn btn-primary">
+                Suivant: Préférences <font-awesome-icon :icon="['fas', 'chevron-right']" />
+              </button>
             </div>
           </form>
         </div>
@@ -135,7 +140,7 @@
       <!-- Étape 2: Préférences de conduite -->
       <div v-if="currentStep === 2" class="step-content">
         <div class="form-card">
-          <h3>⚙️ Préférences de conduite</h3>
+          <h3><font-awesome-icon :icon="['fas', 'gear']" /> Préférences de conduite</h3>
           <p class="step-description">
             Définissez vos préférences pour que les passagers sachent à quoi s'attendre lors du
             trajet.
@@ -146,19 +151,23 @@
               <div class="form-group">
                 <label class="form-label">Musique pendant le trajet</label>
                 <select v-model="preferencesData.musicPreference" class="form-select">
-                  <option value="Aucune musique">🔇 Aucune musique</option>
-                  <option value="Musique douce">🎵 Musique douce</option>
-                  <option value="Radio">📻 Radio</option>
-                  <option value="Selon l'humeur">🎶 Selon l'humeur</option>
+                  <option value="Aucune musique">Aucune musique</option>
+                  <option value="Musique douce">
+                    <font-awesome-icon :icon="['fas', 'music']" /> Musique douce
+                  </option>
+                  <option value="Radio">Radio</option>
+                  <option value="Selon l'humeur">Selon l'humeur</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label class="form-label">Niveau de conversation</label>
                 <select v-model="preferencesData.conversationLevel" class="form-select">
-                  <option value="Silencieux">🤫 Trajet silencieux</option>
-                  <option value="Modérée">💬 Conversation modérée</option>
-                  <option value="Bavard">🗣️ J'aime parler</option>
+                  <option value="Silencieux">Trajet silencieux</option>
+                  <option value="Modérée">
+                    <font-awesome-icon :icon="['fas', 'comment']" /> Conversation modérée
+                  </option>
+                  <option value="Bavard">J'aime parler</option>
                 </select>
               </div>
             </div>
@@ -183,7 +192,7 @@
 
             <div class="preferences-grid">
               <div class="preference-card">
-                <div class="preference-icon">🚭</div>
+                <div class="preference-icon"><font-awesome-icon :icon="['fas', 'smoking']" /></div>
                 <div class="preference-content">
                   <h4>Tabac</h4>
                   <label class="switch">
@@ -199,7 +208,7 @@
               </div>
 
               <div class="preference-card">
-                <div class="preference-icon">🐕</div>
+                <div class="preference-icon"><font-awesome-icon :icon="['fas', 'paw']" /></div>
                 <div class="preference-content">
                   <h4>Animaux</h4>
                   <label class="switch">
@@ -223,9 +232,11 @@
 
             <div class="form-actions">
               <button type="button" @click="currentStep = 1" class="btn btn-secondary">
-                ⬅️ Retour
+                <font-awesome-icon :icon="['fas', 'arrow-left']" /> Retour
               </button>
-              <button type="submit" class="btn btn-primary">Suivant: Confirmation ➡️</button>
+              <button type="submit" class="btn btn-primary">
+                Suivant: Confirmation <font-awesome-icon :icon="['fas', 'chevron-right']" />
+              </button>
             </div>
           </form>
         </div>
@@ -234,14 +245,14 @@
       <!-- Étape 3: Confirmation et finalisation -->
       <div v-if="currentStep === 3" class="step-content">
         <div class="confirmation-card">
-          <h3>✅ Confirmation</h3>
+          <h3><font-awesome-icon :icon="['fas', 'circle-check']" /> Confirmation</h3>
           <p class="step-description">
             Vérifiez vos informations avant de finaliser votre inscription en tant que chauffeur.
           </p>
 
           <!-- Récapitulatif véhicule -->
           <div class="summary-section">
-            <h4>🚙 Votre véhicule</h4>
+            <h4><font-awesome-icon :icon="['fas', 'car']" /> Votre véhicule</h4>
             <div class="summary-grid">
               <div class="summary-item">
                 <span class="label">Plaque:</span>
@@ -262,7 +273,10 @@
               <div class="summary-item">
                 <span class="label">Type:</span>
                 <span class="value">
-                  {{ vehicleData.is_electric ? '⚡ Électrique' : '⛽ Thermique' }}
+                  <span v-if="vehicleData.is_electric"
+                    ><font-awesome-icon :icon="['fas', 'bolt']" /> Électrique</span
+                  >
+                  <span v-else><font-awesome-icon :icon="['fas', 'gas-pump']" /> Thermique</span>
                 </span>
               </div>
             </div>
@@ -286,15 +300,21 @@
               </div>
               <div class="summary-item">
                 <span class="label">Tabac:</span>
-                <span class="value">{{
-                  preferencesData.smokingAllowed ? '✅ Accepté' : '❌ Interdit'
-                }}</span>
+                <span class="value">
+                  <span v-if="preferencesData.smokingAllowed"
+                    ><font-awesome-icon :icon="['fas', 'circle-check']" /> Accepté</span
+                  >
+                  <span v-else><font-awesome-icon :icon="['fas', 'xmark']" /> Interdit</span>
+                </span>
               </div>
               <div class="summary-item">
                 <span class="label">Animaux:</span>
-                <span class="value">{{
-                  preferencesData.petsAllowed ? '✅ Acceptés' : '❌ Interdits'
-                }}</span>
+                <span class="value">
+                  <span v-if="preferencesData.petsAllowed"
+                    ><font-awesome-icon :icon="['fas', 'circle-check']" /> Acceptés</span
+                  >
+                  <span v-else><font-awesome-icon :icon="['fas', 'xmark']" /> Interdits</span>
+                </span>
               </div>
             </div>
             <div v-if="preferencesData.customPreferences" class="custom-prefs">
@@ -306,13 +326,31 @@
           <!-- Engagement -->
           <div class="engagement-section">
             <div class="engagement-card">
-              <h4>📋 Engagement de conduite responsable</h4>
+              <h4>
+                <font-awesome-icon :icon="['fas', 'clipboard-list']" /> Engagement de conduite
+                responsable
+              </h4>
               <ul class="engagement-list">
-                <li>✅ Je m'engage à respecter le code de la route</li>
-                <li>✅ Je m'engage à maintenir mon véhicule en bon état</li>
-                <li>✅ Je m'engage à respecter les horaires convenus</li>
-                <li>✅ Je m'engage à adopter une conduite éco-responsable</li>
-                <li>✅ Je m'engage à respecter les autres utilisateurs</li>
+                <li>
+                  <font-awesome-icon :icon="['fas', 'circle-check']" /> Je m'engage à respecter le
+                  code de la route
+                </li>
+                <li>
+                  <font-awesome-icon :icon="['fas', 'circle-check']" /> Je m'engage à maintenir mon
+                  véhicule en bon état
+                </li>
+                <li>
+                  <font-awesome-icon :icon="['fas', 'circle-check']" /> Je m'engage à respecter les
+                  horaires convenus
+                </li>
+                <li>
+                  <font-awesome-icon :icon="['fas', 'circle-check']" /> Je m'engage à adopter une
+                  conduite éco-responsable
+                </li>
+                <li>
+                  <font-awesome-icon :icon="['fas', 'circle-check']" /> Je m'engage à respecter les
+                  autres utilisateurs
+                </li>
               </ul>
 
               <div class="checkbox-container">
@@ -342,8 +380,13 @@
               :disabled="!acceptEngagement || isSubmitting"
               class="btn btn-primary btn-large"
             >
-              <span v-if="isSubmitting">🔄 Finalisation en cours...</span>
-              <span v-else>🎉 Devenir Chauffeur EcoRide</span>
+              <span v-if="isSubmitting"
+                ><font-awesome-icon :icon="['fas', 'spinner']" spin /> Finalisation en
+                cours...</span
+              >
+              <span v-else
+                ><font-awesome-icon :icon="['fas', 'gift']" /> Devenir Chauffeur EcoRide</span
+              >
             </button>
           </div>
         </div>
@@ -352,24 +395,36 @@
       <!-- Étape 4: Succès -->
       <div v-if="currentStep === 4" class="step-content">
         <div class="success-card">
-          <div class="success-icon">🎉</div>
+          <div class="success-icon"><font-awesome-icon :icon="['fas', 'gift']" /></div>
           <h3>Félicitations !</h3>
           <p>Vous êtes maintenant officiellement chauffeur EcoRide !</p>
 
           <div class="success-benefits">
             <h4>Vos nouveaux avantages :</h4>
             <ul>
-              <li>🚗 Proposer des covoiturages</li>
-              <li>💰 Gagner des crédits en tant que conducteur</li>
-              <li>🌟 Recevoir des avis de vos passagers</li>
-              <li>📊 Accéder à vos statistiques de conduite</li>
-              <li>🏆 Participer au programme de récompenses</li>
+              <li><font-awesome-icon :icon="['fas', 'car']" /> Proposer des covoiturages</li>
+              <li>
+                <font-awesome-icon :icon="['fas', 'coins']" /> Gagner des crédits en tant que
+                conducteur
+              </li>
+              <li>
+                <font-awesome-icon :icon="['fas', 'star']" /> Recevoir des avis de vos passagers
+              </li>
+              <li>
+                <font-awesome-icon :icon="['fas', 'chart-line']" /> Accéder à vos statistiques de
+                conduite
+              </li>
+              <li>
+                <font-awesome-icon :icon="['fas', 'trophy']" /> Participer au programme de
+                récompenses
+              </li>
             </ul>
           </div>
 
           <div class="form-actions">
             <router-link to="/my-trips" class="btn btn-primary btn-large">
-              🚀 Découvrir mes nouvelles fonctionnalités
+              <font-awesome-icon :icon="['fas', 'rocket']" /> Découvrir mes nouvelles
+              fonctionnalités
             </router-link>
           </div>
         </div>

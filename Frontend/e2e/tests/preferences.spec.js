@@ -50,7 +50,10 @@ test('driver can update driving preferences and receive confirmation', async ({ 
   await specialRules.fill('Pas de musique trop forte')
 
   // Wait for the POST /preferences response triggered by UI change
-  await page.waitForResponse((resp) => resp.url().includes('/preferences') && resp.status() === 200)
+  await page.waitForResponse(
+    (resp) => resp.url().includes('/preferences') && resp.status() === 200,
+    { timeout: 15000 },
+  )
 
   // Check for success notification
   await expect(page.locator('.success-message')).toBeVisible()

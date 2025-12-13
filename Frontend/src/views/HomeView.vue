@@ -128,10 +128,7 @@ const scrollToAbout = () => {
           <!-- Section "En savoir plus" -->
           <div class="qui-sommes-nous">
             <div class="scroll-icon" @click="scrollToAbout">
-              <svg class="scroll-svg" width="24" height="24" viewBox="0 0 24 24">
-                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-                <path d="M7.41 15.59L12 20.17l4.59-4.58L18 17l-6 6-6-6 1.41-1.41z" />
-              </svg>
+              <font-awesome-icon :icon="['fas', 'angles-down']" class="scroll-svg" size="lg" />
             </div>
             <div class="en-savoir-plus" @click="scrollToAbout">En Savoir Plus</div>
           </div>
@@ -142,15 +139,11 @@ const scrollToAbout = () => {
     <!-- Footer arrows section -->
     <div class="arrows-section">
       <div class="arrow-down">
-        <svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-        </svg>
+        <font-awesome-icon :icon="['fas', 'chevron-down']" class="arrow-icon" size="lg" />
       </div>
       <div class="footer-links"></div>
       <div class="arrow-down">
-        <svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
-        </svg>
+        <font-awesome-icon :icon="['fas', 'chevron-down']" class="arrow-icon" size="lg" />
       </div>
     </div>
 

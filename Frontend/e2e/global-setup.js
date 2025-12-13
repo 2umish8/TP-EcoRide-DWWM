@@ -32,8 +32,9 @@ export default async function globalSetup() {
     // (we couldn't reliably spawn or import it across all environments). Proceed with seeding.
 
     // Create a consistent test user by calling the API
-    console.log('⏳ Waiting for backend to be available...')
-    await waitForBackend(BASE_URL)
+    console.log('⏳ Waiting for backend to be available (timeout 120s)...')
+    // Allow a longer timeout for local dev environments where DB migrations may delay startup
+    await waitForBackend(BASE_URL, 120000)
 
     console.log('➕ Registering test user and seeding vehicle...')
 

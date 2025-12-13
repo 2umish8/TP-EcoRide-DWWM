@@ -8,7 +8,9 @@
             <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="logo" />
           </div>
           <div class="title-section">
-            <h1>🚨 Signaler un problème</h1>
+            <h1>
+              <font-awesome-icon :icon="['fas', 'triangle-exclamation']" /> Signaler un problème
+            </h1>
             <p>Votre sécurité et satisfaction sont notre priorité</p>
           </div>
         </div>
@@ -23,7 +25,7 @@
       <!-- Error State -->
       <div v-else-if="error" class="error-container">
         <div class="error-content">
-          <h3>❌ Erreur</h3>
+          <h3><font-awesome-icon :icon="['fas', 'xmark']" /> Erreur</h3>
           <p>{{ error }}</p>
           <router-link to="/" class="btn-primary">Retour à l'accueil</router-link>
         </div>
@@ -33,22 +35,24 @@
       <div v-else class="report-content">
         <!-- Trip Information -->
         <div class="trip-info-card" v-if="tripInfo">
-          <h3>📍 Informations du trajet</h3>
+          <h3><font-awesome-icon :icon="['fas', 'location-dot']" /> Informations du trajet</h3>
           <div class="trip-details">
             <div class="detail-row">
-              <span class="label">🚀 Départ :</span>
+              <span class="label"
+                ><font-awesome-icon :icon="['fas', 'location-dot']" /> Départ :</span
+              >
               <span class="value">{{ tripInfo.departure_address }}</span>
             </div>
             <div class="detail-row">
-              <span class="label">🎯 Arrivée :</span>
+              <span class="label"><font-awesome-icon :icon="['fas', 'bullseye']" /> Arrivée :</span>
               <span class="value">{{ tripInfo.arrival_address }}</span>
             </div>
             <div class="detail-row">
-              <span class="label">📅 Date :</span>
+              <span class="label"><font-awesome-icon :icon="['fas', 'calendar']" /> Date :</span>
               <span class="value">{{ formatTripDate(tripInfo.departure_datetime) }}</span>
             </div>
             <div class="detail-row">
-              <span class="label">👤 Chauffeur :</span>
+              <span class="label"><font-awesome-icon :icon="['fas', 'user']" /> Chauffeur :</span>
               <span class="value">{{ tripInfo.driver_pseudo }}</span>
             </div>
           </div>
@@ -56,7 +60,7 @@
 
         <!-- Warning Notice -->
         <div class="warning-notice">
-          <h3>⚠️ Important</h3>
+          <h3><font-awesome-icon :icon="['fas', 'triangle-exclamation']" /> Important</h3>
           <p>
             Les signalements sont examinés attentivement par notre équipe. Merci de fournir des
             informations précises et détaillées pour nous permettre de traiter votre demande
@@ -73,7 +77,7 @@
         <!-- Report Form -->
         <div class="report-form-card">
           <div class="form-header">
-            <h3>📝 Détails du problème</h3>
+            <h3><font-awesome-icon :icon="['fas', 'pen']" /> Détails du problème</h3>
             <p>Décrivez précisément ce qui s'est passé pendant votre trajet</p>
           </div>
 
@@ -109,7 +113,7 @@
                     required
                   />
                   <span class="severity-label">
-                    <span class="severity-icon">🟡</span>
+                    <font-awesome-icon :icon="['fas', 'circle']" class="severity-icon minor" />
                     <span class="severity-text">
                       <strong>Mineur</strong><br />
                       Gêne légère, sans impact sur la sécurité
@@ -126,7 +130,10 @@
                     required
                   />
                   <span class="severity-label">
-                    <span class="severity-icon">🟠</span>
+                    <font-awesome-icon
+                      :icon="['fas', 'exclamation']"
+                      class="severity-icon moderate"
+                    />
                     <span class="severity-text">
                       <strong>Modéré</strong><br />
                       Problème notable affectant le confort
@@ -143,7 +150,10 @@
                     required
                   />
                   <span class="severity-label">
-                    <span class="severity-icon">🔴</span>
+                    <font-awesome-icon
+                      :icon="['fas', 'triangle-exclamation']"
+                      class="severity-icon severe"
+                    />
                     <span class="severity-text">
                       <strong>Grave</strong><br />
                       Problème de sécurité ou comportement inacceptable
@@ -211,7 +221,7 @@
                   @mouseenter="hoverRating = star"
                   @mouseleave="hoverRating = 0"
                 >
-                  ⭐
+                  <font-awesome-icon :icon="['fas', 'star']" />
                 </button>
               </div>
               <span class="rating-text">{{ getRatingText(reportForm.rating) }}</span>
@@ -221,8 +231,13 @@
             <div class="form-actions">
               <router-link to="/" class="btn-secondary"> Annuler </router-link>
               <button type="submit" class="btn-danger" :disabled="!isFormValid || submitting">
-                <span v-if="submitting">Envoi en cours...</span>
-                <span v-else>🚨 Envoyer le signalement</span>
+                <span v-if="submitting"
+                  ><font-awesome-icon :icon="['fas', 'spinner']" spin /> Envoi en cours...</span
+                >
+                <span v-else
+                  ><font-awesome-icon :icon="['fas', 'triangle-exclamation']" /> Envoyer le
+                  signalement</span
+                >
               </button>
             </div>
           </form>
@@ -231,7 +246,7 @@
         <!-- Success Message -->
         <div v-if="submitted" class="success-container">
           <div class="success-content">
-            <h3>✅ Signalement transmis</h3>
+            <h3><font-awesome-icon :icon="['fas', 'circle-check']" /> Signalement transmis</h3>
             <p>Votre signalement a été envoyé à notre équipe de modération.</p>
             <div class="success-details">
               <p>

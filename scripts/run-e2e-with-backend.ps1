@@ -9,10 +9,13 @@ param(
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $backendPidFile = Join-Path $scriptDir 'backend.pid'
 
-Write-Output "Starting backend in background..."
-& "$scriptDir\start-backend-dev.ps1"
+Write-Output 'Starting backend in background...'
+& (Join-Path $scriptDir 'start-backend-dev.ps1')
 
-Write-Output "Waiting for backend health endpoint to respond (timeout ${TimeoutSeconds}s)"
+Write-Output 'Starting frontend in background (for Playwright webServer reuse)...'
+& (Join-Path $scriptDir 'start-frontend-dev.ps1')
+
+Write-Output 'Waiting for backend health endpoint to respond (timeout ' + $TimeoutSeconds + 's)'
 $start = Get-Date
 $healthy = $false
 while (((Get-Date) - $start).TotalSeconds -lt $TimeoutSeconds) {
@@ -28,18 +31,24 @@ if (-not $healthy) {
   exit 1
 }
 
-Write-Output "Backend healthy — running Playwright E2E tests from Frontend"
+Write-Output 'Backend healthy - running Playwright E2E tests from Frontend'
 Push-Location (Join-Path $scriptDir '..\Frontend')
 $npm = 'npm.cmd'
-$testProc = Start-Process -FilePath $npm -ArgumentList 'run','test:e2e' -NoNewWindow -Wait -PassThru
+$testProc = Start-Process -FilePath $npm -ArgumentList 'run','test:e2e','--','--workers=1' -NoNewWindow -Wait -PassThru
 $exitCode = $testProc.ExitCode
 Pop-Location
 
-Write-Output "E2E tests finished with exit code $exitCode"
+Write-Output ('E2E tests finished with exit code ' + $exitCode)
 
 if (Test-Path $backendPidFile) {
   Write-Output "Stopping backend..."
-  & "$scriptDir\stop-dev-by-pid.ps1" -PidFile $backendPidFile
+  & (Join-Path $scriptDir 'stop-dev-by-pid.ps1') -PidFile $backendPidFile
+}
+
+$frontendPidFile = Join-Path $scriptDir 'frontend.pid'
+if (Test-Path $frontendPidFile) {
+  Write-Output "Stopping frontend..."
+  & (Join-Path $scriptDir 'stop-dev-by-pid.ps1') -PidFile $frontendPidFile
 }
 
 exit $exitCode

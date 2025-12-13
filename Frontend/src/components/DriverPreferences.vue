@@ -65,7 +65,7 @@
             />
             <input type="text" v-model="pref.value" placeholder="Valeur" maxlength="100" />
             <button type="button" @click="removeCustomPreference(index)" class="btn-remove">
-              ✕
+              <font-awesome-icon :icon="['fas', 'xmark']" />
             </button>
           </div>
 
@@ -95,22 +95,22 @@
         <!-- Préférences standards -->
         <div class="standard-display">
           <div class="preference-item" v-if="preferences.allowSmoking">
-            <span class="icon">🚬</span>
+            <font-awesome-icon :icon="['fas', 'smoking']" class="icon" />
             <span>Fumeur autorisé</span>
           </div>
 
           <div class="preference-item" v-if="preferences.allowPets">
-            <span class="icon">🐕</span>
+            <font-awesome-icon :icon="['fas', 'paw']" class="icon" />
             <span>Animaux autorisés</span>
           </div>
 
           <div class="preference-item" v-if="preferences.allowMusic">
-            <span class="icon">🎵</span>
+            <font-awesome-icon :icon="['fas', 'music']" class="icon" />
             <span>Musique autorisée</span>
           </div>
 
           <div class="preference-item" v-if="preferences.conversationLevel">
-            <span class="icon">💬</span>
+            <font-awesome-icon :icon="['fas', 'comment']" class="icon" />
             <span>{{ getConversationText(preferences.conversationLevel) }}</span>
           </div>
         </div>

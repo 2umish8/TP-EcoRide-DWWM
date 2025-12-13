@@ -29,7 +29,7 @@
 
         <!-- Indicateur de chargement -->
         <div v-if="isLoadingProfile" class="loading-indicator">
-          <span class="loading-spinner">⏳</span>
+          <font-awesome-icon :icon="['fas', 'hourglass-half']" class="loading-spinner" />
           <p>Chargement de votre profil...</p>
         </div>
 
@@ -38,7 +38,7 @@
           <label class="role-option" :class="{ active: selectedRoles.includes('passager') }">
             <input type="checkbox" value="passager" v-model="selectedRoles" @change="updateRole" />
             <div class="role-content">
-              <span class="role-icon">🚗</span>
+              <span class="role-icon"><font-awesome-icon :icon="['fas', 'car']" /></span>
               <div class="role-text">
                 <h4>Passager</h4>
                 <p>Je cherche des trajets à partager</p>
@@ -49,7 +49,7 @@
           <label class="role-option" :class="{ active: selectedRoles.includes('chauffeur') }">
             <input type="checkbox" value="chauffeur" v-model="selectedRoles" @change="updateRole" />
             <div class="role-content">
-              <span class="role-icon">🛻</span>
+              <span class="role-icon"><font-awesome-icon :icon="['fas', 'truck']" /></span>
               <div class="role-text">
                 <h4>Chauffeur</h4>
                 <p>Je propose mes véhicules pour covoiturer</p>
@@ -64,7 +64,9 @@
         <h3 class="card-title">Proposer un EcoRide</h3>
         <div class="propose-ride-form">
           <div class="form-group" v-if="vehicles.length > 0">
-            <label class="form-label">🚗 Véhicule à utiliser</label>
+            <label class="form-label"
+              ><font-awesome-icon :icon="['fas', 'car']" /> Véhicule à utiliser</label
+            >
             <select v-model="newRide.vehicleId" class="form-input" required>
               <option value="">Sélectionner un véhicule</option>
               <option v-for="vehicle in vehicles" :key="vehicle.id" :value="vehicle.id">
@@ -75,13 +77,17 @@
           </div>
 
           <div v-if="vehicles.length === 0" class="no-vehicle-warning">
-            <span class="warning-icon">⚠️</span>
+            <span class="warning-icon"
+              ><font-awesome-icon :icon="['fas', 'triangle-exclamation']"
+            /></span>
             <p>Vous devez d'abord ajouter un véhicule pour proposer un trajet.</p>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">🚩 Lieu de départ</label>
+              <label class="form-label"
+                ><font-awesome-icon :icon="['fas', 'location-dot']" /> Lieu de départ</label
+              >
               <input
                 type="text"
                 v-model="newRide.departure"
@@ -91,7 +97,9 @@
               />
             </div>
             <div class="form-group">
-              <label class="form-label">🏁 Lieu d'arrivée</label>
+              <label class="form-label"
+                ><font-awesome-icon :icon="['fas', 'flag-checkered']" /> Lieu d'arrivée</label
+              >
               <input
                 type="text"
                 v-model="newRide.destination"
@@ -104,7 +112,9 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">📅 Date de départ</label>
+              <label class="form-label"
+                ><font-awesome-icon :icon="['fas', 'calendar']" /> Date de départ</label
+              >
               <input
                 type="date"
                 v-model="newRide.date"
@@ -114,14 +124,18 @@
               />
             </div>
             <div class="form-group">
-              <label class="form-label">🕐 Heure de départ</label>
+              <label class="form-label"
+                ><font-awesome-icon :icon="['fas', 'clock']" /> Heure de départ</label
+              >
               <input type="time" v-model="newRide.time" class="form-input" required />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">💰 Prix par passager (€)</label>
+              <label class="form-label"
+                ><font-awesome-icon :icon="['fas', 'coins']" /> Prix par passager (€)</label
+              >
               <input
                 type="number"
                 v-model="newRide.price"
@@ -133,7 +147,9 @@
               />
             </div>
             <div class="form-group">
-              <label class="form-label">👥 Places offertes</label>
+              <label class="form-label"
+                ><font-awesome-icon :icon="['fas', 'user-group']" /> Places offertes</label
+              >
               <div class="select-container">
                 <select
                   v-model="newRide.seats"
@@ -149,7 +165,9 @@
 
                 <!-- Tooltip orange quand aucun véhicule n'est sélectionné -->
                 <div v-if="!newRide.vehicleId" class="tooltip-orange">
-                  <span class="tooltip-icon">⚠️</span>
+                  <span class="tooltip-icon"
+                    ><font-awesome-icon :icon="['fas', 'triangle-exclamation']"
+                  /></span>
                   <span class="tooltip-text">Choisissez d'abord un véhicule</span>
                 </div>
               </div>
@@ -162,7 +180,7 @@
               class="propose-btn"
               :disabled="!canProposeRide || vehicles.length === 0"
             >
-              <span class="propose-icon">🚗</span>
+              <font-awesome-icon :icon="['fas', 'car']" class="propose-icon" />
               Proposer un EcoRide
             </button>
           </div>
@@ -176,13 +194,13 @@
           <div class="card-header">
             <h3 class="card-title">Mes Véhicules</h3>
             <button @click="showAddVehicle = true" class="add-btn">
-              <span class="add-icon">+</span>
+              <font-awesome-icon :icon="['fas', 'plus']" class="add-icon" />
               Ajouter un véhicule
             </button>
           </div>
 
           <div v-if="vehicles.length === 0" class="empty-state">
-            <span class="empty-icon">🚗</span>
+            <span class="empty-icon"><font-awesome-icon :icon="['fas', 'car']" /></span>
             <p>Aucun véhicule enregistré</p>
             <small>Ajoutez votre premier véhicule pour proposer des trajets</small>
           </div>
@@ -193,11 +211,13 @@
                 <h4>{{ vehicle.brand_name || vehicle.brand }} {{ vehicle.model }}</h4>
                 <p class="vehicle-details">
                   {{ vehicle.plate_number }} • {{ vehicle.seats_available }} places
-                  <span v-if="vehicle.is_electric" class="eco-badge">⚡ Électrique</span>
+                  <span v-if="vehicle.is_electric" class="eco-badge"
+                    ><font-awesome-icon :icon="['fas', 'bolt']" /> Électrique</span
+                  >
                 </p>
               </div>
               <button @click="removeVehicle(vehicle.id)" class="remove-btn">
-                <span>🗑️</span>
+                <font-awesome-icon :icon="['fas', 'trash']" />
               </button>
             </div>
           </div>
@@ -288,7 +308,7 @@
           <div class="form-group">
             <label class="checkbox-label">
               <input type="checkbox" v-model="newVehicle.is_electric" />
-              <span>⚡ Véhicule électrique</span>
+              <span><font-awesome-icon :icon="['fas', 'bolt']" /> Véhicule électrique</span>
             </label>
           </div>
 
@@ -309,7 +329,7 @@
     <div v-if="showSuccessModal" class="modal-overlay" @click="showSuccessModal = false">
       <div class="modal-content success-modal" @click.stop>
         <div class="modal-header">
-          <h3>🎉 Trajet créé avec succès !</h3>
+          <h3><font-awesome-icon :icon="['fas', 'circle-check']" /> Trajet créé avec succès !</h3>
           <button @click="showSuccessModal = false" class="close-btn">×</button>
         </div>
 
@@ -317,16 +337,28 @@
           <div class="success-message">
             <p>Votre EcoRide a été proposé avec succès !</p>
             <div v-if="lastCreatedTrip" class="trip-summary">
-              <p><strong>🚩 Départ :</strong> {{ lastCreatedTrip.departure }}</p>
-              <p><strong>🏁 Arrivée :</strong> {{ lastCreatedTrip.destination }}</p>
-              <p><strong>📅 Date :</strong> {{ formatDate(lastCreatedTrip.date) }}</p>
-              <p><strong>🕐 Heure :</strong> {{ lastCreatedTrip.time }}</p>
+              <p>
+                <strong><font-awesome-icon :icon="['fas', 'location-dot']" /> Départ :</strong>
+                {{ lastCreatedTrip.departure }}
+              </p>
+              <p>
+                <strong><font-awesome-icon :icon="['fas', 'flag-checkered']" /> Arrivée :</strong>
+                {{ lastCreatedTrip.destination }}
+              </p>
+              <p>
+                <strong><font-awesome-icon :icon="['fas', 'calendar']" /> Date :</strong>
+                {{ formatDate(lastCreatedTrip.date) }}
+              </p>
+              <p>
+                <strong><font-awesome-icon :icon="['fas', 'clock']" /> Heure :</strong>
+                {{ lastCreatedTrip.time }}
+              </p>
             </div>
           </div>
 
           <div class="success-actions">
             <button @click="viewCreatedTrip" class="view-trip-btn">
-              <span class="btn-icon">👀</span>
+              <font-awesome-icon :icon="['fas', 'eye']" class="btn-icon" />
               Voir mon trajet
             </button>
             <button @click="showSuccessModal = false" class="dismiss-btn">Non merci</button>

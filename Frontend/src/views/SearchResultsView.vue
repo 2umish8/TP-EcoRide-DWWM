@@ -90,9 +90,9 @@
           <div class="rating-filter">
             <select v-model="filters.minRating" class="rating-select">
               <option value="0">Toutes notes</option>
-              <option value="3">3⭐ et plus</option>
-              <option value="4">4⭐ et plus</option>
-              <option value="4.5">4.5⭐ et plus</option>
+              <option value="3">3 étoiles et plus</option>
+              <option value="4">4 étoiles et plus</option>
+              <option value="4.5">4.5 étoiles et plus</option>
             </select>
           </div>
         </div>
@@ -125,8 +125,12 @@
           >
             <!-- Badges en haut de la carte -->
             <div class="trip-badges">
-              <span v-if="trip.vehicle.isElectric" class="badge eco-badge"> 🌱 Écologique </span>
-              <span v-if="isMyTrip(trip)" class="badge my-trip-badge"> 🚗 Mon trajet </span>
+              <span v-if="trip.vehicle.isElectric" class="badge eco-badge"
+                ><font-awesome-icon :icon="['fas', 'leaf']" /> Écologique</span
+              >
+              <span v-if="isMyTrip(trip)" class="badge my-trip-badge"
+                ><font-awesome-icon :icon="['fas', 'car']" /> Mon trajet</span
+              >
             </div>
 
             <div class="trip-header">
@@ -161,7 +165,9 @@
                     {{ trip.driver.name }}
                   </span>
                   <div class="driver-rating">
-                    <span class="rating">⭐ {{ trip.driver.rating }}</span>
+                    <span class="rating"
+                      ><font-awesome-icon :icon="['fas', 'star']" /> {{ trip.driver.rating }}</span
+                    >
                     <span class="rides-count" v-if="trip.driver.ridesCount > 0"
                       >({{ trip.driver.ridesCount }} trajets)</span
                     >
@@ -186,13 +192,15 @@
 
             <div class="trip-features" v-if="trip.features.length > 0">
               <span v-for="feature in trip.features" :key="feature" class="feature-tag">
-                {{ getFeatureIcon(feature) }} {{ feature }}
+                <font-awesome-icon :icon="['fas', getFeatureIcon(feature)]" /> {{ feature }}
               </span>
             </div>
 
             <div class="vehicle-info" v-if="trip.vehicle">
               <span class="vehicle-details">{{ trip.vehicle.brand }} {{ trip.vehicle.model }}</span>
-              <span v-if="trip.vehicle.isElectric" class="electric-badge">🌱 Électrique</span>
+              <span v-if="trip.vehicle.isElectric" class="electric-badge"
+                ><font-awesome-icon :icon="['fas', 'leaf']" /> Électrique</span
+              >
             </div>
           </div>
         </div>
@@ -200,7 +208,10 @@
         <!-- Aucun résultat mais date alternative disponible -->
         <div v-else-if="nextAvailableDate" class="no-results-alternative">
           <div class="no-results-content">
-            <h2>Aucun trajet trouvé pour cette date 😕</h2>
+            <h2>
+              <font-awesome-icon :icon="['fas', 'magnifying-glass']" /> Aucun trajet trouvé pour
+              cette date
+            </h2>
             <p>
               Cependant, nous avons trouvé des trajets pour le
               <strong>{{ formatDate(nextAvailableDate) }}</strong>
@@ -217,7 +228,7 @@
     <!-- Message si aucun résultat -->
     <div v-if="formattedResults.length === 0 && !loading && !error" class="no-results">
       <div class="no-results-content">
-        <h2>Aucun trajet trouvé 😕</h2>
+        <h2><font-awesome-icon :icon="['fas', 'magnifying-glass']" /> Aucun trajet trouvé</h2>
         <p>
           Essayez de modifier vos critères de recherche ou créez une alerte pour être notifié quand
           un trajet correspondant sera publié.
@@ -413,16 +424,17 @@ const formatDate = (dateString) => {
 
 // Obtenir l'icône d'une fonctionnalité
 const getFeatureIcon = (feature) => {
+  // Return FontAwesome icon name for a given feature
   const icons = {
-    'Voyage écologique': '🌱',
-    'Réservation instantanée': '⚡',
-    'Animaux acceptés': '🐕',
-    'Fumeurs acceptés': '🚬',
-    Climatisation: '❄️',
-    WiFi: '📶',
-    Musique: '🎵',
+    'Voyage écologique': 'leaf',
+    'Réservation instantanée': 'bolt',
+    'Animaux acceptés': 'paw',
+    'Fumeurs acceptés': 'smoking',
+    Climatisation: 'snowflake',
+    WiFi: 'wifi',
+    Musique: 'music',
   }
-  return icons[feature] || '✅'
+  return icons[feature] || 'circle-check'
 }
 
 // Sélection d'un trajet - navigation vers la vue détaillée

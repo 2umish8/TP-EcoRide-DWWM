@@ -3,7 +3,9 @@
     <div class="reviews-header">
       <h3>Avis des passagers</h3>
       <div class="rating-summary" v-if="averageRating > 0">
-        <span class="average-rating">⭐ {{ averageRating }}</span>
+        <span class="average-rating"
+          ><font-awesome-icon :icon="['fas', 'star']" /> {{ averageRating }}</span
+        >
         <span class="total-reviews">({{ totalReviews }} avis)</span>
       </div>
       <div v-else class="no-rating">
@@ -24,7 +26,13 @@
             <span class="reviewer-name">{{ review.reviewer.pseudo }}</span>
           </div>
           <div class="review-rating">
-            <span class="stars">{{ getStars(review.rating) }}</span>
+            <span class="stars">
+              <font-awesome-icon
+                v-for="n in Math.floor(review.rating)"
+                :key="n"
+                :icon="['fas', 'star']"
+              />
+            </span>
             <span class="rating-value">{{ review.rating }}/5</span>
           </div>
         </div>
@@ -120,15 +128,7 @@ const loadPage = (page) => {
   }
 }
 
-const getStars = (rating) => {
-  const fullStars = Math.floor(rating)
-  const hasHalfStar = rating % 1 !== 0
-  let stars = '⭐'.repeat(fullStars)
-  if (hasHalfStar) {
-    stars += '⭐' // Ou utiliser une étoile demi-pleine si disponible
-  }
-  return stars
-}
+// Stars are rendered via FontAwesome icons in the template
 
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('fr-FR', {

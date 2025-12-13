@@ -20,7 +20,7 @@
             @mouseenter="hoverRating = star"
             @mouseleave="hoverRating = 0"
           >
-            ⭐
+            <font-awesome-icon :icon="['fas', 'star']" />
           </button>
         </div>
         <span class="rating-text">{{ getRatingText(form.rating) }}</span>

@@ -8,7 +8,7 @@
             <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="logo" />
           </div>
           <div class="title-section">
-            <h1>🌟 Évaluer votre trajet</h1>
+            <h1><font-awesome-icon :icon="['fas', 'star']" /> Évaluer votre trajet</h1>
             <p>Votre avis compte pour améliorer l'expérience EcoRide</p>
           </div>
         </div>
@@ -23,7 +23,7 @@
       <!-- Error State -->
       <div v-else-if="error" class="error-container">
         <div class="error-content">
-          <h3>❌ Erreur</h3>
+          <h3><font-awesome-icon :icon="['fas', 'xmark']" /> Erreur</h3>
           <p>{{ error }}</p>
           <router-link to="/" class="btn-primary">Retour à l'accueil</router-link>
         </div>
@@ -33,22 +33,24 @@
       <div v-else class="review-content">
         <!-- Trip Information -->
         <div class="trip-info-card" v-if="tripInfo">
-          <h3>📍 Informations du trajet</h3>
+          <h3><font-awesome-icon :icon="['fas', 'location-dot']" /> Informations du trajet</h3>
           <div class="trip-details">
             <div class="detail-row">
-              <span class="label">🚀 Départ :</span>
+              <span class="label"
+                ><font-awesome-icon :icon="['fas', 'location-dot']" /> Départ :</span
+              >
               <span class="value">{{ tripInfo.departure_address }}</span>
             </div>
             <div class="detail-row">
-              <span class="label">🎯 Arrivée :</span>
+              <span class="label"><font-awesome-icon :icon="['fas', 'bullseye']" /> Arrivée :</span>
               <span class="value">{{ tripInfo.arrival_address }}</span>
             </div>
             <div class="detail-row">
-              <span class="label">📅 Date :</span>
+              <span class="label"><font-awesome-icon :icon="['fas', 'calendar']" /> Date :</span>
               <span class="value">{{ formatTripDate(tripInfo.departure_datetime) }}</span>
             </div>
             <div class="detail-row">
-              <span class="label">👤 Chauffeur :</span>
+              <span class="label"><font-awesome-icon :icon="['fas', 'user']" /> Chauffeur :</span>
               <span class="value">{{ tripInfo.driver_pseudo }}</span>
             </div>
           </div>
@@ -57,7 +59,7 @@
         <!-- Review Form -->
         <div class="review-form-card">
           <div class="form-header">
-            <h3>⭐ Votre évaluation</h3>
+            <h3><font-awesome-icon :icon="['fas', 'star']" /> Votre évaluation</h3>
             <p>Comment s'est passé votre trajet avec {{ tripInfo?.driver_pseudo }} ?</p>
           </div>
 
@@ -76,7 +78,7 @@
                   @mouseenter="hoverRating = star"
                   @mouseleave="hoverRating = 0"
                 >
-                  ⭐
+                  <font-awesome-icon :icon="['fas', 'star']" />
                 </button>
               </div>
               <span class="rating-text">{{ getRatingText(reviewForm.rating) }}</span>
@@ -107,7 +109,8 @@
                   class="form-checkbox"
                 />
                 <label for="hasIssue" class="checkbox-label">
-                  ⚠️ J'ai rencontré un problème pendant ce trajet
+                  <font-awesome-icon :icon="['fas', 'triangle-exclamation']" /> J'ai rencontré un
+                  problème pendant ce trajet
                 </label>
               </div>
             </div>
@@ -137,8 +140,10 @@
             <div class="form-actions">
               <router-link to="/" class="btn-secondary"> Retour à l'accueil </router-link>
               <button type="submit" class="btn-primary" :disabled="!isFormValid || submitting">
-                <span v-if="submitting">Envoi en cours...</span>
-                <span v-else>📝 Publier mon avis</span>
+                <span v-if="submitting"
+                  ><font-awesome-icon :icon="['fas', 'spinner']" spin /> Envoi en cours...</span
+                >
+                <span v-else><font-awesome-icon :icon="['fas', 'pen']" /> Publier mon avis</span>
               </button>
             </div>
           </form>
@@ -147,7 +152,7 @@
         <!-- Success Message -->
         <div v-if="submitted" class="success-container">
           <div class="success-content">
-            <h3>✅ Merci pour votre avis !</h3>
+            <h3><font-awesome-icon :icon="['fas', 'circle-check']" /> Merci pour votre avis !</h3>
             <p>Votre évaluation a été soumise avec succès.</p>
             <p><strong>Elle sera examinée par notre équipe avant publication.</strong></p>
             <div class="success-actions">

@@ -11,7 +11,9 @@
       <form @submit.prevent="createTrip" class="trip-form">
         <!-- Section Itinéraire -->
         <div class="form-section">
-          <h3 class="section-title">📍 Itinéraire</h3>
+          <h3 class="section-title">
+            <font-awesome-icon :icon="['fas', 'location-dot']" /> Itinéraire
+          </h3>
 
           <div class="form-row">
             <div class="form-group">
@@ -41,7 +43,9 @@
 
         <!-- Section Date et Heure -->
         <div class="form-section">
-          <h3 class="section-title">🕒 Date et Heure</h3>
+          <h3 class="section-title">
+            <font-awesome-icon :icon="['fas', 'clock']" /> Date et Heure
+          </h3>
 
           <div class="form-row">
             <div class="form-group">
@@ -87,7 +91,9 @@
 
         <!-- Section Détails du trajet -->
         <div class="form-section">
-          <h3 class="section-title">🚗 Détails du trajet</h3>
+          <h3 class="section-title">
+            <font-awesome-icon :icon="['fas', 'car']" /> Détails du trajet
+          </h3>
 
           <div class="form-row">
             <div class="form-group">
@@ -134,7 +140,7 @@
 
         <!-- Section Véhicule -->
         <div class="form-section">
-          <h3 class="section-title">🚙 Véhicule</h3>
+          <h3 class="section-title"><font-awesome-icon :icon="['fas', 'car']" /> Véhicule</h3>
 
           <div class="form-row">
             <div class="form-group">
@@ -162,15 +168,21 @@
 
         <!-- Récapitulatif -->
         <div class="form-section summary-section">
-          <h3 class="section-title">📋 Récapitulatif</h3>
+          <h3 class="section-title">
+            <font-awesome-icon :icon="['fas', 'clipboard-list']" /> Récapitulatif
+          </h3>
 
           <div class="trip-summary">
             <div class="summary-route">
               <span class="route-point"
-                >📍 {{ tripData.departure_address || 'Lieu de départ' }}</span
+                ><font-awesome-icon :icon="['fas', 'location-dot']" />
+                {{ tripData.departure_address || 'Lieu de départ' }}</span
               >
               <div class="route-arrow">→</div>
-              <span class="route-point">🎯 {{ tripData.arrival_address || 'Destination' }}</span>
+              <span class="route-point"
+                ><font-awesome-icon :icon="['fas', 'bullseye']" />
+                {{ tripData.arrival_address || 'Destination' }}</span
+              >
             </div>
 
             <div class="summary-details">
