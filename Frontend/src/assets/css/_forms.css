@@ -1,0 +1,13 @@
+/* Placeholder for form styles */
+
+.input-eco {
+  padding: 10px 12px;
+  border-radius: var(--radius-input);
+  border: 1px solid var(--border-color);
+}
+
+.input-eco:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.15);
+  border-color: var(--eco-blue);
+}

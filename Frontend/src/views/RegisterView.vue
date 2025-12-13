@@ -487,17 +487,6 @@ const handleRegister = async () => {
   line-height: 1.4;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .password-strength {
   margin-top: 8px;
 }
@@ -634,15 +623,6 @@ const handleRegister = async () => {
 
 .loading-spinner {
   animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .login-link {

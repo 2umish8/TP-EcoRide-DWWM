@@ -109,6 +109,17 @@ npm run lint
 npx eslint src --max-warnings=0
 ```
 
+### Récente action CSS — 2025-12-13
+
+- **But**: Réduire la duplication et centraliser global styles (variables, resets, boutons, cartes, utilitaires, animations).
+- **Actions**:
+	- Création du dossier `Frontend/src/assets/css/` contenant `_variables.css`, `_reset.css`, `_base.css`, `_typography.css`, `_layout.css`, `_utilities.css`, `_buttons.css`, `_cards.css`, `_forms.css`, `_modals.css`, `_animations.css`, `_overrides.css`.
+	- `Frontend/src/assets/main.css` maintenant importe ces partials.
+	- `Frontend/src/main.js`: re-ordonnancement des imports pour charger `bootstrap` avant les partials et ajout d'une classe `force-dark` afin de préserver le thème sombre par défaut.
+	- Build vérifié localement (vite build) — pas d'erreurs.
+
+**Prochaine étape**: extraire les styles répétés depuis les SFCs (ex: GlassButton.vue, TripCard.*) et remplacer les règles locales par les classes centralisées.
+
 ### What to Look For
 ```javascript
 // ❌ Import jamais utilisé
@@ -207,11 +218,30 @@ Ces corrections réduisent le risque d'erreurs runtime liées à une double réf
 
 ## ⏳ PHASES À VENIR
 
+---
+
+### PHASE INLINE-SVGS: Remplacer SVG intégrés par Font Awesome (TERMINE)
+- ✅ `Frontend/src/components/SearchBar.vue` : Remplacé l'icône SVG de recherche avec `font-awesome-icon ['fas', 'search']`
+- ✅ `Frontend/src/views/UserProfileView.vue` : Remplacé l'icône SVG "no-reviews" par `font-awesome-icon ['fas', 'comment']`, ajusté le CSS pour la taille
+- ✅ `Frontend/src/components/CustomIcon.vue` : Remplacé par `font-awesome-icon`, mapping des noms à `['fas', 'user-edit']`, `['fas', 'coins']`, `['fas', 'sign-out-alt']`
+- ✅ Mise à jour CSS et suppression des SVG internes
+
+---
+
+## ⏳ PHASES À VENIR
+
 ### PHASE 6: Imports Inutilisés
 - Vérifier `src/components/` pour imports non utilisés
 - Vérifier `src/views/` pour imports non utilisés
 - ESLint pour détecter automatiquement
 - Supprimer les imports inutilisés
+
+### PHASE 6.1: Extractions des composants (EN COURS)
+- ✅ `SearchBar.vue` créé et intégré dans `HomeView.vue` (remplace le markup de recherche)
+- ✅ `useSearchForm.js` composable créé pour centraliser l'état de recherche
+- ✅ `useScroll.js` composable créé pour centraliser les scrolls
+- ✅ Tests unitaires ajoutés pour `SearchBar`, `useSearchForm` et `useScroll`
+- ✅ `HeroSection.vue`, `AboutSection.vue`, `ArrowsFooter.vue` créés et intégrés dans `HomeView.vue` (12/12/2025)
 
 ### PHASE 7: CSS Inutilisé
 - Vérifier `src/assets/main.css` pour classes inutilisées

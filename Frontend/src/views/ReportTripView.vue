@@ -474,15 +474,6 @@ onMounted(() => {
   animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .error-content {
   background: #2d3748;
   border: 1px solid #4a5568;

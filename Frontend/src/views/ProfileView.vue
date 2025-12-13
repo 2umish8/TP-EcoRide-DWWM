@@ -992,15 +992,6 @@ export default {
   animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .loading-indicator p {
   margin: 0;
   font-size: 1rem;
@@ -1417,17 +1408,6 @@ export default {
 
 .tooltip-text {
   white-space: nowrap;
-}
-
-@keyframes tooltipFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 @media (max-width: 768px) {

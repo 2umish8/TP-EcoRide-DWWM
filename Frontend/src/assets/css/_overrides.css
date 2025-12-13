@@ -1,0 +1,12 @@
+/* Project Bootstrap overrides - loaded last to ensure intended overrides */
+
+/* Keep the app dark background override (was present in main.css previously) */
+body.dark-theme, body.force-dark {
+  background-color: #1a1a1a !important;
+  color: white !important;
+}
+
+/* Example: ensure eco-button has precedence when using Bootstrap */
+.eco-button {
+  /* prefer scoped changes here, keep signatures compatible with bootstrap */
+}

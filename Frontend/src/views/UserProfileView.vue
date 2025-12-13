@@ -64,17 +64,7 @@
       <div class="reviews-section">
         <h3>Avis reçus ({{ reviews.length }})</h3>
         <div v-if="reviews.length === 0" class="no-reviews">
-          <svg
-            class="no-reviews-icon"
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path
-              d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"
-            />
-          </svg>
+          <font-awesome-icon :icon="['fas', 'comment']" class="no-reviews-icon" aria-hidden="true" />
           <p>Aucun avis reçu pour le moment.</p>
         </div>
         <div v-else class="reviews-list">
@@ -279,15 +269,6 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .error-card {
   background: #2d1b1b;
   border: 1px solid #4a2020;
@@ -455,6 +436,7 @@ onMounted(() => {
   width: 48px;
   height: 48px;
   color: #ffffff;
+  font-size: 48px;
 }
 
 .reviews-list {

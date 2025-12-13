@@ -1,0 +1,19 @@
+/* Modal layout and overlay */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content-eco {
+  background: var(--bg-primary);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  width: 100%;
+  max-width: 720px;
+  box-shadow: var(--shadow-card);
+}

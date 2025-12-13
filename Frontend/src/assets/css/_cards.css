@@ -1,0 +1,24 @@
+/* Shared card styles for the project */
+
+.card,
+.card-eco {
+  background: var(--bg-primary);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-color);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.card h3,
+.card-eco h3 {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--eco-green);
+}
+
+.card:hover,
+.card-eco:hover {
+  box-shadow: var(--shadow-card-hover);
+}

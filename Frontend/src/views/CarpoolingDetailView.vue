@@ -521,15 +521,6 @@ onMounted(async () => {
   margin: 0 auto 20px;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .error {
   text-align: center;
   padding: 40px 20px;
@@ -554,13 +545,12 @@ onMounted(async () => {
 }
 
 /* Cards */
-.card {
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+/* Card styles moved to assets/css/_cards.css (global) */
+
+.grid-route {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
 }
 
 .card h3 {
@@ -1089,17 +1079,6 @@ onMounted(async () => {
 /* Additional details */
 .additional-details {
   animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .extra-info p {

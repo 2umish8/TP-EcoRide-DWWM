@@ -620,15 +620,6 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .error-state {
   background: #2a2a2a;
   padding: 30px;

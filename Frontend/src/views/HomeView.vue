@@ -1,28 +1,23 @@
 <script setup>
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import HeroSection from '@/components/HeroSection.vue'
+import ArrowsFooter from '@/components/ArrowsFooter.vue'
+import AboutSection from '@/components/AboutSection.vue'
+import { useSearchForm } from '@/composables/useSearchForm'
 
 // Configuration future pour l'authentification
 const router = useRouter()
 
 // Variables réactives pour le formulaire de recherche
-const searchForm = ref({
-  departure: '',
-  destination: '',
-  date: '',
-})
+const { searchForm, submitSearch } = useSearchForm()
 
-// Fonction pour gérer la recherche
-const handleSearch = () => {
-  // Navigation vers la page de résultats avec les paramètres de recherche (même si vides)
-  router.push({
-    name: 'SearchResults',
-    query: {
-      from: searchForm.value.departure || '',
-      to: searchForm.value.destination || '',
-      date: searchForm.value.date || '',
-    },
-  })
+// Fonction pour gérer la recherche depuis le SearchBar (reçoit la payload)
+const handleSearch = (values) => {
+  // Met à jour localement le formulaire et navigation via composable
+  if (values) {
+    searchForm.value = { ...values }
+  }
+  submitSearch(router, values)
 }
 
 // Fonction pour aller directement à la page des covoiturages
@@ -36,147 +31,22 @@ const goToCarpooling = () => {
     },
   })
 }
-
-// Fonction pour scroller vers la section "À propos"
-const scrollToAbout = () => {
-  const aboutSection = document.getElementById('about-section')
-  if (aboutSection) {
-    aboutSection.scrollIntoView({ behavior: 'smooth' })
-  }
-}
 </script>
 
 <template>
   <div class="accueil">
-    <!-- Hero Section avec design Figma -->
-    <div class="hero-background">
-      <div class="hero-content">
-        <!-- Phrase d'accroche principale -->
-        <div class="catch-phrase">
-          <h1 class="main-title">Ta Voiture, Ton Empreinte Carbone.</h1>
-          <h1 class="main-title">
-            Et Si On <span class="eco-highlight">EcoRoulait</span> Ensemble ?
-          </h1>
-          <h2 class="mobile-slogan">
-            Il y aura moins d'emboutaillage et de pollution, et ca sera grâce à
-            <span class="eco-highlight">Vous</span> !
-          </h2>
-          <p class="subtitle">
-            Chaque trajet en solo pèse sur la planète. Avec EcoRide, partagez vos trajets, réduisez
-            vos émissions et faites des économies. Il est temps de changer la façon dont nous nous
-            déplaçons. EcoRoulons vers un avenir plus vert.
-          </p>
-        </div>
+    <!-- Hero Section (extracted) -->
+    <HeroSection
+      :initialSearchValues="searchForm"
+      @search="handleSearch"
+      @browse-all="goToCarpooling"
+    />
 
-        <!-- Section bottom avec recherche -->
-        <div class="bottom-section">
-          <!-- Barre de recherche principale -->
-          <div class="search-section">
-            <div class="search-bar">
-              <form @submit.prevent="handleSearch" class="search-inputs">
-                <div class="input-group">
-                  <input
-                    type="text"
-                    placeholder="Partir de ..."
-                    class="search-input"
-                    v-model="searchForm.departure"
-                    required
-                  />
-                </div>
-                <div class="input-group">
-                  <input
-                    type="text"
-                    placeholder="Aller à ..."
-                    class="search-input"
-                    v-model="searchForm.destination"
-                    required
-                  />
-                </div>
-                <div class="input-group">
-                  <input
-                    type="date"
-                    placeholder="dd/mm/yyyy"
-                    class="search-input"
-                    v-model="searchForm.date"
-                    lang="fr"
-                    :min="new Date().toISOString().split('T')[0]"
-                  />
-                </div>
-                <button type="submit" class="search-btn">
-                  <span>ecoRIDEZ</span>
-                  <svg
-                    class="search-icon"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path
-                      d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-                    />
-                  </svg>
-                </button>
-              </form>
-            </div>
-            <!-- Bouton pour parcourir tous les covoiturages -->
-            <div class="browse-all-section">
-              <button @click="goToCarpooling" class="browse-all-btn">
-                <span>Parcourir tous les covoiturages</span>
-              </button>
-            </div>
-          </div>
-          <!-- Section "En savoir plus" -->
-          <div class="qui-sommes-nous">
-            <div class="scroll-icon" @click="scrollToAbout">
-              <font-awesome-icon :icon="['fas', 'angles-down']" class="scroll-svg" size="lg" />
-            </div>
-            <div class="en-savoir-plus" @click="scrollToAbout">En Savoir Plus</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Footer arrows section extracted -->
+    <ArrowsFooter />
 
-    <!-- Footer arrows section -->
-    <div class="arrows-section">
-      <div class="arrow-down">
-        <font-awesome-icon :icon="['fas', 'chevron-down']" class="arrow-icon" size="lg" />
-      </div>
-      <div class="footer-links"></div>
-      <div class="arrow-down">
-        <font-awesome-icon :icon="['fas', 'chevron-down']" class="arrow-icon" size="lg" />
-      </div>
-    </div>
-
-    <!-- Section À propos de nous -->
-    <section id="about-section" class="about-section">
-      <div class="about-container">
-        <div class="about-logo"></div>
-        <div class="about-content">
-          <h2 class="about-title">À Propos de Nous</h2>
-          <div class="about-text">
-            <p class="about-paragraph">
-              Nous sommes une équipe passionnée qui croit fermement que le transport peut être
-              différent. Née de l'envie de créer des liens authentiques entre les personnes, EcoRide
-              n'est pas qu'une simple plateforme de covoiturage.
-            </p>
-            <p class="about-paragraph">
-              Nous partageons la conviction que chaque trajet est une opportunité de rencontrer de
-              nouvelles personnes, de partager des moments, et surtout, de contribuer ensemble à un
-              impact positif sur notre environnement.
-            </p>
-            <p class="about-paragraph">
-              Notre mission est simple : faciliter les connexions humaines tout en préservant notre
-              planète. Nous croyons en la force du collectif et en l'impact que peuvent avoir de
-              petits gestes quotidiens quand ils sont partagés par une communauté.
-            </p>
-            <p class="about-values">
-              <strong>Nos valeurs :</strong> Authenticité, Partage, Respect environnemental, et
-              Simplicité.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Section À propos de nous (extrait) -->
+    <AboutSection />
   </div>
 </template>
 
@@ -334,21 +204,6 @@ const scrollToAbout = () => {
   transition: filter 0.3s ease;
 }
 
-@keyframes bounce {
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
-}
 
 .en-savoir-plus {
   font-family: 'Inter', sans-serif;
@@ -465,6 +320,7 @@ const scrollToAbout = () => {
 .search-icon {
   width: 18px;
   height: 18px;
+  font-size: 18px;
 }
 
 /* Styles pour la section de navigation vers tous les covoiturages */
@@ -518,22 +374,6 @@ const scrollToAbout = () => {
   width: 24px;
   height: 24px;
   transition: filter 0.3s ease;
-}
-
-@keyframes arrowBounce {
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(8px);
-  }
-  60% {
-    transform: translateY(4px);
-  }
 }
 
 .footer-links {

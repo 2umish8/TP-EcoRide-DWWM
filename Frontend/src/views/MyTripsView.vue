@@ -236,140 +236,46 @@
             </div>
 
             <div v-else class="trips-grid">
-              <div
+              <trip-card
                 v-for="trip in filteredAndSortedTrips"
                 :key="trip.id"
-                class="trip-card"
-                :class="[
-                  `status-${trip.status}`,
-                  { 'has-participants': trip.participants_count > 0 },
-                ]"
+                :trip="trip"
+                :show-earnings="true"
               >
-                <!-- Header de la carte -->
-                <div class="trip-card-header">
-                  <div class="trip-status">
-                    <span :class="['status-badge', `status-${trip.status}`]">
-                      {{ getStatusIcon(trip.status) }} {{ getStatusLabel(trip.status) }}
-                    </span>
-                  </div>
-                  <div class="trip-actions">
-                    <button
-                      v-if="trip.status === 'prévu'"
-                      @click="startTrip(trip.id)"
-                      class="action-btn-small start"
-                      title="Démarrer le trajet"
-                    >
-                      ▶️
-                    </button>
-                    <button
-                      v-if="trip.status === 'démarré'"
-                      @click="finishTrip(trip.id)"
-                      class="action-btn-small finish"
-                      title="Terminer le trajet"
-                    >
-                      <font-awesome-icon :icon="['fas', 'flag-checkered']" />
-                    </button>
-                    <button
-                      v-if="['prévu', 'démarré'].includes(trip.status)"
-                      @click="cancelTrip(trip.id)"
-                      class="action-btn-small cancel"
-                      title="Annuler le trajet"
-                    >
-                      <font-awesome-icon :icon="['fas', 'xmark']" />
-                    </button>
-                    <router-link
-                      :to="`/carpoolings/${trip.id}`"
-                      class="action-btn-small view"
-                      title="Voir les détails"
-                    >
-                      <font-awesome-icon :icon="['fas', 'eye']" />
-                    </router-link>
-                  </div>
-                </div>
-
-                <!-- Itinéraire -->
-                <div class="trip-route">
-                  <div class="route-info">
-                    <span class="departure"
-                      ><font-awesome-icon :icon="['fas', 'location-dot']" />
-                      {{ trip.departure_address }}</span
-                    >
-                    <div class="route-arrow">→</div>
-                    <span class="destination"
-                      ><font-awesome-icon :icon="['fas', 'bullseye']" />
-                      {{ trip.arrival_address }}</span
-                    >
-                  </div>
-                </div>
-
-                <!-- Détails du voyage -->
-                <div class="trip-details">
-                  <div class="detail-item">
-                    <font-awesome-icon :icon="['fas', 'calendar']" class="detail-icon" />
-                    <div class="detail-content">
-                      <span class="detail-label">Date de départ</span>
-                      <span class="detail-value">{{ formatDate(trip.departure_datetime) }}</span>
-                      <span class="detail-time">{{ formatTime(trip.departure_datetime) }}</span>
-                    </div>
-                  </div>
-
-                  <div class="detail-item">
-                    <font-awesome-icon :icon="['fas', 'clock-rotate-left']" class="detail-icon" />
-                    <div class="detail-content">
-                      <span class="detail-label">Durée estimée</span>
-                      <span class="detail-value">{{
-                        formatDuration(trip.departure_datetime, trip.arrival_datetime)
-                      }}</span>
-                    </div>
-                  </div>
-
-                  <div class="detail-item">
-                    <font-awesome-icon :icon="['fas', 'coins']" class="detail-icon" />
-                    <div class="detail-content">
-                      <span class="detail-label">Prix par personne</span>
-                      <span class="detail-value">{{ trip.price_per_passenger }} crédits</span>
-                    </div>
-                  </div>
-
-                  <div class="detail-item">
-                    <font-awesome-icon :icon="['fas', 'user-group']" class="detail-icon" />
-                    <div class="detail-content">
-                      <span class="detail-label">Participants</span>
-                      <span class="detail-value">
-                        {{ trip.participants_count || 0 }} / {{ trip.initial_seats_offered }}
-                        <span class="seats-remaining"
-                          >({{ trip.seats_remaining }} restante{{
-                            trip.seats_remaining > 1 ? 's' : ''
-                          }})</span
-                        >
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Véhicule -->
-                <div class="trip-vehicle" v-if="trip.model">
-                  <font-awesome-icon :icon="['fas', 'car']" class="vehicle-icon" />
-                  <span class="vehicle-info">{{ trip.model }} ({{ trip.plate_number }})</span>
-                </div>
-
-                <!-- Footer de la carte -->
-                <div class="trip-card-footer">
-                  <div
-                    class="trip-earnings"
-                    v-if="trip.status === 'terminé' && trip.participants_count > 0"
+                <template #actions>
+                  <button
+                    v-if="trip.status === 'prévu'"
+                    @click="handleStartTrip(trip.id)"
+                    class="action-btn-small start"
+                    title="Démarrer le trajet"
                   >
-                    <font-awesome-icon :icon="['fas', 'coins']" class="earnings-icon" />
-                    <span class="earnings-text">
-                      Revenus estimés : {{ calculateEarnings(trip) }} crédits
-                    </span>
-                  </div>
-                  <div class="trip-id">
-                    <span class="id-label">ID :</span>
-                    <span class="id-value">#{{ trip.id }}</span>
-                  </div>
-                </div>
-              </div>
+                    ▶️
+                  </button>
+                  <button
+                    v-if="trip.status === 'démarré'"
+                    @click="handleFinishTrip(trip.id)"
+                    class="action-btn-small finish"
+                    title="Terminer le trajet"
+                  >
+                    <font-awesome-icon :icon="['fas', 'flag-checkered']" />
+                  </button>
+                  <button
+                    v-if="['prévu', 'démarré'].includes(trip.status)"
+                    @click="handleCancelTrip(trip.id)"
+                    class="action-btn-small cancel"
+                    title="Annuler le trajet"
+                  >
+                    <font-awesome-icon :icon="['fas', 'xmark']" />
+                  </button>
+                  <router-link
+                    :to="`/carpoolings/${trip.id}`"
+                    class="action-btn-small view"
+                    title="Voir les détails"
+                  >
+                    <font-awesome-icon :icon="['fas', 'eye']" />
+                  </router-link>
+                </template>
+              </trip-card>
             </div>
           </div>
         </div>
@@ -503,147 +409,45 @@
           </div>
 
           <div v-else class="trips-grid">
-            <div
+            <trip-card
               v-for="participation in filteredAndSortedParticipations"
               :key="`${participation.carpooling_id}-${participation.id}`"
-              class="trip-card participation-card"
-              :class="[
-                `status-${participation.carpooling_status}`,
-                { 'is-cancelled': participation.cancellation_date },
-              ]"
+              :trip="{
+                id: participation.carpooling_id,
+                departure_address: participation.departure_address,
+                arrival_address: participation.arrival_address,
+                departure_datetime: participation.departure_datetime,
+                arrival_datetime: participation.arrival_datetime,
+                price_per_passenger: participation.credits_paid,
+                participants_count: 0,
+                initial_seats_offered: 0,
+                seats_remaining: 0,
+                model: participation.model,
+                plate_number: participation.plate_number,
+                status: participation.carpooling_status,
+                cancellation_date: participation.cancellation_date,
+                credits_paid: participation.credits_paid,
+              }"
+              :show-price="true"
             >
-              <!-- Header de la carte -->
-              <div class="trip-card-header">
-                <div class="trip-status">
-                  <span :class="['status-badge', `status-${participation.carpooling_status}`]">
-                    {{ getStatusIcon(participation.carpooling_status) }}
-                    {{ getStatusLabel(participation.carpooling_status) }}
-                  </span>
-                  <span v-if="participation.cancellation_date" class="cancellation-badge">
-                    Annulée
-                  </span>
-                </div>
-                <div class="trip-actions">
-                  <router-link
-                    :to="`/carpoolings/${participation.carpooling_id}`"
-                    class="action-btn-small view"
-                    title="Voir les détails"
-                  >
-                    <font-awesome-icon :icon="['fas', 'eye']" />
-                  </router-link>
-                  <button
-                    v-if="canCancelParticipation(participation)"
-                    @click="cancelParticipation(participation.carpooling_id)"
-                    class="action-btn-small cancel"
-                    title="Annuler la participation"
-                  >
-                    <font-awesome-icon :icon="['fas', 'xmark']" />
-                  </button>
-                </div>
-              </div>
-
-              <!-- Itinéraire -->
-              <div class="trip-route">
-                <div class="route-info">
-                  <div class="route-addresses">
-                    <div class="departure">
-                      <font-awesome-icon :icon="['fas', 'check']" class="icon" />
-                      <span class="address">{{ participation.departure_address }}</span>
-                    </div>
-                    <div class="route-arrow">
-                      <span class="arrow">↓</span>
-                    </div>
-                    <div class="arrival">
-                      <font-awesome-icon :icon="['fas', 'check']" class="icon" />
-                      <span class="address">{{ participation.arrival_address }}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Détails du voyage -->
-              <div class="trip-details">
-                <div class="trip-schedule">
-                  <div class="schedule-item">
-                    <span class="schedule-label"
-                      ><font-awesome-icon :icon="['fas', 'calendar']" /> Date :</span
-                    >
-                    <span class="schedule-value">{{
-                      formatDate(participation.departure_datetime)
-                    }}</span>
-                  </div>
-                  <div class="schedule-item">
-                    <span class="schedule-label"
-                      ><font-awesome-icon :icon="['fas', 'clock']" /> Heure :</span
-                    >
-                    <span class="schedule-value">
-                      {{ formatTime(participation.departure_datetime) }} -
-                      {{ formatTime(participation.arrival_datetime) }}
-                    </span>
-                  </div>
-                  <div class="schedule-item">
-                    <span class="schedule-label"
-                      ><font-awesome-icon :icon="['fas', 'clock-rotate-left']" /> Durée :</span
-                    >
-                    <span class="schedule-value">
-                      {{
-                        formatDuration(
-                          participation.departure_datetime,
-                          participation.arrival_datetime,
-                        )
-                      }}
-                    </span>
-                  </div>
-                </div>
-
-                <div class="trip-info">
-                  <div class="info-item driver-info">
-                    <span class="info-label"
-                      ><font-awesome-icon :icon="['fas', 'user']" /> Conducteur :</span
-                    >
-                    <span class="info-value">{{ participation.driver_pseudo }}</span>
-                  </div>
-                  <div class="info-item vehicle-info">
-                    <span class="info-label"
-                      ><font-awesome-icon :icon="['fas', 'car']" /> Véhicule :</span
-                    >
-                    <span class="info-value"
-                      >{{ participation.model }} ({{ participation.plate_number }})</span
-                    >
-                  </div>
-                  <div class="info-item price-info">
-                    <span class="info-label"
-                      ><font-awesome-icon :icon="['fas', 'coins']" /> Prix payé :</span
-                    >
-                    <span class="info-value price">{{ participation.credits_paid }} crédits</span>
-                  </div>
-                  <div v-if="participation.participation_date" class="info-item date-info">
-                    <span class="info-label"
-                      ><font-awesome-icon :icon="['fas', 'pen']" /> Réservé le :</span
-                    >
-                    <span class="info-value">{{
-                      formatDate(participation.participation_date)
-                    }}</span>
-                  </div>
-                  <div v-if="participation.cancellation_date" class="info-item cancellation-info">
-                    <span class="info-label"
-                      ><font-awesome-icon :icon="['fas', 'xmark']" /> Annulé le :</span
-                    >
-                    <span class="info-value">{{
-                      formatDate(participation.cancellation_date)
-                    }}</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Footer de la carte -->
-              <div class="trip-card-footer">
-                <div class="trip-id">
-                  <span class="id-label">ID :</span>
-                  <span class="id-value">#{{ participation.carpooling_id }}</span>
-                </div>
-              </div>
-            </div>
+              <template #actions>
+                <router-link
+                  :to="`/carpoolings/${participation.carpooling_id}`"
+                  class="action-btn-small view"
+                  title="Voir les détails"
+                >
+                  <font-awesome-icon :icon="['fas', 'eye']" />
+                </router-link>
+                <button
+                  v-if="canCancelParticipation(participation)"
+                  @click="handleCancelParticipation(participation.carpooling_id)"
+                  class="action-btn-small cancel"
+                  title="Annuler la participation"
+                >
+                  <font-awesome-icon :icon="['fas', 'xmark']" />
+                </button>
+              </template>
+            </trip-card>
           </div>
         </div>
       </div>
@@ -653,261 +457,67 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue'
-import { carpoolingService, participationService } from '@/services/api'
 import { useNotificationStore } from '@/stores/notification'
+import TripCard from '@/components/TripCard.vue'
+import useTrips from '@/composables/useTrips'
+import useParticipations from '@/composables/useParticipations'
+import useDriverStatus from '@/composables/useDriverStatus'
+import { formatDate, formatTime, formatDuration } from '@/composables/useDateFormatting'
+import { getStatusLabel, getStatusIcon, getStatusEmptyMessage } from '@/utils/formatters'
+import { calculateCarbonSaved, calculateEarnings } from '@/utils/helpers'
 
 export default {
   name: 'MyTripsView',
+  components: {
+    TripCard,
+  },
   setup() {
     const notificationStore = useNotificationStore()
-    const trips = ref([])
-    const participations = ref([])
-    const loading = ref(true)
-    const error = ref(null)
-    const selectedStatus = ref('')
-    const sortOrder = ref('date-desc')
-    const activeTab = ref('passenger') // Onglet passager par défaut
-    const isDriver = ref(false) // État conducteur de l'utilisateur
+    const activeTab = ref('passenger')
 
-    // Vérifier si l'utilisateur est conducteur
-    const checkDriverStatus = async () => {
-      try {
-        await carpoolingService.getDriverTrips()
-        isDriver.value = true
-      } catch (err) {
-        // Si erreur d'autorisation, l'utilisateur n'est pas conducteur
-        if (
-          err.response?.status === 403 ||
-          err.response?.status === 401 ||
-          err.response?.data?.message?.includes('conducteur') ||
-          err.response?.data?.message?.includes('driver')
-        ) {
-          isDriver.value = false
-        } else {
-          // Pour d'autres erreurs, on considère qu'il pourrait être conducteur
-          isDriver.value = true
-        }
-      }
-    }
+    // Composables
+    const {
+      trips,
+      loading: tripsLoadingState,
+      error: tripsErrorState,
+      selectedStatus,
+      sortOrder,
+      filteredAndSortedTrips,
+      loadTrips,
+      startTrip,
+      finishTrip,
+      cancelTrip,
+      getTotalParticipants,
+      getStatsByStatus,
+    } = useTrips()
 
-    // Charger les trajets
-    const loadTrips = async () => {
-      try {
-        loading.value = true
-        error.value = null
+    const {
+      participations,
+      loading: participationsLoadingState,
+      error: participationsErrorState,
+      filteredAndSortedParticipations,
+      loadParticipations,
+      cancelParticipation,
+      canCancelParticipation,
+      getTotalSpent,
+      getParticipationStatsByStatus,
+    } = useParticipations()
 
-        const response = await carpoolingService.getDriverTrips()
-        trips.value = response.carpoolings || []
+    const { isDriver, checkDriverStatus } = useDriverStatus()
 
-        // Si on arrive ici sans erreur, l'utilisateur est conducteur
-        isDriver.value = true
-      } catch (err) {
-        console.error('Erreur lors du chargement des trajets:', err)
+    // Computed loading and error based on active tab
+    const loading = computed(() => tripsLoadingState.value || participationsLoadingState.value)
+    const error = computed(() => tripsErrorState.value || participationsErrorState.value)
 
-        // Si erreur 403/401 ou message indiquant que l'utilisateur n'est pas conducteur
-        if (
-          err.response?.status === 403 ||
-          err.response?.status === 401 ||
-          err.response?.data?.message?.includes('conducteur') ||
-          err.response?.data?.message?.includes('driver')
-        ) {
-          isDriver.value = false
-          error.value = null // Pas d'erreur à afficher, juste pas conducteur
-        } else {
-          error.value = err.response?.data?.message || 'Erreur lors du chargement des trajets'
-          isDriver.value = true // Considérer comme conducteur si erreur technique
-        }
-      } finally {
-        loading.value = false
-      }
-    }
-
-    // Charger les participations
-    const loadParticipations = async () => {
-      try {
-        loading.value = true
-        error.value = null
-
-        const response = await participationService.getMyParticipations()
-        participations.value = response.participations || []
-      } catch (err) {
-        console.error('Erreur lors du chargement des participations:', err)
-        error.value = err.response?.data?.message || 'Erreur lors du chargement des participations'
-      } finally {
-        loading.value = false
-      }
-    }
-
-    // Trajets filtrés et triés
-    const filteredAndSortedTrips = computed(() => {
-      let filtered = trips.value
-
-      // Filtrer par statut
-      if (selectedStatus.value) {
-        filtered = filtered.filter((trip) => trip.status === selectedStatus.value)
-      }
-
-      // Trier
-      return filtered.sort((a, b) => {
-        switch (sortOrder.value) {
-          case 'date-asc':
-            return new Date(a.departure_datetime) - new Date(b.departure_datetime)
-          case 'date-desc':
-            return new Date(b.departure_datetime) - new Date(a.departure_datetime)
-          case 'status':
-            return a.status.localeCompare(b.status)
-          default:
-            return new Date(b.departure_datetime) - new Date(a.departure_datetime)
-        }
-      })
-    })
-
-    // Participations filtrées et triées
-    const filteredAndSortedParticipations = computed(() => {
-      let filtered = participations.value
-
-      // Filtrer par statut
-      if (selectedStatus.value) {
-        filtered = filtered.filter(
-          (participation) => participation.carpooling_status === selectedStatus.value,
-        )
-      }
-
-      // Trier
-      return filtered.sort((a, b) => {
-        switch (sortOrder.value) {
-          case 'date-asc':
-            return new Date(a.departure_datetime) - new Date(b.departure_datetime)
-          case 'date-desc':
-            return new Date(b.departure_datetime) - new Date(a.departure_datetime)
-          case 'status':
-            return a.carpooling_status.localeCompare(b.carpooling_status)
-          default:
-            return new Date(b.departure_datetime) - new Date(a.departure_datetime)
-        }
-      })
-    })
-
-    // Méthodes utilitaires
-    const getStatsByStatus = (status) => {
-      return trips.value.filter((trip) => trip.status === status)
-    }
-
-    const getParticipationStatsByStatus = (status) => {
-      return participations.value.filter(
-        (participation) => participation.carpooling_status === status,
-      )
-    }
-
-    const getTotalParticipants = () => {
-      return trips.value.reduce((total, trip) => total + (trip.participants_count || 0), 0)
-    }
-
-    const getTotalSpent = () => {
-      return participations.value.reduce(
-        (total, participation) => total + (participation.credits_paid || 0),
-        0,
-      )
-    }
-
+    // Helper functions
     const getCarbonSaved = () => {
-      // Calcul de l'impact carbone économisé grâce au covoiturage
-      // Estimation : 120g CO₂ par km par passager évité
-      // Distance moyenne estimée basée sur la durée (1h = ~60km en moyenne)
-      let totalCarbonSaved = 0
-
-      trips.value.forEach((trip) => {
-        if (trip.status === 'terminé' && trip.participants_count > 0) {
-          // Estimer la distance basée sur la durée
-          const start = new Date(trip.departure_datetime)
-          const end = new Date(trip.arrival_datetime)
-          const durationHours = (end - start) / (1000 * 60 * 60)
-          const estimatedDistance = durationHours * 60 // 60km/h moyenne
-
-          // CO₂ économisé = distance × participants × 0.12kg CO₂/km
-          const carbonSavedForTrip = estimatedDistance * trip.participants_count * 0.12
-          totalCarbonSaved += carbonSavedForTrip
-        }
-      })
-
-      return Math.round(totalCarbonSaved)
+      return calculateCarbonSaved(trips.value)
     }
 
-    const getStatusIcon = (status) => {
-      // Status icons now rendered with FontAwesome components in template
-      const icons = {
-        prévu: 'calendar',
-        démarré: 'car',
-        terminé: 'circle-check',
-        annulé: 'xmark',
-      }
-      return icons[status] || 'question'
-    }
-
-    const getStatusLabel = (status) => {
-      const labels = {
-        prévu: 'Prévu',
-        démarré: 'En cours',
-        terminé: 'Terminé',
-        annulé: 'Annulé',
-      }
-      return labels[status] || status
-    }
-
-    const getStatusEmptyMessage = (status) => {
-      const messages = {
-        prévu: 'prévu',
-        démarré: 'en cours',
-        terminé: 'terminé',
-        annulé: 'annulé',
-      }
-      return messages[status] || status
-    }
-
-    const formatDate = (dateString) => {
-      return new Date(dateString).toLocaleDateString('fr-FR', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      })
-    }
-
-    const formatTime = (dateString) => {
-      return new Date(dateString).toLocaleTimeString('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit',
-      })
-    }
-
-    const formatDuration = (startDate, endDate) => {
-      const start = new Date(startDate)
-      const end = new Date(endDate)
-      const diffMinutes = Math.round((end - start) / (1000 * 60))
-
-      const hours = Math.floor(diffMinutes / 60)
-      const minutes = diffMinutes % 60
-
-      if (hours > 0) {
-        return `${hours}h${minutes > 0 ? minutes.toString().padStart(2, '0') : ''}`
-      }
-      return `${minutes}min`
-    }
-
-    const calculateEarnings = (trip) => {
-      const participants = trip.participants_count || 0
-      const pricePerPassenger = trip.price_per_passenger || 0
-      const platformCommission = trip.platform_commission_earned || 2 // Commission de la plateforme par passager
-
-      return Math.max(0, participants * pricePerPassenger - participants * platformCommission)
-    }
-
-    // Actions sur les trajets
-    const startTrip = async (tripId) => {
+    const handleStartTrip = async (tripId) => {
       notificationStore.showInfo('Démarrage du trajet...')
       try {
-        await carpoolingService.startTrip(tripId)
-        await loadTrips() // Recharger la liste
+        await startTrip(tripId)
       } catch (err) {
         notificationStore.showError(
           'Erreur lors du démarrage du trajet : ' + (err.response?.data?.message || err.message),
@@ -915,11 +525,10 @@ export default {
       }
     }
 
-    const finishTrip = async (tripId) => {
+    const handleFinishTrip = async (tripId) => {
       notificationStore.showInfo('Fin du trajet...')
       try {
-        await carpoolingService.finishTrip(tripId)
-        await loadTrips() // Recharger la liste
+        await finishTrip(tripId)
       } catch (err) {
         notificationStore.showError(
           'Erreur lors de la fin du trajet : ' + (err.response?.data?.message || err.message),
@@ -927,11 +536,10 @@ export default {
       }
     }
 
-    const cancelTrip = async (tripId) => {
+    const handleCancelTrip = async (tripId) => {
       notificationStore.showInfo('Annulation du trajet...')
       try {
-        await carpoolingService.cancelTrip(tripId)
-        await loadTrips() // Recharger la liste
+        await cancelTrip(tripId)
       } catch (err) {
         notificationStore.showError(
           "Erreur lors de l'annulation du trajet : " + (err.response?.data?.message || err.message),
@@ -939,28 +547,9 @@ export default {
       }
     }
 
-    // Vérifier si une participation peut être annulée
-    const canCancelParticipation = (participation) => {
-      // Impossible d'annuler si déjà annulée
-      if (participation.cancellation_date) {
-        return false
-      }
-
-      // Impossible d'annuler si le covoiturage est déjà démarré ou terminé
-      if (participation.carpooling_status !== 'prévu') {
-        return false
-      }
-
-      return true
-    }
-
-    // Annuler une participation
-    const cancelParticipation = async (carpoolingId) => {
+    const handleCancelParticipation = async (carpoolingId) => {
       try {
-        const result = await participationService.cancelParticipation(carpoolingId)
-        await loadParticipations() // Recharger la liste
-
-        // Afficher le message de succès avec les détails du remboursement
+        const result = await cancelParticipation(carpoolingId)
         let message = result.message
         if (result.creditsRefunded !== undefined) {
           message += `\nCrédits remboursés: ${result.creditsRefunded}`
@@ -968,7 +557,6 @@ export default {
         if (result.penalty && result.penalty > 0) {
           message += `\nPénalité appliquée: ${result.penalty} crédits`
         }
-
         notificationStore.showSuccess(message)
       } catch (err) {
         notificationStore.showError(
@@ -978,13 +566,10 @@ export default {
       }
     }
 
-    // Gestion des onglets avec actions
     const handlePassengerTab = () => {
       if (activeTab.value === 'passenger') {
-        // Si déjà sur l'onglet passager, rediriger vers recherche
         window.location.href = '/search'
       } else {
-        // Sinon, changer vers l'onglet passager et charger les participations
         activeTab.value = 'passenger'
         loadParticipations()
       }
@@ -992,56 +577,52 @@ export default {
 
     const handleDriverTab = () => {
       if (activeTab.value === 'driver') {
-        // Si déjà sur l'onglet conducteur, rediriger vers création
         window.location.href = '/create-trip'
       } else {
-        // Sinon, changer vers l'onglet conducteur et charger les trajets
         activeTab.value = 'driver'
         loadTrips()
       }
     }
 
-    // Charger les données au montage
     onMounted(() => {
-      checkDriverStatus() // Vérifier d'abord le statut conducteur
+      checkDriverStatus()
       if (activeTab.value === 'passenger') {
-        loadParticipations() // Charger les participations si onglet passager actif
+        loadParticipations()
       } else {
-        loadTrips() // Charger les trajets si onglet conducteur actif
+        loadTrips()
       }
     })
 
     return {
+      activeTab,
       trips,
       participations,
       loading,
       error,
       selectedStatus,
       sortOrder,
-      activeTab,
       isDriver,
       filteredAndSortedTrips,
       filteredAndSortedParticipations,
       loadTrips,
       loadParticipations,
-      checkDriverStatus,
+      getCarbonSaved,
       getStatsByStatus,
       getParticipationStatsByStatus,
       getTotalParticipants,
       getTotalSpent,
-      getCarbonSaved,
-      getStatusIcon,
-      getStatusLabel,
-      getStatusEmptyMessage,
       formatDate,
       formatTime,
       formatDuration,
       calculateEarnings,
-      startTrip,
-      finishTrip,
-      cancelTrip,
+      getStatusLabel,
+      getStatusIcon,
+      getStatusEmptyMessage,
+      handleStartTrip,
+      handleFinishTrip,
+      handleCancelTrip,
+      handleCancelParticipation,
       canCancelParticipation,
-      cancelParticipation,
       handlePassengerTab,
       handleDriverTab,
     }
@@ -1156,27 +737,16 @@ export default {
 }
 
 .action-hint.left {
-  order: -1; /* Place l'indice avant le bouton */
+  order: -1;
 }
 
 .action-hint.right {
-  order: 1; /* Place l'indice après le bouton */
+  order: 1;
 }
 
 .hint-text {
   font-style: italic;
   font-weight: 500;
-}
-
-@keyframes fadeInHint {
-  from {
-    opacity: 0;
-    transform: translateX(-10px);
-  }
-  to {
-    opacity: 0.8;
-    transform: translateX(0);
-  }
 }
 
 /* Container principal */
@@ -1189,7 +759,6 @@ export default {
 .loading-state,
 .error-state,
 .empty-state,
-.placeholder-state,
 .become-driver-state {
   text-align: center;
   padding: 3rem 2rem;
@@ -1199,26 +768,22 @@ export default {
   color: #e9ecef;
 }
 
-.placeholder-state,
 .become-driver-state {
   max-width: 600px;
   margin: 0 auto;
 }
 
-.placeholder-icon,
 .become-driver-icon {
   font-size: 4rem;
   margin-bottom: 1.5rem;
 }
 
-.placeholder-description,
 .become-driver-description {
   font-size: 1.1rem;
   color: #adb5bd;
   margin: 1.5rem 0 1rem 0;
 }
 
-.feature-list,
 .benefit-list {
   text-align: left;
   margin: 1.5rem 0;
@@ -1226,7 +791,6 @@ export default {
   list-style: none;
 }
 
-.feature-list li,
 .benefit-list li {
   padding: 0.75rem 0;
   border-bottom: 1px solid #4a5568;
@@ -1234,30 +798,39 @@ export default {
   color: #e9ecef;
 }
 
-.feature-list li:last-child,
 .benefit-list li:last-child {
   border-bottom: none;
 }
 
-.coming-soon,
+.become-driver-notice {
+  background: #374151;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  border-left: 4px solid #28a745;
+}
+
+.become-driver-notice p {
+  margin-bottom: 0.5rem;
+}
+
+.become-driver-notice ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0 0;
+}
+
+.become-driver-notice li {
+  padding: 0.25rem 0;
+  font-size: 0.95rem;
+}
+
 .become-driver-actions {
   margin-top: 2rem;
   display: flex;
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
-}
-
-.coming-soon-badge {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
-  color: #212529;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .become-driver-btn {
@@ -1311,15 +884,6 @@ export default {
   margin: 0 auto 1rem;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .error-icon,
 .empty-icon {
   font-size: 3rem;
@@ -1365,7 +929,6 @@ export default {
   overflow: hidden;
 }
 
-/* Carte Trajets terminés - Vert */
 .stat-card.completed-trips {
   background: linear-gradient(135deg, #2d3748 0%, #1a2e1a 100%);
   border-left-color: #22c55e;
@@ -1386,7 +949,6 @@ export default {
   color: #22c55e;
 }
 
-/* Carte À venir - Orange/Ambre */
 .stat-card.upcoming-trips {
   background: linear-gradient(135deg, #2d3748 0%, #2a1f1a 100%);
   border-left-color: #f59e0b;
@@ -1407,7 +969,6 @@ export default {
   color: #f59e0b;
 }
 
-/* Carte Passagers transportés - Violet */
 .stat-card.passengers-transported {
   background: linear-gradient(135deg, #2d3748 0%, #251a2e 100%);
   border-left-color: #8b5cf6;
@@ -1428,7 +989,6 @@ export default {
   color: #8b5cf6;
 }
 
-/* Carte Impact écologique - Turquoise (existante) */
 .stat-card.eco-impact {
   background: linear-gradient(135deg, #2d3748 0%, #1a2332 100%);
   border-left-color: #20c997;
@@ -1511,7 +1071,6 @@ export default {
   border-color: #28a745;
 }
 
-/* Boutons de statut */
 .status-buttons {
   display: flex;
   gap: 0.5rem;
@@ -1546,7 +1105,6 @@ export default {
   box-shadow: 0 2px 4px rgba(var(--bs-primary-rgb), 0.3);
 }
 
-/* Message aucun trajet pour statut */
 .no-trips-status {
   text-align: center;
   padding: 3rem 2rem;
@@ -1583,7 +1141,11 @@ export default {
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, rgba(var(--bs-primary-rgb),1), rgba(var(--bs-primary-rgb),0.85));
+  background: linear-gradient(
+    90deg,
+    rgba(var(--bs-primary-rgb), 1),
+    rgba(var(--bs-primary-rgb), 0.85)
+  );
   transition: width 0.3s ease;
 }
 
@@ -1598,84 +1160,7 @@ export default {
   gap: 1.5rem;
 }
 
-/* Cartes de trajet */
-.trip-card {
-  background: #2d3748;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-  border-left: 4px solid #4a5568;
-}
-
-.trip-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
-
-.trip-card.status-prévu {
-  border-left-color: #007bff;
-}
-
-.trip-card.status-démarré {
-  border-left-color: #ffc107;
-}
-
-.trip-card.status-terminé {
-  border-left-color: #28a745;
-}
-
-.trip-card.status-annulé {
-  border-left-color: #dc3545;
-  opacity: 0.8;
-}
-
-/* Header de carte */
-.trip-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  background: #374151;
-  border-bottom: 1px solid #4a5568;
-}
-
-.status-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.status-badge.status-prévu {
-  background: #e3f2fd;
-  color: #1976d2;
-}
-
-.status-badge.status-démarré {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.status-badge.status-terminé {
-  background: #d4edda;
-  color: #155724;
-}
-
-.status-badge.status-annulé {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-.trip-actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
+/* Action buttons */
 .action-btn-small {
   width: 32px;
   height: 32px;
@@ -1714,120 +1199,6 @@ export default {
   transform: scale(1.1);
 }
 
-/* Itinéraire */
-.trip-route {
-  padding: 1rem 1.5rem;
-}
-
-.route-info {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-weight: 600;
-}
-
-.departure,
-.destination {
-  flex: 1;
-  color: #e9ecef;
-}
-
-.route-arrow {
-  color: #28a745;
-  font-weight: 700;
-  font-size: 1.2rem;
-}
-
-/* Détails du trajet */
-.trip-details {
-  padding: 0 1.5rem 1rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.detail-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.detail-icon {
-  font-size: 1.1rem;
-  margin-top: 0.2rem;
-}
-
-.detail-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.detail-label {
-  font-size: 0.8rem;
-  color: #adb5bd;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.detail-value {
-  font-weight: 600;
-  color: #e9ecef;
-}
-
-.detail-time {
-  font-size: 0.9rem;
-  color: #28a745;
-  font-weight: 600;
-}
-
-.seats-remaining {
-  font-size: 0.8rem;
-  color: #adb5bd;
-}
-
-/* Véhicule */
-.trip-vehicle {
-  padding: 0 1.5rem 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: #adb5bd;
-}
-
-.vehicle-icon {
-  font-size: 1rem;
-}
-
-/* Footer de carte */
-.trip-card-footer {
-  padding: 1rem 1.5rem;
-  background: #374151;
-  border-top: 1px solid #4a5568;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.trip-earnings {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #28a745;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.trip-id {
-  font-size: 0.8rem;
-  color: #adb5bd;
-}
-
-.id-label {
-  font-weight: 600;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .my-trips {
@@ -1852,11 +1223,11 @@ export default {
 
   .action-hint.left,
   .action-hint.right {
-    order: -1; /* Par défaut, au-dessus du bouton */
+    order: -1;
   }
 
   .action-hint.right {
-    order: 1; /* L'indice droit (proposer) en dessous du bouton */
+    order: 1;
   }
 
   .tab-btn {
@@ -1881,16 +1252,6 @@ export default {
   .trips-stats {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  .trip-details {
-    grid-template-columns: 1fr;
-  }
-
-  .trip-card-footer {
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: flex-start;
-  }
 }
 
 @media (max-width: 480px) {
@@ -1899,7 +1260,6 @@ export default {
   }
 }
 
-/* Styles spécifiques pour les participations */
 .passenger-content {
   width: 100%;
 }
@@ -1908,74 +1268,8 @@ export default {
   width: 100%;
 }
 
-.participation-card {
-  position: relative;
-}
-
-.participation-card.is-cancelled {
-  opacity: 0.7;
-  background: linear-gradient(135deg, #2d1b1b, #3d2d2d);
-  border-left: 4px solid #dc3545;
-}
-
-.participation-card.is-cancelled::before {
-  content: 'ANNULÉE';
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #dc3545;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: bold;
-  z-index: 1;
-}
-
-.cancellation-badge {
-  background: #dc3545;
-  color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  margin-left: 0.5rem;
-}
-
-.driver-info .info-value {
-  font-weight: 600;
-  color: #28a745;
-}
-
-.vehicle-info .info-value {
-  color: #6c757d;
-  font-style: italic;
-}
-
-.price-info .info-value.price {
-  color: #ffc107;
-  font-weight: 600;
-}
-
-.cancellation-info .info-value {
-  color: #dc3545;
-  font-weight: 500;
-}
-
-/* Animation pour le changement d'onglet */
 .passenger-content,
 .driver-content {
   animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 </style>
