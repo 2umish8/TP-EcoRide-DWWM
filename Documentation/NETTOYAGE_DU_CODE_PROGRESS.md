@@ -136,6 +136,7 @@ const isLoggedIn = computed(() => ...)
 - **Actions**:
 	- Déplacement des classes globales `.badge`, `.eco-badge` et `.my-trip-badge` dans `_utilities.css`.
 	- Suppression des définitions locales dans `SearchResultsView.vue`, `ProfileView.vue`, et `CarpoolingDetailView.vue`, qui remplacent maintenant les styles par une importation globale.
+	- Centralisation: `.detail-item`, `.driver-card`, `.spec-item`, `.rating-value` moved into `_cards.css`. Removed heavy duplicate CSS blocks from `CarpoolingDetailView.vue`; `DriverReviews.vue` now uses global `rating-value`. Also added `.eco-button--primary` to `_buttons.css` and removed local `.confirm-filters-btn` from `SearchResultsView.vue`. Replaced hard-coded green hex colors (#00ff88, #00cc6a, #00aa55) in `CarpoolingDetailView.vue` with `var(--eco-green)` and `var(--eco-green-hover)`.
 
 **Prochaine étape**: vérifier les autres occurrences de `badge` et centraliser si possible.
 

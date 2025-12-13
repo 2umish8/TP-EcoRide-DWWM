@@ -84,3 +84,21 @@
     font-size: var(--font-size-sm);
   }
 }
+
+/* Primary eco button for actions */
+.eco-button--primary {
+  background: #34d399;
+  color: #1a1a1a;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 15px;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+.eco-button--primary:hover {
+  background: #22c55e;
+}

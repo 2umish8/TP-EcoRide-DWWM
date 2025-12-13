@@ -283,3 +283,97 @@
   background: linear-gradient(135deg, #1a1a1a 0%, rgba(52, 211, 153, 0.1) 100%);
   box-shadow: 0 4px 20px rgba(52, 211, 153, 0.2);
 }
+
+/* Generic card children centralized */
+.card .detail-item,
+.trip-card .detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #222;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.card .duration-info,
+.trip-card .duration-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 16px;
+  background: #222;
+  border-radius: 8px;
+  border: 1px solid #333;
+  min-width: 120px;
+}
+
+.card .time-slot,
+.trip-card .time-slot {
+  text-align: center;
+  padding: 16px;
+  background: #222;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.card .driver-card,
+.trip-card .driver-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.card .driver-avatar img,
+.trip-card .driver-avatar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #333;
+  object-fit: cover;
+}
+
+.card .driver-details h4,
+.trip-card .driver-details h4 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  color: var(--color-heading);
+}
+
+.card .rating,
+.trip-card .rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card .stars,
+.trip-card .stars {
+  color: #ffd700;
+  font-size: 16px;
+}
+
+.card .rating-value,
+.trip-card .rating-value {
+  font-weight: 600;
+  color: var(--eco-green);
+}
+
+.card .vehicle-specs,
+.trip-card .vehicle-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.card .spec-item,
+.trip-card .spec-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #222;
+  border-radius: 6px;
+  border: 1px solid #333;
+  font-size: 13px;
+}

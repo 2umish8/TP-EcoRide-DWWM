@@ -515,7 +515,7 @@ onMounted(async () => {
   width: 40px;
   height: 40px;
   border: 3px solid #333;
-  border-top: 3px solid #00ff88;
+  border-top: 3px solid var(--eco-green);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 20px;
@@ -557,7 +557,7 @@ onMounted(async () => {
   margin: 0 0 20px 0;
   font-size: 18px;
   font-weight: 600;
-  color: #00ff88;
+  color: var(--eco-green);
 }
 
 /* Trip info */
@@ -593,7 +593,7 @@ onMounted(async () => {
 
 .duration-value {
   font-weight: 600;
-  color: #00ff88;
+  color: var(--eco-green);
   font-size: 16px;
   margin-bottom: 2px;
 }
@@ -637,7 +637,7 @@ onMounted(async () => {
   display: block;
   font-size: 24px;
   font-weight: 600;
-  color: #00ff88;
+  color: var(--eco-green);
   margin-bottom: 4px;
 }
 
@@ -647,120 +647,28 @@ onMounted(async () => {
   color: #ccc;
 }
 
+/* Trip details, driver & vehicle styles are centralized in /assets/css/_cards.css; only minor view overrides kept here */
 .trip-details {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 16px;
   margin-top: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
 
-.detail-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px;
-  background: #222;
-  border-radius: 8px;
-  border: 1px solid #333;
-}
-
-.detail-item .icon {
-  font-size: 18px;
-}
-
-.detail-item .value {
-  font-weight: 600;
-  color: #00ff88;
-}
-
-.detail-item .label {
-  font-size: 12px;
-  color: #888;
-}
-
-.credit-icon {
-  width: 16px;
-  height: 16px;
-  margin-left: 2px;
-}
-
-/* Driver info */
-.driver-card {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.driver-avatar img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid #333;
-  object-fit: cover;
-}
-
+/* Keep view-scoped tweak */
 .driver-details h4 {
-  margin: 0 0 8px 0;
-  font-size: 18px;
-  color: #fff;
+  margin-bottom: 8px;
 }
-
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.stars {
-  color: #ffd700;
-  font-size: 16px;
-}
-
-.rating-value {
-  font-weight: 600;
-  color: #00ff88;
-}
-
 .review-count {
   font-size: 12px;
-  color: #888;
+  color: var(--text-muted);
 }
-
-/* Vehicle info */
-.vehicle-details h4 {
-  margin: 0 0 12px 0;
-  font-size: 18px;
-  color: #fff;
-}
-
-.vehicle-specs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.spec-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  background: #222;
-  border-radius: 6px;
-  border: 1px solid #333;
-  font-size: 13px;
-}
-
-.spec-label {
-  color: #888;
-}
-
 .spec-value {
-  color: #fff;
   font-weight: 500;
 }
 
 .eco-vehicle {
-  color: #00ff88;
+  color: var(--eco-green);
   font-weight: 600;
 }
 
@@ -820,7 +728,7 @@ onMounted(async () => {
 
 .reviewer-name {
   font-weight: 600;
-  color: #00ff88;
+  color: var(--eco-green);
 }
 
 .review-rating {
@@ -867,12 +775,12 @@ onMounted(async () => {
 }
 
 .participate-btn {
-  background: linear-gradient(135deg, #00ff88, #00cc6a);
+  background: linear-gradient(135deg, var(--eco-green), var(--eco-green-hover));
   color: #000;
 }
 
 .participate-btn:not(:disabled):hover {
-  background: linear-gradient(135deg, #00cc6a, #00aa55);
+  background: linear-gradient(135deg, var(--eco-green-hover), var(--eco-green));
   transform: translateY(-2px);
 }
 
@@ -914,7 +822,7 @@ onMounted(async () => {
 
 .modal-header h3 {
   margin: 0;
-  color: #00ff88;
+  color: var(--eco-green);
   font-size: 20px;
   font-weight: 600;
 }
@@ -957,7 +865,7 @@ onMounted(async () => {
 }
 
 .cost-highlight {
-  color: #00ff88 !important;
+  color: var(--eco-green) !important;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -1045,12 +953,12 @@ onMounted(async () => {
 }
 
 .confirm-btn {
-  background: linear-gradient(135deg, #00ff88, #00cc6a);
+  background: linear-gradient(135deg, var(--eco-green), var(--eco-green-hover));
   color: #000;
 }
 
 .confirm-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #00cc6a, #00aa55);
+  background: linear-gradient(135deg, var(--eco-green-hover), var(--eco-green));
 }
 
 .cancel-btn:disabled,
@@ -1071,7 +979,7 @@ onMounted(async () => {
 }
 
 .extra-info strong {
-  color: #00ff88;
+  color: var(--eco-green);
 }
 
 /* Not found */
@@ -1085,7 +993,7 @@ onMounted(async () => {
 .driver-name {
   cursor: pointer;
   transition: all 0.3s ease;
-  color: #00ff88;
+  color: var(--eco-green);
   text-decoration: underline;
   text-decoration-color: transparent;
   text-underline-offset: 2px;

@@ -1017,22 +1017,7 @@ onMounted(() => {
   }
 }
 
-.confirm-filters-btn {
-  background: #34d399;
-  color: #1a1a1a;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 15px;
-  font-size: 0.95rem;
-  transition: background 0.2s;
-}
-.confirm-filters-btn:hover {
-  background: #22c55e;
-}
+/* NOTE: moved .confirm-filters-btn to assets/css/_buttons.css as .eco-button--primary */
 
 .results-list {
   display: flex;

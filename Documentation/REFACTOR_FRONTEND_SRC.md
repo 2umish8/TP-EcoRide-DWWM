@@ -83,6 +83,7 @@ Si tu veux je peux: faire un audit automatique (lister tous les fichiers du `src
 - **Refactor CSS - TripCard & Modals (2025-12-13)**
 	- `TripCard.vue` : extraction complète des styles globaux liés à la carte (header, route, details, footer, status-badges) vers `Frontend/src/assets/css/_cards.css`. Le SFC conserve une petite zone `style scoped` pour overrides spécifiques.
 	- `SearchResultsView.vue` : suppression des styles `.trip-card` et `.trip-card` variants (moved to `_cards.css`); kept layout responsive tweaks in media queries.
+- Centralisation: moved `.detail-item`, `.driver-card`, `.spec-item`, `.rating-value` to `_cards.css` and removed duplicates in `CarpoolingDetailView.vue` and `DriverReviews.vue`. Added `.eco-button--primary` variant in `_buttons.css` and removed `.confirm-filters-btn` from `SearchResultsView.vue` to consolidate button styles. Replaced hard-coded green hex colors (#00ff88, #00cc6a, #00aa55) in `CarpoolingDetailView.vue` with `var(--eco-green)` and `var(--eco-green-hover)`.
 	- `ProfileView.vue` & `CarpoolingDetailView.vue` : removed duplicated `.modal-overlay` style and rely on `Frontend/src/assets/css/_modals.css`; kept minimal, view-specific modal overrides locally (background color, radius, etc.).
 
 **Etat**: en cours — next steps: search for other duplicated modal/views and extract selectors into `_modals.css` or scoped overrides as needed.

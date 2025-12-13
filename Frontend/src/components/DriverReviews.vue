@@ -237,8 +237,7 @@ onMounted(() => {
 }
 
 .rating-value {
-  color: #34d399;
-  font-weight: bold;
+  /* use global rating-value style from _cards.css */
 }
 
 .review-content {
