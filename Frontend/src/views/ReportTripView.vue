@@ -658,6 +658,18 @@ onMounted(() => {
   margin-top: 2px;
 }
 
+.severity-icon.minor {
+  color: #2ecc71;
+}
+
+.severity-icon.moderate {
+  color: #f39c12;
+}
+
+.severity-icon.severe {
+  color: #e74c3c;
+}
+
 .severity-text {
   line-height: 1.4;
 }
@@ -693,13 +705,13 @@ onMounted(() => {
   border: none;
   font-size: 2rem;
   cursor: pointer;
-  transition: transform 0.2s;
-  opacity: 0.3;
+  transition: transform 0.2s, color 0.2s;
+  color: #6c757d;
 }
 
 .star-btn.active,
 .star-btn.hover {
-  opacity: 1;
+  color: #f59e0b;
   transform: scale(1.1);
 }
 

@@ -29,6 +29,31 @@ body {
   position: relative;
 }
 
+/* Make all icons white by default (FontAwesome SVGs and legacy <i> icons)
+   - Ensures icons use currentColor for fill/stroke and cancels any image filters
+   - Uses !important to override scoped styles that invert colors */
+.svg-inline--fa,
+.fa,
+.fas,
+.far,
+.fal,
+.fab,
+svg[data-icon],
+i[class*='fa-'] {
+  color: #ffffff !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* Additionally ensure SVG elements inherit color when used directly */
+svg {
+  color: inherit !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
 a {
   text-decoration: none;
   color: hsla(160, 100%, 37%, 1);

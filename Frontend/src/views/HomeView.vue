@@ -331,12 +331,7 @@ const scrollToAbout = () => {
 .scroll-svg {
   width: 32px;
   height: 32px;
-  filter: invert(1);
   transition: filter 0.3s ease;
-}
-
-.scroll-icon:hover .scroll-svg {
-  filter: invert(1) sepia(1) saturate(5) hue-rotate(150deg);
 }
 
 @keyframes bounce {
@@ -436,7 +431,6 @@ const scrollToAbout = () => {
 }
 
 .search-input[type='date']::-webkit-calendar-picker-indicator {
-  filter: invert(1);
   cursor: pointer;
 }
 
@@ -471,7 +465,6 @@ const scrollToAbout = () => {
 .search-icon {
   width: 18px;
   height: 18px;
-  filter: invert(1);
 }
 
 /* Styles pour la section de navigation vers tous les covoiturages */
@@ -524,7 +517,6 @@ const scrollToAbout = () => {
 .arrow-icon {
   width: 24px;
   height: 24px;
-  filter: invert(1);
   transition: filter 0.3s ease;
 }
 
@@ -777,23 +769,6 @@ const scrollToAbout = () => {
 
   .about-title {
     font-size: 1.8rem;
-  }
-}
-
-/* Animation pour l'icône de scroll */
-@keyframes bounce {
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
   }
 }
 

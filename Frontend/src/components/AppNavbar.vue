@@ -34,19 +34,22 @@ const logout = async () => {
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
             <RouterLink class="nav-link" to="/">
-              <font-awesome-icon :icon="['fas', 'house']" class="nav-icon me-1" />
+              <font-awesome-icon :icon="['fas', 'house']" class="white-icon me-1" />
               Accueil
             </RouterLink>
           </li>
           <li class="nav-item">
             <RouterLink class="nav-link" to="/search">
-              <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="nav-icon me-1" />
+              <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="white-icon me-1" />
               Rechercher
             </RouterLink>
           </li>
           <li class="nav-item" v-if="isLoggedIn">
             <RouterLink class="nav-link" to="/my-trips">
-              <font-awesome-icon :icon="['fas', 'person-walking-luggage']" class="nav-icon me-1" />
+              <font-awesome-icon
+                :icon="['fas', 'person-walking-luggage']"
+                class="white-icon me-1"
+              />
               Mes trajets
             </RouterLink>
           </li>
@@ -58,14 +61,14 @@ const logout = async () => {
               <GlassButton to="/login" variant="connexion">
                 <font-awesome-icon
                   :icon="['fas', 'arrow-right-to-bracket']"
-                  class="nav-icon me-1"
+                  class="white-icon me-1"
                 />
                 Connexion
               </GlassButton>
             </li>
             <li class="nav-item">
               <GlassButton to="/register" variant="inscription">
-                <font-awesome-icon :icon="['fas', 'user-plus']" class="nav-icon me-1" />
+                <font-awesome-icon :icon="['fas', 'user-plus']" class="white-icon me-1" />
                 Inscription
               </GlassButton>
             </li>
@@ -155,7 +158,7 @@ const logout = async () => {
   font-weight: bold;
 }
 
-.nav-icon {
+.white-icon {
   width: 16px;
   height: 16px;
   color: #f5f5f5;
@@ -163,7 +166,7 @@ const logout = async () => {
   vertical-align: middle;
 }
 
-.nav-link:hover .nav-icon {
+.nav-link:hover .white-icon {
   color: var(--bs-primary);
 }
 

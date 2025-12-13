@@ -183,7 +183,7 @@ onMounted(() => {
 }
 
 .no-rating {
-  color: #666;
+  color: #cccccc;
   font-style: italic;
 }
 
@@ -233,6 +233,7 @@ onMounted(() => {
 
 .stars {
   font-size: 0.9em;
+  color: #f59e0b;
 }
 
 .rating-value {
@@ -292,7 +293,7 @@ onMounted(() => {
 
 .no-reviews {
   text-align: center;
-  color: #666;
+  color: #cccccc;
   font-style: italic;
   padding: 40px 20px;
 }

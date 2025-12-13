@@ -454,7 +454,7 @@ onMounted(() => {
 .no-reviews-icon {
   width: 48px;
   height: 48px;
-  color: #666;
+  color: #ffffff;
 }
 
 .reviews-list {
@@ -509,6 +509,7 @@ onMounted(() => {
 
 .star {
   font-size: 0.9rem;
+  color: #ffffff;
 }
 
 .review-comment {

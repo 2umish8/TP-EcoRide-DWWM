@@ -160,3 +160,4 @@ temp_fix.txt
 *_backup.*
 MyTripsView_backup.vue
 .github/
+.agent/
