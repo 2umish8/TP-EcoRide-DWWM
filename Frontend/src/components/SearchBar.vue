@@ -22,16 +22,16 @@
       lang="fr"
       :min="minDate"
     />
-    <PrimaryButton type="submit" class="search-btn">
+    <SecondaryButton type="submit" class="search-btn">
       <span class="eco">eco</span>RIDEZ
       <font-awesome-icon :icon="['fas', 'search']" class="search-icon" aria-hidden="true" />
-    </PrimaryButton>
+    </SecondaryButton>
   </form>
 </template>
 
 <script setup>
 import { ref, computed, watch } from 'vue'
-import PrimaryButton from './ui/PrimaryButton.vue'
+import SecondaryButton from './ui/SecondaryButton.vue'
 
 // Props and emits
 const props = defineProps({
@@ -69,28 +69,19 @@ const onSubmit = () => {
 }
 
 .search-btn {
-  background: var(--color-primary);
-  color: var(--color-dark);
-  border: none;
+  color: var(--color-light);
+  border-width: 3px;
+  border-radius: 9999px;
   padding: 15px 25px;
-  border-radius: 25px;
-  font-size: 1rem;
   font-weight: 600;
-  cursor: pointer;
-  display: flex;
   gap: 0;
-  align-items: center;
-  white-space: nowrap;
-  margin-left: 8px;
-  flex-shrink: 0;
-  min-width: auto;
 }
 
 .eco {
   margin: 0;
   padding: 0;
-  font-weight: bold;
-  color: var(--color-dark-tertiary); /* Example green color for "eco" */
+  font-weight: 200;
+  color: var(--color-primary);
 }
 
 .search-field {
