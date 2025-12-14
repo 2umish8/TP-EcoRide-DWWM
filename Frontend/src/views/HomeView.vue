@@ -32,6 +32,7 @@ const goToCarpooling = () => {
   })
 }
 </script>
+
 <template>
   <div class="accueil">
     <!-- Hero Section (extracted) --><HeroSection
@@ -41,3 +42,12 @@ const goToCarpooling = () => {
     /><!-- Footer arrows section extracted --><ArrowsFooter /><!-- Section À propos de nous (extrait) --><AboutSection />
   </div>
 </template>
+
+<style scoped>
+.accueil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+</style>

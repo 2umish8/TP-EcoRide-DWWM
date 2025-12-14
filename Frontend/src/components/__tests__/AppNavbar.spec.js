@@ -18,7 +18,7 @@ describe('AppNavbar', () => {
         },
       },
     })
-    const texts = wrapper.findAll('.nav-btn').map((n) => n.text().trim())
+    const texts = wrapper.findAll('.base-btn').map((n) => n.text().trim())
     expect(texts).toContain('Accueil')
     expect(texts).toContain('Rechercher')
     expect(texts).toContain('Connexion')

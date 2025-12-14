@@ -5,7 +5,7 @@ import HeroSection from '../HeroSection.vue'
 describe('HeroSection', () => {
   it('renders the titles and includes SearchBar', () => {
     const wrapper = mount(HeroSection)
-    expect(wrapper.find('.main-title').exists()).toBe(true)
+    expect(wrapper.find('h1').exists()).toBe(true)
     expect(wrapper.findComponent({ name: 'SearchBar' }).exists()).toBe(true)
   })
 
@@ -23,7 +23,9 @@ describe('HeroSection', () => {
     const original = global.document.getElementById
     global.document.getElementById = () => fakeEl
     const wrapper = mount(HeroSection)
-    await wrapper.find('.en-savoir-plus').trigger('click')
+    const savoirPlusDiv = wrapper.find('.hero-more')
+    expect(savoirPlusDiv.exists()).toBe(true)
+    await savoirPlusDiv.trigger('click')
     expect(fakeEl.scrollIntoView).toHaveBeenCalled()
     global.document.getElementById = original
   })

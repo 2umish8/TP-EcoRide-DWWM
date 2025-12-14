@@ -33,8 +33,6 @@
         <PrimaryButton type="submit">
           <span>ecoRIDEZ</span><font-awesome-icon :icon="['fas', 'search']" aria-hidden="true" />
         </PrimaryButton>
-        <InlineLink class="browse-all-btn" @click.prevent="$emit('browse-all')"
-          >Parcourir tout</InlineLink
         >
       </form>
     </div>
@@ -43,7 +41,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import PrimaryButton from '@/components/ui/PrimaryButton.vue'
-import InlineLink from '@/components/ui/InlineLink.vue'
 
 // Props and emits
 const props = defineProps({
