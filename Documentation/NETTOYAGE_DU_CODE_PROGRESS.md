@@ -115,7 +115,7 @@ npx eslint src --max-warnings=0
 - **Actions**:
 	- Création du dossier `Frontend/src/assets/css/` contenant `_variables.css`, `_reset.css`, `_base.css`, `_typography.css`, `_layout.css`, `_utilities.css`, `_buttons.css`, `_cards.css`, `_forms.css`, `_modals.css`, `_animations.css`, `_overrides.css`.
 	- `Frontend/src/assets/main.css` maintenant importe ces partials.
-	- `Frontend/src/main.js`: re-ordonnancement des imports pour charger `bootstrap` avant les partials et ajout d'une classe `force-dark` afin de préserver le thème sombre par défaut.
+	- **Décision (2025-12-14)**: suppression de la dépendance à Bootstrap 5. `Frontend/src/main.js` n'importe plus `bootstrap` — le projet s'appuie désormais sur les styles globaux centralisés et des utilitaires personnalisés. Cette étape vise à réduire la taille des bundles et la surface d'attaque des dépendances tierces.
 	- Build vérifié localement (vite build) — pas d'erreurs.
 
 **Prochaine étape**: extraire les styles répétés depuis les SFCs (ex: GlassButton.vue, TripCard.*) et remplacer les règles locales par les classes centralisées.

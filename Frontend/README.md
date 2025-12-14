@@ -2,7 +2,7 @@
 
 ## Description
 
-Interface utilisateur développée avec Vue 3, Vite, Pinia et Bootstrap 5.
+Interface utilisateur développée avec Vue 3, Vite et Pinia. Styles gérés via CSS personnalisées et Font Awesome.
 
 ## Installation et développement
 
