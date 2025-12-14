@@ -22,15 +22,11 @@ const props = defineProps({ size: { type: String, default: 'md' } })
   padding: 8px 12px;
 }
 .nav-btn:hover {
-  background-color: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(4px);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 .nav-btn[disabled] {
   opacity: 0.6;
   cursor: not-allowed;
 }
 </style>
-
-
-
-
-

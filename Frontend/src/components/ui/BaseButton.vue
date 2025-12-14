@@ -54,52 +54,46 @@ const onClick = (e) => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-sm);
-  padding: 10px 20px;
-  border-radius: var(--radius-button);
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 50px;
+  border: none;
 
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-family);
 
   text-decoration: none;
   white-space: nowrap;
 
   cursor: pointer;
   user-select: none;
-  transition: var(--transition-standard);
-  border: none;
+  transition: all 0.3s ease;
 
-  /* Default: primary button look centralized here */
   background-color: var(--color-primary);
   color: var(--color-dark);
-  box-shadow: var(--shadow-button);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .base-btn[disabled] {
   cursor: not-allowed;
   opacity: 0.6;
-  /* disabled primary appearance */
   background-color: var(--color-gray);
   color: var(--color-light);
 }
 
-.base-btn:hover {
+.base-btn:hover:not([disabled]) {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-button-hover);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* size helpers */
 .base-btn.btn-sm {
-  padding: 8px 16px;
-  font-size: var(--font-size-sm);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
 }
+
 .base-btn.btn-lg {
-  padding: 16px 32px;
-  font-size: var(--font-size-lg);
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
 }
 </style>
-
-
-
-
-
