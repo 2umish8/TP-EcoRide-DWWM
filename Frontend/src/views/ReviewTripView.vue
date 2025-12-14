@@ -52,7 +52,7 @@
           </div>
         </div>
         <!-- Review Form -->
-        <div class="review-form-card">
+        <div class="card">
           <div class="form-header">
             <h3><font-awesome-icon :icon="['fas', 'star']" /> Votre évaluation</h3>
             <p>Comment s'est passé votre trajet avec {{ tripInfo?.driver_pseudo }} ?</p>

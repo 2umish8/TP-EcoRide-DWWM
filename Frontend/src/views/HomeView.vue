@@ -33,7 +33,7 @@ const goToCarpooling = () => {
 }
 </script>
 <template>
-  <div>
+  <div class="accueil">
     <!-- Hero Section (extracted) --><HeroSection
       :initialSearchValues="searchForm"
       @search="handleSearch"

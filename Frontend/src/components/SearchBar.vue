@@ -30,15 +30,20 @@
             :min="minDate"
           />
         </div>
-        <button type="submit" class="search-btn">
+        <PrimaryButton type="submit">
           <span>ecoRIDEZ</span><font-awesome-icon :icon="['fas', 'search']" aria-hidden="true" />
-        </button>
+        </PrimaryButton>
+        <InlineLink class="browse-all-btn" @click.prevent="$emit('browse-all')"
+          >Parcourir tout</InlineLink
+        >
       </form>
     </div>
   </div>
 </template>
 <script setup>
 import { ref, computed, watch } from 'vue'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import InlineLink from '@/components/ui/InlineLink.vue'
 
 // Props and emits
 const props = defineProps({

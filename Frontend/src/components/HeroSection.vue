@@ -21,18 +21,19 @@
           @browse-all="onBrowseAll"
         />
         <div class="qui-sommes-nous">
-          <div @click="onScroll">
+          <div class="en-savoir-plus" @click="onScroll">
             <slot name="scroll-icon"
               ><font-awesome-icon :icon="['fas', 'angles-down']" size="lg"
             /></slot>
           </div>
-          <div @click="onScroll">En Savoir Plus</div>
+          <div class="en-savoir-plus" @click="onScroll">En Savoir Plus</div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
+defineOptions({ name: 'HeroSection' })
 import SearchBar from '@/components/SearchBar.vue'
 import { useScroll } from '@/composables/useScroll'
 

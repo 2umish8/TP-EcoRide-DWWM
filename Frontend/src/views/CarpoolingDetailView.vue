@@ -2,7 +2,7 @@
   <div class="carpooling-detail">
     <!-- En-tête avec bouton retour -->
     <div class="header">
-      <button @click="$router.go(-1)" class="back-btn">← Retour</button>
+      <button @click="$router.go(-1)" class="btn-secondary">← Retour</button>
       <h1>Détail du covoiturage</h1>
     </div>
     <!-- Loading et erreurs -->
@@ -12,7 +12,7 @@
     </div>
     <div v-else-if="error" class="error">
       <p><font-awesome-icon :icon="['fas', 'xmark']" /> {{ error }}</p>
-      <button @click="$router.go(-1)" class="retry-btn">Retourner à la recherche</button>
+      <button @click="$router.go(-1)" class="btn-secondary">Retourner à la recherche</button>
     </div>
     <!-- Contenu principal -->
     <div v-else-if="carpooling" class="content">
@@ -62,7 +62,7 @@
       <!-- Informations du chauffeur -->
       <div class="driver-info card">
         <h3><font-awesome-icon :icon="['fas', 'user']" /> Chauffeur</h3>
-        <div class="driver-card">
+        <div class="card driver-info-card">
           <div class="driver-avatar">
             <ClickableAvatar
               :userId="carpooling.driver_id"
@@ -162,7 +162,7 @@
       <!-- Actions -->
       <div class="actions">
         <button
-          class="participate-btn"
+          class="btn-primary"
           :disabled="carpooling.seats_remaining <= 0 || isParticipating"
           @click="initiateParticipation"
         >
@@ -273,7 +273,9 @@
     </div>
     <div v-else class="not-found">
       <p><font-awesome-icon :icon="['fas', 'magnifying-glass']" /> Aucun covoiturage trouvé.</p>
-      <button @click="$router.push('/search')" class="search-btn">Retourner à la recherche</button>
+      <button @click="$router.push('/search')" class="btn-secondary">
+        Retourner à la recherche
+      </button>
     </div>
   </div>
 </template>

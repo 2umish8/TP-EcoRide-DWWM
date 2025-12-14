@@ -15,7 +15,7 @@
     </div>
     <!-- Error state -->
     <div v-else-if="error" class="error-container">
-      <div class="error-card">
+      <div class="card">
         <i class="fas fa-exclamation-triangle error-icon"></i>
         <p>{{ error }}</p>
         <button @click="loadUserProfile" class="retry-button">Réessayer</button>
@@ -24,7 +24,7 @@
     <!-- Profile content -->
     <div v-else-if="user" class="profile-content">
       <!-- User info section -->
-      <div class="user-info-card">
+      <div class="card">
         <div class="user-avatar-container">
           <img :src="getUserAvatar()" :alt="user.pseudo" />
         </div>
@@ -67,7 +67,7 @@
           <p>Aucun avis reçu pour le moment.</p>
         </div>
         <div v-else class="reviews-list">
-          <div v-for="review in reviews" :key="review.id" class="review-card">
+          <div v-for="review in reviews" :key="review.id" class="card review-card">
             <div class="review-header">
               <div class="reviewer-info">
                 <img

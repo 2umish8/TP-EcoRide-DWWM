@@ -38,7 +38,7 @@
           v-model="newSearchParams.date"
           class="search-input-compact"
           :min="new Date().toISOString().split('T')[0]"
-        /><button @click="performNewSearch" class="search-btn-compact">Rechercher</button>
+        /><PrimaryButton @click.prevent="performNewSearch">Rechercher</PrimaryButton>
       </div>
     </div>
     <div class="results-container">
@@ -101,7 +101,7 @@
         <div v-else-if="error" class="error-state">
           <h3>Erreur</h3>
           <p>{{ error }}</p>
-          <button @click="loadCarpoolings" class="retry-btn">Réessayer</button>
+          <SecondaryButton @click="loadCarpoolings">Réessayer</SecondaryButton>
         </div>
         <!-- Résultats -->
         <div v-else-if="formattedResults.length > 0">
@@ -201,8 +201,8 @@
               <strong>{{ formatDate(nextAvailableDate) }}</strong>
             </p>
             <div class="no-results-actions">
-              <button class="btn-primary" @click="searchAlternativeDate">Voir ces trajets</button
-              ><button class="btn-secondary" @click="createAlert">Créer une alerte</button>
+              <PrimaryButton @click="searchAlternativeDate">Voir ces trajets</PrimaryButton>
+              <SecondaryButton @click="createAlert">Créer une alerte</SecondaryButton>
             </div>
           </div>
         </div>
@@ -217,8 +217,8 @@
           un trajet correspondant sera publié.
         </p>
         <div class="no-results-actions">
-          <button class="btn-primary" @click="createAlert">Créer une alerte</button
-          ><button class="btn-secondary" @click="$router.push('/')">Nouvelle recherche</button>
+          <PrimaryButton @click="createAlert">Créer une alerte</PrimaryButton>
+          <SecondaryButton @click="$router.push('/')">Nouvelle recherche</SecondaryButton>
         </div>
       </div>
     </div>
@@ -231,6 +231,8 @@ import { carpoolingService } from '@/services/api.js'
 import { useAuthStore } from '@/stores/auth'
 import IconCredit from '@/components/icons/IconCredit.vue'
 import ClickableAvatar from '@/components/ClickableAvatar.vue'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import SecondaryButton from '@/components/ui/SecondaryButton.vue'
 
 const route = useRoute()
 const router = useRouter()

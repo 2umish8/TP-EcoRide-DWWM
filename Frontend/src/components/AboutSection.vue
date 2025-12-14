@@ -29,4 +29,6 @@
     </div>
   </section>
 </template>
-<script setup></script>
+<script setup>
+defineOptions({ name: 'AboutSection' })
+</script>

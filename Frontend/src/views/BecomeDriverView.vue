@@ -29,7 +29,7 @@
       </div>
       <!-- Étape 1: Informations véhicule -->
       <div v-if="currentStep === 1" class="step-content">
-        <div class="form-card">
+        <div class="card">
           <h3><font-awesome-icon :icon="['fas', 'car']" /> Informations du véhicule</h3>
           <p class="step-description">
             Pour garantir la sécurité de nos utilisateurs, nous devons enregistrer les informations
@@ -125,7 +125,7 @@
       </div>
       <!-- Étape 2: Préférences de conduite -->
       <div v-if="currentStep === 2" class="step-content">
-        <div class="form-card">
+        <div class="card">
           <h3><font-awesome-icon :icon="['fas', 'gear']" /> Préférences de conduite</h3>
           <p class="step-description">
             Définissez vos préférences pour que les passagers sachent à quoi s'attendre lors du

@@ -9,4 +9,6 @@
     </div>
   </div>
 </template>
-<script setup></script>
+<script setup>
+defineOptions({ name: 'ArrowsFooter' })
+</script>

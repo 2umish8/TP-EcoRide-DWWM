@@ -69,7 +69,7 @@
           </p>
         </div>
         <!-- Report Form -->
-        <div class="report-form-card">
+        <div class="card">
           <div class="form-header">
             <h3><font-awesome-icon :icon="['fas', 'pen']" /> Détails du problème</h3>
             <p>Décrivez précisément ce qui s'est passé pendant votre trajet</p>

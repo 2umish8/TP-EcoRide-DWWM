@@ -1,8 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import GlassButton from './GlassButton.vue'
+import NavButton from './ui/NavButton.vue'
 
 const authStore = useAuthStore()
 const isLoggedIn = computed(() => authStore.isLoggedIn)
@@ -14,100 +13,66 @@ const logout = async () => {
 }
 </script>
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
-    <div class="container-fluid">
-      <RouterLink to="/"
-        ><img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" /></RouterLink
-      ><button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <RouterLink to="/"
-              ><font-awesome-icon
-                :icon="['fas', 'house']"
-                class="var(--color-light-primary)-icon me-1"
-              />
+  <nav class="app-navbar">
+    <div class="app-navbar__inner">
+      <NavButton to="/" class="app-navbar__logo">
+        <img
+          src="@/assets/Logo ecoride transparent.PNG"
+          alt="EcoRide"
+          class="app-navbar__logo-img"
+        />
+      </NavButton>
+      <div class="app-navbar__content">
+        <ul class="app-navbar__links">
+          <li>
+            <NavButton to="/">
+              <font-awesome-icon :icon="['fas', 'house']" class="text-light" />
               Accueil
-            </RouterLink>
+            </NavButton>
           </li>
-          <li class="nav-item">
-            <RouterLink to="/search"
-              ><font-awesome-icon
-                :icon="['fas', 'magnifying-glass']"
-                class="var(--color-light-primary)-icon me-1"
-              />
+          <li>
+            <NavButton to="/search">
+              <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="text-light" />
               Rechercher
-            </RouterLink>
+            </NavButton>
           </li>
           <li v-if="isLoggedIn">
-            <RouterLink to="/my-trips"
-              ><font-awesome-icon
-                :icon="['fas', 'person-walking-luggage']"
-                class="var(--color-light-primary)-icon me-1"
-              />
+            <NavButton to="/my-trips">
+              <font-awesome-icon :icon="['fas', 'person-walking-luggage']" class="text-light" />
               Mes trajets
-            </RouterLink>
+            </NavButton>
           </li>
         </ul>
-        <ul class="navbar-nav">
+        <ul class="app-navbar__actions">
           <template v-if="!isLoggedIn"
-            ><li class="nav-item">
-              <GlassButton to="/login" variant="connexion"
-                ><font-awesome-icon
-                  :icon="['fas', 'arrow-right-to-bracket']"
-                  class="var(--color-light-primary)-icon me-1"
-                />
+            ><li>
+              <NavButton to="/login">
+                <font-awesome-icon :icon="['fas', 'arrow-right-to-bracket']" class="text-light" />
                 Connexion
-              </GlassButton>
+              </NavButton>
             </li>
-            <li class="nav-item">
-              <GlassButton to="/register" variant="inscription"
-                ><font-awesome-icon
-                  :icon="['fas', 'user-plus']"
-                  class="var(--color-light-primary)-icon me-1"
-                />
+            <li>
+              <NavButton to="/register">
+                <font-awesome-icon :icon="['fas', 'user-plus']" class="text-light" />
                 Inscription
-              </GlassButton>
+              </NavButton>
             </li></template
           ><template v-else
-            ><li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle user-dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                ><font-awesome-icon :icon="['fas', 'user']" />
+            ><li class="app-navbar__profile">
+              <NavButton to="/profile">
+                <font-awesome-icon :icon="['fas', 'user']" />
                 {{ currentUser?.pseudo || currentUser?.prenom || 'Utilisateur' }}
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu">
-                <li>
-                  <RouterLink to="/profile"
-                    ><font-awesome-icon :icon="['fas', 'user']" />
-                    Mon profil
-                  </RouterLink>
-                </li>
-                <li>
-                  <RouterLink to="/credits"
-                    ><font-awesome-icon :icon="['fas', 'coins']" />
-                    Mes crédits
-                  </RouterLink>
-                </li>
-                <li><hr /></li>
-                <li>
-                  <a href="#" @click.prevent="logout"
-                    ><font-awesome-icon :icon="['fas', 'user-xmark']" />
-                    Déconnexion
-                  </a>
-                </li>
-              </ul>
+              </NavButton>
+              |
+              <NavButton to="/credits">
+                <font-awesome-icon :icon="['fas', 'coins']" />
+                Mes crédits
+              </NavButton>
+              |
+              <NavButton @click="logout">
+                <font-awesome-icon :icon="['fas', 'user-xmark']" />
+                Déconnexion
+              </NavButton>
             </li></template
           >
         </ul>
@@ -115,3 +80,48 @@ const logout = async () => {
     </div>
   </nav>
 </template>
+
+<style scoped>
+/* Layout-only styles for AppNavbar (uses project spacing & variables) */
+.app-navbar {
+  display: block;
+  background-color: var(--color-dark-primary);
+}
+.app-navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+.app-navbar__logo-img {
+  height: 44px;
+  width: auto;
+  display: block;
+}
+.app-navbar__content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+.app-navbar__links,
+.app-navbar__actions {
+  display: flex;
+  gap: var(--spacing-md);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+/* Button appearance is handled by NavButton component; layout spacing is controlled by parent container */
+/* Responsive: hide primary links on small screens to keep layout clean */
+@media (max-width: 640px) {
+  .app-navbar__links {
+    display: none;
+  }
+  .app-navbar__inner {
+    padding-left: var(--spacing-sm);
+    padding-right: var(--spacing-sm);
+  }
+}
+</style>

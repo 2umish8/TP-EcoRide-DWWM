@@ -23,7 +23,7 @@
         </div>
       </div>
       <!-- Sélection du rôle -->
-      <div class="role-selection-card">
+      <div class="card">
         <h3 class="card-title">Mon rôle sur EcoRide</h3>
         <!-- Indicateur de chargement -->
         <div v-if="isLoadingProfile" class="loading-indicator">
@@ -59,7 +59,7 @@
         </div>
       </div>
       <!-- Section Proposer un trajet (si chauffeur sélectionné) -->
-      <div v-if="selectedRoles.includes('chauffeur')" class="propose-ride-card">
+      <div v-if="selectedRoles.includes('chauffeur')" class="card">
         <h3 class="card-title">Proposer un EcoRide</h3>
         <div class="propose-ride-form">
           <div class="form-group" v-if="vehicles.length > 0">
@@ -162,7 +162,7 @@
           <div class="propose-ride-actions">
             <button
               @click="proposeRide"
-              class="propose-btn"
+              class="btn-primary"
               :disabled="!canProposeRide || vehicles.length === 0"
             >
               <font-awesome-icon :icon="['fas', 'car']" />
@@ -174,10 +174,10 @@
       <!-- Section Chauffeur (si chauffeur sélectionné) -->
       <div v-if="selectedRoles.includes('chauffeur')" class="driver-section">
         <!-- Véhicules -->
-        <div class="vehicles-card">
+        <div class="card">
           <div class="card-header">
             <h3 class="card-title">Mes Véhicules</h3>
-            <button @click="showAddVehicle = true" class="add-btn">
+            <button @click="showAddVehicle = true" class="btn-primary">
               <font-awesome-icon :icon="['fas', 'plus']" />
               Ajouter un véhicule
             </button>
@@ -198,7 +198,7 @@
                   >
                 </p>
               </div>
-              <button @click="removeVehicle(vehicle.id)" class="remove-btn">
+              <button @click="removeVehicle(vehicle.id)" class="btn-secondary">
                 <font-awesome-icon :icon="['fas', 'trash']" />
               </button>
             </div>
@@ -288,7 +288,8 @@
             >
           </div>
           <div class="modal-actions">
-            <button type="button" @click="showAddVehicle = false" class="cancel-btn">Annuler</button
+            <button type="button" @click="showAddVehicle = false" class="btn-secondary">
+              Annuler</button
             ><button type="submit" :disabled="isSubmitting">
               <span v-if="isSubmitting">⏳</span><span v-else>Ajouter</span>
             </button>
@@ -326,7 +327,7 @@
             </div>
           </div>
           <div class="success-actions">
-            <button @click="viewCreatedTrip" class="view-trip-btn">
+            <button @click="viewCreatedTrip" class="btn-primary">
               <font-awesome-icon :icon="['fas', 'eye']" class="btn-icon" />
               Voir mon trajet</button
             ><button @click="showSuccessModal = false" class="dismiss-btn">Non merci</button>

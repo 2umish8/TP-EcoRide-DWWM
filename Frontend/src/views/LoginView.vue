@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <div class="login-container">
-      <div class="login-card">
+      <div class="card">
         <!-- Logo et titre -->
         <div class="login-header">
           <div class="logo-section">
@@ -67,23 +67,20 @@
             <font-awesome-icon :icon="['fas', 'circle-check']" />
             {{ successMessage }}
           </div>
-          <!-- Bouton de connexion --><button
-            type="submit"
-            class="login-btn"
-            :disabled="isLoading || !isFormValid"
-          >
+          <!-- Bouton de connexion -->
+          <PrimaryButton type="submit" :disabled="isLoading || !isFormValid">
             <font-awesome-icon
               v-if="isLoading"
               :icon="['fas', 'spinner']"
               spin
-              class="loading-spinner"
+              class="spinner"
             /><span v-else>Se connecter</span>
-          </button>
+          </PrimaryButton>
         </form>
         <!-- Lien vers inscription -->
         <div class="signup-link">
           <p>Vous n'avez pas encore de compte ?</p>
-          <router-link to="/register" class="signup-btn"> Créer un compte </router-link>
+          <SecondaryButton to="/register">Créer un compte</SecondaryButton>
         </div>
       </div>
     </div>
@@ -94,6 +91,8 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { authService } from '@/services/api'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import SecondaryButton from '@/components/ui/SecondaryButton.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
