@@ -17,44 +17,33 @@ const closeNav = () => {
 
 <template>
   <nav class="navbar">
-    <div class="navbar-container">
-      <!-- Logo -->
-      <RouterLink class="navbar-brand" to="/">
-        <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="navbar-logo" />
-      </RouterLink>
+    <!-- Logo -->
+    <RouterLink class="navbar-brand" to="/">
+      <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="navbar-logo" />
+    </RouterLink>
 
-      <!-- Hamburger toggle for mobile -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        @click="toggleNav"
-        :class="{ active: isNavOpen }"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <!-- Hamburger toggle for mobile -->
+    <button class="navbar-toggler" type="button" @click="toggleNav" :class="{ active: isNavOpen }">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <!-- Navigation items wrapper -->
-      <div class="navbar-nav-wrapper" :class="{ open: isNavOpen }">
-        <NavMenu :isLoggedIn="true" @navigate="closeNav" />
-        <NavActions @navigate="closeNav" />
-      </div>
+    <!-- Navigation items wrapper -->
+    <div class="navbar-nav-wrapper" :class="{ open: isNavOpen }">
+      <NavMenu :isLoggedIn="true" @navigate="closeNav" />
+      <NavActions @navigate="closeNav" />
     </div>
   </nav>
 </template>
 
 <style scoped>
 .navbar {
-  background: var(--color-dark);
+  background: linear-gradient(to right, var(--color-dark), var(--color-dark-secondary));
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0;
+  padding: 0.75rem 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.navbar-container {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 0.75rem 1rem;
 }
 
 .navbar-logo {
@@ -109,7 +98,7 @@ const closeNav = () => {
 
 /* Tablet (768px - 1024px) */
 @media (max-width: 1024px) {
-  .navbar-container {
+  .navbar {
     padding: 0.5rem 1rem;
   }
 
@@ -128,7 +117,7 @@ const closeNav = () => {
 
 /* Mobile (< 768px) */
 @media (max-width: 767px) {
-  .navbar-container {
+  .navbar {
     position: relative;
     padding: 0.75rem;
   }

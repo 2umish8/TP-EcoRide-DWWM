@@ -40,16 +40,6 @@ Ceci est créé spécialement pour s'assurer d'avoir un design cohérent et unif
 ## Typographies
 
 - **Police principale :** Inter (utilisée pour l'ensemble de l'interface). Si `Inter` n'est pas disponible, la pile de secours système est utilisée : `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif`.
-- **Taille et hauteur de ligne par défaut :** `font-size: 15px` (base) et `line-height: 1.6` 
-- **Variables CSS utiles :**
-	- `--font-size-sm`: 0.875rem
-	- `--font-size-base`: 1rem
-	- `--font-size-lg`: 1.125rem
-	- `--font-size-xl`: 1.25rem
-	- `--font-weight-normal`: 400
-	- `--font-weight-medium`: 500
-	- `--font-weight-semibold`: 600
-	- `--font-weight-bold`: 700
 
 ## Boutons
 ### Bouton principal
