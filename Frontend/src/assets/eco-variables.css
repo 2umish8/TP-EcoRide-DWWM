@@ -1,5 +1,0 @@
-/* compatibility shim — variables and buttons moved to partials */
-@import './css/_variables.css';
-
-/* This file kept for backward compatibility; prefer using assets/main.css imports. */
-}

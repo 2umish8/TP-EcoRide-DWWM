@@ -14,10 +14,6 @@ const hideLayout = computed(() => {
   const pagesWithoutLayout = ['Admin', 'login', 'register', 'forgot-password']
   return pagesWithoutLayout.includes(route.name) || route.path.startsWith('/admin')
 })
-
-const mainPaddingTop = computed(() => {
-  return hideLayout.value ? '0px' : '70px'
-})
 </script>
 
 <template>
@@ -26,7 +22,7 @@ const mainPaddingTop = computed(() => {
     <AppNavbar v-if="!hideLayout" />
 
     <!-- Contenu principal -->
-    <div class="main-content" :style="{ paddingTop: mainPaddingTop }">
+    <div class="main-content">
       <RouterView />
     </div>
 

@@ -19,13 +19,13 @@ const computedClass = `secondary-btn ${props.size && props.size !== 'md' ? `btn-
 }
 .secondary-btn:hover {
   background-color: var(--color-primary);
-  color: var(--color-dark-primary);
+  color: var(--color-dark);
   /* hover raise/box-shadow handled by BaseButton */
 }
 .secondary-btn[disabled] {
   background-color: rgba(122, 122, 122, 0.2);
-  color: var(--color-gray-primary);
-  border-color: var(--color-gray-primary);
+  color: var(--color-gray);
+  border-color: var(--color-gray);
   cursor: not-allowed;
 }
 </style>

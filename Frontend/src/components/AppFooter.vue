@@ -21,8 +21,8 @@
   position: static;
   width: 100%;
   z-index: 100;
-  background: linear-gradient(90deg, #181c1f, #23272b 80%);
-  color: #f5f5f5;
+  background: var(--color-dark-tertiary);
+  color: var(--color-light);
   font-size: 1rem;
   padding: 15px 0;
   box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.12);
@@ -38,17 +38,17 @@
 }
 
 .footer-link {
-  color: #f5f5f5;
+  color: var(--color-light);
   text-decoration: underline;
   transition: color 0.2s;
 }
 
 .footer-link:hover {
-  color: var(--eco-blue);
+  color: var(--color-primary);
 }
 
 .footer-separator {
-  color: #f5f5f5;
+  color: var(--color-light);
   opacity: 0.5;
 }
 

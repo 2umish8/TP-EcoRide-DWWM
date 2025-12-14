@@ -1,39 +1,40 @@
-/* Modal layout and overlay */
+/* Modal Styles */
 
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: fadeIn 0.3s ease;
 }
 
-/* Default content container for modals */
-.modal-content,
-.modal-content-eco {
-  background: var(--bg-primary);
+.modal-content {
+  background: var(--color-dark-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-card);
-  padding: 16px;
+  padding: var(--spacing-lg);
   width: 100%;
-  max-width: 720px;
+  max-width: 600px;
   box-shadow: var(--shadow-card);
+  animation: slideDown 0.3s ease;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 8px;
+  margin-bottom: var(--spacing-lg);
 }
 
-.modal-header h3 {
+.modal-header h2 {
   margin: 0;
 }
 
 .modal-actions {
   display: flex;
-  gap: 8px;
+  gap: var(--spacing-md);
   justify-content: flex-end;
-  margin-top: 12px;
+  margin-top: var(--spacing-lg);
 }

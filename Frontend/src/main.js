@@ -1,6 +1,4 @@
 import './assets/main.css'
-// Bootstrap removed: app uses custom/global CSS and smaller utilities instead
-import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

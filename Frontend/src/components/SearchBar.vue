@@ -1,46 +1,37 @@
 <template>
-  <div class="search-section">
-    <div class="search-bar">
-      <form @submit.prevent="onSubmit" class="search-inputs">
-        <div class="input-group">
-          <input
-            type="text"
-            placeholder="Partir de ..."
-            class="search-input"
-            v-model="localForm.departure"
-            required
-          />
-        </div>
-        <div class="input-group">
-          <input
-            type="text"
-            placeholder="Aller à ..."
-            class="search-input"
-            v-model="localForm.destination"
-            required
-          />
-        </div>
-        <div class="input-group">
-          <input
-            type="date"
-            placeholder="dd/mm/yyyy"
-            class="search-input"
-            v-model="localForm.date"
-            lang="fr"
-            :min="minDate"
-          />
-        </div>
-        <button type="submit" class="search-btn">
-          <span>ecoRIDEZ</span>
-          <font-awesome-icon :icon="['fas', 'search']" class="search-icon" aria-hidden="true" />
-        </button>
-      </form>
-    </div>
-  </div>
+  <form @submit.prevent="onSubmit" class="search-field">
+    <input
+      type="text"
+      placeholder="Partir de ..."
+      class="search-input"
+      v-model="localForm.departure"
+      required
+    />
+    <input
+      type="text"
+      placeholder="Aller à ..."
+      class="search-input"
+      v-model="localForm.destination"
+      required
+    />
+    <input
+      type="date"
+      placeholder="dd/mm/yyyy"
+      class="search-input"
+      v-model="localForm.date"
+      lang="fr"
+      :min="minDate"
+    />
+    <PrimaryButton type="submit" class="search-btn">
+      <span class="eco">eco</span>RIDEZ
+      <font-awesome-icon :icon="['fas', 'search']" class="search-icon" aria-hidden="true" />
+    </PrimaryButton>
+  </form>
 </template>
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import PrimaryButton from './ui/PrimaryButton.vue'
 
 // Props and emits
 const props = defineProps({
@@ -73,20 +64,36 @@ const onSubmit = () => {
 </script>
 
 <style scoped>
-/* Minimal selection of search-related styles (kept consistent with HomeView styling) */
-.search-section {
-  width: 100%;
-  max-width: none;
+.search-icon {
+  margin-left: 10px;
 }
 
-.search-bar {
-  background: transparent;
-  border-radius: 50px;
+.search-btn {
+  background: var(--color-primary);
+  color: var(--color-dark);
+  border: none;
+  padding: 15px 25px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  gap: 0;
+  align-items: center;
+  white-space: nowrap;
+  margin-left: 8px;
+  flex-shrink: 0;
+  min-width: auto;
+}
+
+.eco {
+  margin: 0;
   padding: 0;
-  box-shadow: none;
+  font-weight: bold;
+  color: var(--color-dark-tertiary); /* Example green color for "eco" */
 }
 
-.search-inputs {
+.search-field {
   display: flex;
   align-items: center;
   gap: 0;
@@ -94,32 +101,32 @@ const onSubmit = () => {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 50px;
   padding: 8px;
+  width: 100%;
+  max-width: none;
 }
 
-.input-group {
-  display: flex;
-  align-items: center;
-  flex: 1;
+.search-input {
+  border: none;
   background: rgba(213, 213, 213, 0.1);
-  border-color: #666666;
+  border-color: var(--color-grey);
   border-radius: 25px;
   margin: 0 4px;
   padding: 0 20px;
+  font-size: 1rem;
+  color: var(--color-light);
+  flex: 1;
+  outline: none;
   min-width: 0;
-}
-
-.input-group:nth-child(1),
-.input-group:nth-child(2) {
-  flex: 0.35;
-}
-
-.input-group:nth-child(3) {
-  flex: 0.3;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  backdrop-filter: blur(2px);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Mobile-first: stack inputs vertically on small screens */
 @media (max-width: 767px) {
-  .search-inputs {
+  .search-field {
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
@@ -127,7 +134,7 @@ const onSubmit = () => {
     border-radius: 16px;
   }
 
-  .input-group {
+  .search-input {
     flex: none;
     width: 100%;
     margin: 0;
@@ -146,18 +153,18 @@ const onSubmit = () => {
 
 /* On wider screens keep a wide horizontal layout */
 @media (min-width: 768px) {
-  .search-inputs {
+  .search-field {
     flex-direction: row;
     align-items: center;
     gap: 0;
   }
 
-  .input-group:nth-child(1),
-  .input-group:nth-child(2) {
+  .search-input:nth-of-type(1),
+  .search-input:nth-of-type(2) {
     flex: 0.35;
   }
 
-  .input-group:nth-child(3) {
+  .search-input:nth-of-type(3) {
     flex: 0.3;
   }
 
@@ -167,48 +174,12 @@ const onSubmit = () => {
   }
 }
 
-.search-input {
-  border: none;
-  background: transparent;
-  font-size: 1rem;
-  color: #ffffff;
-  flex: 1;
-  padding: 15px 0;
-  outline: none;
-  min-width: 0;
-  width: 100%;
+.search-input:nth-of-type(1),
+.search-input:nth-of-type(2) {
+  flex: 0.35;
 }
 
-.search-btn {
-  background: #34d399;
-  color: #1a1a1a;
-  border: none;
-  padding: 15px 25px;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: background 0.3s ease;
-  white-space: nowrap;
-  margin-left: 8px;
-  flex-shrink: 0;
-  min-width: auto;
-}
-
-.browse-all-btn {
-  background: rgba(52, 211, 153, 0.15);
-  color: #34d399;
-  border: 2px solid #34d399;
-  padding: 12px 20px;
-  border-radius: 25px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  backdrop-filter: blur(10px);
+.search-input:nth-of-type(3) {
+  flex: 0.3;
 }
 </style>

@@ -2,6 +2,7 @@
   <div class="search-results">
     <!-- Header avec critères de recherche -->
     <div class="search-header">
+      <SearchBar :initialValues="newSearchParams" @search="performNewSearch" />
       <div class="search-criteria">
         <h1 class="results-title">
           {{ hasSearchCriteria ? 'Résultats de recherche' : 'Tous les covoiturages' }}
@@ -18,31 +19,6 @@
         {{ formattedResults.length }} trajet{{ formattedResults.length > 1 ? 's' : '' }}
         {{ hasSearchCriteria ? 'trouvé' : 'disponible'
         }}{{ formattedResults.length > 1 ? 's' : '' }}
-      </div>
-    </div>
-
-    <!-- Formulaire de recherche compact -->
-    <div class="search-form-compact">
-      <div class="search-inputs-compact">
-        <input
-          type="text"
-          placeholder="Départ"
-          v-model="newSearchParams.from"
-          class="search-input-compact"
-        />
-        <input
-          type="text"
-          placeholder="Destination"
-          v-model="newSearchParams.to"
-          class="search-input-compact"
-        />
-        <input
-          type="date"
-          v-model="newSearchParams.date"
-          class="search-input-compact"
-          :min="new Date().toISOString().split('T')[0]"
-        />
-        <button @click="performNewSearch" class="search-btn-compact">Rechercher</button>
       </div>
     </div>
 
@@ -247,6 +223,7 @@ import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { carpoolingService } from '@/services/api.js'
 import { useAuthStore } from '@/stores/auth'
+import SearchBar from '@/components/SearchBar.vue'
 import IconCredit from '@/components/icons/IconCredit.vue'
 import ClickableAvatar from '@/components/ClickableAvatar.vue'
 
@@ -535,73 +512,14 @@ onMounted(() => {
   max-width: 1200px;
   margin: 0 auto 30px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 20px;
   background: #2a2a2a;
   padding: 25px 30px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* Styles pour le formulaire de recherche compact */
-.search-form-compact {
-  max-width: 1200px;
-  margin: 0 auto 30px;
-  background: #2a2a2a;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.search-inputs-compact {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.search-input-compact {
-  flex: 1;
-  min-width: 150px;
-  padding: 12px 15px;
-  border: 1px solid #444;
-  border-radius: 8px;
-  background: #1a1a1a;
-  color: white;
-  font-size: 0.9rem;
-}
-
-.search-input-compact::placeholder {
-  color: #999;
-}
-
-.search-input-compact:focus {
-  outline: none;
-  border-color: var(--bs-primary);
-}
-
-.search-btn-compact {
-  background: #34d399;
-  color: #1a1a1a;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  white-space: nowrap;
-}
-
-.search-btn-compact:hover {
-  background: var(--bs-primary);
-  color: #fff;
-}
-
-/* États de chargement et d'erreur */
 .loading-state {
   display: flex;
   flex-direction: column;

@@ -56,7 +56,7 @@ const onClick = (e) => {
   justify-content: center;
   gap: var(--spacing-sm);
   padding: 10px 20px;
-  border-radius: var(--border-radius-button);
+  border-radius: var(--radius-button);
 
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
@@ -71,7 +71,7 @@ const onClick = (e) => {
 
   /* Default: primary button look centralized here */
   background-color: var(--color-primary);
-  color: var(--color-dark-primary);
+  color: var(--color-dark);
   box-shadow: var(--shadow-button);
 }
 
@@ -79,8 +79,8 @@ const onClick = (e) => {
   cursor: not-allowed;
   opacity: 0.6;
   /* disabled primary appearance */
-  background-color: var(--color-gray-primary);
-  color: var(--color-light-primary);
+  background-color: var(--color-gray);
+  color: var(--color-light);
 }
 
 .base-btn:hover {

@@ -1,4 +1,5 @@
-/* Project reset & box-sizing consolidated */
+/* CSS Reset */
+
 *,
 *::before,
 *::after {
@@ -7,13 +8,6 @@
   padding: 0;
 }
 
-html,
-body {
-  width: 100%;
-  height: 100%;
-}
-
-/* Add this here so that layout can use the correct defaults */
 html {
   -webkit-text-size-adjust: 100%;
 }

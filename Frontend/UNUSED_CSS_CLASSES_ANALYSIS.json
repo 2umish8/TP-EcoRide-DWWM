@@ -1,0 +1,206 @@
+{
+  "analysis_date": "2025-12-14",
+  "total_files_analyzed": 40,
+  "files_with_unused_classes": 8,
+  "total_unused_classes": 15,
+  "summary": "Analysis of scoped CSS classes across all .vue files. Only classes defined in <style scoped> are included. Bootstrap and global utility classes are excluded.",
+  "unused_classes_by_file": [
+    {
+      "filename": "Frontend/src/App.vue",
+      "filepath": "c:\\Users\\umisc\\OneDrive\\Documents\\ECF\\TP-EcoRide-DWWM\\Frontend\\src\\App.vue",
+      "unused_classes": [
+        {
+          "class_name": ".test-class",
+          "line_number": 51,
+          "defined_in_template": false,
+          "notes": "This class is defined but never used in the template. Contains background-color, color, padding, and text-align styles."
+        }
+      ]
+    },
+    {
+      "filename": "Frontend/src/components/SearchBar.vue",
+      "filepath": "c:\\Users\\umisc\\OneDrive\\Documents\\ECF\\TP-EcoRide-DWWM\\Frontend\\src\\components\\SearchBar.vue",
+      "unused_classes": [
+        {
+          "class_name": ".browse-all-btn",
+          "line_number": 85,
+          "defined_in_template": false,
+          "notes": "Defined in styles but the button using this class is not present in the template. This style appears to be leftover from a previous implementation."
+        }
+      ]
+    },
+    {
+      "filename": "Frontend/src/components/HeroSection.vue",
+      "filepath": "c:\\Users\\umisc\\OneDrive\\Documents\\ECF\\TP-EcoRide-DWWM\\Frontend\\src\\components\\HeroSection.vue",
+      "unused_classes": [
+        {
+          "class_name": ".mobile-catch-phrase",
+          "line_number": 50,
+          "defined_in_template": true,
+          "usage": "Used in template via v-if with responsive display logic",
+          "notes": "Actually used - class is conditionally shown on mobile. This is NOT unused."
+        }
+      ]
+    },
+    {
+      "filename": "Frontend/src/components/PasswordStrengthIndicator.vue",
+      "filepath": "c:\\Users\\umisc\\OneDrive\\Documents\\ECF\\TP-EcoRide-DWWM\\Frontend\\src\\components\\PasswordStrengthIndicator.vue",
+      "unused_classes": [
+        {
+          "class_name": ".strength-excellent",
+          "line_number": 22,
+          "defined_in_template": false,
+          "notes": "Background color styles for excellent password strength state - may be used dynamically but no direct template reference found"
+        },
+        {
+          "class_name": ".strength-good",
+          "line_number": 27,
+          "defined_in_template": false,
+          "notes": "Background color styles for good password strength state - may be used dynamically but no direct template reference found"
+        },
+        {
+          "class_name": ".strength-medium",
+          "line_number": 32,
+          "defined_in_template": false,
+          "notes": "Background color styles for medium password strength state - may be used dynamically but no direct template reference found"
+        },
+        {
+          "class_name": ".strength-weak",
+          "line_number": 37,
+          "defined_in_template": false,
+          "notes": "Background color styles for weak password strength state - may be used dynamically but no direct template reference found"
+        },
+        {
+          "class_name": ".strength-very-weak",
+          "line_number": 42,
+          "defined_in_template": false,
+          "notes": "Background color styles for very-weak password strength state - may be used dynamically but no direct template reference found"
+        },
+        {
+          "class_name": ".strength-invalid",
+          "line_number": 47,
+          "defined_in_template": false,
+          "notes": "Background color styles for invalid password state - may be used dynamically but no direct template reference found"
+        }
+      ],
+      "clarification": "These classes are likely applied dynamically via the getPasswordStrengthColor() method, so they should be kept despite not being explicitly in the template."
+    },
+    {
+      "filename": "Frontend/src/views/HomeView.vue",
+      "filepath": "c:\\Users\\umisc\\OneDrive\\Documents\\ECF\\TP-EcoRide-DWWM\\Frontend\\src\\views\\HomeView.vue",
+      "unused_classes": [
+        {
+          "class_name": ".mobile-slogan",
+          "line_number": 64,
+          "defined_in_template": false,
+          "notes": "Large file with many duplicated styles. This class appears to duplicate styles from extracted components. Should consolidate with HeroSection component."
+        },
+        {
+          "class_name": ".arrow-down",
+          "line_number": 145,
+          "defined_in_template": false,
+          "notes": "Duplicated in ArrowsFooter.vue component. This is dead code - use the component version instead."
+        },
+        {
+          "class_name": ".arrow-icon",
+          "line_number": 153,
+          "defined_in_template": false,
+          "notes": "Duplicated in ArrowsFooter.vue component. Should be removed in favor of component version."
+        },
+        {
+          "class_name": ".about-section",
+          "line_number": 180,
+          "defined_in_template": false,
+          "notes": "Duplicated in AboutSection.vue component. This style should not be in HomeView - use component version."
+        }
+      ]
+    },
+    {
+      "filename": "Frontend/src/views/MyTripsView.vue",
+      "filepath": "c:\\Users\\umisc\\OneDrive\\Documents\\ECF\\TP-EcoRide-DWWM\\Frontend\\src\\views\\MyTripsView.vue",
+      "unused_classes": [
+        {
+          "class_name": ".fadeInHint",
+          "line_number": 720,
+          "defined_in_template": false,
+          "notes": "Animation keyframe defined but never applied to any element in the template"
+        }
+      ],
+      "note": "This is a very large file (1276 lines). Only significant unused classes are listed. Consider breaking this into smaller components."
+    },
+    {
+      "filename": "Frontend/src/views/CarpoolingDetailView.vue",
+      "filepath": "c:\\Users\\umisc\\OneDrive\\Documents\\ECF\\TP-EcoRide-DWWM\\Frontend\\src\\views\\CarpoolingDetailView.vue",
+      "unused_classes": [
+        {
+          "class_name": ".eco-badge",
+          "line_number": 190,
+          "defined_in_template": false,
+          "notes": "Referenced in script comments but style definition may be in global utilities. Check if truly scoped or if it's using global styles."
+        }
+      ]
+    },
+    {
+      "filename": "Frontend/src/views/SearchResultsView.vue",
+      "filepath": "c:\\Users\\umisc\\OneDrive\\Documents\\ECF\\TP-EcoRide-DWWM\\Frontend\\src\\views\\SearchResultsView.vue",
+      "unused_classes": [
+        {
+          "class_name": ".my-trip-badge",
+          "line_number": 310,
+          "defined_in_template": true,
+          "usage": "Applied to span with :class binding 'my-trip-badge'",
+          "notes": "Actually used - dynamically applied when isMyTrip(trip) returns true. This is NOT unused."
+        }
+      ],
+      "note": "This is a large view file (1215 lines) with comprehensive styling."
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "action": "Remove .test-class from App.vue",
+      "reason": "Clearly test/debug code that should not be in production"
+    },
+    {
+      "priority": "HIGH",
+      "action": "Remove .browse-all-btn from SearchBar.vue",
+      "reason": "Orphaned style with no corresponding template element - likely from previous refactoring"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Consolidate HomeView.vue styles",
+      "reason": "File has 1600+ lines with many duplicated styles from extracted components (.mobile-slogan, .arrow-down, .about-section). Refactor to use components only."
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Review dynamically applied classes",
+      "reason": "Password strength indicator classes and other dynamic styles should be verified as actually used despite not appearing explicitly in templates"
+    },
+    {
+      "priority": "LOW",
+      "action": "Break MyTripsView into smaller components",
+      "reason": "1276-line view file is difficult to maintain. Extract TripsList, DriverSection, PassengerSection as separate components"
+    },
+    {
+      "priority": "LOW",
+      "action": "Consolidate CSS across components",
+      "reason": "Move view-specific styles to global assets/css as per your guidelines - keep scoped styles for layout only"
+    }
+  ],
+  "methodology": {
+    "description": "Analysis performed on all 40 .vue files in Frontend/src directory",
+    "scope": "Only <style scoped> blocks analyzed",
+    "exclusions": [
+      "Bootstrap classes (e.g., btn, col-, row, etc.)",
+      "Global utility classes from assets/css",
+      "Dynamically applied classes that are harder to detect statically",
+      "Classes applied via :class bindings (unless explicitly unused)"
+    ],
+    "confidence_levels": {
+      "HIGH": "Class is definitively unused - no template reference and no dynamic binding",
+      "MEDIUM": "Class appears unused but may be applied dynamically via computed properties or conditionals",
+      "LOW": "Class is likely used but detection required deeper code analysis"
+    }
+  },
+  "export_format_notes": "This report is provided in JSON format for easy parsing and integration with your workflow. See 'csv_format' for tabular view."
+}

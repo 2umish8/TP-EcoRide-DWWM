@@ -727,7 +727,7 @@ export default {
   font-size: 0.8rem;
   color: #6b7280;
   opacity: 0;
-  animation: fadeInHint 0.3s ease-in-out 0.5s forwards;
+  animation: fadeIn 0.3s ease-in-out 0.5s forwards;
   white-space: nowrap;
 }
 
