@@ -14,7 +14,7 @@ import ButtonsTemplate from '@/components/test/ButtonsTemplate.vue'
             <span>#6bc26b</span>
           </div>
           <div class="swatch" style="background: var(--eco-secondary)"><span>#79d09e</span></div>
-          <div class="swatch" style="background: var(--bg-dark)"><span>#1a1a1a</span></div>
+          <div class="swatch" style="background: var(--bg-dark)"><span>var(--color-dark)</span></div>
           <div class="swatch" style="background: var(--bg-dark-2)"><span>#2d2d2d</span></div>
         </div>
       </div>
@@ -71,7 +71,7 @@ import ButtonsTemplate from '@/components/test/ButtonsTemplate.vue'
 }
 .btn-primary {
   background: var(--eco-green);
-  color: #132;
+  color: var(--color-dark);
   box-shadow: var(--shadow-button);
   border-radius: var(--radius-button);
   transition: var(--transition-standard);
@@ -82,7 +82,7 @@ import ButtonsTemplate from '@/components/test/ButtonsTemplate.vue'
 }
 .btn-secondary {
   background: var(--eco-blue);
-  color: #fff;
+  color: var(--color-light);
   box-shadow: var(--shadow-button);
   border-radius: var(--radius-button);
   transition: var(--transition-standard);
@@ -94,11 +94,11 @@ import ButtonsTemplate from '@/components/test/ButtonsTemplate.vue'
 .btn-outline {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #fff;
+  color: var(--color-light);
 }
 .btn-disabled {
-  background: #7a7a7a;
-  color: #fff;
+  background: var(--color-gray);
+  color: var(--color-light);
   cursor: not-allowed;
   opacity: 0.7;
 }
@@ -110,7 +110,7 @@ import ButtonsTemplate from '@/components/test/ButtonsTemplate.vue'
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--color-light);
   box-shadow: var(--shadow-card);
   margin-bottom: 8px;
 }
@@ -148,3 +148,8 @@ import ButtonsTemplate from '@/components/test/ButtonsTemplate.vue'
   color: var(--text-muted);
 }
 </style>
+
+
+
+
+

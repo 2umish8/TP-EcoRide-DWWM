@@ -21,12 +21,12 @@
   justify-content: space-between;
   padding: 20px 60px;
   height: 56px;
-  background-color: #1a1a1a;
+  background-color: var(--color-dark);
   width: 100%;
 }
 
 .arrow-down {
-  color: #ffffff;
+  color: var(--color-light);
   font-size: 1.2rem;
   animation: arrowBounce 2s infinite ease-in-out;
 }
@@ -46,7 +46,7 @@
   gap: 40px;
   font-family: 'Inter', sans-serif;
   font-size: 0.9rem;
-  color: #cccccc;
+  color: var(--color-light-secondary);
 }
 
 .footer-links span {
@@ -55,6 +55,11 @@
 }
 
 .footer-links span:hover {
-  color: #2e7d32;
+  color: var(--color-success);
 }
 </style>
+
+
+
+
+

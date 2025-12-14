@@ -65,7 +65,7 @@ const onScroll = () => {
 /* Minimal hero styles (migrated from HomeView.vue) */
 .hero-background {
   flex: 1;
-  background: #1a1a1a url('@/assets/Accueil BG.png') center/cover no-repeat;
+  background: var(--color-dark) url('@/assets/Accueil BG.png') center/cover no-repeat;
   border-radius: 0px 0px 80px 0px;
   display: flex;
   align-items: center;
@@ -84,8 +84,8 @@ const onScroll = () => {
   width: 60%;
   height: 100%;
   background:
-    radial-gradient(circle at 15% 15%, #34d399 18px, transparent 18px),
-    radial-gradient(circle at 35% 25%, #22c55e 22px, transparent 22px);
+    radial-gradient(circle at 15% 15%, var(--color-primary) 18px, transparent 18px),
+    radial-gradient(circle at 35% 25%, var(--color-success) 22px, transparent 22px);
   opacity: 0.3;
   z-index: 0;
   filter: blur(2px);
@@ -117,7 +117,7 @@ const onScroll = () => {
     sans-serif;
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-light);
   margin: 0;
   line-height: 1.1;
   margin-bottom: 0.5rem;
@@ -126,14 +126,14 @@ const onScroll = () => {
 }
 
 .eco-highlight {
-  color: #34d399;
+  color: var(--color-primary);
 }
 
 .subtitle {
   font-family: 'Inter', sans-serif;
   font-size: 1.2rem;
   font-weight: 300;
-  color: #e0e0e0;
+  color: var(--color-light-secondary);
   margin-top: 1rem;
   max-width: 700px;
   line-height: 1.4;
@@ -180,3 +180,8 @@ const onScroll = () => {
   }
 }
 </style>
+
+
+
+
+

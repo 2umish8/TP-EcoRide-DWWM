@@ -34,9 +34,9 @@
 
 <style scoped>
 .about-section {
-  background-color: #1a1a1a;
+  background-color: var(--color-dark);
   padding: 80px 60px;
-  color: #ffffff;
+  color: var(--color-light);
 }
 
 .about-container {
@@ -65,7 +65,7 @@
   font-family: 'Inter', sans-serif;
   font-size: 2.5rem;
   font-weight: 600;
-  color: #34d399;
+  color: var(--color-primary);
   margin-bottom: 30px;
   letter-spacing: -0.02em;
 }
@@ -77,18 +77,23 @@
 
 .about-paragraph {
   font-size: 1.1rem;
-  color: #e0e0e0;
+  color: var(--color-light-secondary);
   margin-bottom: 20px;
   font-weight: 300;
 }
 
 .about-values {
   font-size: 1.1rem;
-  color: #ffffff;
+  color: var(--color-light);
   margin-top: 30px;
   padding: 20px;
   background: rgba(52, 211, 153, 0.1);
-  border-left: 4px solid #34d399;
+  border-left: 4px solid var(--color-primary);
   border-radius: 0 8px 8px 0;
 }
 </style>
+
+
+
+
+

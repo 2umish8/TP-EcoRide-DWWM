@@ -88,14 +88,14 @@ const updateFilter = (key, value) => {
 
 <style scoped>
 .filters-sidebar {
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   height: fit-content;
   position: sticky;
   top: 20px;
-  border: 1px solid #444;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   min-width: 260px;
   max-width: 320px;
 }
@@ -103,7 +103,7 @@ const updateFilter = (key, value) => {
 .filters-sidebar h3 {
   font-size: 1.3rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-light);
   margin-bottom: 20px;
 }
 
@@ -114,19 +114,19 @@ const updateFilter = (key, value) => {
 .filter-group h4 {
   font-size: 1rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-light);
   margin-bottom: 12px;
 }
 
 .price-slider {
   width: 100%;
   margin-bottom: 8px;
-  accent-color: #34d399;
+  accent-color: var(--color-primary);
 }
 
 .price-value {
   font-weight: 600;
-  color: #34d399;
+  color: var(--color-primary);
 }
 
 .ecological-filter,
@@ -139,9 +139,9 @@ const updateFilter = (key, value) => {
 .rating-select {
   width: 100%;
   padding: 8px 12px;
-  background: #1a1a1a;
-  color: white;
-  border: 1px solid #444;
+  background: var(--color-dark);
+  color: var(--color-light);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;
   margin-top: 8px;
 }
@@ -152,11 +152,11 @@ const updateFilter = (key, value) => {
   gap: 8px;
   cursor: pointer;
   padding: 4px 0;
-  color: #ccc;
+  color: var(--color-light-secondary);
 }
 
 .feature-option input {
-  accent-color: #34d399;
+  accent-color: var(--color-primary);
 }
 
 @media (max-width: 900px) {

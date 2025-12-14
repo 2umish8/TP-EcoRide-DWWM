@@ -63,11 +63,11 @@ const formatDate = (dateString) => {
 }
 
 .no-results-content {
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   border-radius: 12px;
   padding: 40px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  border: 1px solid #444;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .no-results-content h2 {
@@ -77,7 +77,7 @@ const formatDate = (dateString) => {
 }
 
 .no-results-content p {
-  color: #ccc;
+  color: var(--color-light-secondary);
   font-size: 1.1rem;
   margin-bottom: 24px;
   line-height: 1.6;
@@ -90,7 +90,7 @@ const formatDate = (dateString) => {
 }
 
 .btn-primary {
-  background: #34d399;
+  background: var(--color-primary);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -101,14 +101,14 @@ const formatDate = (dateString) => {
 }
 
 .btn-primary:hover {
-  background: #3b82f6;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-light);
 }
 
 .btn-secondary {
   background: transparent;
-  color: #34d399;
-  border: 2px solid #34d399;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
@@ -117,9 +117,9 @@ const formatDate = (dateString) => {
 }
 
 .btn-secondary:hover {
-  background: #3b82f6;
-  color: #fff;
-  border-color: #3b82f6;
+  background: var(--color-primary);
+  color: var(--color-light);
+  border-color: var(--color-primary);
 }
 
 @media (max-width: 600px) {
@@ -145,3 +145,8 @@ const formatDate = (dateString) => {
   }
 }
 </style>
+
+
+
+
+

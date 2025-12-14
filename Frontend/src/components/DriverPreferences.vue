@@ -283,7 +283,7 @@ onMounted(() => {
 
 <style scoped>
 .driver-preferences {
-  background: #1a1a1a;
+  background: var(--color-dark);
   border-radius: 12px;
   padding: 20px;
   margin-top: 20px;
@@ -295,12 +295,12 @@ onMounted(() => {
 }
 
 .preferences-header h3 {
-  color: #34d399;
+  color: var(--color-primary);
   margin: 0 0 10px 0;
 }
 
 .preferences-header p {
-  color: #888;
+  color: var(--color-gray);
   margin: 0;
 }
 
@@ -313,9 +313,9 @@ onMounted(() => {
 
 .standard-preferences h4,
 .custom-preferences h4 {
-  color: #fff;
+  color: var(--color-light);
   margin: 0 0 15px 0;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   padding-bottom: 10px;
 }
 
@@ -324,23 +324,23 @@ onMounted(() => {
 }
 
 .preference-group label {
-  color: #fff;
+  color: var(--color-light);
   font-weight: bold;
 }
 
 .preference-group select {
-  background: #2a2a2a;
-  border: 2px solid #333;
+  background: var(--color-dark-secondary);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
   padding: 10px;
-  color: #fff;
+  color: var(--color-light);
   width: 100%;
   margin-top: 5px;
 }
 
 .preference-group select:focus {
   outline: none;
-  border-color: #34d399;
+  border-color: var(--color-primary);
 }
 
 .checkbox-label {
@@ -358,16 +358,16 @@ onMounted(() => {
 .checkmark {
   width: 20px;
   height: 20px;
-  background: #2a2a2a;
-  border: 2px solid #333;
+  background: var(--color-dark-secondary);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 4px;
   position: relative;
   transition: all 0.3s;
 }
 
 .checkbox-label input[type='checkbox']:checked + .checkmark {
-  background: #34d399;
-  border-color: #34d399;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .checkbox-label input[type='checkbox']:checked + .checkmark::after {
@@ -376,7 +376,7 @@ onMounted(() => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #000;
+  color: var(--color-dark);
   font-weight: bold;
 }
 
@@ -389,22 +389,22 @@ onMounted(() => {
 }
 
 .custom-preference-item input {
-  background: #2a2a2a;
-  border: 2px solid #333;
+  background: var(--color-dark-secondary);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
   padding: 10px;
-  color: #fff;
+  color: var(--color-light);
   flex: 1;
 }
 
 .custom-preference-item input:focus {
   outline: none;
-  border-color: #34d399;
+  border-color: var(--color-primary);
 }
 
 .btn-remove {
-  background: #ef4444;
-  color: #fff;
+  background: var(--color-error);
+  color: var(--color-light);
   border: none;
   width: 32px;
   height: 32px;
@@ -416,9 +416,9 @@ onMounted(() => {
 }
 
 .btn-add-custom {
-  background: #333;
-  color: #34d399;
-  border: 2px dashed #34d399;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-primary);
+  border: 2px dashed var(--color-primary);
   border-radius: 8px;
   padding: 12px;
   cursor: pointer;
@@ -447,10 +447,10 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   padding: 10px 15px;
   border-radius: 8px;
-  color: #fff;
+  color: var(--color-light);
 }
 
 .preference-item .icon {
@@ -458,27 +458,27 @@ onMounted(() => {
 }
 
 .custom-display h4 {
-  color: #fff;
+  color: var(--color-light);
   margin: 20px 0 15px 0;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   padding-bottom: 10px;
 }
 
 .custom-preference-display {
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   padding: 12px 15px;
   border-radius: 8px;
   margin-bottom: 10px;
-  color: #ccc;
+  color: var(--color-light-secondary);
 }
 
 .custom-preference-display strong {
-  color: #34d399;
+  color: var(--color-primary);
 }
 
 .no-preferences {
   text-align: center;
-  color: #666;
+  color: var(--color-gray);
   font-style: italic;
   padding: 40px 20px;
 }
@@ -486,7 +486,7 @@ onMounted(() => {
 .btn-link {
   background: none;
   border: none;
-  color: #34d399;
+  color: var(--color-primary);
   text-decoration: underline;
   cursor: pointer;
 }
@@ -510,18 +510,18 @@ onMounted(() => {
 }
 
 .btn-cancel {
-  background: #333;
-  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-light);
 }
 
 .btn-save {
-  background: #34d399;
-  color: #000;
+  background: var(--color-primary);
+  color: var(--color-dark);
 }
 
 .btn-edit {
-  background: #34d399;
-  color: #000;
+  background: var(--color-primary);
+  color: var(--color-dark);
   margin-top: 20px;
   display: block;
   margin-left: auto;
@@ -542,8 +542,8 @@ onMounted(() => {
 /* Messages */
 .error-message {
   background: rgba(239, 68, 68, 0.1);
-  border: 1px solid #ef4444;
-  color: #ef4444;
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
   padding: 12px;
   border-radius: 8px;
   margin-top: 15px;
@@ -551,8 +551,8 @@ onMounted(() => {
 
 .success-message {
   background: rgba(52, 211, 153, 0.1);
-  border: 1px solid #34d399;
-  color: #34d399;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
   padding: 12px;
   border-radius: 8px;
   margin-top: 15px;
@@ -575,3 +575,8 @@ onMounted(() => {
   }
 }
 </style>
+
+
+
+
+

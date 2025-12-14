@@ -293,8 +293,8 @@ onMounted(() => {
 <style scoped>
 .review-trip-page {
   min-height: 100vh;
-  background-color: #1a1a1a;
-  color: #e9ecef;
+  background-color: var(--color-dark);
+  color: var(--color-light-secondary);
   padding: 20px 0;
 }
 
@@ -305,8 +305,8 @@ onMounted(() => {
 }
 
 .page-header {
-  background: #2d3748;
-  border: 1px solid #4a5568;
+  background: var(--color-dark-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   margin-bottom: 30px;
@@ -327,13 +327,13 @@ onMounted(() => {
 
 .title-section h1 {
   margin: 0 0 10px 0;
-  color: #ffffff;
+  color: var(--color-light);
   font-size: 2rem;
 }
 
 .title-section p {
   margin: 0;
-  color: #adb5bd;
+  color: var(--color-gray);
   font-size: 1.1rem;
 }
 
@@ -347,15 +347,15 @@ onMounted(() => {
   width: 40px;
   height: 40px;
   margin: 0 auto 20px;
-  border: 4px solid #374151;
-  border-top: 4px solid #28a745;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top: 4px solid var(--color-success);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
 .error-content {
-  background: #2d3748;
-  border: 1px solid #4a5568;
+  background: var(--color-dark-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
@@ -363,8 +363,8 @@ onMounted(() => {
 
 .trip-info-card,
 .review-form-card {
-  background: #2d3748;
-  border: 1px solid #4a5568;
+  background: var(--color-dark-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   margin-bottom: 30px;
@@ -377,7 +377,7 @@ onMounted(() => {
 
 .trip-info-card h3 {
   margin: 0 0 20px 0;
-  color: #ffffff;
+  color: var(--color-light);
   font-size: 1.3rem;
 }
 
@@ -396,11 +396,11 @@ onMounted(() => {
 .detail-row .label {
   font-weight: bold;
   min-width: 100px;
-  color: #adb5bd;
+  color: var(--color-gray);
 }
 
 .detail-row .value {
-  color: #e9ecef;
+  color: var(--color-light-secondary);
 }
 
 .review-form-card {
@@ -414,13 +414,13 @@ onMounted(() => {
 
 .form-header h3 {
   margin: 0 0 10px 0;
-  color: #ffffff;
+  color: var(--color-light);
   font-size: 1.4rem;
 }
 
 .form-header p {
   margin: 0;
-  color: #adb5bd;
+  color: var(--color-gray);
   font-size: 1rem;
 }
 
@@ -432,7 +432,7 @@ onMounted(() => {
   display: block;
   margin-bottom: 8px;
   font-weight: bold;
-  color: #e9ecef;
+  color: var(--color-light-secondary);
 }
 
 .star-rating {
@@ -449,44 +449,44 @@ onMounted(() => {
   transition:
     transform 0.2s,
     color 0.2s;
-  color: #6c757d;
+  color: var(--color-gray);
 }
 
 .star-btn.active,
 .star-btn.hover {
-  color: #f59e0b;
+  color: var(--color-warning);
   transform: scale(1.1);
 }
 
 .rating-text {
   font-size: 0.9rem;
-  color: #adb5bd;
+  color: var(--color-gray);
   font-style: italic;
 }
 
 .form-textarea {
   width: 100%;
   padding: 12px;
-  border: 2px solid #4a5568;
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
   font-family: inherit;
   font-size: 1rem;
   line-height: 1.5;
   resize: vertical;
   transition: border-color 0.3s;
-  background-color: #374151;
-  color: #e9ecef;
+  background-color: var(--color-dark-tertiary);
+  color: var(--color-light-secondary);
 }
 
 .form-textarea:focus {
   outline: none;
-  border-color: #28a745;
+  border-color: var(--color-success);
 }
 
 .char-count {
   text-align: right;
   font-size: 0.8rem;
-  color: #adb5bd;
+  color: var(--color-gray);
   margin-top: 5px;
 }
 
@@ -504,29 +504,29 @@ onMounted(() => {
 .checkbox-label {
   margin: 0;
   cursor: pointer;
-  color: #f39c12;
+  color: var(--color-warning);
   font-weight: normal;
 }
 
 .problem-details {
-  background: #2d1b1b;
-  border: 1px solid #e74c3c;
+  background: rgba(205, 101, 112, 0.1);
+  border: 1px solid var(--color-error);
   border-radius: 8px;
   padding: 20px;
   margin-top: 15px;
 }
 
 .problem-textarea {
-  border-color: #e74c3c;
+  border-color: var(--color-error);
 }
 
 .problem-note {
   margin-top: 10px;
   padding: 10px;
-  background: #3d2525;
+  background: rgba(205, 101, 112, 0.15);
   border-radius: 6px;
   font-size: 0.9rem;
-  color: #f8d7da;
+  color: rgba(205, 101, 112, 0.8);
 }
 
 .form-actions {
@@ -552,28 +552,28 @@ onMounted(() => {
 }
 
 .btn-primary {
-  background: #28a745;
-  color: white;
+  background: var(--color-success);
+  color: var(--color-light);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #218838;
+  background: rgba(67, 197, 97, 0.8);
   transform: translateY(-2px);
 }
 
 .btn-primary:disabled {
-  background: #6c757d;
+  background: var(--color-gray);
   cursor: not-allowed;
 }
 
 .btn-secondary {
-  background: #374151;
-  color: #e9ecef;
-  border: 2px solid #4a5568;
+  background: var(--color-dark-tertiary);
+  color: var(--color-light-secondary);
+  border: 2px solid rgba(255, 255, 255, 0.15);
 }
 
 .btn-secondary:hover {
-  background: #4a5568;
+  background: rgba(255, 255, 255, 0.1);
   transform: translateY(-2px);
 }
 
@@ -583,16 +583,16 @@ onMounted(() => {
 }
 
 .success-content {
-  background: #2d3748;
-  border: 1px solid #4a5568;
+  background: var(--color-dark-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  border: 3px solid #28a745;
+  border: 3px solid var(--color-success);
 }
 
 .success-content h3 {
-  color: #28a745;
+  color: var(--color-success);
   margin-bottom: 15px;
 }
 

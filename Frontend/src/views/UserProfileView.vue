@@ -210,8 +210,8 @@ onMounted(() => {
   margin: 0 auto;
   padding: 20px;
   min-height: 100vh;
-  background: #1a1a1a;
-  color: #ffffff;
+  background: var(--color-dark);
+  color: var(--color-light);
 }
 
 .star .inactive {
@@ -226,9 +226,9 @@ onMounted(() => {
 }
 
 .back-button {
-  background: #2a2a2a;
-  border: 2px solid #333;
-  color: #ffffff;
+  background: var(--color-dark-secondary);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  color: var(--color-light);
   padding: 12px 20px;
   border-radius: 12px;
   cursor: pointer;
@@ -241,8 +241,8 @@ onMounted(() => {
 }
 
 .back-button:hover {
-  background: #333;
-  border-color: var(--bs-primary);
+  background: var(--color-dark-tertiary);
+  border-color: var(--color-primary);
   transform: translateX(-2px);
 }
 
@@ -250,7 +250,7 @@ onMounted(() => {
   margin: 0;
   font-size: 2rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-light);
 }
 
 .loading-container,
@@ -266,17 +266,17 @@ onMounted(() => {
 .loading-spinner {
   width: 50px;
   height: 50px;
-  border: 3px solid #333;
-  border-top: 3px solid var(--bs-primary);
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top: 3px solid var(--color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 20px;
 }
 
 .error-card {
-  background: #2d1b1b;
-  border: 1px solid #4a2020;
-  color: #ff6b6b;
+  background: rgba(205, 101, 112, 0.1);
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
   padding: 30px;
   border-radius: 12px;
   display: flex;
@@ -288,12 +288,12 @@ onMounted(() => {
 
 .error-icon {
   font-size: 2rem;
-  color: #ff6b6b;
+  color: var(--color-error);
 }
 
 .retry-button {
-  background: #34d399;
-  color: #1a1a1a;
+  background: var(--color-primary);
+  color: var(--color-dark);
   border: none;
   padding: 12px 24px;
   border-radius: 12px;
@@ -303,8 +303,8 @@ onMounted(() => {
 }
 
 .retry-button:hover {
-  background: var(--bs-primary);
-  color: #fff;
+  background: var(--color-primary-hover);
+  color: var(--color-light);
   transform: translateY(-1px);
 }
 
@@ -315,8 +315,8 @@ onMounted(() => {
 }
 
 .user-info-card {
-  background: #2a2a2a;
-  border: 2px solid #333;
+  background: var(--color-dark-secondary);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 16px;
   padding: 30px;
   display: flex;
@@ -326,7 +326,7 @@ onMounted(() => {
 }
 
 .user-info-card:hover {
-  border-color: var(--bs-primary);
+  border-color: var(--color-primary);
   transform: translateY(-2px);
 }
 
@@ -339,8 +339,8 @@ onMounted(() => {
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #34d399;
-  box-shadow: 0 4px 20px rgba(52, 211, 153, 0.3);
+  border: 4px solid var(--color-primary);
+  box-shadow: 0 4px 20px rgba(143, 218, 179, 0.3);
 }
 
 .user-details {
@@ -350,12 +350,12 @@ onMounted(() => {
 .user-details h2 {
   margin: 0 0 10px 0;
   font-size: 2rem;
-  color: #ffffff;
+  color: var(--color-light);
   font-weight: 700;
 }
 
 .member-since {
-  color: #cccccc;
+  color: var(--color-light-secondary);
   margin: 0 0 20px 0;
   font-size: 0.9rem;
 }
@@ -373,12 +373,12 @@ onMounted(() => {
   display: block;
   font-size: 1.5rem;
   font-weight: bold;
-  color: #34d399;
+  color: var(--color-primary);
 }
 
 .stat-label {
   font-size: 0.8rem;
-  color: #cccccc;
+  color: var(--color-light-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -390,40 +390,40 @@ onMounted(() => {
 }
 
 .role-badge {
-  background: #34d399;
-  color: #1a1a1a;
+  background: var(--color-primary);
+  color: var(--color-dark);
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  border: 2px solid #34d399;
+  border: 2px solid var(--color-primary);
   transition: all 0.3s ease;
 }
 
 .role-badge:hover {
-  background: var(--bs-primary);
-  border-color: var(--bs-primary);
-  color: #fff;
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  color: var(--color-light);
   transform: translateY(-1px);
 }
 
 .reviews-section {
-  background: #2a2a2a;
-  border: 2px solid #333;
+  background: var(--color-dark-secondary);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 16px;
   padding: 30px;
 }
 
 .reviews-section h3 {
   margin: 0 0 20px 0;
-  color: #ffffff;
+  color: var(--color-light);
   font-size: 1.3rem;
   font-weight: 600;
 }
 
 .no-reviews {
   text-align: center;
-  color: #cccccc;
+  color: var(--color-light-secondary);
   padding: 40px 0;
   display: flex;
   flex-direction: column;
@@ -439,7 +439,7 @@ onMounted(() => {
 .no-reviews-icon {
   width: 48px;
   height: 48px;
-  color: #ffffff;
+  color: var(--color-light);
   font-size: 48px;
 }
 
@@ -450,15 +450,15 @@ onMounted(() => {
 }
 
 .review-card {
-  background: #333;
+  background: var(--color-dark-tertiary);
   border-radius: 12px;
   padding: 20px;
-  border-left: 4px solid #34d399;
+  border-left: 4px solid var(--color-primary);
   transition: all 0.3s ease;
 }
 
 .review-card:hover {
-  background: #3a3a3a;
+  background: rgba(143, 218, 179, 0.08);
   transform: translateX(4px);
 }
 
@@ -480,12 +480,12 @@ onMounted(() => {
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #34d399;
+  border: 2px solid var(--color-primary);
 }
 
 .reviewer-name {
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-light);
 }
 
 .review-rating {
@@ -495,19 +495,19 @@ onMounted(() => {
 
 .star {
   font-size: 0.9rem;
-  color: #ffffff;
+  color: var(--color-light);
 }
 
 .review-comment {
   margin: 0 0 10px 0;
-  color: #cccccc;
+  color: var(--color-light-secondary);
   line-height: 1.5;
 }
 
 .review-date {
   margin: 0;
   font-size: 0.8rem;
-  color: #999;
+  color: var(--color-gray);
 }
 
 @media (max-width: 768px) {

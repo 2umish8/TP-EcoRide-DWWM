@@ -91,8 +91,13 @@ export default {
 
 <style scoped>
 .preferences-card {
-  background: #111827;
+  background: var(--color-dark);
   padding: 20px;
   border-radius: 12px;
 }
 </style>
+
+
+
+
+

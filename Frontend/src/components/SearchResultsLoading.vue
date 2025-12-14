@@ -21,14 +21,14 @@
   flex-direction: column;
   align-items: center;
   padding: 40px;
-  color: #999;
+  color: var(--color-gray);
 }
 
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #444;
-  border-top: 3px solid #3b82f6;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top: 3px solid var(--color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 20px;
@@ -40,3 +40,8 @@
   }
 }
 </style>
+
+
+
+
+

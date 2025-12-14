@@ -45,7 +45,7 @@ defineProps({
   display: flex;
   align-items: center;
   gap: 12px;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  background: linear-gradient(135deg, var(--color-dark) 0%, #2d2d2d 100%);
   border: 2px solid;
   border-radius: 8px;
   padding: 16px;
@@ -55,19 +55,19 @@ defineProps({
 }
 
 .notification--success {
-  border-color: #8fbc8f;
+  border-color: var(--color-success);
 }
 
 .notification--error {
-  border-color: #ff6b6b;
+  border-color: var(--color-error);
 }
 
 .notification--warning {
-  border-color: #fbbf24;
+  border-color: var(--color-warning);
 }
 
 .notification--info {
-  border-color: #87ceeb;
+  border-color: var(--color-primary);
 }
 
 .notification-icon {
@@ -81,27 +81,27 @@ defineProps({
 }
 
 .notification--success .notification-icon {
-  color: #8fbc8f;
+  color: var(--color-success);
   background-color: rgba(143, 188, 143, 0.2);
 }
 
 .notification--error .notification-icon {
-  color: #ff6b6b;
+  color: var(--color-error);
   background-color: rgba(255, 107, 107, 0.2);
 }
 
 .notification--warning .notification-icon {
-  color: #fbbf24;
+  color: var(--color-warning);
   background-color: rgba(251, 191, 36, 0.2);
 }
 
 .notification--info .notification-icon {
-  color: #87ceeb;
+  color: var(--color-primary);
   background-color: rgba(135, 206, 235, 0.2);
 }
 
 .notification-message {
-  color: #f5f5f5;
+  color: var(--color-light);
   font-size: 0.95rem;
   line-height: 1.4;
 }
@@ -129,3 +129,8 @@ defineProps({
   }
 }
 </style>
+
+
+
+
+

@@ -123,45 +123,45 @@ export default {
 }
 
 .strength-excellent {
-  background-color: #f0fdf4;
-  color: #166534;
-  border: 1px solid #bbf7d0;
+  background-color: rgba(67, 197, 97, 0.1);
+  color: var(--color-success);
+  border: 1px solid rgba(67, 197, 97, 0.3);
 }
 
 .strength-good {
-  background-color: #f0fdf4;
-  color: #166534;
-  border: 1px solid #bbf7d0;
+  background-color: rgba(67, 197, 97, 0.1);
+  color: var(--color-success);
+  border: 1px solid rgba(67, 197, 97, 0.3);
 }
 
 .strength-medium {
-  background-color: #fffbeb;
-  color: #92400e;
-  border: 1px solid #fde68a;
+  background-color: var(--color-light)beb;
+  color: rgba(241, 213, 129, 0.8);
+  border: 1px solid var(--color-warning);
 }
 
 .strength-weak {
-  background-color: #fef2f2;
-  color: #991b1b;
-  border: 1px solid #fecaca;
+  background-color: rgba(205, 101, 112, 0.1);
+  color: var(--color-error);
+  border: 1px solid rgba(205, 101, 112, 0.2);
 }
 
 .strength-very-weak {
-  background-color: #fef2f2;
-  color: #991b1b;
-  border: 1px solid #fecaca;
+  background-color: rgba(205, 101, 112, 0.1);
+  color: var(--color-error);
+  border: 1px solid rgba(205, 101, 112, 0.2);
 }
 
 .strength-invalid {
-  background-color: #f3f4f6;
-  color: #6b7280;
-  border: 1px solid #d1d5db;
+  background-color: var(--color-light);
+  color: var(--color-gray);
+  border: 1px solid var(--color-light-secondary);
 }
 
 .password-strength-bar {
   width: 100%;
   height: 0.25rem;
-  background-color: #e5e7eb;
+  background-color: var(--color-light-secondary);
   border-radius: 0.125rem;
   overflow: hidden;
   margin-top: 0.5rem;
@@ -174,35 +174,35 @@ export default {
 }
 
 .password-strength-progress.strength-excellent {
-  background-color: #22c55e;
+  background-color: var(--color-success);
 }
 
 .password-strength-progress.strength-good {
-  background-color: #22c55e;
+  background-color: var(--color-success);
 }
 
 .password-strength-progress.strength-medium {
-  background-color: #f59e0b;
+  background-color: var(--color-warning);
 }
 
 .password-strength-progress.strength-weak {
-  background-color: #ef4444;
+  background-color: var(--color-error);
 }
 
 .password-strength-progress.strength-very-weak {
-  background-color: #dc2626;
+  background-color: var(--color-error);
 }
 
 .password-strength-progress.strength-invalid {
-  background-color: #9ca3af;
+  background-color: var(--color-gray);
 }
 
 .password-error {
   margin-top: 0.5rem;
   padding: 0.5rem;
-  background-color: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
+  background-color: rgba(205, 101, 112, 0.1);
+  color: var(--color-error);
+  border: 1px solid rgba(205, 101, 112, 0.2);
   border-radius: 0.375rem;
   font-size: 0.875rem;
 }
@@ -210,8 +210,8 @@ export default {
 .password-requirements {
   margin-top: 0.75rem;
   padding: 0.75rem;
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background-color: var(--color-light);
+  border: 1px solid var(--color-light-secondary);
   border-radius: 0.375rem;
   font-size: 0.875rem;
 }
@@ -219,13 +219,13 @@ export default {
 .password-requirements h4 {
   margin: 0 0 0.5rem 0;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-dark-tertiary);
 }
 
 .password-requirements ul {
   margin: 0;
   padding-left: 1.25rem;
-  color: #6b7280;
+  color: var(--color-gray);
 }
 
 .password-requirements li {
@@ -235,9 +235,9 @@ export default {
 .password-suggestions {
   margin-top: 0.5rem;
   padding: 0.5rem;
-  background-color: #eff6ff;
-  color: #1e40af;
-  border: 1px solid #bfdbfe;
+  background-color: rgba(67, 197, 97, 0.05);
+  color: var(--color-primary);
+  border: 1px solid rgba(67, 197, 97, 0.15);
   border-radius: 0.375rem;
   font-size: 0.875rem;
 }
@@ -247,3 +247,8 @@ export default {
   margin-right: 0.25rem;
 }
 </style>
+
+
+
+
+

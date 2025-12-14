@@ -27,21 +27,21 @@ defineEmits(['retry'])
 }
 
 .error-state {
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   padding: 30px;
   border-radius: 12px;
   text-align: center;
   margin: 20px 0;
-  border: 1px solid #444;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .error-state h3 {
-  color: #ef4444;
+  color: var(--color-error);
   margin-bottom: 10px;
 }
 
 .retry-btn {
-  background: #34d399;
+  background: var(--color-primary);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -53,8 +53,13 @@ defineEmits(['retry'])
 }
 
 .retry-btn:hover {
-  background: #3b82f6;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-light);
   transform: translateY(-1px);
 }
 </style>
+
+
+
+
+

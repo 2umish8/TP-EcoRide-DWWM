@@ -29,3 +29,8 @@ const props = defineProps({ size: { type: String, default: 'md' } })
   cursor: not-allowed;
 }
 </style>
+
+
+
+
+

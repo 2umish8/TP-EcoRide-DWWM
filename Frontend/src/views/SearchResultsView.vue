@@ -181,7 +181,7 @@ watch(route, (newRoute) => {
 <style scoped>
 .search-results {
   min-height: 100vh;
-  background-color: #1a1a1a;
+  background-color: var(--color-dark);
   padding: 20px 20px 40px;
   color: white;
 }

@@ -58,9 +58,9 @@ export default {
 .password-confirmation-success {
   margin-top: 0.5rem;
   padding: 0.5rem;
-  background-color: #f0fdf4;
-  color: #166534;
-  border: 1px solid #bbf7d0;
+  background-color: rgba(67, 197, 97, 0.1);
+  color: var(--color-success);
+  border: 1px solid rgba(67, 197, 97, 0.3);
   border-radius: 0.375rem;
   font-size: 0.875rem;
 }
@@ -68,10 +68,15 @@ export default {
 .password-confirmation-error {
   margin-top: 0.5rem;
   padding: 0.5rem;
-  background-color: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
+  background-color: rgba(205, 101, 112, 0.1);
+  color: var(--color-error);
+  border: 1px solid rgba(205, 101, 112, 0.2);
   border-radius: 0.375rem;
   font-size: 0.875rem;
 }
 </style>
+
+
+
+
+

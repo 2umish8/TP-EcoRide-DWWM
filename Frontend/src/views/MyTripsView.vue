@@ -634,8 +634,8 @@ export default {
 /* Vue principale */
 .my-trips {
   min-height: 100vh;
-  background-color: #1a1a1a;
-  color: #e9ecef;
+  background-color: var(--color-dark);
+  color: var(--color-light-secondary);
   padding: 1rem 1rem;
 }
 
@@ -648,13 +648,13 @@ export default {
 .page-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-light);
   margin-bottom: 0.5rem;
 }
 
 .page-subtitle {
   font-size: 1.1rem;
-  color: #adb5bd;
+  color: var(--color-gray);
   margin: 0 0 2rem 0;
 }
 
@@ -674,10 +674,10 @@ export default {
 
 .tab-btn {
   padding: 0.75rem 1.5rem;
-  border: 2px solid #4a5568;
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  background: #2d3748;
-  color: #adb5bd;
+  background: var(--color-dark-secondary);
+  color: var(--color-gray);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -691,7 +691,7 @@ export default {
 .tab-btn:hover {
   border-color: var(--bs-primary);
   color: var(--bs-primary);
-  background: #374151;
+  background: var(--color-dark-tertiary);
 }
 
 .tab-btn.active {
@@ -725,7 +725,7 @@ export default {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--color-gray);
   opacity: 0;
   animation: fadeIn 0.3s ease-in-out 0.5s forwards;
   white-space: nowrap;
@@ -762,10 +762,10 @@ export default {
 .become-driver-state {
   text-align: center;
   padding: 3rem 2rem;
-  background: #2d3748;
+  background: var(--color-dark-secondary);
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  color: #e9ecef;
+  color: var(--color-light-secondary);
 }
 
 .become-driver-state {
@@ -780,7 +780,7 @@ export default {
 
 .become-driver-description {
   font-size: 1.1rem;
-  color: #adb5bd;
+  color: var(--color-gray);
   margin: 1.5rem 0 1rem 0;
 }
 
@@ -793,9 +793,9 @@ export default {
 
 .benefit-list li {
   padding: 0.75rem 0;
-  border-bottom: 1px solid #4a5568;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 1rem;
-  color: #e9ecef;
+  color: var(--color-light-secondary);
 }
 
 .benefit-list li:last-child {
@@ -803,11 +803,11 @@ export default {
 }
 
 .become-driver-notice {
-  background: #374151;
+  background: var(--color-dark-tertiary);
   padding: 1rem;
   border-radius: 8px;
   margin: 1.5rem 0;
-  border-left: 4px solid #28a745;
+  border-left: 4px solid var(--color-success);
 }
 
 .become-driver-notice p {
@@ -834,8 +834,8 @@ export default {
 }
 
 .become-driver-btn {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--color-success) 0%, var(--color-secondary) 100%);
+  color: var(--color-light);
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -854,9 +854,9 @@ export default {
 }
 
 .learn-more-btn {
-  background: #2d3748;
-  color: #e9ecef;
-  border: 2px solid #4a5568;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-secondary);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
@@ -869,7 +869,7 @@ export default {
 }
 
 .learn-more-btn:hover {
-  background: #374151;
+  background: var(--color-dark-tertiary);
   border-color: var(--bs-primary);
   color: var(--bs-primary);
 }
@@ -877,8 +877,8 @@ export default {
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid var(--bs-primary);
+  border: 4px solid var(--color-light-secondary);
+  border-top: 4px solid var(--color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 1rem;
@@ -892,8 +892,8 @@ export default {
 
 .retry-btn,
 .create-first-trip-btn {
-  background: #28a745;
-  color: white;
+  background: var(--color-success);
+  color: var(--color-light);
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
@@ -907,7 +907,7 @@ export default {
 
 .retry-btn:hover,
 .create-first-trip-btn:hover {
-  background: #218838;
+  background: rgba(67, 197, 97, 0.8);
 }
 
 /* Statistiques */
@@ -919,19 +919,19 @@ export default {
 }
 
 .stat-card {
-  background: #2d3748;
+  background: var(--color-dark-secondary);
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   text-align: center;
-  border-left: 4px solid #28a745;
+  border-left: 4px solid var(--color-success);
   position: relative;
   overflow: hidden;
 }
 
 .stat-card.completed-trips {
-  background: linear-gradient(135deg, #2d3748 0%, #1a2e1a 100%);
-  border-left-color: #22c55e;
+  background: linear-gradient(135deg, var(--color-dark-secondary) 0%, rgba(34, 197, 94, 0.1) 100%);
+  border-left-color: var(--color-success);
 }
 
 .stat-card.completed-trips::before {
@@ -941,17 +941,17 @@ export default {
   right: -50%;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, rgba(34, 197, 94, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(67, 197, 97, 0.15) 0%, transparent 70%);
   pointer-events: none;
 }
 
 .stat-card.completed-trips .stat-number {
-  color: #22c55e;
+  color: var(--color-success);
 }
 
 .stat-card.upcoming-trips {
-  background: linear-gradient(135deg, #2d3748 0%, #2a1f1a 100%);
-  border-left-color: #f59e0b;
+  background: linear-gradient(135deg, var(--color-dark-secondary) 0%, rgba(245, 158, 11, 0.1) 100%);
+  border-left-color: var(--color-warning);
 }
 
 .stat-card.upcoming-trips::before {
@@ -961,17 +961,17 @@ export default {
   right: -50%;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(241, 213, 129, 0.15) 0%, transparent 70%);
   pointer-events: none;
 }
 
 .stat-card.upcoming-trips .stat-number {
-  color: #f59e0b;
+  color: var(--color-warning);
 }
 
 .stat-card.passengers-transported {
-  background: linear-gradient(135deg, #2d3748 0%, #251a2e 100%);
-  border-left-color: #8b5cf6;
+  background: linear-gradient(135deg, var(--color-dark-secondary) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border-left-color: var(--color-primary);
 }
 
 .stat-card.passengers-transported::before {
@@ -981,17 +981,17 @@ export default {
   right: -50%;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(143, 218, 179, 0.15) 0%, transparent 70%);
   pointer-events: none;
 }
 
 .stat-card.passengers-transported .stat-number {
-  color: #8b5cf6;
+  color: var(--color-primary);
 }
 
 .stat-card.eco-impact {
-  background: linear-gradient(135deg, #2d3748 0%, #1a2332 100%);
-  border-left-color: #20c997;
+  background: linear-gradient(135deg, var(--color-dark-secondary) 0%, rgba(32, 201, 151, 0.1) 100%);
+  border-left-color: var(--color-secondary);
 }
 
 .stat-card.eco-impact::before {
@@ -1001,18 +1001,18 @@ export default {
   right: -50%;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, rgba(32, 201, 151, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(121, 208, 158, 0.15) 0%, transparent 70%);
   pointer-events: none;
 }
 
 .stat-card.eco-impact .stat-number {
-  color: #20c997;
+  color: var(--color-secondary);
 }
 
 .stat-subtext {
   display: block;
   font-size: 0.75rem;
-  color: #20c997;
+  color: var(--color-secondary);
   margin-top: 0.25rem;
   font-weight: 500;
 }
@@ -1021,13 +1021,13 @@ export default {
   display: block;
   font-size: 2rem;
   font-weight: 700;
-  color: #28a745;
+  color: var(--color-success);
   margin-bottom: 0.5rem;
 }
 
 .stat-label {
   font-size: 0.9rem;
-  color: #adb5bd;
+  color: var(--color-gray);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -1037,7 +1037,7 @@ export default {
   display: flex;
   gap: 2rem;
   margin-bottom: 2rem;
-  background: #2d3748;
+  background: var(--color-dark-secondary);
   padding: 1rem 1.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -1052,23 +1052,23 @@ export default {
 
 .filter-group label {
   font-weight: 600;
-  color: #e9ecef;
+  color: var(--color-light-secondary);
   font-size: 0.9rem;
 }
 
 .filter-select {
   padding: 0.5rem;
-  border: 2px solid #4a5568;
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;
   font-size: 0.9rem;
   min-width: 150px;
-  background: #374151;
-  color: #e9ecef;
+  background: var(--color-dark-tertiary);
+  color: var(--color-light-secondary);
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #28a745;
+  border-color: var(--color-success);
 }
 
 .status-buttons {
@@ -1079,10 +1079,10 @@ export default {
 
 .status-btn {
   padding: 0.5rem 1rem;
-  border: 2px solid #4a5568;
+  border: 2px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;
-  background: #374151;
-  color: #adb5bd;
+  background: var(--color-dark-tertiary);
+  color: var(--color-gray);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -1095,7 +1095,7 @@ export default {
 .status-btn:hover {
   border-color: var(--bs-primary);
   color: var(--bs-primary);
-  background: #2d3748;
+  background: var(--color-dark-secondary);
 }
 
 .status-btn.active {
@@ -1108,10 +1108,10 @@ export default {
 .no-trips-status {
   text-align: center;
   padding: 3rem 2rem;
-  background: #2d3748;
+  background: var(--color-dark-secondary);
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  color: #e9ecef;
+  color: var(--color-light-secondary);
   margin-bottom: 2rem;
 }
 
@@ -1122,7 +1122,7 @@ export default {
 }
 
 .invite-link {
-  color: #28a745;
+  color: var(--color-success);
   text-decoration: none;
   font-weight: 600;
   position: relative;
@@ -1130,8 +1130,8 @@ export default {
 }
 
 .invite-link:hover {
-  color: var(--bs-primary);
-  text-shadow: 0 0 8px rgba(var(--bs-primary-rgb), 0.45);
+  color: var(--color-primary);
+  text-shadow: 0 0 8px rgba(143, 218, 179, 0.45);
 }
 
 .invite-link::after {
@@ -1141,11 +1141,7 @@ export default {
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(
-    90deg,
-    rgba(var(--bs-primary-rgb), 1),
-    rgba(var(--bs-primary-rgb), 0.85)
-  );
+  background: linear-gradient(90deg, rgba(143, 218, 179, 1), rgba(121, 208, 158, 0.85));
   transition: width 0.3s ease;
 }
 
@@ -1176,23 +1172,23 @@ export default {
 }
 
 .action-btn-small.start {
-  background: #28a745;
-  color: white;
+  background: var(--color-success);
+  color: var(--color-light);
 }
 
 .action-btn-small.finish {
-  background: #ffc107;
-  color: #212529;
+  background: var(--color-warning);
+  color: var(--color-dark);
 }
 
 .action-btn-small.cancel {
-  background: #dc3545;
-  color: white;
+  background: var(--color-error);
+  color: var(--color-light);
 }
 
 .action-btn-small.view {
-  background: #6c757d;
-  color: white;
+  background: var(--color-gray);
+  color: var(--color-light);
 }
 
 .action-btn-small:hover {

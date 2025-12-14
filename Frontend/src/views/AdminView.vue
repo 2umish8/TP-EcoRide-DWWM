@@ -135,7 +135,7 @@ onMounted(fetchUsers)
 }
 .admin-section {
   margin-bottom: 2.5rem;
-  background: #23272b;
+  background: var(--color-dark-secondary);
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
@@ -149,12 +149,12 @@ onMounted(fetchUsers)
 .admin-form input {
   padding: 0.5rem 1rem;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-light-secondary);
   min-width: 180px;
 }
 .admin-form button {
-  background: #34d399;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-light);
   border: none;
   border-radius: 5px;
   padding: 0.5rem 1.5rem;
@@ -163,10 +163,10 @@ onMounted(fetchUsers)
   transition: background 0.2s;
 }
 .admin-form button:hover {
-  background: #059669;
+  background: var(--color-success);
 }
 .admin-msg {
-  color: #059669;
+  color: var(--color-success);
   margin-bottom: 0.5rem;
 }
 .admin-table {
@@ -177,25 +177,30 @@ onMounted(fetchUsers)
 .admin-table th,
 .admin-table td {
   padding: 0.7rem 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   text-align: left;
 }
 .admin-table th {
-  background: #181c1f;
+  background: var(--color-dark);
 }
 .suspended {
-  color: #e11d48;
+  color: var(--color-error);
   font-weight: bold;
 }
 .active {
-  color: #10b981;
+  color: var(--color-success);
   font-weight: bold;
 }
 .admin-search {
   margin-bottom: 1rem;
   padding: 0.5rem 1rem;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-light-secondary);
   min-width: 220px;
 }
 </style>
+
+
+
+
+

@@ -470,7 +470,7 @@ onMounted(async () => {
   max-width: 800px;
   margin: 20px auto;
   padding: 20px;
-  color: #fff;
+  color: var(--color-light);
   min-height: 100vh;
 }
 
@@ -483,9 +483,9 @@ onMounted(async () => {
 }
 
 .back-btn {
-  background: #1a1a1a;
-  color: #fff;
-  border: 1px solid #333;
+  background: var(--color-dark);
+  color: var(--color-light);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 10px 16px;
   border-radius: 8px;
   cursor: pointer;
@@ -494,12 +494,12 @@ onMounted(async () => {
 }
 
 .back-btn:hover {
-  background: #333;
-  border-color: #555;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--color-gray);
 }
 
 .header h1 {
-  color: #fff;
+  color: var(--color-light);
   margin: 0;
   font-size: 24px;
   font-weight: 600;
@@ -514,7 +514,7 @@ onMounted(async () => {
 .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #333;
+  border: 3px solid rgba(255, 255, 255, 0.15);
   border-top: 3px solid var(--eco-green);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -524,14 +524,14 @@ onMounted(async () => {
 .error {
   text-align: center;
   padding: 40px 20px;
-  color: #ff6b6b;
+  color: var(--color-error);
 }
 
 .retry-btn,
 .search-btn {
-  background: #333;
-  color: #fff;
-  border: 1px solid #555;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-light);
+  border: 1px solid var(--color-gray);
   padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
@@ -541,7 +541,7 @@ onMounted(async () => {
 
 .retry-btn:hover,
 .search-btn:hover {
-  background: #555;
+  background: var(--color-gray);
 }
 
 /* Cards */
@@ -572,7 +572,7 @@ onMounted(async () => {
 .route h2 {
   margin: 0 0 10px 0;
   font-size: 20px;
-  color: #fff;
+  color: var(--color-light);
 }
 
 .duration-info {
@@ -580,9 +580,9 @@ onMounted(async () => {
   flex-direction: column;
   align-items: center;
   padding: 12px 16px;
-  background: #222;
+  background: var(--color-dark-secondary);
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   min-width: 120px;
 }
 
@@ -600,7 +600,7 @@ onMounted(async () => {
 
 .duration-label {
   font-size: 11px;
-  color: #888;
+  color: var(--color-gray);
   text-align: center;
 }
 
@@ -620,15 +620,15 @@ onMounted(async () => {
 .time-slot {
   text-align: center;
   padding: 16px;
-  background: #222;
+  background: var(--color-dark-secondary);
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .time-slot .label {
   display: block;
   font-size: 12px;
-  color: #888;
+  color: var(--color-gray);
   text-transform: uppercase;
   margin-bottom: 4px;
 }
@@ -644,7 +644,7 @@ onMounted(async () => {
 .time-slot .date {
   display: block;
   font-size: 13px;
-  color: #ccc;
+  color: var(--color-light-secondary);
 }
 
 /* Trip details, driver & vehicle styles are centralized in /assets/css/_cards.css; only minor view overrides kept here */
@@ -684,9 +684,9 @@ onMounted(async () => {
   align-items: center;
   gap: 10px;
   padding: 12px;
-  background: #222;
+  background: var(--color-dark-secondary);
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .pref-icon {
@@ -695,13 +695,13 @@ onMounted(async () => {
 
 .pref-label {
   font-size: 13px;
-  color: #888;
+  color: var(--color-gray);
   min-width: 70px;
 }
 
 .pref-value {
   font-size: 13px;
-  color: #fff;
+  color: var(--color-light);
   font-weight: 500;
 }
 
@@ -713,9 +713,9 @@ onMounted(async () => {
 
 .review-item {
   padding: 16px;
-  background: #222;
+  background: var(--color-dark-secondary);
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   margin-bottom: 12px;
 }
 
@@ -732,25 +732,25 @@ onMounted(async () => {
 }
 
 .review-rating {
-  color: #ffd700;
+  color: var(--color-warning);
   font-size: 14px;
 }
 
 .review-date {
   font-size: 12px;
-  color: #888;
+  color: var(--color-gray);
 }
 
 .review-comment {
   margin: 0;
-  color: #ccc;
+  color: var(--color-light-secondary);
   font-size: 14px;
   line-height: 1.4;
 }
 
 .no-reviews {
   text-align: center;
-  color: #888;
+  color: var(--color-gray);
   font-style: italic;
   padding: 20px;
 }
@@ -776,7 +776,7 @@ onMounted(async () => {
 
 .participate-btn {
   background: linear-gradient(135deg, var(--eco-green), var(--eco-green-hover));
-  color: #000;
+  color: var(--color-dark);
 }
 
 .participate-btn:not(:disabled):hover {
@@ -785,27 +785,27 @@ onMounted(async () => {
 }
 
 .participate-btn:disabled {
-  background: #444;
-  color: #888;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--color-gray);
   cursor: not-allowed;
 }
 
 .details-btn {
-  background: #333;
-  color: #fff;
-  border: 1px solid #555;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-light);
+  border: 1px solid var(--color-gray);
 }
 
 .details-btn:hover {
-  background: #444;
-  border-color: #666;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--color-gray);
 }
 
 /* Use global modal-overlay from assets/css/_modals.css */
 
 .confirmation-modal {
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: var(--color-dark);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 16px;
   padding: 0;
   max-width: 500px;
@@ -817,7 +817,7 @@ onMounted(async () => {
 
 .modal-header {
   padding: 20px 24px 16px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .modal-header h3 {
@@ -836,7 +836,7 @@ onMounted(async () => {
 }
 
 .participation-summary h4 {
-  color: #fff;
+  color: var(--color-light);
   margin: 0 0 16px;
   font-size: 16px;
   font-weight: 600;
@@ -847,7 +847,7 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid #2a2a2a;
+  border-bottom: 1px solid var(--color-dark-secondary);
 }
 
 .summary-item:last-child {
@@ -855,12 +855,12 @@ onMounted(async () => {
 }
 
 .summary-item .label {
-  color: #888;
+  color: var(--color-gray);
   font-size: 14px;
 }
 
 .summary-item .value {
-  color: #fff;
+  color: var(--color-light);
   font-weight: 500;
 }
 
@@ -873,7 +873,7 @@ onMounted(async () => {
 }
 
 .credits-info {
-  background: #242424;
+  background: var(--color-dark-secondary);
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 24px;
@@ -889,23 +889,23 @@ onMounted(async () => {
 
 .credits-current .label,
 .credits-after .label {
-  color: #888;
+  color: var(--color-gray);
   font-size: 14px;
 }
 
 .credits-current .value {
-  color: #fff;
+  color: var(--color-light);
   font-weight: 500;
 }
 
 .credits-after .value {
-  color: #ff9500;
+  color: var(--color-warning);
   font-weight: 600;
 }
 
 .confirmation-warning {
-  background: #2a1a1a;
-  border: 1px solid #442;
+  background: rgba(205, 101, 112, 0.1);
+  border: 1px solid rgba(205, 101, 112, 0.2);
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 24px;
@@ -913,7 +913,7 @@ onMounted(async () => {
 
 .confirmation-warning p {
   margin: 0 0 8px;
-  color: #ccc;
+  color: var(--color-light-secondary);
   font-size: 13px;
   line-height: 1.4;
 }
@@ -926,7 +926,7 @@ onMounted(async () => {
   display: flex;
   gap: 12px;
   padding: 16px 24px 24px;
-  border-top: 1px solid #333;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .cancel-btn,
@@ -942,19 +942,19 @@ onMounted(async () => {
 }
 
 .cancel-btn {
-  background: #333;
-  color: #fff;
-  border: 1px solid #555;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-light);
+  border: 1px solid var(--color-gray);
 }
 
 .cancel-btn:hover:not(:disabled) {
-  background: #444;
-  border-color: #666;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--color-gray);
 }
 
 .confirm-btn {
   background: linear-gradient(135deg, var(--eco-green), var(--eco-green-hover));
-  color: #000;
+  color: var(--color-dark);
 }
 
 .confirm-btn:hover:not(:disabled) {
@@ -975,7 +975,7 @@ onMounted(async () => {
 .extra-info p {
   margin: 8px 0;
   font-size: 14px;
-  color: #ccc;
+  color: var(--color-light-secondary);
 }
 
 .extra-info strong {
@@ -986,7 +986,7 @@ onMounted(async () => {
 .not-found {
   text-align: center;
   padding: 60px 20px;
-  color: #888;
+  color: var(--color-gray);
 }
 
 /* Driver name clickable styling */
@@ -1056,3 +1056,8 @@ onMounted(async () => {
   }
 }
 </style>
+
+
+
+
+

@@ -146,7 +146,7 @@ onMounted(() => {
 
 <style scoped>
 .reviews-section {
-  background: #1a1a1a;
+  background: var(--color-dark);
   border-radius: 12px;
   padding: 20px;
   margin-top: 20px;
@@ -157,12 +157,12 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   padding-bottom: 15px;
 }
 
 .reviews-header h3 {
-  color: #34d399;
+  color: var(--color-primary);
   margin: 0;
 }
 
@@ -175,15 +175,15 @@ onMounted(() => {
 .average-rating {
   font-size: 1.2em;
   font-weight: bold;
-  color: #34d399;
+  color: var(--color-primary);
 }
 
 .total-reviews {
-  color: #888;
+  color: var(--color-gray);
 }
 
 .no-rating {
-  color: #cccccc;
+  color: var(--color-light-secondary);
   font-style: italic;
 }
 
@@ -194,10 +194,10 @@ onMounted(() => {
 }
 
 .review-item {
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   border-radius: 8px;
   padding: 15px;
-  border-left: 3px solid #34d399;
+  border-left: 3px solid var(--color-primary);
 }
 
 .review-header {
@@ -222,7 +222,7 @@ onMounted(() => {
 
 .reviewer-name {
   font-weight: bold;
-  color: #fff;
+  color: var(--color-light);
 }
 
 .review-rating {
@@ -233,7 +233,7 @@ onMounted(() => {
 
 .stars {
   font-size: 0.9em;
-  color: #f59e0b;
+  color: var(--color-warning);
 }
 
 .rating-value {
@@ -241,7 +241,7 @@ onMounted(() => {
 }
 
 .review-content {
-  color: #ccc;
+  color: var(--color-light-secondary);
 }
 
 .review-comment {
@@ -251,7 +251,7 @@ onMounted(() => {
 
 .review-date {
   font-size: 0.85em;
-  color: #888;
+  color: var(--color-gray);
 }
 
 .pagination {
@@ -261,12 +261,12 @@ onMounted(() => {
   gap: 15px;
   margin-top: 20px;
 
-  border-top: 1px solid #333;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .pagination-btn {
-  background: #34d399;
-  color: #000;
+  background: var(--color-primary);
+  color: var(--color-dark);
   border: none;
   padding: 8px 16px;
   border-radius: 6px;
@@ -275,31 +275,36 @@ onMounted(() => {
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: #10b981;
+  background: var(--color-success);
 }
 
 .pagination-btn:disabled {
-  background: #555;
-  color: #888;
+  background: var(--color-gray);
+  color: var(--color-gray);
   cursor: not-allowed;
 }
 
 .page-info {
-  color: #ccc;
+  color: var(--color-light-secondary);
   min-width: 120px;
   text-align: center;
 }
 
 .no-reviews {
   text-align: center;
-  color: #cccccc;
+  color: var(--color-light-secondary);
   font-style: italic;
   padding: 40px 20px;
 }
 
 .loading {
   text-align: center;
-  color: #34d399;
+  color: var(--color-primary);
   padding: 40px 20px;
 }
 </style>
+
+
+
+
+
