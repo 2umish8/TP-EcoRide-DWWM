@@ -35,23 +35,29 @@
 
   --section-gap: 160px;
 
-  /* from eco-variables.css (ecoride palette) */
-  --eco-green: #8fbc8f;
-  --eco-green-hover: #7fb87f;
-  --eco-blue: #87ceeb;
-  --eco-blue-hover: #6bb6dd;
-  --eco-beige: #f5deb3;
+  /* Simplified palette - main color and two neutrals. Legacy names mapped for compatibility. */
+  --main-color: #8fdab3;
+  --main-color-dark: #6bc26b;
+  --dark-color: #1a1a1a;
+  --light-color: #ffffff;
 
-  --text-primary: #2d2d2d;
-  --text-secondary: #6b7280;
-  --border-color: #d1d5db;
-  --bg-primary: #ffffff;
+  /* Legacy aliases (keeps compatibility with older classes) */
+  --eco-green: var(--main-color);
+  --eco-green-hover: var(--main-color-dark);
+  --eco-blue: var(--main-color);
+  --eco-blue-hover: var(--main-color-dark);
+  --eco-beige: var(--light-color);
+
+  --text-primary: var(--dark-color);
+  --text-secondary: rgba(107, 114, 128, 1);
+  --border-color: rgba(0, 0, 0, 0.08);
+  --bg-primary: var(--light-color);
   --bg-light: #f9fafb;
 
-  --color-success: #8fbc8f;
+  --color-success: var(--main-color);
   --color-warning: #f4a460;
   --color-error: #cd5c5c;
-  --color-info: #87ceeb;
+  --color-info: var(--main-color-dark);
 
   --shadow-button: 0 4px 12px rgba(0, 0, 0, 0.15);
   --shadow-button-hover: 0 6px 16px rgba(0, 0, 0, 0.2);

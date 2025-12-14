@@ -12,6 +12,9 @@ const logout = async () => {
   await authStore.logout()
   window.location.href = '/'
 }
+
+// expose a simple flag for template to avoid using import.meta in expressions
+const isDev = import.meta.env.MODE !== 'production'
 </script>
 
 <template>
@@ -42,6 +45,12 @@ const logout = async () => {
             <RouterLink class="nav-link" to="/search">
               <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="white-icon me-1" />
               Rechercher
+            </RouterLink>
+          </li>
+          <li class="nav-item" v-if="isDev">
+            <RouterLink class="nav-link" to="/test/visuals">
+              <font-awesome-icon :icon="['fas', 'shapes']" class="white-icon me-1" />
+              Visuals
             </RouterLink>
           </li>
           <li class="nav-item" v-if="isLoggedIn">
