@@ -1,85 +1,66 @@
-/* Merged variables from base.css and eco-variables.css */
+/* Variables CSS EcoRide - Charte Graphique */
 
 :root {
-  /* from base.css (vt palette) */
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  /* === COULEURS PRINCIPALES === */
+  /* Couleur primaire (éléments interactifs, boutons, liens, accents) */
+  --color-primary: #8fdab3;
+  --color-primary-hover: #6bc26b;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  /* Couleur secondaire (texte ou fond secondaire) */
+  --color-secondary: #79d09e;
 
-  --vt-c-indigo: #2c3e50;
+  /* Couleurs sombres (thème sombre uniquement) */
+  --color-dark-primary: #1a1a1a; /* Fond principal */
+  --color-dark-secondary: #2d2d2d; /* Cartes et sections secondaires */
+  --color-dark-tertiary: #24272b; /* Pied de page, distinction supplémentaire */
 
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+  /* Couleurs claires */
+  --color-light-primary: #ffffff; /* Titres et texte interactif */
+  --color-light-secondary: #cacaca; /* Texte principal sur fond sombre */
 
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  /* Gris */
+  --color-gray-primary: #7a7a7a; /* Boutons désactivés, texte secondaire */
 
-  /* semantic color variables from base.css */
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
-
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
-
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
-
-  --section-gap: 160px;
-
-  /* from eco-variables.css (ecoride palette) */
-  --eco-green: #8fbc8f;
-  --eco-green-hover: #7fb87f;
-  --eco-blue: #87ceeb;
-  --eco-blue-hover: #6bb6dd;
-  --eco-beige: #f5deb3;
-
-  --text-primary: #2d2d2d;
-  --text-secondary: #6b7280;
-  --border-color: #d1d5db;
-  --bg-primary: #ffffff;
-  --bg-light: #f9fafb;
-
-  --color-success: #8fbc8f;
+  /* === COULEURS SÉMANTIQUES === */
+  --color-success: var(--color-primary);
   --color-warning: #f4a460;
   --color-error: #cd5c5c;
-  --color-info: #87ceeb;
 
-  --shadow-button: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --shadow-button-hover: 0 6px 16px rgba(0, 0, 0, 0.2);
-  --shadow-button-active: 0 2px 8px rgba(0, 0, 0, 0.2);
+  /* === OMBRES === */
+  /* Boutons */
+  --shadow-button: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-button-hover: 0 4px 12px rgba(0, 0, 0, 0.2);
 
-  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --shadow-card-hover: 0 8px 20px rgba(0, 0, 0, 0.15);
+  /* Cartes (subtile pour indiquer la profondeur) */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
 
-  --text-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* === BORDURES === */
+  --border-radius-button: 25px;
+  --border-radius-card: 12px;
+  --border-radius-input: 8px;
 
-  --radius-button: 25px;
-  --radius-card: 12px;
-  --radius-input: 8px;
+  --border-color: rgba(255, 255, 255, 0.1); /* Fine bordure grise sur fond sombre */
 
+  /* === TRANSITIONS === */
   --transition-standard: all 0.3s ease;
   --transition-fast: all 0.2s ease;
 
+  /* === ESPACEMENTS === */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
 
+  /* === TYPOGRAPHIE === */
+  /* Tailles de police */
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
   --font-size-lg: 1.125rem;
   --font-size-xl: 1.25rem;
 
+  /* Poids de police */
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;

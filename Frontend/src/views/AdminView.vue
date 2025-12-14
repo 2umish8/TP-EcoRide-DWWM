@@ -135,7 +135,7 @@ onMounted(fetchUsers)
 }
 .admin-section {
   margin-bottom: 2.5rem;
-  background: #23272b;
+  background: var(--color-dark-tertiary);
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
@@ -149,12 +149,12 @@ onMounted(fetchUsers)
 .admin-form input {
   padding: 0.5rem 1rem;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-light-secondary);
   min-width: 180px;
 }
 .admin-form button {
-  background: #34d399;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-light-primary);
   border: none;
   border-radius: 5px;
   padding: 0.5rem 1.5rem;
@@ -163,7 +163,7 @@ onMounted(fetchUsers)
   transition: background 0.2s;
 }
 .admin-form button:hover {
-  background: #059669;
+  background: var(--color-primary);
 }
 .admin-msg {
   color: #059669;
@@ -177,7 +177,7 @@ onMounted(fetchUsers)
 .admin-table th,
 .admin-table td {
   padding: 0.7rem 0.5rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--color-dark-secondary);
   text-align: left;
 }
 .admin-table th {
@@ -195,7 +195,7 @@ onMounted(fetchUsers)
   margin-bottom: 1rem;
   padding: 0.5rem 1rem;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-light-secondary);
   min-width: 220px;
 }
 </style>

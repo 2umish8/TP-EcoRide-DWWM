@@ -289,7 +289,7 @@ const handleRegister = async () => {
 <style scoped>
 .register-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
+  background: linear-gradient(135deg, var(--color-dark-primary) 0%, var(--color-dark-secondary) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -301,12 +301,12 @@ const handleRegister = async () => {
   grid-template-columns: 1fr 1fr;
   max-width: 1200px;
   width: 100%;
-  background: #1a1a1a;
+  background: var(--color-dark-primary);
   border-radius: 20px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   min-height: 600px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-dark-secondary);
 }
 
 .register-header-section {
@@ -315,10 +315,10 @@ const handleRegister = async () => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #1a1a1a;
-  color: white;
+  background: var(--color-dark-primary);
+  color: var(--color-light-primary);
   text-align: center;
-  border-right: 1px solid #333;
+  border-right: 1px solid var(--color-dark-secondary);
 }
 
 .register-card {
@@ -327,7 +327,7 @@ const handleRegister = async () => {
   flex-direction: column;
   justify-content: center;
   overflow-y: auto;
-  background: #1a1a1a;
+  background: var(--color-dark-primary);
 }
 
 .register-logo {
@@ -339,12 +339,12 @@ const handleRegister = async () => {
 .register-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #34d399;
+  color: var(--color-primary);
   margin-bottom: 16px;
 }
 
 .register-subtitle {
-  color: #cccccc;
+  color: var(--color-light-secondary);
   font-size: 1.1rem;
   line-height: 1.6;
 }
@@ -369,43 +369,43 @@ const handleRegister = async () => {
 
 .form-label {
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-light-primary);
   font-size: 0.9rem;
 }
 
 .form-input {
   padding: 15px 16px;
-  border: 2px solid #333;
+  border: 2px solid var(--color-dark-secondary);
   border-radius: 12px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: #2a2a2a;
-  color: #ffffff;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-primary);
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #34d399;
-  background: #2a2a2a;
+  border-color: var(--color-primary);
+  background: var(--color-dark-secondary);
   box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2);
 }
 
 .form-input::placeholder {
-  color: #888;
+  color: var(--color-gray-primary);
 }
 
 .form-input.error {
-  border-color: #ef4444;
+  border-color: var(--color-error);
   background: rgba(239, 68, 68, 0.1);
 }
 
 .form-input.error:focus {
-  border-color: #ef4444;
+  border-color: var(--color-error);
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
 }
 
 .field-error {
-  color: #ef4444;
+  color: var(--color-error);
   font-size: 0.85rem;
   font-weight: 500;
   margin-top: 4px;
@@ -442,7 +442,7 @@ const handleRegister = async () => {
 }
 
 .password-toggle:hover {
-  background: #333;
+  background: var(--color-dark-secondary);
 }
 
 /* Tooltip pour les critères de mot de passe */
@@ -461,17 +461,17 @@ const handleRegister = async () => {
 }
 
 .tooltip-content {
-  background: #2a2a2a;
-  border: 1px solid #444;
+  background: var(--color-dark-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   font-size: 0.85rem;
-  color: #ffffff;
+  color: var(--color-light-primary);
 }
 
 .tooltip-content strong {
-  color: #34d399;
+  color: var(--color-primary);
   display: block;
   margin-bottom: 8px;
 }
@@ -479,7 +479,7 @@ const handleRegister = async () => {
 .tooltip-content ul {
   margin: 0;
   padding-left: 16px;
-  color: #cccccc;
+  color: var(--color-light-secondary);
 }
 
 .tooltip-content li {
@@ -494,7 +494,7 @@ const handleRegister = async () => {
 .strength-bar {
   width: 100%;
   height: 4px;
-  background: #e2e8f0;
+  background: var(--color-light-secondary);
   border-radius: 2px;
   overflow: hidden;
   margin-bottom: 4px;
@@ -506,16 +506,16 @@ const handleRegister = async () => {
 }
 
 .strength-fill.weak {
-  background: #ef4444;
+  background: var(--color-error);
 }
 .strength-fill.medium {
-  background: #f59e0b;
+  background: var(--color-warning);
 }
 .strength-fill.good {
-  background: #3b82f6;
+  background: var(--color-primary);
 }
 .strength-fill.strong {
-  background: #22c55e;
+  background: var(--color-primary-hover);
 }
 
 .strength-text {
@@ -524,20 +524,20 @@ const handleRegister = async () => {
 }
 
 .strength-text.weak {
-  color: #ef4444;
+  color: var(--color-error);
 }
 .strength-text.medium {
-  color: #f59e0b;
+  color: var(--color-warning);
 }
 .strength-text.good {
-  color: #3b82f6;
+  color: var(--color-primary);
 }
 .strength-text.strong {
-  color: #22c55e;
+  color: var(--color-primary-hover);
 }
 
 .password-error {
-  color: #ff6b6b;
+  color: var(--color-error);
   font-size: 0.8rem;
   margin-top: 4px;
 }
@@ -548,17 +548,17 @@ const handleRegister = async () => {
   gap: 12px;
   cursor: pointer;
   font-size: 0.9rem;
-  color: #cccccc;
+  color: var(--color-light-secondary);
   line-height: 1.5;
 }
 
 .checkbox-label input[type='checkbox'] {
-  accent-color: #34d399;
+  accent-color: var(--color-primary);
   margin: 0;
 }
 
 .link {
-  color: #34d399;
+  color: var(--color-primary);
   text-decoration: none;
   font-weight: 500;
 }
@@ -569,9 +569,9 @@ const handleRegister = async () => {
 }
 
 .error-message {
-  background: #2d1b1b;
-  border: 1px solid #4a2020;
-  color: #ff6b6b;
+  background: var(--color-dark-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--color-error);
   padding: 12px 16px;
   border-radius: 8px;
   display: flex;
@@ -581,9 +581,9 @@ const handleRegister = async () => {
 }
 
 .success-message {
-  background: #1b2d1b;
-  border: 1px solid #204a20;
-  color: #4ade80;
+  background: var(--color-dark-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--color-primary);
   padding: 12px 16px;
   border-radius: 8px;
   display: flex;
@@ -593,8 +593,8 @@ const handleRegister = async () => {
 }
 
 .register-btn {
-  background: #34d399;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-light-primary);
   border: none;
   padding: 16px 24px;
   border-radius: 12px;
@@ -611,7 +611,7 @@ const handleRegister = async () => {
 
 .register-btn:hover:not(:disabled) {
   background: var(--bs-primary);
-  color: #fff;
+  color: var(--color-light-primary);
   transform: translateY(-1px);
 }
 
@@ -631,12 +631,12 @@ const handleRegister = async () => {
 }
 
 .login-link p {
-  color: #cccccc;
+  color: var(--color-light-secondary);
   margin-bottom: 12px;
 }
 
 .login-btn-link {
-  color: #34d399;
+  color: var(--color-primary);
   text-decoration: none;
   font-weight: 600;
   padding: 8px 16px;
@@ -646,7 +646,7 @@ const handleRegister = async () => {
 
 .login-btn-link:hover {
   background: var(--bs-primary);
-  color: #fff;
+  color: var(--color-light-primary);
 }
 
 /* Responsive */

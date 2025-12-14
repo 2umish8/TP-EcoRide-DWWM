@@ -101,7 +101,7 @@ const onSubmit = () => {
   align-items: center;
   flex: 1;
   background: rgba(213, 213, 213, 0.1);
-  border-color: #666666;
+  border-color: var(--color-gray-primary);
   border-radius: 25px;
   margin: 0 4px;
   padding: 0 20px;
@@ -171,7 +171,7 @@ const onSubmit = () => {
   border: none;
   background: transparent;
   font-size: 1rem;
-  color: #ffffff;
+  color: var(--color-light-primary);
   flex: 1;
   padding: 15px 0;
   outline: none;
@@ -180,8 +180,8 @@ const onSubmit = () => {
 }
 
 .search-btn {
-  background: #34d399;
-  color: #1a1a1a;
+  background: var(--color-primary);
+  color: var(--color-dark-primary);
   border: none;
   padding: 15px 25px;
   border-radius: 25px;
@@ -192,7 +192,7 @@ const onSubmit = () => {
   align-items: center;
   gap: 10px;
   transition: background 0.3s ease;
-  white-space: nowrap;
+  var(--color-light-primary)-space: nowrap;
   margin-left: 8px;
   flex-shrink: 0;
   min-width: auto;
@@ -200,15 +200,15 @@ const onSubmit = () => {
 
 .browse-all-btn {
   background: rgba(52, 211, 153, 0.15);
-  color: #34d399;
-  border: 2px solid #34d399;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   padding: 12px 20px;
   border-radius: 25px;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  white-space: nowrap;
+  var(--color-light-primary)-space: nowrap;
   backdrop-filter: blur(10px);
 }
 </style>

@@ -1,4 +1,4 @@
-/* Global typography styles */
+/* Typographie globale - Charte Graphique EcoRide */
 
 h1,
 h2,
@@ -6,13 +6,55 @@ h3,
 h4,
 h5,
 h6 {
-  color: var(--color-heading);
-  margin: 0 0 8px 0;
-  font-weight: var(--font-weight-semibold);
+  color: var(--color-light-primary);
+  margin: 0 0 var(--spacing-md) 0;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
 }
 
-p,
+h1 {
+  font-size: calc(var(--font-size-xl) * 2);
+}
+
+h2 {
+  font-size: calc(var(--font-size-xl) * 1.5);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+}
+
+h5,
+h6 {
+  font-size: var(--font-size-base);
+}
+
+p {
+  color: var(--color-light-secondary);
+  margin: 0 0 var(--spacing-md) 0;
+  line-height: 1.6;
+}
+
 span,
 label {
-  color: var(--color-text);
+  color: var(--color-light-secondary);
+}
+
+strong,
+b {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-light-primary);
+}
+
+em,
+i {
+  font-style: italic;
+}
+
+small {
+  font-size: var(--font-size-sm);
 }

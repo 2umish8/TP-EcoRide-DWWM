@@ -53,25 +53,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.password-confirmation-success {
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  background-color: #f0fdf4;
-  color: #166534;
-  border: 1px solid #bbf7d0;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-}
-
-.password-confirmation-error {
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  background-color: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-}
-</style>

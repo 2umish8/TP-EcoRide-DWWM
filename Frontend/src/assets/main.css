@@ -6,10 +6,11 @@
 @import './css/_layout.css';
 @import './css/_utilities.css';
 @import './css/_buttons.css';
-@import './css/_cards.css';
+@import './css/_card-base.css';
+@import './css/_trip-card.css';
+@import './css/_card-variations.css';
 @import './css/_forms.css';
 @import './css/_modals.css';
 @import './css/_animations.css';
-@import './css/_overrides.css';
 
 /* Keep only imports in main.css; all content extracted to partials. */

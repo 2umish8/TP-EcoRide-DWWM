@@ -842,7 +842,7 @@ export default {
 <style scoped>
 .profile-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
+  background: linear-gradient(135deg, var(--color-dark-primary) 0%, var(--color-dark-secondary) 100%);
   padding: 1rem 20px 40px;
 }
 
@@ -855,16 +855,16 @@ export default {
 }
 
 .profile-header {
-  background: #1a1a1a;
+  background: var(--color-dark-primary);
   border-radius: 20px;
   padding: 30px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-dark-secondary);
 }
 
 .profile-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-light-primary);
   margin-bottom: 20px;
   text-align: center;
 }
@@ -880,7 +880,7 @@ export default {
   height: 80px;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid #34d399;
+  border: 3px solid var(--color-primary);
 }
 
 .avatar-img {
@@ -892,13 +892,13 @@ export default {
 .avatar-placeholder {
   width: 100%;
   height: 100%;
-  background: #34d399;
+  background: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2rem;
   font-weight: bold;
-  color: white;
+  color: var(--color-light-primary);
 }
 
 .user-details {
@@ -908,12 +908,12 @@ export default {
 .user-name {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-light-primary);
   margin-bottom: 5px;
 }
 
 .user-email {
-  color: #cccccc;
+  color: var(--color-light-secondary);
   font-size: 1rem;
 }
 
@@ -921,16 +921,16 @@ export default {
 .propose-ride-card,
 .vehicles-card,
 .preferences-card {
-  background: #1a1a1a;
+  background: var(--color-dark-primary);
   border-radius: 20px;
   padding: 30px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-dark-secondary);
 }
 
 .card-title {
   font-size: 1.3rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-light-primary);
   margin-bottom: 20px;
 }
 
@@ -941,16 +941,16 @@ export default {
 }
 
 .role-option {
-  border: 2px solid #333;
+  border: 2px solid var(--color-dark-secondary);
   border-radius: 15px;
   padding: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
 }
 
 .role-option.active {
-  border-color: #34d399;
+  border-color: var(--color-primary);
   background: rgba(52, 211, 153, 0.1);
 }
 
@@ -969,20 +969,20 @@ export default {
 }
 
 .role-text h4 {
-  color: #ffffff;
+  color: var(--color-light-primary);
   font-size: 1.1rem;
   margin-bottom: 5px;
 }
 
 .role-text p {
-  color: #cccccc;
+  color: var(--color-light-secondary);
   font-size: 0.9rem;
 }
 
 .loading-indicator {
   text-align: center;
   padding: 40px 20px;
-  color: #cccccc;
+  color: var(--color-light-secondary);
 }
 
 .loading-spinner {
@@ -1005,8 +1005,8 @@ export default {
 }
 
 .add-btn {
-  background: #34d399;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-light-primary);
   border: none;
   padding: 10px 20px;
   border-radius: 10px;
@@ -1026,7 +1026,7 @@ export default {
 .empty-state {
   text-align: center;
   padding: 40px 20px;
-  color: #cccccc;
+  color: var(--color-light-secondary);
 }
 
 .empty-icon {
@@ -1049,23 +1049,23 @@ export default {
 }
 
 .vehicle-item {
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   border-radius: 12px;
   padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid #333;
+  border: 1px solid var(--color-dark-secondary);
 }
 
 .vehicle-info h4 {
-  color: #ffffff;
+  color: var(--color-light-primary);
   font-size: 1.1rem;
   margin-bottom: 5px;
 }
 
 .vehicle-details {
-  color: #cccccc;
+  color: var(--color-light-secondary);
   font-size: 0.9rem;
 }
 
@@ -1075,8 +1075,8 @@ export default {
 }
 
 .remove-btn {
-  background: #dc3545;
-  color: white;
+  background: var(--color-error);
+  color: var(--color-light-primary);
   border: none;
   padding: 8px 12px;
   border-radius: 8px;
@@ -1085,7 +1085,7 @@ export default {
 }
 
 .remove-btn:hover {
-  background: #c82333;
+  background: var(--color-error);
 }
 
 .preferences-grid {
@@ -1105,11 +1105,11 @@ export default {
 }
 
 .preference-item input[type='checkbox'] {
-  accent-color: #34d399;
+  accent-color: var(--color-primary);
 }
 
 .preference-label {
-  color: #ffffff;
+  color: var(--color-light-primary);
   font-size: 0.95rem;
 }
 
@@ -1122,7 +1122,7 @@ export default {
 }
 
 .form-label {
-  color: #ffffff;
+  color: var(--color-light-primary);
   font-weight: 600;
   font-size: 0.9rem;
 }
@@ -1131,10 +1131,10 @@ export default {
 .form-input,
 .form-textarea {
   padding: 12px 16px;
-  border: 2px solid #333;
+  border: 2px solid var(--color-dark-secondary);
   border-radius: 10px;
-  background: #2a2a2a;
-  color: #ffffff;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-primary);
   font-size: 0.95rem;
   width: 100%;
   max-width: 250px;
@@ -1170,14 +1170,14 @@ export default {
 
 /* View-specific modal overrides */
 .modal-content {
-  background: #1a1a1a;
+  background: var(--color-dark-primary);
   border-radius: 20px;
   padding: 30px;
   max-width: 600px;
   width: 90%;
   max-height: 90vh;
   overflow-y: auto;
-  border: 1px solid #333;
+  border: 1px solid var(--color-dark-secondary);
 }
 
 .modal-header {
@@ -1185,7 +1185,7 @@ export default {
 }
 
 .modal-header h3 {
-  color: #ffffff;
+  color: var(--color-light-primary);
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -1193,7 +1193,7 @@ export default {
 .close-btn {
   background: none;
   border: none;
-  color: #cccccc;
+  color: var(--color-light-secondary);
   font-size: 2rem;
   cursor: pointer;
   padding: 5px;
@@ -1202,8 +1202,8 @@ export default {
 }
 
 .close-btn:hover {
-  background: #333;
-  color: #ffffff;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-primary);
 }
 
 .vehicle-form {
@@ -1228,12 +1228,12 @@ export default {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #ffffff;
+  color: var(--color-light-primary);
   cursor: pointer;
 }
 
 .checkbox-label input[type='checkbox'] {
-  accent-color: #34d399;
+  accent-color: var(--color-primary);
 }
 
 .modal-actions {
@@ -1244,8 +1244,8 @@ export default {
 }
 
 .cancel-btn {
-  background: #6b7280;
-  color: white;
+  background: var(--color-gray-primary);
+  color: var(--color-light-primary);
   border: none;
   padding: 12px 24px;
   border-radius: 10px;
@@ -1255,12 +1255,12 @@ export default {
 }
 
 .cancel-btn:hover {
-  background: #555;
+  background: var(--color-gray-primary);
 }
 
 .submit-btn {
-  background: #34d399;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-light-primary);
   border: none;
   padding: 12px 24px;
   border-radius: 10px;
@@ -1274,7 +1274,7 @@ export default {
 
 .submit-btn:hover:not(:disabled) {
   background: var(--bs-primary);
-  color: #fff;
+  color: var(--color-light-primary);
   transform: translateY(-1px);
 }
 
@@ -1300,8 +1300,8 @@ export default {
 }
 
 .propose-btn {
-  background: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  color: var(--color-light-primary);
   border: none;
   padding: 15px 30px;
   border-radius: 15px;
@@ -1333,11 +1333,11 @@ export default {
 
 .no-vehicle-warning {
   background: rgba(255, 193, 7, 0.1);
-  border: 1px solid #ffc107;
+  border: 1px solid var(--color-warning);
   border-radius: 10px;
   padding: 15px;
   text-align: center;
-  color: #ffc107;
+  color: var(--color-warning);
   margin: 10px 0;
 }
 
@@ -1361,7 +1361,7 @@ export default {
   top: -35px;
   left: 0;
   background: rgba(255, 152, 0, 0.95);
-  color: #fff;
+  color: var(--color-light-primary);
   padding: 6px 12px;
   border-radius: 8px;
   font-size: 0.8rem;
@@ -1389,7 +1389,7 @@ export default {
 }
 
 .tooltip-text {
-  white-space: nowrap;
+  var(--color-light-primary)-space: nowrap;
 }
 
 @media (max-width: 768px) {
@@ -1422,7 +1422,7 @@ export default {
 }
 
 .success-modal .modal-header h3 {
-  color: #34d399;
+  color: var(--color-primary);
   font-size: 1.8rem;
   margin: 0;
 }
@@ -1434,7 +1434,7 @@ export default {
 }
 
 .success-message {
-  color: #ffffff;
+  color: var(--color-light-primary);
 }
 
 .success-message p {
@@ -1443,21 +1443,21 @@ export default {
 }
 
 .trip-summary {
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   border-radius: 12px;
   padding: 20px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-dark-secondary);
   text-align: left;
 }
 
 .trip-summary p {
   margin: 8px 0;
-  color: #cccccc;
+  color: var(--color-light-secondary);
   font-size: 0.95rem;
 }
 
 .trip-summary strong {
-  color: #ffffff;
+  color: var(--color-light-primary);
 }
 
 .success-actions {
@@ -1468,8 +1468,8 @@ export default {
 }
 
 .view-trip-btn {
-  background: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  color: var(--color-light-primary);
   border: none;
   padding: 12px 24px;
   border-radius: 12px;
@@ -1489,8 +1489,8 @@ export default {
 }
 
 .dismiss-btn {
-  background: #6b7280;
-  color: white;
+  background: var(--color-gray-primary);
+  color: var(--color-light-primary);
   border: none;
   padding: 12px 24px;
   border-radius: 12px;
@@ -1500,7 +1500,7 @@ export default {
 }
 
 .dismiss-btn:hover {
-  background: #555;
+  background: var(--color-gray-primary);
   transform: translateY(-1px);
 }
 

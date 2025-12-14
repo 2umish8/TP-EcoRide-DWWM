@@ -59,21 +59,21 @@ const goToCarpooling = () => {
 }
 
 .accueil {
-  background-color: #1a1a1a;
+  background-color: var(--color-dark-primary);
   border: none;
   min-height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
-  color: white;
+  color: var(--color-light-primary);
   margin: 0;
   padding: 0;
 }
 
 .hero-background {
   flex: 1;
-  background: #1a1a1a url('@/assets/Accueil BG.png') center/cover no-repeat;
+  background: var(--color-dark-primary) url('@/assets/Accueil BG.png') center/cover no-repeat;
   border-radius: 0px 0px 80px 0px; /* Réduit de 100px à 80px pour moins de clipping */
   display: flex;
   align-items: center;
@@ -92,14 +92,14 @@ const goToCarpooling = () => {
   width: 60%;
   height: 100%;
   background:
-    radial-gradient(circle at 15% 15%, #34d399 18px, transparent 18px),
-    radial-gradient(circle at 35% 25%, #22c55e 22px, transparent 22px),
-    radial-gradient(circle at 25% 45%, #16a34a 25px, transparent 25px),
-    radial-gradient(circle at 45% 65%, #34d399 20px, transparent 20px),
-    radial-gradient(circle at 12% 80%, #22c55e 24px, transparent 24px),
-    radial-gradient(circle at 50% 35%, #34d399 16px, transparent 16px),
-    radial-gradient(circle at 20% 70%, #16a34a 19px, transparent 19px),
-    radial-gradient(circle at 40% 85%, #22c55e 17px, transparent 17px);
+    radial-gradient(circle at 15% 15%, var(--color-primary) 18px, transparent 18px),
+    radial-gradient(circle at 35% 25%, var(--color-primary-hover) 22px, transparent 22px),
+    radial-gradient(circle at 25% 45%, var(--color-primary-hover) 25px, transparent 25px),
+    radial-gradient(circle at 45% 65%, var(--color-primary) 20px, transparent 20px),
+    radial-gradient(circle at 12% 80%, var(--color-primary-hover) 24px, transparent 24px),
+    radial-gradient(circle at 50% 35%, var(--color-primary) 16px, transparent 16px),
+    radial-gradient(circle at 20% 70%, var(--color-primary-hover) 19px, transparent 19px),
+    radial-gradient(circle at 40% 85%, var(--color-primary-hover) 17px, transparent 17px);
   opacity: 0.3;
   z-index: 0;
   filter: blur(2px);
@@ -132,7 +132,7 @@ const goToCarpooling = () => {
     sans-serif;
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-light-primary);
   margin: 0;
   line-height: 1.1;
   margin-bottom: 0.5rem;
@@ -141,14 +141,14 @@ const goToCarpooling = () => {
 }
 
 .eco-highlight {
-  color: #34d399;
+  color: var(--color-primary);
 }
 
 .mobile-slogan {
   font-family: 'Inter', sans-serif;
   font-size: 1.8rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-light-primary);
   margin: 0;
   line-height: 1.2;
   display: none; /* Masqué par défaut, affiché seulement sur mobile */
@@ -158,7 +158,7 @@ const goToCarpooling = () => {
   font-family: 'Inter', sans-serif;
   font-size: 1.2rem; /* Réduit de 1.5rem à 1.2rem */
   font-weight: 300;
-  color: #e0e0e0;
+  color: var(--color-light-secondary);
   margin-top: 1rem;
   max-width: 700px;
   line-height: 1.4;
@@ -184,7 +184,7 @@ const goToCarpooling = () => {
 
 .scroll-icon {
   font-size: 2rem;
-  color: #ffffff;
+  color: var(--color-light-primary);
   animation: bounce 2s infinite;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -208,7 +208,7 @@ const goToCarpooling = () => {
   font-family: 'Inter', sans-serif;
   font-size: 1.5rem;
   font-weight: 300;
-  color: #ffffff;
+  color: var(--color-light-primary);
   text-align: center;
   letter-spacing: -0.08px;
   cursor: pointer;
@@ -216,7 +216,7 @@ const goToCarpooling = () => {
 }
 
 .en-savoir-plus:hover {
-  color: #2e7d32;
+  color: var(--color-primary);
 }
 
 .search-section {
@@ -246,7 +246,7 @@ const goToCarpooling = () => {
   align-items: center;
   flex: 1;
   background: rgba(213, 213, 213, 0.1);
-  border-color: #666666;
+  border-color: var(--color-gray-primary);
   border-radius: 25px;
   margin: 0 4px;
   padding: 0 20px;
@@ -263,7 +263,7 @@ const goToCarpooling = () => {
 }
 
 .input-group i {
-  color: #34d399;
+  color: var(--color-primary);
   font-size: 1.2rem;
   margin-right: 10px;
 }
@@ -272,7 +272,7 @@ const goToCarpooling = () => {
   border: none;
   background: transparent;
   font-size: 1rem;
-  color: #ffffff;
+  color: var(--color-light-primary);
   flex: 1;
   padding: 15px 0;
   outline: none;
@@ -289,12 +289,12 @@ const goToCarpooling = () => {
 }
 
 .search-input::placeholder {
-  color: #cccccc;
+  color: var(--color-light-secondary);
 }
 
 .search-btn {
-  background: #34d399;
-  color: #1a1a1a;
+  background: var(--color-primary);
+  color: var(--color-dark-primary);
   border: none;
   padding: 15px 25px;
   border-radius: 25px;
@@ -305,7 +305,7 @@ const goToCarpooling = () => {
   align-items: center;
   gap: 10px;
   transition: background 0.3s ease;
-  white-space: nowrap;
+  var(--color-light-primary)-space: nowrap;
   margin-left: 8px;
   flex-shrink: 0; /* Le bouton ne rétrécit jamais */
   min-width: auto; /* Pas de largeur minimum imposée par le navigateur */
@@ -313,7 +313,7 @@ const goToCarpooling = () => {
 
 .search-btn:hover {
   background: var(--bs-primary);
-  color: #fff;
+  color: var(--color-light-primary);
 }
 
 .search-icon {
@@ -331,21 +331,21 @@ const goToCarpooling = () => {
 
 .browse-all-btn {
   background: rgba(52, 211, 153, 0.15);
-  color: #34d399;
-  border: 2px solid #34d399;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   padding: 12px 20px;
   border-radius: 25px;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  white-space: nowrap;
+  var(--color-light-primary)-space: nowrap;
   backdrop-filter: blur(10px);
 }
 
 .browse-all-btn:hover {
   background: var(--bs-primary);
-  color: #fff;
+  color: var(--color-light-primary);
   transform: translateY(-2px);
 }
 
@@ -355,12 +355,12 @@ const goToCarpooling = () => {
   justify-content: space-between;
   padding: 20px 60px;
   height: 56px;
-  background-color: #1a1a1a;
+  background-color: var(--color-dark-primary);
   width: 100%;
 }
 
 .arrow-down {
-  color: #ffffff;
+  color: var(--color-light-primary);
   font-size: 1.2rem;
   animation: arrowBounce 2s infinite ease-in-out;
 }
@@ -380,7 +380,7 @@ const goToCarpooling = () => {
   gap: 40px;
   font-family: 'Inter', sans-serif;
   font-size: 0.9rem;
-  color: #cccccc;
+  color: var(--color-light-secondary);
 }
 
 .footer-links span {
@@ -389,14 +389,14 @@ const goToCarpooling = () => {
 }
 
 .footer-links span:hover {
-  color: #2e7d32;
+  color: var(--color-primary);
 }
 
 /* Section À propos de nous */
 .about-section {
-  background-color: #1a1a1a;
+  background-color: var(--color-dark-primary);
   padding: 80px 60px;
-  color: #ffffff;
+  color: var(--color-light-primary);
 }
 
 .about-container {
@@ -425,7 +425,7 @@ const goToCarpooling = () => {
   font-family: 'Inter', sans-serif;
   font-size: 2.5rem;
   font-weight: 600;
-  color: #34d399;
+  color: var(--color-primary);
   margin-bottom: 30px;
   letter-spacing: -0.02em;
 }
@@ -437,18 +437,18 @@ const goToCarpooling = () => {
 
 .about-paragraph {
   font-size: 1.1rem;
-  color: #e0e0e0;
+  color: var(--color-light-secondary);
   margin-bottom: 20px;
   font-weight: 300;
 }
 
 .about-values {
   font-size: 1.1rem;
-  color: #ffffff;
+  color: var(--color-light-primary);
   margin-top: 30px;
   padding: 20px;
   background: rgba(52, 211, 153, 0.1);
-  border-left: 4px solid #34d399;
+  border-left: 4px solid var(--color-primary);
   border-radius: 0 8px 8px 0;
 }
 

@@ -123,19 +123,19 @@ export default {
 }
 
 .strength-excellent {
-  background-color: #f0fdf4;
-  color: #166534;
-  border: 1px solid #bbf7d0;
+  background-color: rgba(143, 218, 179, 0.1);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
 }
 
 .strength-good {
-  background-color: #f0fdf4;
-  color: #166534;
-  border: 1px solid #bbf7d0;
+  background-color: rgba(143, 218, 179, 0.1);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
 }
 
 .strength-medium {
-  background-color: #fffbeb;
+  background-color: var(--color-light-primary) beb;
   color: #92400e;
   border: 1px solid #fde68a;
 }
@@ -154,7 +154,7 @@ export default {
 
 .strength-invalid {
   background-color: #f3f4f6;
-  color: #6b7280;
+  color: var(--color-gray-primary);
   border: 1px solid #d1d5db;
 }
 
@@ -174,23 +174,23 @@ export default {
 }
 
 .password-strength-progress.strength-excellent {
-  background-color: #22c55e;
+  background-color: var(--color-primary-hover);
 }
 
 .password-strength-progress.strength-good {
-  background-color: #22c55e;
+  background-color: var(--color-primary-hover);
 }
 
 .password-strength-progress.strength-medium {
-  background-color: #f59e0b;
+  background-color: var(--color-warning);
 }
 
 .password-strength-progress.strength-weak {
-  background-color: #ef4444;
+  background-color: var(--color-error);
 }
 
 .password-strength-progress.strength-very-weak {
-  background-color: #dc2626;
+  background-color: var(--color-error);
 }
 
 .password-strength-progress.strength-invalid {
@@ -201,7 +201,7 @@ export default {
   margin-top: 0.5rem;
   padding: 0.5rem;
   background-color: #fef2f2;
-  color: #dc2626;
+  color: var(--color-error);
   border: 1px solid #fecaca;
   border-radius: 0.375rem;
   font-size: 0.875rem;
@@ -219,13 +219,13 @@ export default {
 .password-requirements h4 {
   margin: 0 0 0.5rem 0;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-dark-secondary);
 }
 
 .password-requirements ul {
   margin: 0;
   padding-left: 1.25rem;
-  color: #6b7280;
+  color: var(--color-gray-primary);
 }
 
 .password-requirements li {

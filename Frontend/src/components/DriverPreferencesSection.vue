@@ -88,11 +88,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.preferences-card {
-  background: #111827;
-  padding: 20px;
-  border-radius: 12px;
-}
-</style>

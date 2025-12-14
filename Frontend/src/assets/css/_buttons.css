@@ -1,104 +1,166 @@
-/* Reusable buttons for the project (moved from eco-variables.css) */
+/* Boutons EcoRide - Charte Graphique */
 
-.eco-button {
+/* === BOUTON PRINCIPAL === */
+/* Utilisé pour les actions principales (soumettre un formulaire, etc.) */
+.btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-sm);
 
-  padding: 15px 25px;
-  border-radius: var(--radius-button);
+  padding: 12px 24px;
+  border-radius: var(--border-radius-button);
+
+  background-color: var(--color-primary);
+  color: var(--color-dark-primary);
+  border: none;
 
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   text-decoration: none;
   white-space: nowrap;
 
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
-  text-shadow: var(--text-shadow-inset);
-  box-shadow: var(--shadow-button);
-  transition: var(--transition-standard);
   cursor: pointer;
   user-select: none;
+  transition: var(--transition-standard);
 }
 
-.eco-button:hover {
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+  color: var(--color-light-primary);
   transform: translateY(-2px);
   box-shadow: var(--shadow-button-hover);
-  text-decoration: none;
 }
 
-.eco-button:active {
+.btn-primary:active {
   transform: translateY(0);
-  box-shadow: var(--shadow-button-active);
+  box-shadow: var(--shadow-button);
 }
 
-.eco-button:focus-visible {
-  outline: 2px solid var(--eco-beige);
-  outline-offset: 2px;
+.btn-primary:disabled {
+  background-color: var(--color-gray-primary);
+  color: var(--color-light-primary);
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
 }
 
-.eco-button--sm {
-  padding: 12px 20px;
+/* === BOUTON SECONDAIRE === */
+/* Utilisé pour les actions secondaires, souvent à côté d'un bouton principal */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+
+  padding: 12px 24px;
+  border-radius: var(--border-radius-button);
+
+  background-color: rgba(143, 218, 179, 0.1);
+  backdrop-filter: blur(8px);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  white-space: nowrap;
+
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition-standard);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-primary);
+  color: var(--color-dark-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-button-hover);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-button);
+}
+
+.btn-secondary:disabled {
+  background-color: rgba(122, 122, 122, 0.2);
+  color: var(--color-gray-primary);
+  border-color: var(--color-gray-primary);
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
+/* === LIEN/BOUTON DE NAVIGATION === */
+/* Utilisé pour la navigation entre les pages ou sections */
+.btn-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+
+  padding: 10px 20px;
+  border-radius: var(--border-radius-button);
+
+  background-color: transparent;
+  color: var(--color-light-primary);
+  border: none;
+
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  white-space: nowrap;
+
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition-fast);
+}
+
+.btn-nav:hover {
+  background-color: rgba(143, 218, 179, 0.15);
+}
+
+/* === LIENS INTERLIGNES === */
+/* Utilisé pour les liens dans le texte */
+.link {
+  color: var(--color-light-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.link:hover {
+  color: var(--color-secondary);
+  transform: translateY(-1px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.link:disabled {
+  color: var(--color-gray-primary);
+  text-decoration: none;
+  cursor: not-allowed;
+}
+
+/* === VARIANTES DE TAILLE === */
+.btn-sm {
+  padding: 8px 16px;
   font-size: var(--font-size-sm);
 }
 
-.eco-button--lg {
-  padding: 18px 30px;
+.btn-lg {
+  padding: 16px 32px;
   font-size: var(--font-size-lg);
 }
 
-.eco-button--connexion {
-  background: var(--eco-green);
-  box-shadow: var(--shadow-button);
-}
-
-.eco-button--connexion:hover {
-  background: var(--bs-primary);
-  color: #fff;
-  box-shadow: var(--shadow-button-hover);
-  transform: translateY(-2px);
-}
-
-.eco-button--inscription {
-  background: var(--eco-blue);
-  box-shadow: var(--shadow-button);
-}
-
-.eco-button--inscription:hover {
-  background: var(--eco-blue-hover);
-  box-shadow: var(--shadow-button-hover);
-  transform: translateY(-2px);
-}
-
-.eco-button--connexion:active,
-.eco-button--inscription:active {
-  transform: translateY(0);
-  box-shadow: var(--shadow-button-active);
-}
-
+/* === RESPONSIVE === */
 @media (max-width: 640px) {
-  .eco-button {
-    padding: 12px 20px;
+  .btn-primary,
+  .btn-secondary,
+  .btn-nav {
+    padding: 10px 20px;
     font-size: var(--font-size-sm);
   }
-}
-
-/* Primary eco button for actions */
-.eco-button--primary {
-  background: #34d399;
-  color: #1a1a1a;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 15px;
-  font-size: 0.95rem;
-  transition: background 0.2s;
-}
-.eco-button--primary:hover {
-  background: #22c55e;
 }

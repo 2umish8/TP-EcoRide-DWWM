@@ -172,7 +172,7 @@ const handleLogin = async () => {
 <style scoped>
 .login-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
+  background: linear-gradient(135deg, var(--color-dark-primary) 0%, var(--color-dark-secondary) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -182,11 +182,11 @@ const handleLogin = async () => {
 .login-container {
   max-width: 500px;
   width: 100%;
-  background: #1a1a1a;
+  background: var(--color-dark-primary);
   border-radius: 20px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   overflow: hidden;
-  border: 1px solid #333;
+  border: 1px solid var(--color-dark-secondary);
 }
 
 .login-card {
@@ -194,7 +194,7 @@ const handleLogin = async () => {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: #1a1a1a;
+  background: var(--color-dark-primary);
 }
 
 .login-header {
@@ -214,12 +214,12 @@ const handleLogin = async () => {
 .login-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-light-primary);
   margin-bottom: 8px;
 }
 
 .login-subtitle {
-  color: #cccccc;
+  color: var(--color-light-secondary);
   font-size: 1rem;
   line-height: 1.5;
 }
@@ -238,29 +238,29 @@ const handleLogin = async () => {
 
 .form-label {
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-light-primary);
   font-size: 0.9rem;
 }
 
 .form-input {
   padding: 15px 16px;
-  border: 2px solid #333;
+  border: 2px solid var(--color-dark-secondary);
   border-radius: 12px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: #2a2a2a;
-  color: #ffffff;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-primary);
 }
 
 .form-input:focus {
   outline: none;
   border-color: var(--bs-primary);
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.18);
 }
 
 .form-input::placeholder {
-  color: #888;
+  color: var(--color-gray-primary);
 }
 
 .form-input:disabled {
@@ -286,7 +286,7 @@ const handleLogin = async () => {
 }
 
 .password-toggle:hover {
-  background: #333;
+  background: var(--color-dark-secondary);
 }
 
 .form-options {
@@ -302,17 +302,17 @@ const handleLogin = async () => {
   gap: 8px;
   cursor: pointer;
   font-size: 0.9rem;
-  color: #cccccc;
+  color: var(--color-light-secondary);
 }
 
 .remember-me input[type='checkbox'] {
-  accent-color: #34d399;
+  accent-color: var(--color-primary);
 }
 
 .error-message {
-  background: #2d1b1b;
-  border: 1px solid #4a2020;
-  color: #ff6b6b;
+  background: var(--color-dark-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--color-error);
   padding: 12px 16px;
   border-radius: 8px;
   display: flex;
@@ -322,9 +322,9 @@ const handleLogin = async () => {
 }
 
 .success-message {
-  background: #1b2d1b;
-  border: 1px solid #204a20;
-  color: #4ade80;
+  background: var(--color-dark-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--color-primary);
   padding: 12px 16px;
   border-radius: 8px;
   display: flex;
@@ -334,8 +334,8 @@ const handleLogin = async () => {
 }
 
 .login-btn {
-  background: #34d399;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-light-primary);
   border: none;
   padding: 16px 24px;
   border-radius: 12px;
@@ -351,7 +351,7 @@ const handleLogin = async () => {
 
 .login-btn:hover:not(:disabled) {
   background: var(--bs-primary);
-  color: #fff;
+  color: var(--color-light-primary);
   transform: translateY(-1px);
 }
 
@@ -367,12 +367,12 @@ const handleLogin = async () => {
 }
 
 .signup-link p {
-  color: #cccccc;
+  color: var(--color-light-secondary);
   margin-bottom: 12px;
 }
 
 .signup-btn {
-  color: #34d399;
+  color: var(--color-primary);
   text-decoration: none;
   font-weight: 600;
   padding: 8px 16px;
@@ -382,7 +382,7 @@ const handleLogin = async () => {
 
 .signup-btn:hover {
   background: var(--bs-primary);
-  color: #fff;
+  color: var(--color-light-primary);
 }
 
 /* Responsive */

@@ -526,9 +526,9 @@ onMounted(() => {
 <style scoped>
 .search-results {
   min-height: 100vh;
-  background-color: #1a1a1a;
+  background-color: var(--color-dark-primary);
   padding: 20px 20px 40px;
-  color: white;
+  color: var(--color-light-primary);
 }
 
 .search-header {
@@ -537,7 +537,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   padding: 25px 30px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -547,7 +547,7 @@ onMounted(() => {
 .search-form-compact {
   max-width: 1200px;
   margin: 0 auto 30px;
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -567,15 +567,15 @@ onMounted(() => {
   flex: 1;
   min-width: 150px;
   padding: 12px 15px;
-  border: 1px solid #444;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: #1a1a1a;
-  color: white;
+  background: var(--color-dark-primary);
+  color: var(--color-light-primary);
   font-size: 0.9rem;
 }
 
 .search-input-compact::placeholder {
-  color: #999;
+  color: var(--color-gray-primary);
 }
 
 .search-input-compact:focus {
@@ -584,8 +584,8 @@ onMounted(() => {
 }
 
 .search-btn-compact {
-  background: #34d399;
-  color: #1a1a1a;
+  background: var(--color-primary);
+  color: var(--color-dark-primary);
   border: none;
   padding: 12px 20px;
   border-radius: 8px;
@@ -593,12 +593,12 @@ onMounted(() => {
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease;
-  white-space: nowrap;
+  var(--color-light-primary)-space: nowrap;
 }
 
 .search-btn-compact:hover {
   background: var(--bs-primary);
-  color: #fff;
+  color: var(--color-light-primary);
 }
 
 /* États de chargement et d'erreur */
@@ -607,13 +607,13 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   padding: 40px;
-  color: #999;
+  color: var(--color-gray-primary);
 }
 
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #444;
+  border: 3px solid var(--border-color);
   border-top: 3px solid var(--bs-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -621,7 +621,7 @@ onMounted(() => {
 }
 
 .error-state {
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   padding: 30px;
   border-radius: 12px;
   text-align: center;
@@ -629,13 +629,13 @@ onMounted(() => {
 }
 
 .error-state h3 {
-  color: #ef4444;
+  color: var(--color-error);
   margin-bottom: 10px;
 }
 
 .retry-btn {
-  background: #34d399;
-  color: #1a1a1a;
+  background: var(--color-primary);
+  color: var(--color-dark-primary);
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
@@ -644,13 +644,13 @@ onMounted(() => {
 }
 .retry-btn:hover {
   background: var(--bs-primary);
-  color: #fff;
+  color: var(--color-light-primary);
   transform: translateY(-1px);
 }
 
 /* Alternative pour aucun résultat */
 .no-results-alternative {
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   padding: 40px;
   border-radius: 12px;
   text-align: center;
@@ -658,7 +658,7 @@ onMounted(() => {
 }
 
 .no-results-alternative h2 {
-  color: #34d399;
+  color: var(--color-primary);
   margin-bottom: 15px;
 }
 
@@ -669,14 +669,14 @@ onMounted(() => {
   align-items: center;
   margin-top: 10px;
 
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--color-dark-secondary);
   font-size: 0.85rem;
-  color: #999;
+  color: var(--color-gray-primary);
 }
 
 .electric-badge {
-  background: #22c55e;
-  color: white;
+  background: var(--color-primary-hover);
+  color: var(--color-light-primary);
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 0.75rem;
@@ -694,16 +694,16 @@ onMounted(() => {
 .rating-select {
   width: 100%;
   padding: 8px 12px;
-  background: #1a1a1a;
-  color: white;
-  border: 1px solid #444;
+  background: var(--color-dark-primary);
+  color: var(--color-light-primary);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   margin-top: 8px;
 }
 
 .reset-filters-btn {
-  background: #ef4444;
-  color: white;
+  background: var(--color-error);
+  color: var(--color-light-primary);
   border: none;
   padding: 8px 16px;
   border-radius: 6px;
@@ -714,13 +714,13 @@ onMounted(() => {
 }
 
 .reset-filters-btn:hover {
-  background: #dc2626;
+  background: var(--color-error);
 }
 
 .results-title {
   font-size: 1.8rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-light-primary);
   margin-bottom: 8px;
 }
 
@@ -731,28 +731,28 @@ onMounted(() => {
 }
 
 .browse-message {
-  color: #34d399;
+  color: var(--color-primary);
   font-style: italic;
 }
 
 .route {
   font-size: 1.1rem;
   font-weight: 500;
-  color: #34d399;
+  color: var(--color-primary);
 }
 
 .date {
   font-size: 0.95rem;
-  color: #ccc;
+  color: var(--color-light-secondary);
 }
 
 .results-count {
   font-size: 1rem;
-  color: #ccc;
-  background: #1a1a1a;
+  color: var(--color-light-secondary);
+  background: var(--color-dark-primary);
   padding: 8px 16px;
   border-radius: 20px;
-  border: 1px solid #444;
+  border: 1px solid var(--border-color);
 }
 
 .results-container {
@@ -764,14 +764,14 @@ onMounted(() => {
 }
 
 .filters-sidebar {
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   height: fit-content;
   position: sticky;
   top: 20px;
-  border: 1px solid #444;
+  border: 1px solid var(--border-color);
   min-width: 260px;
   max-width: 320px;
   margin-right: 32px;
@@ -780,7 +780,7 @@ onMounted(() => {
 .filters-sidebar h3 {
   font-size: 1.3rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-light-primary);
   margin-bottom: 20px;
 }
 
@@ -791,19 +791,19 @@ onMounted(() => {
 .filter-group h4 {
   font-size: 1rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-light-primary);
   margin-bottom: 12px;
 }
 
 .price-slider {
   width: 100%;
   margin-bottom: 8px;
-  accent-color: #34d399;
+  accent-color: var(--color-primary);
 }
 
 .price-value {
   font-weight: 600;
-  color: #34d399;
+  color: var(--color-primary);
 }
 
 .time-filters,
@@ -820,12 +820,12 @@ onMounted(() => {
   gap: 8px;
   cursor: pointer;
   padding: 4px 0;
-  color: #ccc;
+  color: var(--color-light-secondary);
 }
 
 .time-option input,
 .feature-option input {
-  accent-color: #34d399;
+  accent-color: var(--color-primary);
 }
 
 .no-results {
@@ -836,21 +836,21 @@ onMounted(() => {
 }
 
 .no-results-content {
-  background: #2a2a2a;
+  background: var(--color-dark-secondary);
   border-radius: 12px;
   padding: 40px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  border: 1px solid #444;
+  border: 1px solid var(--border-color);
 }
 
 .no-results h2 {
   font-size: 1.8rem;
-  color: white;
+  color: var(--color-light-primary);
   margin-bottom: 16px;
 }
 
 .no-results p {
-  color: #ccc;
+  color: var(--color-light-secondary);
   font-size: 1.1rem;
   margin-bottom: 24px;
   line-height: 1.6;
@@ -863,8 +863,8 @@ onMounted(() => {
 }
 
 .btn-primary {
-  background: #34d399;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-light-primary);
   border: none;
   padding: 12px 24px;
   border-radius: 8px;
@@ -875,13 +875,13 @@ onMounted(() => {
 
 .btn-primary:hover {
   background: var(--bs-primary);
-  color: #fff;
+  color: var(--color-light-primary);
 }
 
 .btn-secondary {
   background: transparent;
-  color: #34d399;
-  border: 2px solid #34d399;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
@@ -891,7 +891,7 @@ onMounted(() => {
 
 .btn-secondary:hover {
   background: var(--bs-primary);
-  color: #fff;
+  color: var(--color-light-primary);
 }
 
 /* Responsive */
@@ -1092,17 +1092,17 @@ onMounted(() => {
 }
 
 .dot.start {
-  background: #34d399;
+  background: var(--color-primary);
 }
 
 .dot.end {
-  background: #ef4444;
+  background: var(--color-error);
 }
 
 .line {
   flex: 1;
   height: 2px;
-  background: linear-gradient(to right, #34d399, #ef4444);
+  background: linear-gradient(to right, var(--color-primary), var(--color-error));
   border-radius: 1px;
 }
 
@@ -1117,12 +1117,12 @@ onMounted(() => {
 .departure-time,
 .arrival-time {
   font-weight: 600;
-  color: white;
+  color: var(--color-light-primary);
 }
 
 .duration {
   font-size: 0.85rem;
-  color: #ccc;
+  color: var(--color-light-secondary);
 }
 
 .trip-details {
@@ -1142,12 +1142,12 @@ onMounted(() => {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 2px solid #444;
+  border: 2px solid var(--border-color);
 }
 
 .driver-name {
   font-weight: 600;
-  color: white;
+  color: var(--color-light-primary);
   display: block;
   cursor: pointer;
   transition: color 0.3s ease;
@@ -1160,12 +1160,12 @@ onMounted(() => {
 
 .driver-rating {
   font-size: 0.85rem;
-  color: #ccc;
+  color: var(--color-light-secondary);
   margin-top: 2px;
 }
 
 .rating {
-  color: #f59e0b;
+  color: var(--color-warning);
 }
 
 .trip-info {
@@ -1177,7 +1177,7 @@ onMounted(() => {
 
 .seats-available {
   font-size: 0.9rem;
-  color: #ccc;
+  color: var(--color-light-secondary);
 }
 
 .price {
@@ -1189,12 +1189,12 @@ onMounted(() => {
 .amount {
   font-size: 1.4rem;
   font-weight: 700;
-  color: #34d399;
+  color: var(--color-primary);
 }
 
 .per-person {
   font-size: 0.8rem;
-  color: #ccc;
+  color: var(--color-light-secondary);
 }
 
 .trip-features {
@@ -1204,11 +1204,11 @@ onMounted(() => {
 }
 
 .feature-tag {
-  background: #1a1a1a;
-  color: #34d399;
+  background: var(--color-dark-primary);
+  color: var(--color-primary);
   padding: 4px 10px;
   border-radius: 16px;
   font-size: 0.8rem;
-  border: 1px solid #444;
+  border: 1px solid var(--border-color);
 }
 </style>

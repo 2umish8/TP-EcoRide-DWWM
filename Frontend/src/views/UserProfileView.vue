@@ -210,8 +210,8 @@ onMounted(() => {
   margin: 0 auto;
   padding: 20px;
   min-height: 100vh;
-  background: #1a1a1a;
-  color: #ffffff;
+  background: var(--color-dark-primary);
+  color: var(--color-light-primary);
 }
 
 .star .inactive {
@@ -226,9 +226,9 @@ onMounted(() => {
 }
 
 .back-button {
-  background: #2a2a2a;
-  border: 2px solid #333;
-  color: #ffffff;
+  background: var(--color-dark-secondary);
+  border: 2px solid var(--color-dark-secondary);
+  color: var(--color-light-primary);
   padding: 12px 20px;
   border-radius: 12px;
   cursor: pointer;
@@ -241,7 +241,7 @@ onMounted(() => {
 }
 
 .back-button:hover {
-  background: #333;
+  background: var(--color-dark-secondary);
   border-color: var(--bs-primary);
   transform: translateX(-2px);
 }
@@ -250,7 +250,7 @@ onMounted(() => {
   margin: 0;
   font-size: 2rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-light-primary);
 }
 
 .loading-container,
@@ -266,7 +266,7 @@ onMounted(() => {
 .loading-spinner {
   width: 50px;
   height: 50px;
-  border: 3px solid #333;
+  border: 3px solid var(--color-dark-secondary);
   border-top: 3px solid var(--bs-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -274,9 +274,9 @@ onMounted(() => {
 }
 
 .error-card {
-  background: #2d1b1b;
-  border: 1px solid #4a2020;
-  color: #ff6b6b;
+  background: var(--color-dark-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--color-error);
   padding: 30px;
   border-radius: 12px;
   display: flex;
@@ -288,12 +288,12 @@ onMounted(() => {
 
 .error-icon {
   font-size: 2rem;
-  color: #ff6b6b;
+  color: var(--color-error);
 }
 
 .retry-button {
-  background: #34d399;
-  color: #1a1a1a;
+  background: var(--color-primary);
+  color: var(--color-dark-primary);
   border: none;
   padding: 12px 24px;
   border-radius: 12px;
@@ -304,7 +304,7 @@ onMounted(() => {
 
 .retry-button:hover {
   background: var(--bs-primary);
-  color: #fff;
+  color: var(--color-light-primary);
   transform: translateY(-1px);
 }
 
@@ -315,8 +315,8 @@ onMounted(() => {
 }
 
 .user-info-card {
-  background: #2a2a2a;
-  border: 2px solid #333;
+  background: var(--color-dark-secondary);
+  border: 2px solid var(--color-dark-secondary);
   border-radius: 16px;
   padding: 30px;
   display: flex;
@@ -339,7 +339,7 @@ onMounted(() => {
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #34d399;
+  border: 4px solid var(--color-primary);
   box-shadow: 0 4px 20px rgba(52, 211, 153, 0.3);
 }
 
@@ -350,12 +350,12 @@ onMounted(() => {
 .user-details h2 {
   margin: 0 0 10px 0;
   font-size: 2rem;
-  color: #ffffff;
+  color: var(--color-light-primary);
   font-weight: 700;
 }
 
 .member-since {
-  color: #cccccc;
+  color: var(--color-light-secondary);
   margin: 0 0 20px 0;
   font-size: 0.9rem;
 }
@@ -373,12 +373,12 @@ onMounted(() => {
   display: block;
   font-size: 1.5rem;
   font-weight: bold;
-  color: #34d399;
+  color: var(--color-primary);
 }
 
 .stat-label {
   font-size: 0.8rem;
-  color: #cccccc;
+  color: var(--color-light-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -390,40 +390,40 @@ onMounted(() => {
 }
 
 .role-badge {
-  background: #34d399;
-  color: #1a1a1a;
+  background: var(--color-primary);
+  color: var(--color-dark-primary);
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  border: 2px solid #34d399;
+  border: 2px solid var(--color-primary);
   transition: all 0.3s ease;
 }
 
 .role-badge:hover {
   background: var(--bs-primary);
   border-color: var(--bs-primary);
-  color: #fff;
+  color: var(--color-light-primary);
   transform: translateY(-1px);
 }
 
 .reviews-section {
-  background: #2a2a2a;
-  border: 2px solid #333;
+  background: var(--color-dark-secondary);
+  border: 2px solid var(--color-dark-secondary);
   border-radius: 16px;
   padding: 30px;
 }
 
 .reviews-section h3 {
   margin: 0 0 20px 0;
-  color: #ffffff;
+  color: var(--color-light-primary);
   font-size: 1.3rem;
   font-weight: 600;
 }
 
 .no-reviews {
   text-align: center;
-  color: #cccccc;
+  color: var(--color-light-secondary);
   padding: 40px 0;
   display: flex;
   flex-direction: column;
@@ -439,7 +439,7 @@ onMounted(() => {
 .no-reviews-icon {
   width: 48px;
   height: 48px;
-  color: #ffffff;
+  color: var(--color-light-primary);
   font-size: 48px;
 }
 
@@ -450,15 +450,15 @@ onMounted(() => {
 }
 
 .review-card {
-  background: #333;
+  background: var(--color-dark-secondary);
   border-radius: 12px;
   padding: 20px;
-  border-left: 4px solid #34d399;
+  border-left: 4px solid var(--color-primary);
   transition: all 0.3s ease;
 }
 
 .review-card:hover {
-  background: #3a3a3a;
+  background: var(--color-dark-secondary);
   transform: translateX(4px);
 }
 
@@ -480,12 +480,12 @@ onMounted(() => {
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #34d399;
+  border: 2px solid var(--color-primary);
 }
 
 .reviewer-name {
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-light-primary);
 }
 
 .review-rating {
@@ -495,19 +495,19 @@ onMounted(() => {
 
 .star {
   font-size: 0.9rem;
-  color: #ffffff;
+  color: var(--color-light-primary);
 }
 
 .review-comment {
   margin: 0 0 10px 0;
-  color: #cccccc;
+  color: var(--color-light-secondary);
   line-height: 1.5;
 }
 
 .review-date {
   margin: 0;
   font-size: 0.8rem;
-  color: #999;
+  color: var(--color-gray-primary);
 }
 
 @media (max-width: 768px) {

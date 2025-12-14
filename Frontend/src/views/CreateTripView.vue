@@ -364,8 +364,8 @@ export default {
 /* Vue principale */
 .create-trip {
   min-height: 100vh;
-  background-color: #1a1a1a;
-  color: #e9ecef;
+  background-color: var(--color-dark-primary);
+  color: var(--color-light-primary);
   padding: 2rem 1rem;
 }
 
@@ -378,13 +378,13 @@ export default {
 .page-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-light-primary);
   margin-bottom: 0.5rem;
 }
 
 .page-subtitle {
   font-size: 1.1rem;
-  color: #adb5bd;
+  color: var(--color-light-secondary);
   margin: 0;
 }
 
@@ -396,7 +396,7 @@ export default {
 
 /* Formulaire */
 .trip-form {
-  background: #2d3748;
+  background: var(--color-dark-secondary);
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -414,7 +414,7 @@ export default {
 .section-title {
   font-size: 1.3rem;
   font-weight: 600;
-  color: #28a745;
+  color: var(--color-primary);
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
@@ -437,7 +437,7 @@ export default {
 
 .form-group label {
   font-weight: 600;
-  color: #e9ecef;
+  color: var(--color-light-primary);
   font-size: 0.9rem;
 }
 
@@ -446,10 +446,10 @@ export default {
 .form-select,
 .form-textarea {
   padding: 0.75rem;
-  border: 2px solid #4a5568;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
-  background: #374151;
-  color: #e9ecef;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-primary);
   font-size: 1rem;
   transition: border-color 0.3s ease;
 }
@@ -458,11 +458,11 @@ export default {
 .form-select:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: #28a745;
+  border-color: var(--color-primary);
 }
 
 .form-input::placeholder {
-  color: #9ca3af;
+  color: var(--color-gray-primary);
 }
 
 .form-textarea {
@@ -472,14 +472,18 @@ export default {
 
 /* Section récapitulatif */
 .summary-section {
-  background: linear-gradient(135deg, #374151 0%, #2d3748 100%);
-  border: 2px solid #28a745;
+  background: linear-gradient(
+    135deg,
+    var(--color-dark-secondary) 0%,
+    var(--color-dark-secondary) 100%
+  );
+  border: 2px solid var(--color-primary);
   border-radius: 12px;
   padding: 1.5rem;
 }
 
 .trip-summary {
-  background: #1a1a1a;
+  background: var(--color-dark-primary);
   border-radius: 8px;
   padding: 1.5rem;
 }
@@ -495,11 +499,11 @@ export default {
 
 .route-point {
   flex: 1;
-  color: #e9ecef;
+  color: var(--color-light-primary);
 }
 
 .route-arrow {
-  color: #28a745;
+  color: var(--color-primary);
   font-weight: 700;
   font-size: 1.3rem;
 }
@@ -514,7 +518,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #4a5568;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .summary-item:last-child {
@@ -522,12 +526,12 @@ export default {
 }
 
 .summary-label {
-  color: #adb5bd;
+  color: var(--color-light-secondary);
   font-weight: 500;
 }
 
 .summary-value {
-  color: #e9ecef;
+  color: var(--color-light-primary);
   font-weight: 600;
 }
 
@@ -538,7 +542,7 @@ export default {
   justify-content: flex-end;
   margin-top: 2rem;
 
-  border-top: 1px solid #4a5568;
+  border-top: 1px solid var(--border-color);
 }
 
 .btn {
@@ -555,17 +559,17 @@ export default {
 }
 
 .btn-secondary {
-  background: #6c757d;
-  color: white;
+  background: var(--color-gray-primary);
+  color: var(--color-light-primary);
 }
 
 .btn-secondary:hover {
-  background: #5a6268;
+  background: var(--color-gray-primary);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: var(--color-light-primary);
 }
 
 .btn-primary:hover:not(:disabled) {

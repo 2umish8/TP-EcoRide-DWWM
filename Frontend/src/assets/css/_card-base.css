@@ -1,0 +1,92 @@
+/* Style de base commun à toutes les cartes - Charte Graphique EcoRide */
+
+.card {
+  background: var(--color-dark-secondary);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Titre de carte */
+.card h3 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-light-primary);
+}
+
+/* Texte de carte */
+.card p,
+.card span,
+.card label {
+  color: var(--color-light-secondary);
+}
+
+/* Éléments de détail dans les cartes */
+.card .detail-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background: var(--color-dark-primary);
+  border-radius: var(--spacing-sm);
+  border: 1px solid var(--border-color);
+}
+
+/* Avatar conducteur */
+.card .driver-avatar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  object-fit: cover;
+}
+
+/* Détails conducteur */
+.card .driver-details h4 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: var(--font-size-lg);
+  color: var(--color-light-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Notes/étoiles */
+.card .rating {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.card .stars {
+  color: var(--color-warning);
+  font-size: var(--font-size-base);
+}
+
+.card .rating-value {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+}
+
+/* Spécifications véhicule */
+.card .vehicle-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.card .spec-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-dark-primary);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  font-size: var(--font-size-sm);
+}
+
+.card .spec-icon {
+  color: var(--color-primary);
+}

@@ -1,39 +1,100 @@
-/* Modal layout and overlay */
+/* Modales EcoRide - Charte Graphique */
 
+/* === OVERLAY === */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
 }
 
-/* Default content container for modals */
-.modal-content,
-.modal-content-eco {
-  background: var(--bg-primary);
-  border-radius: var(--radius-card);
-  padding: 16px;
-  width: 100%;
+/* === CONTENU === */
+.modal-content {
+  background: var(--color-dark-secondary);
+  border-radius: var(--border-radius-card);
+  padding: var(--spacing-lg);
+  width: 90%;
   max-width: 720px;
   box-shadow: var(--shadow-card);
+  animation: fadeIn 0.3s ease-out;
+  border: 1px solid var(--border-color);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
+/* === HEADER === */
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 8px;
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--spacing-lg);
 }
 
 .modal-header h3 {
   margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-light-primary);
 }
 
+.modal-close {
+  background: transparent;
+  border: none;
+  color: var(--color-light-secondary);
+  font-size: var(--font-size-xl);
+  cursor: pointer;
+  padding: 4px;
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-light-primary);
+}
+
+/* === BODY === */
+.modal-body {
+  padding: var(--spacing-md) 0;
+  color: var(--color-light-secondary);
+}
+
+/* === FOOTER / ACTIONS === */
+.modal-footer,
 .modal-actions {
   display: flex;
-  gap: 8px;
+  gap: var(--spacing-md);
   justify-content: flex-end;
-  margin-top: 12px;
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-color);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 640px) {
+  .modal-content {
+    width: 95%;
+    padding: var(--spacing-md);
+    max-height: 95vh;
+  }
+
+  .modal-header h3 {
+    font-size: var(--font-size-lg);
+  }
+
+  .modal-footer,
+  .modal-actions {
+    flex-direction: column;
+  }
 }

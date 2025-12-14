@@ -1,13 +1,234 @@
-/* Placeholder for form styles */
+/* Formulaires EcoRide - Charte Graphique */
 
-.input-eco {
-  padding: 10px 12px;
-  border-radius: var(--radius-input);
+/* === LABELS === */
+label {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-light-primary);
+}
+
+/* === INPUTS === */
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='number'],
+input[type='tel'],
+input[type='url'],
+input[type='date'],
+input[type='time'],
+input[type='datetime-local'],
+textarea,
+select {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--border-radius-input);
+  border: 1px solid var(--border-color);
+  background-color: var(--color-dark-secondary);
+  color: var(--color-light-primary);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  transition: var(--transition-fast);
+}
+
+/* Focus state */
+input[type='text']:focus,
+input[type='email']:focus,
+input[type='password']:focus,
+input[type='number']:focus,
+input[type='tel']:focus,
+input[type='url']:focus,
+input[type='date']:focus,
+input[type='time']:focus,
+input[type='datetime-local']:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(143, 218, 179, 0.15);
+}
+
+/* Placeholder */
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-gray-primary);
+}
+
+/* Disabled state */
+input:disabled,
+textarea:disabled,
+select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--color-dark-primary);
+}
+
+/* === TEXTAREA === */
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* === SELECT === */
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23cacaca' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* === VALIDATION STATES === */
+/* Erreur */
+input.error,
+textarea.error,
+select.error {
+  border-color: var(--color-error);
+}
+
+input.error:focus,
+textarea.error:focus,
+select.error:focus {
+  box-shadow: 0 0 0 3px rgba(205, 92, 92, 0.15);
+}
+
+/* Succès */
+input.success,
+textarea.success,
+select.success {
+  border-color: var(--color-success);
+}
+
+input.success:focus,
+textarea.success:focus,
+select.success:focus {
+  box-shadow: 0 0 0 3px rgba(143, 218, 179, 0.15);
+}
+
+/* Messages de validation */
+.error-message {
+  display: block;
+  margin-top: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+}
+
+.success-message {
+  display: block;
+  margin-top: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-success);
+}
+
+/* === VALIDATION MOT DE PASSE === */
+.password-validation {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--color-dark-primary);
+  border-radius: var(--border-radius-input);
   border: 1px solid var(--border-color);
 }
 
-.input-eco:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.15);
-  border-color: var(--eco-blue);
+.password-strength-indicator {
+  margin-bottom: var(--spacing-md);
+}
+
+.password-strength-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-light-secondary);
+}
+
+.password-strength-bar {
+  height: 6px;
+  background: var(--color-dark-secondary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.password-strength-fill {
+  height: 100%;
+  transition: var(--transition-standard);
+  border-radius: 3px;
+}
+
+/* Forces du mot de passe */
+.password-strength-fill.very-weak {
+  width: 20%;
+  background: var(--color-error);
+}
+
+.password-strength-fill.weak {
+  width: 40%;
+  background: var(--color-error);
+}
+
+.password-strength-fill.medium {
+  width: 60%;
+  background: var(--color-warning);
+}
+
+.password-strength-fill.good {
+  width: 80%;
+  background: var(--color-primary);
+}
+
+.password-strength-fill.excellent {
+  width: 100%;
+  background: var(--color-primary);
+}
+
+/* Exigences du mot de passe */
+.password-requirements {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.password-requirements li {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 6px 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-light-secondary);
+}
+
+.password-requirements li.met {
+  color: var(--color-primary);
+}
+
+.password-requirements li.not-met {
+  color: var(--color-error);
+}
+
+/* === CHECKBOXES ET RADIOS === */
+input[type='checkbox'],
+input[type='radio'] {
+  width: auto;
+  margin-right: var(--spacing-sm);
+  cursor: pointer;
+}
+
+/* === GROUPES DE FORMULAIRE === */
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
 }

@@ -470,7 +470,7 @@ onMounted(async () => {
   max-width: 800px;
   margin: 20px auto;
   padding: 20px;
-  color: #fff;
+  color: var(--color-light-primary);
   min-height: 100vh;
 }
 
@@ -483,9 +483,9 @@ onMounted(async () => {
 }
 
 .back-btn {
-  background: #1a1a1a;
-  color: #fff;
-  border: 1px solid #333;
+  background: var(--color-dark-primary);
+  color: var(--color-light-primary);
+  border: 1px solid var(--color-dark-secondary);
   padding: 10px 16px;
   border-radius: 8px;
   cursor: pointer;
@@ -494,12 +494,12 @@ onMounted(async () => {
 }
 
 .back-btn:hover {
-  background: #333;
-  border-color: #555;
+  background: var(--color-dark-secondary);
+  border-color: var(--color-gray-primary);
 }
 
 .header h1 {
-  color: #fff;
+  color: var(--color-light-primary);
   margin: 0;
   font-size: 24px;
   font-weight: 600;
@@ -514,7 +514,7 @@ onMounted(async () => {
 .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #333;
+  border: 3px solid var(--color-dark-secondary);
   border-top: 3px solid var(--eco-green);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -524,14 +524,14 @@ onMounted(async () => {
 .error {
   text-align: center;
   padding: 40px 20px;
-  color: #ff6b6b;
+  color: var(--color-error);
 }
 
 .retry-btn,
 .search-btn {
-  background: #333;
-  color: #fff;
-  border: 1px solid #555;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-primary);
+  border: 1px solid var(--color-gray-primary);
   padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
@@ -541,7 +541,7 @@ onMounted(async () => {
 
 .retry-btn:hover,
 .search-btn:hover {
-  background: #555;
+  background: var(--color-gray-primary);
 }
 
 /* Cards */
@@ -572,7 +572,7 @@ onMounted(async () => {
 .route h2 {
   margin: 0 0 10px 0;
   font-size: 20px;
-  color: #fff;
+  color: var(--color-light-primary);
 }
 
 .duration-info {
@@ -580,9 +580,9 @@ onMounted(async () => {
   flex-direction: column;
   align-items: center;
   padding: 12px 16px;
-  background: #222;
+  background: var(--color-dark-secondary);
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-dark-secondary);
   min-width: 120px;
 }
 
@@ -600,7 +600,7 @@ onMounted(async () => {
 
 .duration-label {
   font-size: 11px;
-  color: #888;
+  color: var(--color-gray-primary);
   text-align: center;
 }
 
@@ -620,15 +620,15 @@ onMounted(async () => {
 .time-slot {
   text-align: center;
   padding: 16px;
-  background: #222;
+  background: var(--color-dark-secondary);
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-dark-secondary);
 }
 
 .time-slot .label {
   display: block;
   font-size: 12px;
-  color: #888;
+  color: var(--color-gray-primary);
   text-transform: uppercase;
   margin-bottom: 4px;
 }
@@ -644,7 +644,7 @@ onMounted(async () => {
 .time-slot .date {
   display: block;
   font-size: 13px;
-  color: #ccc;
+  color: var(--color-light-secondary);
 }
 
 /* Trip details, driver & vehicle styles are centralized in /assets/css/_cards.css; only minor view overrides kept here */
@@ -684,9 +684,9 @@ onMounted(async () => {
   align-items: center;
   gap: 10px;
   padding: 12px;
-  background: #222;
+  background: var(--color-dark-secondary);
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-dark-secondary);
 }
 
 .pref-icon {
@@ -695,13 +695,13 @@ onMounted(async () => {
 
 .pref-label {
   font-size: 13px;
-  color: #888;
+  color: var(--color-gray-primary);
   min-width: 70px;
 }
 
 .pref-value {
   font-size: 13px;
-  color: #fff;
+  color: var(--color-light-primary);
   font-weight: 500;
 }
 
@@ -713,9 +713,9 @@ onMounted(async () => {
 
 .review-item {
   padding: 16px;
-  background: #222;
+  background: var(--color-dark-secondary);
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-dark-secondary);
   margin-bottom: 12px;
 }
 
@@ -738,19 +738,19 @@ onMounted(async () => {
 
 .review-date {
   font-size: 12px;
-  color: #888;
+  color: var(--color-gray-primary);
 }
 
 .review-comment {
   margin: 0;
-  color: #ccc;
+  color: var(--color-light-secondary);
   font-size: 14px;
   line-height: 1.4;
 }
 
 .no-reviews {
   text-align: center;
-  color: #888;
+  color: var(--color-gray-primary);
   font-style: italic;
   padding: 20px;
 }
@@ -785,27 +785,27 @@ onMounted(async () => {
 }
 
 .participate-btn:disabled {
-  background: #444;
-  color: #888;
+  background: var(--border-color);
+  color: var(--color-gray-primary);
   cursor: not-allowed;
 }
 
 .details-btn {
-  background: #333;
-  color: #fff;
-  border: 1px solid #555;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-primary);
+  border: 1px solid var(--color-gray-primary);
 }
 
 .details-btn:hover {
-  background: #444;
-  border-color: #666;
+  background: var(--border-color);
+  border-color: var(--color-gray-primary);
 }
 
 /* Use global modal-overlay from assets/css/_modals.css */
 
 .confirmation-modal {
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: var(--color-dark-primary);
+  border: 1px solid var(--color-dark-secondary);
   border-radius: 16px;
   padding: 0;
   max-width: 500px;
@@ -817,7 +817,7 @@ onMounted(async () => {
 
 .modal-header {
   padding: 20px 24px 16px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--color-dark-secondary);
 }
 
 .modal-header h3 {
@@ -836,7 +836,7 @@ onMounted(async () => {
 }
 
 .participation-summary h4 {
-  color: #fff;
+  color: var(--color-light-primary);
   margin: 0 0 16px;
   font-size: 16px;
   font-weight: 600;
@@ -847,7 +847,7 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid #2a2a2a;
+  border-bottom: 1px solid var(--color-dark-secondary);
 }
 
 .summary-item:last-child {
@@ -855,12 +855,12 @@ onMounted(async () => {
 }
 
 .summary-item .label {
-  color: #888;
+  color: var(--color-gray-primary);
   font-size: 14px;
 }
 
 .summary-item .value {
-  color: #fff;
+  color: var(--color-light-primary);
   font-weight: 500;
 }
 
@@ -889,12 +889,12 @@ onMounted(async () => {
 
 .credits-current .label,
 .credits-after .label {
-  color: #888;
+  color: var(--color-gray-primary);
   font-size: 14px;
 }
 
 .credits-current .value {
-  color: #fff;
+  color: var(--color-light-primary);
   font-weight: 500;
 }
 
@@ -913,7 +913,7 @@ onMounted(async () => {
 
 .confirmation-warning p {
   margin: 0 0 8px;
-  color: #ccc;
+  color: var(--color-light-secondary);
   font-size: 13px;
   line-height: 1.4;
 }
@@ -926,7 +926,7 @@ onMounted(async () => {
   display: flex;
   gap: 12px;
   padding: 16px 24px 24px;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--color-dark-secondary);
 }
 
 .cancel-btn,
@@ -942,14 +942,14 @@ onMounted(async () => {
 }
 
 .cancel-btn {
-  background: #333;
-  color: #fff;
-  border: 1px solid #555;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-primary);
+  border: 1px solid var(--color-gray-primary);
 }
 
 .cancel-btn:hover:not(:disabled) {
-  background: #444;
-  border-color: #666;
+  background: var(--border-color);
+  border-color: var(--color-gray-primary);
 }
 
 .confirm-btn {
@@ -975,7 +975,7 @@ onMounted(async () => {
 .extra-info p {
   margin: 8px 0;
   font-size: 14px;
-  color: #ccc;
+  color: var(--color-light-secondary);
 }
 
 .extra-info strong {
@@ -986,7 +986,7 @@ onMounted(async () => {
 .not-found {
   text-align: center;
   padding: 60px 20px;
-  color: #888;
+  color: var(--color-gray-primary);
 }
 
 /* Driver name clickable styling */

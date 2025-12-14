@@ -1,5 +1,7 @@
-/* Utility classes and icon defaults (from main.css icon rules) */
+/* Classes utilitaires EcoRide - Charte Graphique */
 
+/* === ICÔNES === */
+/* Force la couleur blanche pour tous les icônes */
 .svg-inline--fa,
 .fa,
 .fas,
@@ -8,7 +10,7 @@
 .fab,
 svg[data-icon],
 i[class*='fa-'] {
-  color: #ffffff !important;
+  color: var(--color-light-primary) !important;
   fill: currentColor !important;
   stroke: currentColor !important;
   filter: none !important;
@@ -21,41 +23,161 @@ svg {
   stroke: currentColor !important;
 }
 
+/* === LIENS === */
+/* Liens génériques (non dans boutons) */
 a {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
+  color: var(--color-primary);
+  transition: var(--transition-fast);
   padding: 3px;
 }
 
 @media (hover: hover) {
   a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    background-color: rgba(143, 218, 179, 0.15);
   }
 }
 
-/* Common spinner utility */
+/* === SPINNERS / CHARGEMENT === */
 .loading-spinner,
 .spinner {
   display: inline-block;
   animation: spin 1s linear infinite;
+  color: var(--color-primary);
 }
 
-/* Badges (generic) */
-.badge {
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 4px 12px;
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+/* === CLASSES DE TEXTE === */
+.text-primary {
+  color: var(--color-primary);
 }
 
-.eco-badge {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  border-radius: 8px 0 12px 0;
+.text-secondary {
+  color: var(--color-secondary);
 }
 
-.my-trip-badge {
-  background: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
-  border-radius: 0 8px 0 12px;
+.text-light {
+  color: var(--color-light-primary);
+}
+
+.text-muted {
+  color: var(--color-light-secondary);
+}
+
+.text-error {
+  color: var(--color-error);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+/* === CLASSES DE FOND === */
+.bg-dark-primary {
+  background-color: var(--color-dark-primary);
+}
+
+.bg-dark-secondary {
+  background-color: var(--color-dark-secondary);
+}
+
+.bg-dark-tertiary {
+  background-color: var(--color-dark-tertiary);
+}
+
+/* === ESPACEMENTS === */
+.mt-xs {
+  margin-top: var(--spacing-xs);
+}
+.mt-sm {
+  margin-top: var(--spacing-sm);
+}
+.mt-md {
+  margin-top: var(--spacing-md);
+}
+.mt-lg {
+  margin-top: var(--spacing-lg);
+}
+.mt-xl {
+  margin-top: var(--spacing-xl);
+}
+
+.mb-xs {
+  margin-bottom: var(--spacing-xs);
+}
+.mb-sm {
+  margin-bottom: var(--spacing-sm);
+}
+.mb-md {
+  margin-bottom: var(--spacing-md);
+}
+.mb-lg {
+  margin-bottom: var(--spacing-lg);
+}
+.mb-xl {
+  margin-bottom: var(--spacing-xl);
+}
+
+.p-xs {
+  padding: var(--spacing-xs);
+}
+.p-sm {
+  padding: var(--spacing-sm);
+}
+.p-md {
+  padding: var(--spacing-md);
+}
+.p-lg {
+  padding: var(--spacing-lg);
+}
+.p-xl {
+  padding: var(--spacing-xl);
+}
+
+/* === VISIBILITÉ === */
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+/* === CENTRAGE === */
+.text-center {
+  text-align: center;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 640px) {
+  .mobile-hidden {
+    display: none;
+  }
+}
+
+@media (min-width: 641px) {
+  .desktop-only {
+    display: block;
+  }
+  .mobile-only {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .desktop-only {
+    display: none;
+  }
+  .mobile-only {
+    display: block;
+  }
 }

@@ -634,8 +634,8 @@ export default {
 /* Vue principale */
 .my-trips {
   min-height: 100vh;
-  background-color: #1a1a1a;
-  color: #e9ecef;
+  background-color: var(--color-dark-primary);
+  color: var(--color-light-primary);
   padding: 1rem 1rem;
 }
 
@@ -648,13 +648,13 @@ export default {
 .page-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-light-primary);
   margin-bottom: 0.5rem;
 }
 
 .page-subtitle {
   font-size: 1.1rem;
-  color: #adb5bd;
+  color: var(--color-light-secondary);
   margin: 0 0 2rem 0;
 }
 
@@ -674,10 +674,10 @@ export default {
 
 .tab-btn {
   padding: 0.75rem 1.5rem;
-  border: 2px solid #4a5568;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
-  background: #2d3748;
-  color: #adb5bd;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-secondary);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -691,13 +691,13 @@ export default {
 .tab-btn:hover {
   border-color: var(--bs-primary);
   color: var(--bs-primary);
-  background: #374151;
+  background: var(--color-dark-secondary);
 }
 
 .tab-btn.active {
   border-color: var(--bs-primary);
   background: var(--bs-primary);
-  color: white;
+  color: var(--color-light-primary);
   box-shadow: 0 2px 8px rgba(var(--bs-primary-rgb), 0.28);
 }
 
@@ -725,10 +725,10 @@ export default {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--color-gray-primary);
   opacity: 0;
   animation: fadeInHint 0.3s ease-in-out 0.5s forwards;
-  white-space: nowrap;
+  var(--color-light-primary)-space: nowrap;
 }
 
 .action-hint.invisible {
@@ -762,10 +762,10 @@ export default {
 .become-driver-state {
   text-align: center;
   padding: 3rem 2rem;
-  background: #2d3748;
+  background: var(--color-dark-secondary);
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  color: #e9ecef;
+  color: var(--color-light-primary);
 }
 
 .become-driver-state {
@@ -780,7 +780,7 @@ export default {
 
 .become-driver-description {
   font-size: 1.1rem;
-  color: #adb5bd;
+  color: var(--color-light-secondary);
   margin: 1.5rem 0 1rem 0;
 }
 
@@ -793,9 +793,9 @@ export default {
 
 .benefit-list li {
   padding: 0.75rem 0;
-  border-bottom: 1px solid #4a5568;
+  border-bottom: 1px solid var(--border-color);
   font-size: 1rem;
-  color: #e9ecef;
+  color: var(--color-light-primary);
 }
 
 .benefit-list li:last-child {
@@ -803,11 +803,11 @@ export default {
 }
 
 .become-driver-notice {
-  background: #374151;
+  background: var(--color-dark-secondary);
   padding: 1rem;
   border-radius: 8px;
   margin: 1.5rem 0;
-  border-left: 4px solid #28a745;
+  border-left: 4px solid var(--color-primary);
 }
 
 .become-driver-notice p {
@@ -834,8 +834,8 @@ export default {
 }
 
 .become-driver-btn {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: var(--color-light-primary);
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -854,9 +854,9 @@ export default {
 }
 
 .learn-more-btn {
-  background: #2d3748;
-  color: #e9ecef;
-  border: 2px solid #4a5568;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-primary);
+  border: 2px solid var(--border-color);
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
@@ -869,7 +869,7 @@ export default {
 }
 
 .learn-more-btn:hover {
-  background: #374151;
+  background: var(--color-dark-secondary);
   border-color: var(--bs-primary);
   color: var(--bs-primary);
 }
@@ -877,7 +877,7 @@ export default {
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
+  border: 4px solid var(--color-light-secondary);
   border-top: 4px solid var(--bs-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -892,8 +892,8 @@ export default {
 
 .retry-btn,
 .create-first-trip-btn {
-  background: #28a745;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-light-primary);
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
@@ -907,7 +907,7 @@ export default {
 
 .retry-btn:hover,
 .create-first-trip-btn:hover {
-  background: #218838;
+  background: var(--color-primary-hover);
 }
 
 /* Statistiques */
@@ -919,19 +919,19 @@ export default {
 }
 
 .stat-card {
-  background: #2d3748;
+  background: var(--color-dark-secondary);
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   text-align: center;
-  border-left: 4px solid #28a745;
+  border-left: 4px solid var(--color-primary);
   position: relative;
   overflow: hidden;
 }
 
 .stat-card.completed-trips {
-  background: linear-gradient(135deg, #2d3748 0%, #1a2e1a 100%);
-  border-left-color: #22c55e;
+  background: linear-gradient(135deg, var(--color-dark-secondary) 0%, var(--color-dark-tertiary) 100%);
+  border-left-color: var(--color-primary-hover);
 }
 
 .stat-card.completed-trips::before {
@@ -946,12 +946,12 @@ export default {
 }
 
 .stat-card.completed-trips .stat-number {
-  color: #22c55e;
+  color: var(--color-primary-hover);
 }
 
 .stat-card.upcoming-trips {
-  background: linear-gradient(135deg, #2d3748 0%, #2a1f1a 100%);
-  border-left-color: #f59e0b;
+  background: linear-gradient(135deg, var(--color-dark-secondary) 0%, var(--color-dark-tertiary) 100%);
+  border-left-color: var(--color-warning);
 }
 
 .stat-card.upcoming-trips::before {
@@ -966,12 +966,12 @@ export default {
 }
 
 .stat-card.upcoming-trips .stat-number {
-  color: #f59e0b;
+  color: var(--color-warning);
 }
 
 .stat-card.passengers-transported {
-  background: linear-gradient(135deg, #2d3748 0%, #251a2e 100%);
-  border-left-color: #8b5cf6;
+  background: linear-gradient(135deg, var(--color-dark-secondary) 0%, var(--color-dark-tertiary) 100%);
+  border-left-color: var(--color-primary);
 }
 
 .stat-card.passengers-transported::before {
@@ -986,12 +986,12 @@ export default {
 }
 
 .stat-card.passengers-transported .stat-number {
-  color: #8b5cf6;
+  color: var(--color-primary);
 }
 
 .stat-card.eco-impact {
-  background: linear-gradient(135deg, #2d3748 0%, #1a2332 100%);
-  border-left-color: #20c997;
+  background: linear-gradient(135deg, var(--color-dark-secondary) 0%, var(--color-dark-tertiary) 100%);
+  border-left-color: var(--color-secondary);
 }
 
 .stat-card.eco-impact::before {
@@ -1006,13 +1006,13 @@ export default {
 }
 
 .stat-card.eco-impact .stat-number {
-  color: #20c997;
+  color: var(--color-secondary);
 }
 
 .stat-subtext {
   display: block;
   font-size: 0.75rem;
-  color: #20c997;
+  color: var(--color-secondary);
   margin-top: 0.25rem;
   font-weight: 500;
 }
@@ -1021,13 +1021,13 @@ export default {
   display: block;
   font-size: 2rem;
   font-weight: 700;
-  color: #28a745;
+  color: var(--color-primary);
   margin-bottom: 0.5rem;
 }
 
 .stat-label {
   font-size: 0.9rem;
-  color: #adb5bd;
+  color: var(--color-light-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -1037,7 +1037,7 @@ export default {
   display: flex;
   gap: 2rem;
   margin-bottom: 2rem;
-  background: #2d3748;
+  background: var(--color-dark-secondary);
   padding: 1rem 1.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -1052,23 +1052,23 @@ export default {
 
 .filter-group label {
   font-weight: 600;
-  color: #e9ecef;
+  color: var(--color-light-primary);
   font-size: 0.9rem;
 }
 
 .filter-select {
   padding: 0.5rem;
-  border: 2px solid #4a5568;
+  border: 2px solid var(--border-color);
   border-radius: 6px;
   font-size: 0.9rem;
   min-width: 150px;
-  background: #374151;
-  color: #e9ecef;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-primary);
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #28a745;
+  border-color: var(--color-primary);
 }
 
 .status-buttons {
@@ -1079,10 +1079,10 @@ export default {
 
 .status-btn {
   padding: 0.5rem 1rem;
-  border: 2px solid #4a5568;
+  border: 2px solid var(--border-color);
   border-radius: 6px;
-  background: #374151;
-  color: #adb5bd;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-secondary);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -1095,23 +1095,23 @@ export default {
 .status-btn:hover {
   border-color: var(--bs-primary);
   color: var(--bs-primary);
-  background: #2d3748;
+  background: var(--color-dark-secondary);
 }
 
 .status-btn.active {
   border-color: var(--bs-primary);
   background: var(--bs-primary);
-  color: white;
+  color: var(--color-light-primary);
   box-shadow: 0 2px 4px rgba(var(--bs-primary-rgb), 0.3);
 }
 
 .no-trips-status {
   text-align: center;
   padding: 3rem 2rem;
-  background: #2d3748;
+  background: var(--color-dark-secondary);
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  color: #e9ecef;
+  color: var(--color-light-primary);
   margin-bottom: 2rem;
 }
 
@@ -1122,7 +1122,7 @@ export default {
 }
 
 .invite-link {
-  color: #28a745;
+  color: var(--color-primary);
   text-decoration: none;
   font-weight: 600;
   position: relative;
@@ -1176,23 +1176,23 @@ export default {
 }
 
 .action-btn-small.start {
-  background: #28a745;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-light-primary);
 }
 
 .action-btn-small.finish {
-  background: #ffc107;
-  color: #212529;
+  background: var(--color-warning);
+  color: var(--color-dark-primary);
 }
 
 .action-btn-small.cancel {
-  background: #dc3545;
-  color: white;
+  background: var(--color-error);
+  color: var(--color-light-primary);
 }
 
 .action-btn-small.view {
-  background: #6c757d;
-  color: white;
+  background: var(--color-gray-primary);
+  color: var(--color-light-primary);
 }
 
 .action-btn-small:hover {

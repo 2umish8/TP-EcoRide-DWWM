@@ -23,20 +23,3 @@ defineProps({
   },
 })
 </script>
-
-<style scoped>
-/* Only keep variants specific to this component; base styles live in _buttons.css */
-.eco-button--connexion {
-  /* local overrides if necessary */
-}
-
-.eco-button--inscription {
-  /* local overrides if necessary */
-}
-
-/* Focus for a11y: keep local focus rule if different from base */
-.eco-button:focus-visible {
-  outline: 2px solid #f5deb3;
-  outline-offset: 2px;
-}
-</style>

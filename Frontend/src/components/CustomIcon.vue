@@ -37,10 +37,3 @@ const sizeStyle = computed(() => {
   return { fontSize: val }
 })
 </script>
-
-<style scoped>
-.custom-icon {
-  display: inline-block;
-  vertical-align: middle;
-}
-</style>

@@ -171,7 +171,7 @@ const submitReview = async () => {
 
 <style scoped>
 .review-form {
-  background: #1a1a1a;
+  background: var(--color-dark-primary);
   border-radius: 12px;
   padding: 20px;
   margin-top: 20px;
@@ -183,12 +183,12 @@ const submitReview = async () => {
 }
 
 .form-header h3 {
-  color: #34d399;
+  color: var(--color-primary);
   margin: 0 0 10px 0;
 }
 
 .form-header p {
-  color: #888;
+  color: var(--color-gray-primary);
   margin: 0;
 }
 
@@ -206,7 +206,7 @@ const submitReview = async () => {
 }
 
 .rating-input label {
-  color: #fff;
+  color: var(--color-light-primary);
   font-weight: bold;
 }
 
@@ -233,7 +233,7 @@ const submitReview = async () => {
 }
 
 .rating-text {
-  color: #34d399;
+  color: var(--color-primary);
   font-weight: bold;
   margin-top: 5px;
 }
@@ -246,16 +246,16 @@ const submitReview = async () => {
 }
 
 .form-group label {
-  color: #fff;
+  color: var(--color-light-primary);
   font-weight: bold;
 }
 
 .form-group textarea {
-  background: #2a2a2a;
-  border: 2px solid #333;
+  background: var(--color-dark-secondary);
+  border: 2px solid var(--color-dark-secondary);
   border-radius: 8px;
   padding: 12px;
-  color: #fff;
+  color: var(--color-light-primary);
   font-family: inherit;
   resize: vertical;
   min-height: 100px;
@@ -264,15 +264,15 @@ const submitReview = async () => {
 
 .form-group textarea:focus {
   outline: none;
-  border-color: #34d399;
+  border-color: var(--color-primary);
 }
 
 .form-group textarea::placeholder {
-  color: #666;
+  color: var(--color-gray-primary);
 }
 
 .char-count {
-  color: #888;
+  color: var(--color-gray-primary);
   font-size: 0.85em;
   text-align: right;
 }
@@ -296,16 +296,16 @@ const submitReview = async () => {
 }
 
 .btn-cancel {
-  background: #333;
-  color: #fff;
+  background: var(--color-dark-secondary);
+  color: var(--color-light-primary);
 }
 
 .btn-cancel:hover:not(:disabled) {
-  background: #444;
+  background: var(--border-color);
 }
 
 .btn-submit {
-  background: #34d399;
+  background: var(--color-primary);
   color: #000;
 }
 
@@ -322,8 +322,8 @@ const submitReview = async () => {
 /* Messages */
 .error-message {
   background: rgba(239, 68, 68, 0.1);
-  border: 1px solid #ef4444;
-  color: #ef4444;
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
   padding: 12px;
   border-radius: 8px;
   margin-top: 15px;
@@ -331,8 +331,8 @@ const submitReview = async () => {
 
 .success-message {
   background: rgba(52, 211, 153, 0.1);
-  border: 1px solid #34d399;
-  color: #34d399;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
   padding: 12px;
   border-radius: 8px;
   margin-top: 15px;
