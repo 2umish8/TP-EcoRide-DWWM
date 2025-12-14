@@ -117,6 +117,56 @@ const onSubmit = () => {
   flex: 0.3;
 }
 
+/* Mobile-first: stack inputs vertically on small screens */
+@media (max-width: 767px) {
+  .search-inputs {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 16px;
+  }
+
+  .input-group {
+    flex: none;
+    width: 100%;
+    margin: 0;
+    padding: 0 14px;
+    border-radius: 12px;
+  }
+
+  .search-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+    margin-left: 0;
+    border-radius: 12px;
+  }
+}
+
+/* On wider screens keep a wide horizontal layout */
+@media (min-width: 768px) {
+  .search-inputs {
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+  }
+
+  .input-group:nth-child(1),
+  .input-group:nth-child(2) {
+    flex: 0.35;
+  }
+
+  .input-group:nth-child(3) {
+    flex: 0.3;
+  }
+
+  .search-btn {
+    width: auto;
+    margin-left: 8px;
+  }
+}
+
 .search-input {
   border: none;
   background: transparent;

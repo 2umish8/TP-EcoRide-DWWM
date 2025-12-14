@@ -3,10 +3,8 @@
     <div class="hero-content">
       <div class="catch-phrase">
         <h1 class="main-title">Ta Voiture, Ton Empreinte Carbone.</h1>
-        <h1 class="main-title">
-          Et Si On <span class="eco-highlight">EcoRoulait</span> Ensemble ?
-        </h1>
-        <h2 class="mobile-slogan">
+        <h1 class="main-title">Et Si On <span class="eco-highlight">EcoRidait</span> Ensemble ?</h1>
+        <h2 class="mobile-catch-phrase">
           Il y aura moins d'emboutaillage et de pollution, et ca sera grâce à
           <span class="eco-highlight">Vous</span> !
         </h2>
@@ -156,5 +154,29 @@ const onScroll = () => {
   flex-direction: column;
   align-items: center;
   gap: 20px;
+}
+
+/* Mobile-first visibility:
+   - On small screens show only the mobile catch phrase
+   - Hide main titles and subtitle on small screens
+   - On wider screens (>=768px) hide mobile catch phrase and show main titles/subtitle */
+.mobile-catch-phrase {
+  display: block;
+}
+
+.main-title,
+.subtitle {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .mobile-catch-phrase {
+    display: none;
+  }
+
+  .main-title,
+  .subtitle {
+    display: block;
+  }
 }
 </style>
