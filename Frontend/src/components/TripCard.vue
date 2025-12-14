@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     class="trip-card"
     :class="[
@@ -153,7 +153,3 @@ export default {
 }
 </script>
 
-<style scoped>
-/* Component-specific overrides moved to assets/css/_cards.css */
-/* Keep this block for future tweaks that are truly local to TripCard */
-</style>

@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { computed } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import AppNavbar from './components/AppNavbar.vue'
@@ -38,25 +38,3 @@ const mainPaddingTop = computed(() => {
   </div>
 </template>
 
-<style>
-#app {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.main-content {
-  padding-bottom: 20px;
-  min-height: calc(100vh - 70px);
-}
-
-.router-view > * {
-  margin-top: 0;
-}
-
-footer {
-  position: static;
-  width: 100%;
-  z-index: 100;
-}
-</style>

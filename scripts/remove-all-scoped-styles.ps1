@@ -1,37 +1,45 @@
-# Script PowerShell pour supprimer tous les <style scoped> des fichiers .vue
-# Approche : lire chaque fichier, supprimer le bloc style, réécrire
+# Script PowerShell pour vider TOUS les <style scoped> dans les fichiers .vue
+# Les balises <style scoped> seront complètement supprimées
 
-$vueFiles = Get-ChildItem -Path "Frontend\src" -Filter "*.vue" -Recurse -Force
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$frontendSrcPath = Join-Path $scriptDir "..\Frontend\src"
 
-Write-Host "`n🔍 Found $($vueFiles.Count) .vue files`n" -ForegroundColor Cyan
+$vueFiles = Get-ChildItem -Path $frontendSrcPath -Filter "*.vue" -Recurse -Force
 
-$removedCount = 0
+Write-Host "`n🔍 Fichiers .vue trouvés: $($vueFiles.Count)`n" -ForegroundColor Cyan
+
+$filesModified = 0
+$totalStylesRemoved = 0
 
 foreach ($file in $vueFiles) {
     try {
         $content = Get-Content -Path $file.FullName -Raw -Encoding UTF8
-        $originalLength = $content.Length
+        $originalContent = $content
         
-        # Supprimer <style scoped>...</style> avec tous les caractères entre (incluant newlines)
-        # Utilise -Singleline pour que . match les newlines
-        $newContent = $content -replace '(?s)<style\s+scoped[^>]*>.*?</style>', ''
+        # Pattern pour trouver et supprimer <style scoped>...</style>
+        $pattern = '<style\s+scoped[^>]*>.*?</style>'
         
-        # Nettoyer les newlines excessives
-        $newContent = $newContent -replace '\n\n\n+', "`n`n"
-        
-        # Si du contenu a été retiré
-        if ($newContent.Length -ne $originalLength) {
-            Set-Content -Path $file.FullName -Value $newContent -Encoding UTF8 -NoNewline
+        if ($content -match $pattern) {
+            $matches = [regex]::Matches($content, $pattern, [System.Text.RegularExpressions.RegexOptions]::Singleline)
+            $totalStylesRemoved += $matches.Count
+            
+            # Supprimer tous les blocs <style scoped>
+            $content = [regex]::Replace($content, $pattern, '', [System.Text.RegularExpressions.RegexOptions]::Singleline)
+            
+            # Nettoyer les lignes vides en excès (max 2 newlines consécutifs)
+            $content = [regex]::Replace($content, '\n\n\n+', "`n`n")
+            
+            Set-Content -Path $file.FullName -Value $content -Encoding UTF8 -NoNewline
             Write-Host "✓ $($file.Name)" -ForegroundColor Green
-            $removedCount++
+            $filesModified++
         }
     }
     catch {
-        Write-Host "✗ Error: $($file.Name)" -ForegroundColor Red
+        Write-Host "✗ Erreur: $($file.Name) - $_" -ForegroundColor Red
     }
 }
 
-Write-Host "`n✅ Summary:" -ForegroundColor Cyan
-Write-Host "   Files processed: $($vueFiles.Count)" -ForegroundColor Cyan
-Write-Host "   Style scoped removed: $removedCount" -ForegroundColor Cyan
-Write-Host "`n📝 All styles are now managed globally in src/assets/css/`n" -ForegroundColor Yellow
+Write-Host "`n✅ Résumé:" -ForegroundColor Cyan
+Write-Host "   Style scoped supprimées: $totalStylesRemoved" -ForegroundColor Green
+Write-Host "   Fichiers modifiés: $filesModified" -ForegroundColor Green
+Write-Host "`n📝 Tous les styles sont maintenant gérés globalement via src/assets/css/`n" -ForegroundColor Yellow

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="admin-view">
     <h1>Gestion des comptes</h1>
 
@@ -127,75 +127,3 @@ async function handleCreateEmployee() {
 onMounted(fetchUsers)
 </script>
 
-<style scoped>
-.admin-view {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
-.admin-section {
-  margin-bottom: 2.5rem;
-  background: var(--color-dark-tertiary);
-  border-radius: 10px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
-}
-.admin-form {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-}
-.admin-form input {
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  border: 1px solid var(--color-light-secondary);
-  min-width: 180px;
-}
-.admin-form button {
-  background: var(--color-primary);
-  color: var(--color-light-primary);
-  border: none;
-  border-radius: 5px;
-  padding: 0.5rem 1.5rem;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.2s;
-}
-.admin-form button:hover {
-  background: var(--color-primary);
-}
-.admin-msg {
-  color: #059669;
-  margin-bottom: 0.5rem;
-}
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-}
-.admin-table th,
-.admin-table td {
-  padding: 0.7rem 0.5rem;
-  border-bottom: 1px solid var(--color-dark-secondary);
-  text-align: left;
-}
-.admin-table th {
-  background: #181c1f;
-}
-.suspended {
-  color: #e11d48;
-  font-weight: bold;
-}
-.active {
-  color: #10b981;
-  font-weight: bold;
-}
-.admin-search {
-  margin-bottom: 1rem;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  border: 1px solid var(--color-light-secondary);
-  min-width: 220px;
-}
-</style>
