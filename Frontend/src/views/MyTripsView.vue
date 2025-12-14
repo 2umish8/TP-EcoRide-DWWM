@@ -9,11 +9,9 @@
       <div class="tabs-container">
         <div class="tab-wrapper">
           <div v-if="activeTab === 'passenger'" class="action-hint left">
-            <span class="hint-text">Cliquez à nouveau pour</span>
+            Cliquez à nouveau pour
           </div>
-          <div v-else class="action-hint left invisible">
-            <span class="hint-text">Cliquez à nouveau pour</span>
-          </div>
+          <div v-else class="action-hint left invisible">Cliquez à nouveau pour</div>
           <button
             @click="handlePassengerTab"
             :class="['tab-btn', { active: activeTab === 'passenger' }]"
@@ -40,12 +38,8 @@
               Voir mes EcoRides proposés
             </span>
           </button>
-          <div v-if="activeTab === 'driver'" class="action-hint right">
-            <span class="hint-text">Cliquez à nouveau pour</span>
-          </div>
-          <div v-else class="action-hint right invisible">
-            <span class="hint-text">Cliquez à nouveau pour</span>
-          </div>
+          <div v-if="activeTab === 'driver'" class="action-hint right">Cliquez à nouveau pour</div>
+          <div v-else class="action-hint right invisible">Cliquez à nouveau pour</div>
         </div>
       </div>
     </div>
@@ -56,9 +50,7 @@
       <div v-if="activeTab === 'driver'" class="driver-content">
         <!-- Vérification si l'utilisateur est conducteur -->
         <div v-if="!isDriver" class="become-driver-state">
-          <div class="become-driver-icon">
-            <font-awesome-icon :icon="['fas', 'car']" />
-          </div>
+          <font-awesome-icon :icon="['fas', 'car']" class="become-driver-icon" />
           <h3>Devenez conducteur EcoRide</h3>
           <p>Vous n'êtes pas encore conducteur sur EcoRide.</p>
           <p class="become-driver-description">En devenant conducteur, vous pourrez :</p>
@@ -118,9 +110,7 @@
 
           <!-- État d'erreur -->
           <div v-else-if="error" class="error-state">
-            <div class="error-icon">
-              <font-awesome-icon :icon="['fas', 'xmark']" />
-            </div>
+            <font-awesome-icon :icon="['fas', 'xmark']" class="error-icon" />
             <h3>Erreur de chargement</h3>
             <p>{{ error }}</p>
             <button @click="loadTrips" class="retry-btn">Réessayer</button>
@@ -128,9 +118,7 @@
 
           <!-- Aucun trajet -->
           <div v-else-if="trips.length === 0" class="empty-state">
-            <div class="empty-icon">
-              <font-awesome-icon :icon="['fas', 'car']" />
-            </div>
+            <font-awesome-icon :icon="['fas', 'car']" class="empty-icon" />
             <h3>Aucun EcoRide trouvé</h3>
             <p>
               Vous n'avez pas encore créé de covoiturage. Commencez par proposer votre premier
@@ -226,7 +214,7 @@
               v-if="filteredAndSortedTrips.length === 0 && selectedStatus"
               class="no-trips-status"
             >
-              <div class="no-trips-icon"><font-awesome-icon :icon="['fas', 'inbox']" /></div>
+              <font-awesome-icon :icon="['fas', 'inbox']" class="no-trips-icon" />
               <h3>Aucun EcoRide {{ getStatusEmptyMessage(selectedStatus) }}</h3>
               <p>
                 Réduisez les embouteillages et
@@ -291,9 +279,7 @@
 
         <!-- État d'erreur -->
         <div v-else-if="error" class="error-state">
-          <div class="error-icon">
-            <font-awesome-icon :icon="['fas', 'xmark']" />
-          </div>
+          <font-awesome-icon :icon="['fas', 'xmark']" class="error-icon" />
           <h3>Erreur de chargement</h3>
           <p>{{ error }}</p>
           <button @click="loadParticipations" class="retry-btn">Réessayer</button>
@@ -301,9 +287,7 @@
 
         <!-- Aucune participation -->
         <div v-else-if="participations.length === 0" class="empty-state">
-          <div class="empty-icon">
-            <font-awesome-icon :icon="['fas', 'ticket']" />
-          </div>
+          <font-awesome-icon :icon="['fas', 'ticket']" class="empty-icon" />
           <h3>Aucune participation trouvée</h3>
           <p>
             Vous n'avez pas encore participé à un covoiturage. Découvrez les EcoRides disponibles !
@@ -399,7 +383,7 @@
             v-if="filteredAndSortedParticipations.length === 0 && selectedStatus"
             class="no-trips-status"
           >
-            <div class="no-trips-icon"><font-awesome-icon :icon="['fas', 'road']" /></div>
+            <font-awesome-icon :icon="['fas', 'road']" class="no-trips-icon" />
             <h3>Aucune participation {{ getStatusEmptyMessage(selectedStatus) }}</h3>
             <p>
               Découvrez les
@@ -729,6 +713,8 @@ export default {
   opacity: 0;
   animation: fadeIn 0.3s ease-in-out 0.5s forwards;
   white-space: nowrap;
+  font-style: italic;
+  font-weight: 500;
 }
 
 .action-hint.invisible {
@@ -744,9 +730,14 @@ export default {
   order: 1;
 }
 
-.hint-text {
-  font-style: italic;
-  font-weight: 500;
+/* Loading spinner animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Container principal */
@@ -776,6 +767,7 @@ export default {
 .become-driver-icon {
   font-size: 4rem;
   margin-bottom: 1.5rem;
+  display: block;
 }
 
 .become-driver-description {
@@ -888,6 +880,7 @@ export default {
 .empty-icon {
   font-size: 3rem;
   margin-bottom: 1rem;
+  display: block;
 }
 
 .retry-btn,
@@ -1119,6 +1112,7 @@ export default {
   font-size: 3rem;
   margin-bottom: 1rem;
   opacity: 0.7;
+  display: block;
 }
 
 .invite-link {
