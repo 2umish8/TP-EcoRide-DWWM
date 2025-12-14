@@ -123,7 +123,7 @@ test.describe('Become Driver Flow (E2E)', () => {
 
     // Wait for success - either success message or redirect to profile/home
     await Promise.race([
-      expect(page.locator('.success-message')).toBeVisible(),
+      await expect(page.locator('.success-message')).toBeVisible(),
       page.waitForURL('/profile', { timeout: 5000 }),
       page.waitForURL('/', { timeout: 5000 }),
     ]).catch(() => {

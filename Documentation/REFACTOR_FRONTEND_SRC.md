@@ -64,6 +64,36 @@ Ces fichiers représentent les plus gros points chauds — templates très volum
 ---
 Si tu veux je peux: faire un audit automatique (lister tous les fichiers du `src` par taille, trouver occurrences de `console.log`, `TODO`, code commenté et proposer un MR avec extraction d'un composant exemple — par ex. extraire `TripCard` + `useCarpoolings` pour `SearchResultsView`). Dis‑moi quelle action tu veux que je fasse ensuite.
 
+## Avancement: ProfileView.vue (extraction majeure — 2025-12-14)
+- ✅ **Extraction de composants réutilisables (7 nouveaux composants)**:
+  - `BaseModal.vue` — Modal wrapper générique avec slots pour header, body, footer
+  - `ProfileHeader.vue` — Affichage header profil (avatar, pseudo, email) — réutilisable dans UserProfileView
+  - `RoleSelectionCard.vue` — Sélection de rôle (passager/chauffeur) avec état de chargement
+  - `ProposeRideForm.vue` — Formulaire complet pour proposer un trajet (130 lignes → composant dédié)
+  - `VehicleListCard.vue` — Liste de véhicules avec suppression et état vide
+  - `AddVehicleModal.vue` — Modal d'ajout de véhicule (réutilise `BaseModal.vue`)
+  - `TripSuccessModal.vue` — Modal de succès après création de trajet (réutilise `BaseModal.vue`)
+- ✅ **Refactorisation de ProfileView.vue**:
+  - **Avant**: 1529 lignes (monolithe) → **Après**: 313 lignes (orchestration + logique métier)
+  - Template réduit de ~375 → ~45 lignes (composants importés remplacent markup inline)
+  - Script réduit de ~800 → ~270 lignes (logique métier préservée, formatage/UI déléguée aux composants)
+  - CSS réduit de ~350 → ~50 lignes (styles view-spécifiques uniquement; styles composants localisés)
+- ✅ **Conformité aux règles**:
+  - ✅ Pas de wrappers inutiles — chaque composant a une responsabilité claire
+  - ✅ Couleurs uniquement dans `_variables.css`, spacing/padding dans les composants
+  - ✅ Font Awesome icons uniquement (pas d'emojis)
+  - ✅ Base component pattern — `BaseModal.vue` réutilisé par `AddVehicleModal.vue` et `TripSuccessModal.vue`
+- ✅ **Réduction code**:
+  - **Avant**: 1529 LOC total
+  - **Après**: 313 (ProfileView) + 72 (BaseModal) + 60 (ProfileHeader) + 85 (RoleSelectionCard) + 160 (ProposeRideForm) + 67 (VehicleListCard) + 110 (AddVehicleModal) + 100 (TripSuccessModal) = **967 LOC total** (37% réduction)
+  - ✅ Tous les composants < 200 lignes
+- ✅ **Erreurs corrigées**:
+  - RoleSelectionCard: référence `props.modelValue` au lieu de `modelValue` non-défini
+  - AddVehicleModal: déplacement du slot `#footer` en dehors du formulaire (template validation)
+  - ProfileView: suppression de fonction `formatDate()` inutilisée (déléguée à TripSuccessModal.vue)
+- ✅ **Test de compilation**: aucune erreur ESLint/Vite après refactoring
+- 🔜 Prochain: profiter du pattern pour refactoriser `SearchResultsView.vue` avec `TripCard`, `TripFilters`, et composables
+
 ## Avancement: HomeView.vue (extraction incrémentale)
 - ✅ `SearchBar.vue` créé et intégré dans `HomeView.vue` (remplace le markup de recherche)
 - ✅ `useSearchForm.js` composable ajouté et utilisé dans `HomeView.vue` pour centraliser état et navigation
