@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="search-results">
     <!-- Header avec critères de recherche -->
     <div class="search-header">
@@ -6,11 +6,11 @@
         <h1 class="results-title">
           {{ hasSearchCriteria ? 'Résultats de recherche' : 'Tous les covoiturages' }}
         </h1>
-        <div class="criteria-details" v-if="hasSearchCriteria">
-          <span class="route">{{ searchParams.from }} → {{ searchParams.to }}</span>
-          <span class="date" v-if="searchParams.date">{{ formatDate(searchParams.date) }}</span>
+        <div v-if="hasSearchCriteria">
+          <span class="route">{{ searchParams.from }} → {{ searchParams.to }}</span
+          ><span v-if="searchParams.date">{{ formatDate(searchParams.date) }}</span>
         </div>
-        <div class="criteria-details" v-else>
+        <div v-else>
           <span class="browse-message">Parcourez tous les covoiturages disponibles</span>
         </div>
       </div>
@@ -20,7 +20,6 @@
         }}{{ formattedResults.length > 1 ? 's' : '' }}
       </div>
     </div>
-
     <!-- Formulaire de recherche compact -->
     <div class="search-form-compact">
       <div class="search-inputs-compact">
@@ -29,23 +28,19 @@
           placeholder="Départ"
           v-model="newSearchParams.from"
           class="search-input-compact"
-        />
-        <input
+        /><input
           type="text"
           placeholder="Destination"
           v-model="newSearchParams.to"
           class="search-input-compact"
-        />
-        <input
+        /><input
           type="date"
           v-model="newSearchParams.date"
           class="search-input-compact"
           :min="new Date().toISOString().split('T')[0]"
-        />
-        <button @click="performNewSearch" class="search-btn-compact">Rechercher</button>
+        /><button @click="performNewSearch" class="search-btn-compact">Rechercher</button>
       </div>
     </div>
-
     <div class="results-container">
       <!-- Sidebar de filtres -->
       <div class="filters-sidebar">
@@ -59,16 +54,15 @@
             step="5"
             v-model="filters.maxPrice"
             class="price-slider"
-          />
-          <span class="price-value"
+          /><span class="price-value"
             >{{ filters.maxPrice }}<IconCredit style="vertical-align: middle; margin-left: 2px"
           /></span>
         </div>
         <div class="filter-group">
           <h4>Aspect écologique</h4>
           <div class="ecological-filter">
-            <label class="feature-option">
-              <input type="checkbox" v-model="filters.isElectric" /> Voiture électrique uniquement
+            <label class="feature-option"
+              ><input type="checkbox" v-model="filters.isElectric" /> Voiture électrique uniquement
             </label>
           </div>
         </div>
@@ -103,14 +97,12 @@
           <div class="loading-spinner"></div>
           <p>Recherche des covoiturages...</p>
         </div>
-
         <!-- État d'erreur -->
         <div v-else-if="error" class="error-state">
           <h3>Erreur</h3>
           <p>{{ error }}</p>
           <button @click="loadCarpoolings" class="retry-btn">Réessayer</button>
         </div>
-
         <!-- Résultats -->
         <div v-else-if="formattedResults.length > 0">
           <div
@@ -127,12 +119,10 @@
             <div class="trip-badges">
               <span v-if="trip.vehicle.isElectric" class="badge eco-badge"
                 ><font-awesome-icon :icon="['fas', 'leaf']" /> Écologique</span
-              >
-              <span v-if="isMyTrip(trip)" class="badge my-trip-badge"
+              ><span v-if="isMyTrip(trip)" class="badge my-trip-badge"
                 ><font-awesome-icon :icon="['fas', 'car']" /> Mon trajet</span
               >
             </div>
-
             <div class="trip-header">
               <div class="trip-route">
                 <span class="departure">{{ trip.departure }}</span>
@@ -146,12 +136,11 @@
                 <span class="destination">{{ trip.destination }}</span>
               </div>
               <div class="trip-time">
-                <span class="departure-time">{{ trip.departureTime }}</span>
-                <span class="duration">{{ trip.duration }}</span>
-                <span class="arrival-time">{{ trip.arrivalTime }}</span>
+                <span class="departure-time">{{ trip.departureTime }}</span
+                ><span class="duration">{{ trip.duration }}</span
+                ><span class="arrival-time">{{ trip.arrivalTime }}</span>
               </div>
             </div>
-
             <div class="trip-details">
               <div class="driver-info">
                 <ClickableAvatar
@@ -161,20 +150,18 @@
                   @click="viewDriverProfile"
                 />
                 <div class="driver-details">
-                  <span class="driver-name" @click="viewDriverProfile(trip.driverId)">
+                  <span @click="viewDriverProfile(trip.driverId)">
                     {{ trip.driver.name }}
                   </span>
                   <div class="driver-rating">
                     <span class="rating"
                       ><font-awesome-icon :icon="['fas', 'star']" /> {{ trip.driver.rating }}</span
-                    >
-                    <span class="rides-count" v-if="trip.driver.ridesCount > 0"
+                    ><span v-if="trip.driver.ridesCount > 0"
                       >({{ trip.driver.ridesCount }} trajets)</span
                     >
                   </div>
                 </div>
               </div>
-
               <div class="trip-info">
                 <div class="seats">
                   <span class="seats-available"
@@ -183,28 +170,25 @@
                 </div>
                 <div class="price">
                   <span class="amount"
-                    >{{ trip.price }}<IconCredit style="vertical-align: middle; margin-left: 2px"
-                  /></span>
-                  <span class="per-person">par personne</span>
+                    >{{ trip.price
+                    }}<IconCredit style="vertical-align: middle; margin-left: 2px" /></span
+                  ><span class="per-person">par personne</span>
                 </div>
               </div>
             </div>
-
-            <div class="trip-features" v-if="trip.features.length > 0">
-              <span v-for="feature in trip.features" :key="feature" class="feature-tag">
-                <font-awesome-icon :icon="['fas', getFeatureIcon(feature)]" /> {{ feature }}
+            <div v-if="trip.features.length > 0">
+              <span v-for="feature in trip.features" :key="feature" class="feature-tag"
+                ><font-awesome-icon :icon="['fas', getFeatureIcon(feature)]" /> {{ feature }}
               </span>
             </div>
-
-            <div class="vehicle-info" v-if="trip.vehicle">
-              <span class="vehicle-details">{{ trip.vehicle.brand }} {{ trip.vehicle.model }}</span>
-              <span v-if="trip.vehicle.isElectric" class="electric-badge"
+            <div v-if="trip.vehicle">
+              <span class="vehicle-details">{{ trip.vehicle.brand }} {{ trip.vehicle.model }}</span
+              ><span v-if="trip.vehicle.isElectric" class="electric-badge"
                 ><font-awesome-icon :icon="['fas', 'leaf']" /> Électrique</span
               >
             </div>
           </div>
         </div>
-
         <!-- Aucun résultat mais date alternative disponible -->
         <div v-else-if="nextAvailableDate" class="no-results-alternative">
           <div class="no-results-content">
@@ -217,14 +201,13 @@
               <strong>{{ formatDate(nextAvailableDate) }}</strong>
             </p>
             <div class="no-results-actions">
-              <button class="btn-primary" @click="searchAlternativeDate">Voir ces trajets</button>
-              <button class="btn-secondary" @click="createAlert">Créer une alerte</button>
+              <button class="btn-primary" @click="searchAlternativeDate">Voir ces trajets</button
+              ><button class="btn-secondary" @click="createAlert">Créer une alerte</button>
             </div>
           </div>
         </div>
       </div>
     </div>
-
     <!-- Message si aucun résultat -->
     <div v-if="formattedResults.length === 0 && !loading && !error" class="no-results">
       <div class="no-results-content">
@@ -234,14 +217,13 @@
           un trajet correspondant sera publié.
         </p>
         <div class="no-results-actions">
-          <button class="btn-primary" @click="createAlert">Créer une alerte</button>
-          <button class="btn-secondary" @click="$router.push('/')">Nouvelle recherche</button>
+          <button class="btn-primary" @click="createAlert">Créer une alerte</button
+          ><button class="btn-secondary" @click="$router.push('/')">Nouvelle recherche</button>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -522,4 +504,3 @@ onMounted(() => {
   loadCarpoolings()
 })
 </script>
-

@@ -14,7 +14,6 @@
           déplaçons. EcoRoulons vers un avenir plus vert.
         </p>
       </div>
-
       <div class="bottom-section">
         <SearchBar
           :initialValues="initialSearchValues"
@@ -22,18 +21,17 @@
           @browse-all="onBrowseAll"
         />
         <div class="qui-sommes-nous">
-          <div class="scroll-icon" @click="onScroll">
-            <slot name="scroll-icon">
-              <font-awesome-icon :icon="['fas', 'angles-down']" class="scroll-svg" size="lg" />
-            </slot>
+          <div @click="onScroll">
+            <slot name="scroll-icon"
+              ><font-awesome-icon :icon="['fas', 'angles-down']" size="lg"
+            /></slot>
           </div>
-          <div class="en-savoir-plus" @click="onScroll">En Savoir Plus</div>
+          <div @click="onScroll">En Savoir Plus</div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script setup>
 import SearchBar from '@/components/SearchBar.vue'
 import { useScroll } from '@/composables/useScroll'

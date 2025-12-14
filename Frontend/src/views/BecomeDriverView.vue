@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="become-driver-page">
     <div class="container">
       <!-- Header -->
@@ -10,7 +10,6 @@
           </div>
         </div>
       </div>
-
       <!-- Étapes du processus -->
       <div class="steps-indicator">
         <div
@@ -28,7 +27,6 @@
           <div class="step-label">{{ step }}</div>
         </div>
       </div>
-
       <!-- Étape 1: Informations véhicule -->
       <div v-if="currentStep === 1" class="step-content">
         <div class="form-card">
@@ -37,25 +35,22 @@
             Pour garantir la sécurité de nos utilisateurs, nous devons enregistrer les informations
             de votre véhicule.
           </p>
-
           <form @submit.prevent="validateVehicleStep">
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Plaque d'immatriculation *</label>
-                <input
+                <label class="form-label">Plaque d'immatriculation *</label
+                ><input
                   v-model="vehicleData.plate_number"
                   type="text"
                   class="form-input"
                   placeholder="AB-123-CD"
                   pattern="[A-Z]{2}-[0-9]{3}-[A-Z]{2}"
                   required
-                />
-                <small class="form-hint">Format: AB-123-CD</small>
+                /><small class="form-hint">Format: AB-123-CD</small>
               </div>
-
               <div class="form-group">
-                <label class="form-label">Date de première immatriculation *</label>
-                <input
+                <label class="form-label">Date de première immatriculation *</label
+                ><input
                   v-model="vehicleData.first_registration_date"
                   type="date"
                   class="form-input"
@@ -64,21 +59,19 @@
                 />
               </div>
             </div>
-
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Marque *</label>
-                <select v-model="vehicleData.brand_name" class="form-select" required>
+                <label class="form-label">Marque *</label
+                ><select v-model="vehicleData.brand_name" required>
                   <option value="">Sélectionnez une marque</option>
                   <option v-for="brand in carBrands" :key="brand" :value="brand">
                     {{ brand }}
                   </option>
                 </select>
               </div>
-
               <div class="form-group">
-                <label class="form-label">Modèle *</label>
-                <input
+                <label class="form-label">Modèle *</label
+                ><input
                   v-model="vehicleData.model"
                   type="text"
                   class="form-input"
@@ -87,21 +80,19 @@
                 />
               </div>
             </div>
-
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Couleur *</label>
-                <select v-model="vehicleData.color_name" class="form-select" required>
+                <label class="form-label">Couleur *</label
+                ><select v-model="vehicleData.color_name" required>
                   <option value="">Sélectionnez une couleur</option>
                   <option v-for="color in carColors" :key="color" :value="color">
                     {{ color }}
                   </option>
                 </select>
               </div>
-
               <div class="form-group">
-                <label class="form-label">Nombre de places disponibles *</label>
-                <select v-model="vehicleData.seats_available" class="form-select" required>
+                <label class="form-label">Nombre de places disponibles *</label
+                ><select v-model="vehicleData.seats_available" required>
                   <option value="">Sélectionnez</option>
                   <option v-for="n in 7" :key="n" :value="n">
                     {{ n }} place{{ n > 1 ? 's' : '' }}
@@ -109,7 +100,6 @@
                 </select>
               </div>
             </div>
-
             <div class="form-group">
               <div class="checkbox-container">
                 <input
@@ -117,26 +107,22 @@
                   type="checkbox"
                   id="electric"
                   class="form-checkbox"
-                />
-                <label for="electric" class="checkbox-label">
-                  <font-awesome-icon :icon="['fas', 'bolt']" /> Véhicule électrique (bonus
+                /><label for="electric" class="checkbox-label"
+                  ><font-awesome-icon :icon="['fas', 'bolt']" /> Véhicule électrique (bonus
                   écologique !)
                 </label>
               </div>
             </div>
-
             <div class="form-actions">
               <router-link to="/my-trips" class="btn btn-secondary"
                 ><font-awesome-icon :icon="['fas', 'xmark']" /> Annuler</router-link
-              >
-              <button type="submit" class="btn btn-primary">
+              ><button type="submit" class="btn btn-primary">
                 Suivant: Préférences <font-awesome-icon :icon="['fas', 'chevron-right']" />
               </button>
             </div>
           </form>
         </div>
       </div>
-
       <!-- Étape 2: Préférences de conduite -->
       <div v-if="currentStep === 2" class="step-content">
         <div class="form-card">
@@ -145,12 +131,11 @@
             Définissez vos préférences pour que les passagers sachent à quoi s'attendre lors du
             trajet.
           </p>
-
           <form @submit.prevent="validatePreferencesStep">
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Musique pendant le trajet</label>
-                <select v-model="preferencesData.musicPreference" class="form-select">
+                <label class="form-label">Musique pendant le trajet</label
+                ><select v-model="preferencesData.musicPreference" class="form-select">
                   <option value="Aucune musique">Aucune musique</option>
                   <option value="Musique douce">
                     <font-awesome-icon :icon="['fas', 'music']" /> Musique douce
@@ -159,10 +144,9 @@
                   <option value="Selon l'humeur">Selon l'humeur</option>
                 </select>
               </div>
-
               <div class="form-group">
-                <label class="form-label">Niveau de conversation</label>
-                <select v-model="preferencesData.conversationLevel" class="form-select">
+                <label class="form-label">Niveau de conversation</label
+                ><select v-model="preferencesData.conversationLevel" class="form-select">
                   <option value="Silencieux">Trajet silencieux</option>
                   <option value="Modérée">
                     <font-awesome-icon :icon="['fas', 'comment']" /> Conversation modérée
@@ -171,7 +155,6 @@
                 </select>
               </div>
             </div>
-
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Température préférée (°C)</label>
@@ -182,23 +165,22 @@
                     min="16"
                     max="26"
                     class="temperature-slider"
-                  />
-                  <span class="temperature-value"
+                  /><span class="temperature-value"
                     >{{ preferencesData.temperaturePreference }}°C</span
                   >
                 </div>
               </div>
             </div>
-
             <div class="preferences-grid">
               <div class="preference-card">
                 <div class="preference-icon"><font-awesome-icon :icon="['fas', 'smoking']" /></div>
                 <div class="preference-content">
                   <h4>Tabac</h4>
-                  <label class="switch">
-                    <input v-model="preferencesData.smokingAllowed" type="checkbox" />
-                    <span class="slider"></span>
-                  </label>
+                  <label class="switch"
+                    ><input v-model="preferencesData.smokingAllowed" type="checkbox" /><span
+                      class="slider"
+                    ></span
+                  ></label>
                   <p>
                     {{
                       preferencesData.smokingAllowed ? 'Fumeur accepté' : 'Non-fumeur uniquement'
@@ -206,42 +188,38 @@
                   </p>
                 </div>
               </div>
-
               <div class="preference-card">
                 <div class="preference-icon"><font-awesome-icon :icon="['fas', 'paw']" /></div>
                 <div class="preference-content">
                   <h4>Animaux</h4>
-                  <label class="switch">
-                    <input v-model="preferencesData.petsAllowed" type="checkbox" />
-                    <span class="slider"></span>
-                  </label>
+                  <label class="switch"
+                    ><input v-model="preferencesData.petsAllowed" type="checkbox" /><span
+                      class="slider"
+                    ></span
+                  ></label>
                   <p>{{ preferencesData.petsAllowed ? 'Animaux acceptés' : "Pas d'animaux" }}</p>
                 </div>
               </div>
             </div>
-
             <div class="form-group">
-              <label class="form-label">Préférences personnalisées (optionnel)</label>
-              <textarea
+              <label class="form-label">Préférences personnalisées (optionnel)</label
+              ><textarea
                 v-model="preferencesData.customPreferences"
                 class="form-textarea"
                 rows="3"
                 placeholder="ex: J'accepte les instruments de musique, j'aime les discussions sur les voyages..."
               ></textarea>
             </div>
-
             <div class="form-actions">
               <button type="button" @click="currentStep = 1" class="btn btn-secondary">
-                <font-awesome-icon :icon="['fas', 'arrow-left']" /> Retour
-              </button>
-              <button type="submit" class="btn btn-primary">
+                <font-awesome-icon :icon="['fas', 'arrow-left']" /> Retour</button
+              ><button type="submit" class="btn btn-primary">
                 Suivant: Confirmation <font-awesome-icon :icon="['fas', 'chevron-right']" />
               </button>
             </div>
           </form>
         </div>
       </div>
-
       <!-- Étape 3: Confirmation et finalisation -->
       <div v-if="currentStep === 3" class="step-content">
         <div class="confirmation-card">
@@ -249,72 +227,71 @@
           <p class="step-description">
             Vérifiez vos informations avant de finaliser votre inscription en tant que chauffeur.
           </p>
-
           <!-- Récapitulatif véhicule -->
           <div class="summary-section">
             <h4><font-awesome-icon :icon="['fas', 'car']" /> Votre véhicule</h4>
             <div class="summary-grid">
               <div class="summary-item">
-                <span class="label">Plaque:</span>
-                <span class="value">{{ vehicleData.plate_number }}</span>
+                <span class="label">Plaque:</span
+                ><span class="value">{{ vehicleData.plate_number }}</span>
               </div>
               <div class="summary-item">
-                <span class="label">Véhicule:</span>
-                <span class="value">{{ vehicleData.brand_name }} {{ vehicleData.model }}</span>
+                <span class="label">Véhicule:</span
+                ><span class="value">{{ vehicleData.brand_name }} {{ vehicleData.model }}</span>
               </div>
               <div class="summary-item">
-                <span class="label">Couleur:</span>
-                <span class="value">{{ vehicleData.color_name }}</span>
+                <span class="label">Couleur:</span
+                ><span class="value">{{ vehicleData.color_name }}</span>
               </div>
               <div class="summary-item">
-                <span class="label">Places:</span>
-                <span class="value">{{ vehicleData.seats_available }} places</span>
+                <span class="label">Places:</span
+                ><span class="value">{{ vehicleData.seats_available }} places</span>
               </div>
               <div class="summary-item">
-                <span class="label">Type:</span>
-                <span class="value">
-                  <span v-if="vehicleData.is_electric"
+                <span class="label">Type:</span
+                ><span class="value"
+                  ><span v-if="vehicleData.is_electric"
                     ><font-awesome-icon :icon="['fas', 'bolt']" /> Électrique</span
-                  >
-                  <span v-else><font-awesome-icon :icon="['fas', 'gas-pump']" /> Thermique</span>
-                </span>
+                  ><span v-else
+                    ><font-awesome-icon :icon="['fas', 'gas-pump']" /> Thermique</span
+                  ></span
+                >
               </div>
             </div>
           </div>
-
           <!-- Récapitulatif préférences -->
           <div class="summary-section">
             <h4>⚙️ Vos préférences</h4>
             <div class="summary-grid">
               <div class="summary-item">
-                <span class="label">Musique:</span>
-                <span class="value">{{ preferencesData.musicPreference }}</span>
+                <span class="label">Musique:</span
+                ><span class="value">{{ preferencesData.musicPreference }}</span>
               </div>
               <div class="summary-item">
-                <span class="label">Conversation:</span>
-                <span class="value">{{ preferencesData.conversationLevel }}</span>
+                <span class="label">Conversation:</span
+                ><span class="value">{{ preferencesData.conversationLevel }}</span>
               </div>
               <div class="summary-item">
-                <span class="label">Température:</span>
-                <span class="value">{{ preferencesData.temperaturePreference }}°C</span>
+                <span class="label">Température:</span
+                ><span class="value">{{ preferencesData.temperaturePreference }}°C</span>
               </div>
               <div class="summary-item">
-                <span class="label">Tabac:</span>
-                <span class="value">
-                  <span v-if="preferencesData.smokingAllowed"
+                <span class="label">Tabac:</span
+                ><span class="value"
+                  ><span v-if="preferencesData.smokingAllowed"
                     ><font-awesome-icon :icon="['fas', 'circle-check']" /> Accepté</span
-                  >
-                  <span v-else><font-awesome-icon :icon="['fas', 'xmark']" /> Interdit</span>
-                </span>
+                  ><span v-else><font-awesome-icon :icon="['fas', 'xmark']" /> Interdit</span></span
+                >
               </div>
               <div class="summary-item">
-                <span class="label">Animaux:</span>
-                <span class="value">
-                  <span v-if="preferencesData.petsAllowed"
+                <span class="label">Animaux:</span
+                ><span class="value"
+                  ><span v-if="preferencesData.petsAllowed"
                     ><font-awesome-icon :icon="['fas', 'circle-check']" /> Acceptés</span
-                  >
-                  <span v-else><font-awesome-icon :icon="['fas', 'xmark']" /> Interdits</span>
-                </span>
+                  ><span v-else
+                    ><font-awesome-icon :icon="['fas', 'xmark']" /> Interdits</span
+                  ></span
+                >
               </div>
             </div>
             <div v-if="preferencesData.customPreferences" class="custom-prefs">
@@ -322,7 +299,6 @@
               <p>{{ preferencesData.customPreferences }}</p>
             </div>
           </div>
-
           <!-- Engagement -->
           <div class="engagement-section">
             <div class="engagement-card">
@@ -352,7 +328,6 @@
                   autres utilisateurs
                 </li>
               </ul>
-
               <div class="checkbox-container">
                 <input
                   v-model="acceptEngagement"
@@ -360,22 +335,19 @@
                   id="engagement"
                   class="form-checkbox"
                   required
-                />
-                <label for="engagement" class="checkbox-label">
-                  <strong
+                /><label for="engagement" class="checkbox-label"
+                  ><strong
                     >J'accepte ces engagements et je confirme l'exactitude des informations
                     fournies</strong
-                  >
-                </label>
+                  ></label
+                >
               </div>
             </div>
           </div>
-
           <div class="form-actions">
             <button type="button" @click="currentStep = 2" class="btn btn-secondary">
-              ⬅️ Retour
-            </button>
-            <button
+              ⬅️ Retour</button
+            ><button
               @click="submitDriverApplication"
               :disabled="!acceptEngagement || isSubmitting"
               class="btn btn-primary btn-large"
@@ -383,22 +355,19 @@
               <span v-if="isSubmitting"
                 ><font-awesome-icon :icon="['fas', 'spinner']" spin /> Finalisation en
                 cours...</span
-              >
-              <span v-else
+              ><span v-else
                 ><font-awesome-icon :icon="['fas', 'gift']" /> Devenir Chauffeur EcoRide</span
               >
             </button>
           </div>
         </div>
       </div>
-
       <!-- Étape 4: Succès -->
       <div v-if="currentStep === 4" class="step-content">
         <div class="success-card">
           <div class="success-icon"><font-awesome-icon :icon="['fas', 'gift']" /></div>
           <h3>Félicitations !</h3>
           <p>Vous êtes maintenant officiellement chauffeur EcoRide !</p>
-
           <div class="success-benefits">
             <h4>Vos nouveaux avantages :</h4>
             <ul>
@@ -420,10 +389,9 @@
               </li>
             </ul>
           </div>
-
           <div class="form-actions">
-            <router-link to="/my-trips" class="btn btn-primary btn-large">
-              <font-awesome-icon :icon="['fas', 'rocket']" /> Découvrir mes nouvelles
+            <router-link to="/my-trips"
+              ><font-awesome-icon :icon="['fas', 'rocket']" /> Découvrir mes nouvelles
               fonctionnalités
             </router-link>
           </div>
@@ -432,7 +400,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import { ref, computed } from 'vue'
 import { vehicleService } from '@/services/api'
@@ -606,4 +573,3 @@ export default {
   },
 }
 </script>
-

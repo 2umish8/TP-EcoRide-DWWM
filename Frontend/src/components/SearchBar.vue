@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="search-section">
     <div class="search-bar">
       <form @submit.prevent="onSubmit" class="search-inputs">
@@ -31,14 +31,12 @@
           />
         </div>
         <button type="submit" class="search-btn">
-          <span>ecoRIDEZ</span>
-          <font-awesome-icon :icon="['fas', 'search']" class="search-icon" aria-hidden="true" />
+          <span>ecoRIDEZ</span><font-awesome-icon :icon="['fas', 'search']" aria-hidden="true" />
         </button>
       </form>
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, computed, watch } from 'vue'
 
@@ -71,4 +69,3 @@ const onSubmit = () => {
   emit('search', { ...localForm.value })
 }
 </script>
-

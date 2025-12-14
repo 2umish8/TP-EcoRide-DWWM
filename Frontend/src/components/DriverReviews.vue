@@ -2,19 +2,15 @@
   <div class="reviews-section">
     <div class="reviews-header">
       <h3>Avis des passagers</h3>
-      <div class="rating-summary" v-if="averageRating > 0">
+      <div v-if="averageRating > 0">
         <span class="average-rating"
           ><font-awesome-icon :icon="['fas', 'star']" /> {{ averageRating }}</span
-        >
-        <span class="total-reviews">({{ totalReviews }} avis)</span>
+        ><span class="total-reviews">({{ totalReviews }} avis)</span>
       </div>
-      <div v-else class="no-rating">
-        <span>Aucun avis pour le moment</span>
-      </div>
+      <div v-else class="no-rating"><span>Aucun avis pour le moment</span></div>
     </div>
-
     <!-- Liste des avis -->
-    <div class="reviews-list" v-if="reviews.length > 0">
+    <div v-if="reviews.length > 0">
       <div v-for="review in reviews" :key="review.id" class="review-item">
         <div class="review-header">
           <div class="reviewer-info">
@@ -22,43 +18,34 @@
               :src="review.reviewer.profilePicture || '/default-avatar.png'"
               :alt="review.reviewer.pseudo"
               class="reviewer-avatar"
-            />
-            <span class="reviewer-name">{{ review.reviewer.pseudo }}</span>
+            /><span class="reviewer-name">{{ review.reviewer.pseudo }}</span>
           </div>
           <div class="review-rating">
-            <span class="stars">
-              <font-awesome-icon
+            <span class="stars"
+              ><font-awesome-icon
                 v-for="n in Math.floor(review.rating)"
                 :key="n"
-                :icon="['fas', 'star']"
-              />
-            </span>
-            <span class="rating-value">{{ review.rating }}/5</span>
+                :icon="['fas', 'star']" /></span
+            ><span class="rating-value">{{ review.rating }}/5</span>
           </div>
         </div>
-
         <div class="review-content">
           <p class="review-comment">{{ review.comment }}</p>
           <span class="review-date">{{ formatDate(review.createdAt) }}</span>
         </div>
       </div>
     </div>
-
     <!-- Pagination -->
-    <div class="pagination" v-if="pagination.totalPages > 1">
+    <div v-if="pagination.totalPages > 1">
       <button
         @click="loadPage(pagination.currentPage - 1)"
         :disabled="pagination.currentPage <= 1"
         class="pagination-btn"
       >
-        Précédent
-      </button>
-
-      <span class="page-info">
-        Page {{ pagination.currentPage }} sur {{ pagination.totalPages }}
-      </span>
-
-      <button
+        Précédent</button
+      ><span class="page-info">
+        Page {{ pagination.currentPage }} sur {{ pagination.totalPages }} </span
+      ><button
         @click="loadPage(pagination.currentPage + 1)"
         :disabled="pagination.currentPage >= pagination.totalPages"
         class="pagination-btn"
@@ -66,19 +53,14 @@
         Suivant
       </button>
     </div>
-
     <!-- Message si aucun avis -->
     <div v-if="reviews.length === 0 && !loading" class="no-reviews">
       <p>Ce chauffeur n'a pas encore reçu d'avis.</p>
     </div>
-
     <!-- Loading -->
-    <div v-if="loading" class="loading">
-      <p>Chargement des avis...</p>
-    </div>
+    <div v-if="loading"><p>Chargement des avis...</p></div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted } from 'vue'
 import { reviewService } from '@/services/mongoServices.js'

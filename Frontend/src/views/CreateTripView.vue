@@ -1,11 +1,10 @@
-﻿<template>
+<template>
   <div class="create-trip">
     <!-- Header -->
     <div class="create-trip-header">
       <h1 class="page-title">Proposer un trajet</h1>
       <p class="page-subtitle">Partagez votre itinéraire et réduisez votre empreinte carbone</p>
     </div>
-
     <!-- Formulaire principal -->
     <div class="create-trip-container">
       <form @submit.prevent="createTrip" class="trip-form">
@@ -14,11 +13,10 @@
           <h3 class="section-title">
             <font-awesome-icon :icon="['fas', 'location-dot']" /> Itinéraire
           </h3>
-
           <div class="form-row">
             <div class="form-group">
-              <label for="departure">Lieu de départ</label>
-              <input
+              <label for="departure">Lieu de départ</label
+              ><input
                 id="departure"
                 v-model="tripData.departure_address"
                 type="text"
@@ -28,8 +26,8 @@
               />
             </div>
             <div class="form-group">
-              <label for="destination">Destination</label>
-              <input
+              <label for="destination">Destination</label
+              ><input
                 id="destination"
                 v-model="tripData.arrival_address"
                 type="text"
@@ -40,17 +38,15 @@
             </div>
           </div>
         </div>
-
         <!-- Section Date et Heure -->
         <div class="form-section">
           <h3 class="section-title">
             <font-awesome-icon :icon="['fas', 'clock']" /> Date et Heure
           </h3>
-
           <div class="form-row">
             <div class="form-group">
-              <label for="departure-date">Date de départ</label>
-              <input
+              <label for="departure-date">Date de départ</label
+              ><input
                 id="departure-date"
                 v-model="departureDate"
                 type="date"
@@ -60,8 +56,8 @@
               />
             </div>
             <div class="form-group">
-              <label for="departure-time">Heure de départ</label>
-              <input
+              <label for="departure-time">Heure de départ</label
+              ><input
                 id="departure-time"
                 v-model="departureTime"
                 type="time"
@@ -70,11 +66,10 @@
               />
             </div>
           </div>
-
           <div class="form-row">
             <div class="form-group">
-              <label for="arrival-date">Date d'arrivée estimée</label>
-              <input
+              <label for="arrival-date">Date d'arrivée estimée</label
+              ><input
                 id="arrival-date"
                 v-model="arrivalDate"
                 type="date"
@@ -83,22 +78,20 @@
               />
             </div>
             <div class="form-group">
-              <label for="arrival-time">Heure d'arrivée estimée</label>
-              <input id="arrival-time" v-model="arrivalTime" type="time" class="form-input" />
+              <label for="arrival-time">Heure d'arrivée estimée</label
+              ><input id="arrival-time" v-model="arrivalTime" type="time" />
             </div>
           </div>
         </div>
-
         <!-- Section Détails du trajet -->
         <div class="form-section">
           <h3 class="section-title">
             <font-awesome-icon :icon="['fas', 'car']" /> Détails du trajet
           </h3>
-
           <div class="form-row">
             <div class="form-group">
-              <label for="seats">Nombre de places disponibles</label>
-              <select
+              <label for="seats">Nombre de places disponibles</label
+              ><select
                 id="seats"
                 v-model="tripData.initial_seats_offered"
                 class="form-select"
@@ -112,8 +105,8 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="price">Prix par passager (crédits)</label>
-              <input
+              <label for="price">Prix par passager (crédits)</label
+              ><input
                 id="price"
                 v-model="tripData.price_per_passenger"
                 type="number"
@@ -125,10 +118,9 @@
               />
             </div>
           </div>
-
           <div class="form-group">
-            <label for="description">Description du trajet (optionnel)</label>
-            <textarea
+            <label for="description">Description du trajet (optionnel)</label
+            ><textarea
               id="description"
               v-model="tripData.description"
               class="form-textarea"
@@ -137,15 +129,13 @@
             ></textarea>
           </div>
         </div>
-
         <!-- Section Véhicule -->
         <div class="form-section">
           <h3 class="section-title"><font-awesome-icon :icon="['fas', 'car']" /> Véhicule</h3>
-
           <div class="form-row">
             <div class="form-group">
-              <label for="vehicle-model">Modèle du véhicule (optionnel)</label>
-              <input
+              <label for="vehicle-model">Modèle du véhicule (optionnel)</label
+              ><input
                 id="vehicle-model"
                 v-model="tripData.model"
                 type="text"
@@ -154,8 +144,8 @@
               />
             </div>
             <div class="form-group">
-              <label for="vehicle-plate">Plaque d'immatriculation (optionnel)</label>
-              <input
+              <label for="vehicle-plate">Plaque d'immatriculation (optionnel)</label
+              ><input
                 id="vehicle-plate"
                 v-model="tripData.plate_number"
                 type="text"
@@ -165,13 +155,11 @@
             </div>
           </div>
         </div>
-
         <!-- Récapitulatif -->
         <div class="form-section summary-section">
           <h3 class="section-title">
             <font-awesome-icon :icon="['fas', 'clipboard-list']" /> Récapitulatif
           </h3>
-
           <div class="trip-summary">
             <div class="summary-route">
               <span class="route-point"
@@ -184,30 +172,28 @@
                 {{ tripData.arrival_address || 'Destination' }}</span
               >
             </div>
-
             <div class="summary-details">
               <div class="summary-item">
-                <span class="summary-label">Date et heure :</span>
-                <span class="summary-value">
+                <span class="summary-label">Date et heure :</span
+                ><span class="summary-value">
                   {{ formatSummaryDateTime() }}
                 </span>
               </div>
               <div class="summary-item">
-                <span class="summary-label">Places disponibles :</span>
-                <span class="summary-value">{{ tripData.initial_seats_offered || 0 }}</span>
+                <span class="summary-label">Places disponibles :</span
+                ><span class="summary-value">{{ tripData.initial_seats_offered || 0 }}</span>
               </div>
               <div class="summary-item">
-                <span class="summary-label">Prix par passager :</span>
-                <span class="summary-value">{{ tripData.price_per_passenger || 0 }} crédits</span>
+                <span class="summary-label">Prix par passager :</span
+                ><span class="summary-value">{{ tripData.price_per_passenger || 0 }} crédits</span>
               </div>
             </div>
           </div>
         </div>
-
         <!-- Actions -->
         <div class="form-actions">
-          <router-link to="/my-trips" class="btn btn-secondary"> Annuler </router-link>
-          <button type="submit" class="btn btn-primary" :disabled="loading">
+          <router-link to="/my-trips" class="btn btn-secondary"> Annuler </router-link
+          ><button type="submit" class="btn btn-primary" :disabled="loading">
             <span v-if="loading" class="loading-spinner"></span>
             {{ loading ? 'Création...' : 'Créer le trajet' }}
           </button>
@@ -216,7 +202,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -359,4 +344,3 @@ export default {
   },
 }
 </script>
-

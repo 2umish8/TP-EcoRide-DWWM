@@ -32,21 +32,12 @@ const goToCarpooling = () => {
   })
 }
 </script>
-
 <template>
-  <div class="accueil">
-    <!-- Hero Section (extracted) -->
-    <HeroSection
+  <div>
+    <!-- Hero Section (extracted) --><HeroSection
       :initialSearchValues="searchForm"
       @search="handleSearch"
       @browse-all="goToCarpooling"
-    />
-
-    <!-- Footer arrows section extracted -->
-    <ArrowsFooter />
-
-    <!-- Section À propos de nous (extrait) -->
-    <AboutSection />
+    /><!-- Footer arrows section extracted --><ArrowsFooter /><!-- Section À propos de nous (extrait) --><AboutSection />
   </div>
 </template>
-

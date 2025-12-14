@@ -5,41 +5,33 @@
       <p v-if="isOwnProfile">Configurez vos préférences pour les passagers</p>
       <p v-else>Préférences de ce chauffeur</p>
     </div>
-
     <!-- Mode édition -->
     <div v-if="isEditing" class="edit-mode">
       <form @submit.prevent="savePreferences" class="preferences-form">
         <!-- Préférences standards -->
         <div class="standard-preferences">
           <h4>Préférences standard</h4>
-
           <div class="preference-group">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="form.allowSmoking" />
-              <span class="checkmark"></span>
+            <label class="checkbox-label"
+              ><input type="checkbox" v-model="form.allowSmoking" /><span class="checkmark"></span>
               Fumeur autorisé
             </label>
           </div>
-
           <div class="preference-group">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="form.allowPets" />
-              <span class="checkmark"></span>
+            <label class="checkbox-label"
+              ><input type="checkbox" v-model="form.allowPets" /><span class="checkmark"></span>
               Animaux autorisés
             </label>
           </div>
-
           <div class="preference-group">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="form.allowMusic" />
-              <span class="checkmark"></span>
+            <label class="checkbox-label"
+              ><input type="checkbox" v-model="form.allowMusic" /><span class="checkmark"></span>
               Musique autorisée
             </label>
           </div>
-
           <div class="preference-group">
-            <label for="conversation">Niveau de conversation :</label>
-            <select id="conversation" v-model="form.conversationLevel">
+            <label for="conversation">Niveau de conversation :</label
+            ><select id="conversation" v-model="form.conversationLevel">
               <option value="silence">Silence préféré</option>
               <option value="minimal">Conversation minimale</option>
               <option value="normal">Conversation normale</option>
@@ -47,11 +39,9 @@
             </select>
           </div>
         </div>
-
         <!-- Préférences personnalisées -->
         <div class="custom-preferences">
           <h4>Préférences personnalisées</h4>
-
           <div
             v-for="(pref, index) in form.customPreferences"
             :key="index"
@@ -62,13 +52,14 @@
               v-model="pref.name"
               placeholder="Nom de la préférence"
               maxlength="50"
-            />
-            <input type="text" v-model="pref.value" placeholder="Valeur" maxlength="100" />
-            <button type="button" @click="removeCustomPreference(index)" class="btn-remove">
+            /><input type="text" v-model="pref.value" placeholder="Valeur" maxlength="100" /><button
+              type="button"
+              @click="removeCustomPreference(index)"
+              class="btn-remove"
+            >
               <font-awesome-icon :icon="['fas', 'xmark']" />
             </button>
           </div>
-
           <button
             type="button"
             @click="addCustomPreference"
@@ -78,43 +69,35 @@
             + Ajouter une préférence
           </button>
         </div>
-
         <!-- Actions -->
         <div class="form-actions">
-          <button type="button" @click="cancelEdit" class="btn-cancel">Annuler</button>
-          <button type="submit" class="btn-save" :disabled="loading">
+          <button type="button" @click="cancelEdit" class="btn-cancel">Annuler</button
+          ><button type="submit" class="btn-save" :disabled="loading">
             {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
           </button>
         </div>
       </form>
     </div>
-
     <!-- Mode affichage -->
     <div v-else class="display-mode">
       <div v-if="hasPreferences" class="preferences-display">
         <!-- Préférences standards -->
         <div class="standard-display">
           <div class="preference-item" v-if="preferences.allowSmoking">
-            <font-awesome-icon :icon="['fas', 'smoking']" class="icon" />
-            <span>Fumeur autorisé</span>
+            <font-awesome-icon :icon="['fas', 'smoking']" /><span>Fumeur autorisé</span>
           </div>
-
           <div class="preference-item" v-if="preferences.allowPets">
-            <font-awesome-icon :icon="['fas', 'paw']" class="icon" />
-            <span>Animaux autorisés</span>
+            <font-awesome-icon :icon="['fas', 'paw']" /><span>Animaux autorisés</span>
           </div>
-
           <div class="preference-item" v-if="preferences.allowMusic">
-            <font-awesome-icon :icon="['fas', 'music']" class="icon" />
-            <span>Musique autorisée</span>
+            <font-awesome-icon :icon="['fas', 'music']" /><span>Musique autorisée</span>
           </div>
-
           <div class="preference-item" v-if="preferences.conversationLevel">
-            <font-awesome-icon :icon="['fas', 'comment']" class="icon" />
-            <span>{{ getConversationText(preferences.conversationLevel) }}</span>
+            <font-awesome-icon :icon="['fas', 'comment']" /><span>{{
+              getConversationText(preferences.conversationLevel)
+            }}</span>
           </div>
         </div>
-
         <!-- Préférences personnalisées -->
         <div v-if="preferences.customPreferences?.length > 0" class="custom-display">
           <h4>Autres préférences</h4>
@@ -127,7 +110,6 @@
           </div>
         </div>
       </div>
-
       <div v-else class="no-preferences">
         <p v-if="isOwnProfile">
           Aucune préférence configurée.
@@ -135,22 +117,21 @@
         </p>
         <p v-else>Ce chauffeur n'a pas encore configuré ses préférences.</p>
       </div>
-
-      <!-- Bouton d'édition -->
-      <button v-if="isOwnProfile && hasPreferences" @click="startEdit" class="btn-edit">
+      <!-- Bouton d'édition --><button
+        v-if="isOwnProfile && hasPreferences"
+        @click="startEdit"
+        class="btn-edit"
+      >
         Modifier mes préférences
       </button>
     </div>
-
     <!-- Messages -->
     <div v-if="error" class="error-message">
       {{ error }}
     </div>
-
     <div v-if="success" class="success-message">Préférences enregistrées avec succès !</div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { preferencesService } from '@/services/mongoServices.js'

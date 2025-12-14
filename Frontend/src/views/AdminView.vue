@@ -1,19 +1,24 @@
 ﻿<template>
   <div class="admin-view">
     <h1>Gestion des comptes</h1>
-
     <!-- Formulaire création employé -->
     <section class="admin-section">
       <h2>Créer un compte employé</h2>
       <form @submit.prevent="handleCreateEmployee" class="admin-form">
-        <input v-model="newEmployee.pseudo" type="text" placeholder="Pseudo" required />
-        <input v-model="newEmployee.email" type="email" placeholder="Email" required />
-        <input v-model="newEmployee.password" type="password" placeholder="Mot de passe" required />
-        <button type="submit">Créer l'employé</button>
+        <input v-model="newEmployee.pseudo" type="text" placeholder="Pseudo" required /><input
+          v-model="newEmployee.email"
+          type="email"
+          placeholder="Email"
+          required
+        /><input
+          v-model="newEmployee.password"
+          type="password"
+          placeholder="Mot de passe"
+          required
+        /><button type="submit">Créer l'employé</button>
       </form>
       <div v-if="employeeCreationMsg" class="admin-msg">{{ employeeCreationMsg }}</div>
     </section>
-
     <!-- Liste des utilisateurs -->
     <section class="admin-section">
       <h2>Utilisateurs</h2>
@@ -39,7 +44,7 @@
             <td>{{ user.email }}</td>
             <td>{{ user.roles }}</td>
             <td>
-              <span :class="user.suspended ? 'suspended' : 'active'">
+              <span>
                 {{ user.suspended ? 'Suspendu' : 'Actif' }}
               </span>
             </td>
@@ -55,7 +60,6 @@
     </section>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
@@ -126,4 +130,3 @@ async function handleCreateEmployee() {
 
 onMounted(fetchUsers)
 </script>
-

@@ -1,11 +1,11 @@
-﻿<template>
+<template>
   <div class="report-trip-page">
     <div class="container">
       <!-- Header -->
       <div class="page-header">
         <div class="header-content">
           <div class="logo-section">
-            <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="logo" />
+            <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" />
           </div>
           <div class="title-section">
             <h1>
@@ -15,13 +15,11 @@
           </div>
         </div>
       </div>
-
       <!-- Loading State -->
       <div v-if="loading" class="loading-container">
         <div class="spinner"></div>
         <p>Chargement des informations du trajet...</p>
       </div>
-
       <!-- Error State -->
       <div v-else-if="error" class="error-container">
         <div class="error-content">
@@ -30,34 +28,31 @@
           <router-link to="/" class="btn-primary">Retour à l'accueil</router-link>
         </div>
       </div>
-
       <!-- Main Content -->
       <div v-else class="report-content">
         <!-- Trip Information -->
-        <div class="trip-info-card" v-if="tripInfo">
+        <div v-if="tripInfo">
           <h3><font-awesome-icon :icon="['fas', 'location-dot']" /> Informations du trajet</h3>
           <div class="trip-details">
             <div class="detail-row">
               <span class="label"
                 ><font-awesome-icon :icon="['fas', 'location-dot']" /> Départ :</span
-              >
-              <span class="value">{{ tripInfo.departure_address }}</span>
+              ><span class="value">{{ tripInfo.departure_address }}</span>
             </div>
             <div class="detail-row">
-              <span class="label"><font-awesome-icon :icon="['fas', 'bullseye']" /> Arrivée :</span>
-              <span class="value">{{ tripInfo.arrival_address }}</span>
+              <span class="label"><font-awesome-icon :icon="['fas', 'bullseye']" /> Arrivée :</span
+              ><span class="value">{{ tripInfo.arrival_address }}</span>
             </div>
             <div class="detail-row">
-              <span class="label"><font-awesome-icon :icon="['fas', 'calendar']" /> Date :</span>
-              <span class="value">{{ formatTripDate(tripInfo.departure_datetime) }}</span>
+              <span class="label"><font-awesome-icon :icon="['fas', 'calendar']" /> Date :</span
+              ><span class="value">{{ formatTripDate(tripInfo.departure_datetime) }}</span>
             </div>
             <div class="detail-row">
-              <span class="label"><font-awesome-icon :icon="['fas', 'user']" /> Chauffeur :</span>
-              <span class="value">{{ tripInfo.driver_pseudo }}</span>
+              <span class="label"><font-awesome-icon :icon="['fas', 'user']" /> Chauffeur :</span
+              ><span class="value">{{ tripInfo.driver_pseudo }}</span>
             </div>
           </div>
         </div>
-
         <!-- Warning Notice -->
         <div class="warning-notice">
           <h3><font-awesome-icon :icon="['fas', 'triangle-exclamation']" /> Important</h3>
@@ -73,19 +68,17 @@
             >
           </p>
         </div>
-
         <!-- Report Form -->
         <div class="report-form-card">
           <div class="form-header">
             <h3><font-awesome-icon :icon="['fas', 'pen']" /> Détails du problème</h3>
             <p>Décrivez précisément ce qui s'est passé pendant votre trajet</p>
           </div>
-
           <form @submit.prevent="submitReport" class="report-form">
             <!-- Problem Category -->
             <div class="form-group">
-              <label for="category" class="form-label">Type de problème *</label>
-              <select id="category" v-model="reportForm.category" class="form-select" required>
+              <label for="category" class="form-label">Type de problème *</label
+              ><select id="category" v-model="reportForm.category" required>
                 <option value="">Sélectionnez le type de problème</option>
                 <option value="conduite_dangereuse">Conduite dangereuse</option>
                 <option value="retard_important">Retard important (plus de 30 min)</option>
@@ -99,74 +92,65 @@
                 <option value="autre">Autre problème</option>
               </select>
             </div>
-
             <!-- Severity Level -->
             <div class="form-group">
               <label class="form-label">Gravité du problème *</label>
               <div class="severity-options">
-                <label class="severity-option">
-                  <input
+                <label class="severity-option"
+                  ><input
                     type="radio"
                     name="severity"
                     value="mineur"
                     v-model="reportForm.severity"
                     required
-                  />
-                  <span class="severity-label">
-                    <font-awesome-icon :icon="['fas', 'circle']" class="severity-icon minor" />
-                    <span class="severity-text">
-                      <strong>Mineur</strong><br />
+                  /><span class="severity-label"
+                    ><font-awesome-icon
+                      :icon="['fas', 'circle']"
+                      class="severity-icon minor"
+                    /><span class="severity-text"
+                      ><strong>Mineur</strong><br />
                       Gêne légère, sans impact sur la sécurité
-                    </span>
-                  </span>
-                </label>
-
-                <label class="severity-option">
-                  <input
+                    </span></span
+                  ></label
+                ><label class="severity-option"
+                  ><input
                     type="radio"
                     name="severity"
                     value="modere"
                     v-model="reportForm.severity"
                     required
-                  />
-                  <span class="severity-label">
-                    <font-awesome-icon
+                  /><span class="severity-label"
+                    ><font-awesome-icon
                       :icon="['fas', 'exclamation']"
                       class="severity-icon moderate"
-                    />
-                    <span class="severity-text">
-                      <strong>Modéré</strong><br />
+                    /><span class="severity-text"
+                      ><strong>Modéré</strong><br />
                       Problème notable affectant le confort
-                    </span>
-                  </span>
-                </label>
-
-                <label class="severity-option">
-                  <input
+                    </span></span
+                  ></label
+                ><label class="severity-option"
+                  ><input
                     type="radio"
                     name="severity"
                     value="grave"
                     v-model="reportForm.severity"
                     required
-                  />
-                  <span class="severity-label">
-                    <font-awesome-icon
+                  /><span class="severity-label"
+                    ><font-awesome-icon
                       :icon="['fas', 'triangle-exclamation']"
                       class="severity-icon severe"
-                    />
-                    <span class="severity-text">
-                      <strong>Grave</strong><br />
+                    /><span class="severity-text"
+                      ><strong>Grave</strong><br />
                       Problème de sécurité ou comportement inacceptable
-                    </span>
-                  </span>
-                </label>
+                    </span></span
+                  ></label
+                >
               </div>
             </div>
-
             <!-- Detailed Description -->
             <div class="form-group">
-              <label for="description" class="form-label">Description détaillée *</label>
-              <textarea
+              <label for="description" class="form-label">Description détaillée *</label
+              ><textarea
                 id="description"
                 v-model="reportForm.description"
                 placeholder="Décrivez précisément ce qui s'est passé : heure, lieu, circonstances, impact sur votre trajet..."
@@ -177,11 +161,10 @@
               ></textarea>
               <div class="char-count">{{ reportForm.description.length }}/1000 caractères</div>
             </div>
-
             <!-- Additional Information -->
             <div class="form-group">
-              <label for="additionalInfo" class="form-label">Informations complémentaires</label>
-              <textarea
+              <label for="additionalInfo" class="form-label">Informations complémentaires</label
+              ><textarea
                 id="additionalInfo"
                 v-model="reportForm.additionalInfo"
                 placeholder="Témoins, preuves, contexte particulier... (optionnel)"
@@ -191,7 +174,6 @@
               ></textarea>
               <div class="char-count">{{ reportForm.additionalInfo.length }}/500 caractères</div>
             </div>
-
             <!-- Contact Permission -->
             <div class="form-group">
               <div class="checkbox-container">
@@ -200,13 +182,11 @@
                   id="contactPermission"
                   v-model="reportForm.allowContact"
                   class="form-checkbox"
-                />
-                <label for="contactPermission" class="checkbox-label">
+                /><label for="contactPermission" class="checkbox-label">
                   J'autorise l'équipe EcoRide à me contacter pour des précisions sur ce signalement
                 </label>
               </div>
             </div>
-
             <!-- Rating (required for reports) -->
             <div class="form-group">
               <label class="form-label">Note globale du trajet *</label>
@@ -226,15 +206,13 @@
               </div>
               <span class="rating-text">{{ getRatingText(reportForm.rating) }}</span>
             </div>
-
             <!-- Form Actions -->
             <div class="form-actions">
-              <router-link to="/" class="btn-secondary"> Annuler </router-link>
-              <button type="submit" class="btn-danger" :disabled="!isFormValid || submitting">
+              <router-link to="/" class="btn-secondary"> Annuler </router-link
+              ><button type="submit" class="btn-danger" :disabled="!isFormValid || submitting">
                 <span v-if="submitting"
                   ><font-awesome-icon :icon="['fas', 'spinner']" spin /> Envoi en cours...</span
-                >
-                <span v-else
+                ><span v-else
                   ><font-awesome-icon :icon="['fas', 'triangle-exclamation']" /> Envoyer le
                   signalement</span
                 >
@@ -242,7 +220,6 @@
             </div>
           </form>
         </div>
-
         <!-- Success Message -->
         <div v-if="submitted" class="success-container">
           <div class="success-content">
@@ -261,8 +238,8 @@
               </ul>
             </div>
             <div class="success-actions">
-              <router-link to="/" class="btn-primary">Retour à l'accueil</router-link>
-              <router-link to="/my-trips" class="btn-secondary">Mes trajets</router-link>
+              <router-link to="/" class="btn-primary">Retour à l'accueil</router-link
+              ><router-link to="/my-trips" class="btn-secondary">Mes trajets</router-link>
             </div>
           </div>
         </div>
@@ -270,7 +247,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
@@ -410,4 +386,3 @@ onMounted(() => {
   loadTripInfo()
 })
 </script>
-

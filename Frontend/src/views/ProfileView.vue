@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="profile-page">
     <div class="profile-container">
       <!-- En-tête du profil -->
@@ -22,43 +22,42 @@
           </div>
         </div>
       </div>
-
       <!-- Sélection du rôle -->
       <div class="role-selection-card">
         <h3 class="card-title">Mon rôle sur EcoRide</h3>
-
         <!-- Indicateur de chargement -->
         <div v-if="isLoadingProfile" class="loading-indicator">
           <font-awesome-icon :icon="['fas', 'hourglass-half']" class="loading-spinner" />
           <p>Chargement de votre profil...</p>
         </div>
-
         <!-- Options de rôle -->
         <div v-else class="role-options">
-          <label class="role-option" :class="{ active: selectedRoles.includes('passager') }">
-            <input type="checkbox" value="passager" v-model="selectedRoles" @change="updateRole" />
+          <label :class="{ active: selectedRoles.includes('passager') }"
+            ><input type="checkbox" value="passager" v-model="selectedRoles" @change="updateRole" />
             <div class="role-content">
               <span class="role-icon"><font-awesome-icon :icon="['fas', 'car']" /></span>
               <div class="role-text">
                 <h4>Passager</h4>
                 <p>Je cherche des trajets à partager</p>
               </div>
-            </div>
-          </label>
-
-          <label class="role-option" :class="{ active: selectedRoles.includes('chauffeur') }">
-            <input type="checkbox" value="chauffeur" v-model="selectedRoles" @change="updateRole" />
+            </div></label
+          ><label :class="{ active: selectedRoles.includes('chauffeur') }"
+            ><input
+              type="checkbox"
+              value="chauffeur"
+              v-model="selectedRoles"
+              @change="updateRole"
+            />
             <div class="role-content">
               <span class="role-icon"><font-awesome-icon :icon="['fas', 'truck']" /></span>
               <div class="role-text">
                 <h4>Chauffeur</h4>
                 <p>Je propose mes véhicules pour covoiturer</p>
               </div>
-            </div>
-          </label>
+            </div></label
+          >
         </div>
       </div>
-
       <!-- Section Proposer un trajet (si chauffeur sélectionné) -->
       <div v-if="selectedRoles.includes('chauffeur')" class="propose-ride-card">
         <h3 class="card-title">Proposer un EcoRide</h3>
@@ -66,8 +65,7 @@
           <div class="form-group" v-if="vehicles.length > 0">
             <label class="form-label"
               ><font-awesome-icon :icon="['fas', 'car']" /> Véhicule à utiliser</label
-            >
-            <select v-model="newRide.vehicleId" class="form-input" required>
+            ><select v-model="newRide.vehicleId" required>
               <option value="">Sélectionner un véhicule</option>
               <option v-for="vehicle in vehicles" :key="vehicle.id" :value="vehicle.id">
                 {{ vehicle.brand_name || vehicle.brand }} {{ vehicle.model }} -
@@ -75,20 +73,17 @@
               </option>
             </select>
           </div>
-
           <div v-if="vehicles.length === 0" class="no-vehicle-warning">
             <span class="warning-icon"
               ><font-awesome-icon :icon="['fas', 'triangle-exclamation']"
             /></span>
             <p>Vous devez d'abord ajouter un véhicule pour proposer un trajet.</p>
           </div>
-
           <div class="form-row">
             <div class="form-group">
               <label class="form-label"
                 ><font-awesome-icon :icon="['fas', 'location-dot']" /> Lieu de départ</label
-              >
-              <input
+              ><input
                 type="text"
                 v-model="newRide.departure"
                 class="form-input"
@@ -99,8 +94,7 @@
             <div class="form-group">
               <label class="form-label"
                 ><font-awesome-icon :icon="['fas', 'flag-checkered']" /> Lieu d'arrivée</label
-              >
-              <input
+              ><input
                 type="text"
                 v-model="newRide.destination"
                 class="form-input"
@@ -109,13 +103,11 @@
               />
             </div>
           </div>
-
           <div class="form-row">
             <div class="form-group">
               <label class="form-label"
                 ><font-awesome-icon :icon="['fas', 'calendar']" /> Date de départ</label
-              >
-              <input
+              ><input
                 type="date"
                 v-model="newRide.date"
                 :min="minDate"
@@ -126,17 +118,14 @@
             <div class="form-group">
               <label class="form-label"
                 ><font-awesome-icon :icon="['fas', 'clock']" /> Heure de départ</label
-              >
-              <input type="time" v-model="newRide.time" class="form-input" required />
+              ><input type="time" v-model="newRide.time" required />
             </div>
           </div>
-
           <div class="form-row">
             <div class="form-group">
               <label class="form-label"
                 ><font-awesome-icon :icon="['fas', 'coins']" /> Prix par passager (€)</label
-              >
-              <input
+              ><input
                 type="number"
                 v-model="newRide.price"
                 class="form-input"
@@ -160,33 +149,28 @@
                   <option value="">Sélectionner</option>
                   <option v-for="n in availableSeats" :key="n" :value="n">
                     {{ n }} place{{ n > 1 ? 's' : '' }}
-                  </option>
-                </select>
-
-                <!-- Tooltip orange quand aucun véhicule n'est sélectionné -->
+                  </option></select
+                ><!-- Tooltip orange quand aucun véhicule n'est sélectionné -->
                 <div v-if="!newRide.vehicleId" class="tooltip-orange">
                   <span class="tooltip-icon"
-                    ><font-awesome-icon :icon="['fas', 'triangle-exclamation']"
-                  /></span>
-                  <span class="tooltip-text">Choisissez d'abord un véhicule</span>
+                    ><font-awesome-icon :icon="['fas', 'triangle-exclamation']" /></span
+                  ><span class="tooltip-text">Choisissez d'abord un véhicule</span>
                 </div>
               </div>
             </div>
           </div>
-
           <div class="propose-ride-actions">
             <button
               @click="proposeRide"
               class="propose-btn"
               :disabled="!canProposeRide || vehicles.length === 0"
             >
-              <font-awesome-icon :icon="['fas', 'car']" class="propose-icon" />
+              <font-awesome-icon :icon="['fas', 'car']" />
               Proposer un EcoRide
             </button>
           </div>
         </div>
       </div>
-
       <!-- Section Chauffeur (si chauffeur sélectionné) -->
       <div v-if="selectedRoles.includes('chauffeur')" class="driver-section">
         <!-- Véhicules -->
@@ -194,17 +178,15 @@
           <div class="card-header">
             <h3 class="card-title">Mes Véhicules</h3>
             <button @click="showAddVehicle = true" class="add-btn">
-              <font-awesome-icon :icon="['fas', 'plus']" class="add-icon" />
+              <font-awesome-icon :icon="['fas', 'plus']" />
               Ajouter un véhicule
             </button>
           </div>
-
           <div v-if="vehicles.length === 0" class="empty-state">
             <span class="empty-icon"><font-awesome-icon :icon="['fas', 'car']" /></span>
             <p>Aucun véhicule enregistré</p>
             <small>Ajoutez votre premier véhicule pour proposer des trajets</small>
           </div>
-
           <div v-else class="vehicles-list">
             <div v-for="vehicle in vehicles" :key="vehicle.id" class="vehicle-item">
               <div class="vehicle-info">
@@ -222,9 +204,7 @@
             </div>
           </div>
         </div>
-
-        <!-- Préférences du chauffeur (composant) -->
-        <DriverPreferencesSection
+        <!-- Préférences du chauffeur (composant) --><DriverPreferencesSection
           :preferences="driverPreferences"
           @update="
             (newPrefs) => {
@@ -235,7 +215,6 @@
         />
       </div>
     </div>
-
     <!-- Modal d'ajout de véhicule -->
     <div v-if="showAddVehicle" class="modal-overlay" @click="showAddVehicle = false">
       <div class="modal-content" @click.stop>
@@ -243,11 +222,10 @@
           <h3>Ajouter un véhicule</h3>
           <button @click="showAddVehicle = false" class="close-btn">×</button>
         </div>
-
         <form @submit.prevent="addVehicle" class="vehicle-form">
           <div class="form-group">
-            <label class="form-label">Plaque d'immatriculation</label>
-            <input
+            <label class="form-label">Plaque d'immatriculation</label
+            ><input
               type="text"
               v-model="newVehicle.plate_number"
               class="form-input"
@@ -255,11 +233,10 @@
               required
             />
           </div>
-
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">Marque</label>
-              <input
+              <label class="form-label">Marque</label
+              ><input
                 type="text"
                 v-model="newVehicle.brand"
                 class="form-input"
@@ -268,8 +245,8 @@
               />
             </div>
             <div class="form-group">
-              <label class="form-label">Modèle</label>
-              <input
+              <label class="form-label">Modèle</label
+              ><input
                 type="text"
                 v-model="newVehicle.model"
                 class="form-input"
@@ -278,11 +255,10 @@
               />
             </div>
           </div>
-
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">Nombre de places</label>
-              <select v-model="newVehicle.seats_available" class="form-select" required>
+              <label class="form-label">Nombre de places</label
+              ><select v-model="newVehicle.seats_available" required>
                 <option value="">Sélectionner</option>
                 <option value="1">1 place</option>
                 <option value="2">2 places</option>
@@ -294,8 +270,8 @@
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label">Couleur</label>
-              <input
+              <label class="form-label">Couleur</label
+              ><input
                 type="text"
                 v-model="newVehicle.color"
                 class="form-input"
@@ -304,27 +280,22 @@
               />
             </div>
           </div>
-
           <div class="form-group">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="newVehicle.is_electric" />
-              <span><font-awesome-icon :icon="['fas', 'bolt']" /> Véhicule électrique</span>
-            </label>
+            <label class="checkbox-label"
+              ><input type="checkbox" v-model="newVehicle.is_electric" /><span
+                ><font-awesome-icon :icon="['fas', 'bolt']" /> Véhicule électrique</span
+              ></label
+            >
           </div>
-
           <div class="modal-actions">
-            <button type="button" @click="showAddVehicle = false" class="cancel-btn">
-              Annuler
-            </button>
-            <button type="submit" class="submit-btn" :disabled="isSubmitting">
-              <span v-if="isSubmitting">⏳</span>
-              <span v-else>Ajouter</span>
+            <button type="button" @click="showAddVehicle = false" class="cancel-btn">Annuler</button
+            ><button type="submit" :disabled="isSubmitting">
+              <span v-if="isSubmitting">⏳</span><span v-else>Ajouter</span>
             </button>
           </div>
         </form>
       </div>
     </div>
-
     <!-- Modal de succès après création d'un trajet -->
     <div v-if="showSuccessModal" class="modal-overlay" @click="showSuccessModal = false">
       <div class="modal-content success-modal" @click.stop>
@@ -332,7 +303,6 @@
           <h3><font-awesome-icon :icon="['fas', 'circle-check']" /> Trajet créé avec succès !</h3>
           <button @click="showSuccessModal = false" class="close-btn">×</button>
         </div>
-
         <div class="success-content">
           <div class="success-message">
             <p>Votre EcoRide a été proposé avec succès !</p>
@@ -355,20 +325,17 @@
               </p>
             </div>
           </div>
-
           <div class="success-actions">
             <button @click="viewCreatedTrip" class="view-trip-btn">
               <font-awesome-icon :icon="['fas', 'eye']" class="btn-icon" />
-              Voir mon trajet
-            </button>
-            <button @click="showSuccessModal = false" class="dismiss-btn">Non merci</button>
+              Voir mon trajet</button
+            ><button @click="showSuccessModal = false" class="dismiss-btn">Non merci</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
@@ -838,4 +805,3 @@ export default {
   },
 }
 </script>
-

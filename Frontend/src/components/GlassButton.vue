@@ -1,15 +1,6 @@
-<template>
-  <router-link
-    :to="to"
-    :class="[
-      'eco-button',
-      variant === 'inscription' ? 'eco-button--inscription' : 'eco-button--connexion',
-    ]"
-  >
-    <slot></slot>
-  </router-link>
+﻿<template>
+  <router-link :to="to"><slot></slot></router-link>
 </template>
-
 <script setup>
 defineProps({
   to: {

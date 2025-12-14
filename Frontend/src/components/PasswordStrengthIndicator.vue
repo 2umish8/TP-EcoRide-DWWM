@@ -6,10 +6,9 @@
       class="password-strength-indicator"
       :class="getPasswordStrengthColor(validation.strength)"
     >
-      <span class="password-icon">{{ getPasswordStrengthIcon(validation.strength) }}</span>
-      <span>Force du mot de passe : {{ validation.strength }}</span>
+      <span class="password-icon">{{ getPasswordStrengthIcon(validation.strength) }}</span
+      ><span>Force du mot de passe : {{ validation.strength }}</span>
     </div>
-
     <!-- Barre de progression -->
     <div v-if="password" class="password-strength-bar">
       <div
@@ -18,12 +17,10 @@
         :style="{ width: validation.percentage + '%' }"
       ></div>
     </div>
-
     <!-- Messages d'erreur -->
     <div v-if="password && !validation.isValid" class="password-error">
       {{ getPasswordErrorMessage(validation) }}
     </div>
-
     <!-- Suggestions d'amélioration -->
     <div
       v-if="password && !validation.isValid && validation.suggestions.length > 0"
@@ -32,7 +29,6 @@
       <strong>Suggestions :</strong>
       {{ validation.suggestions.join(', ') }}
     </div>
-
     <!-- Critères requis -->
     <div v-if="showRequirements" class="password-requirements">
       <h4>Critères requis :</h4>
@@ -47,7 +43,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import {
   validatePassword,
@@ -103,4 +98,3 @@ export default {
   },
 }
 </script>
-

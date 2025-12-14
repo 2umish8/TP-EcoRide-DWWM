@@ -1,17 +1,11 @@
 <template>
-  <div class="clickable-avatar-container" @click="handleClick">
-    <img
-      :src="avatarSrc"
-      :alt="alt"
-      class="clickable-avatar"
-      :class="{ clickable: clickable, [size]: true }"
-    />
-    <div v-if="showTooltip" class="tooltip">
+  <div @click="handleClick">
+    <img :src="avatarSrc" :alt="alt" />
+    <div v-if="showTooltip">
       {{ tooltipText }}
     </div>
   </div>
 </template>
-
 <script setup>
 import { computed } from 'vue'
 

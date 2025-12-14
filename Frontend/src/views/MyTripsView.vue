@@ -1,10 +1,9 @@
-﻿<template>
+<template>
   <div class="my-trips">
     <!-- Header -->
     <div class="trips-header">
       <h1 class="page-title">Mes Trajets</h1>
       <p class="page-subtitle">Gérez tous vos covoiturages</p>
-
       <!-- Onglets Conducteur/Passager -->
       <div class="tabs-container">
         <div class="tab-wrapper">
@@ -18,25 +17,20 @@
             @click="handlePassengerTab"
             :class="['tab-btn', { active: activeTab === 'passenger' }]"
           >
-            <span v-if="activeTab === 'passenger'" class="tab-content action-mode">
-              <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="icon" />
-              Rechercher un EcoRide
-            </span>
-            <span v-else class="tab-content normal-mode">
-              <font-awesome-icon :icon="['fas', 'calendar']" class="icon" />
+            <span v-if="activeTab === 'passenger'" class="tab-content action-mode"
+              ><font-awesome-icon :icon="['fas', 'magnifying-glass']" /> Rechercher un EcoRide </span
+            ><span v-else class="tab-content normal-mode"
+              ><font-awesome-icon :icon="['fas', 'calendar']" />
               Voir mes réservations
             </span>
           </button>
         </div>
-
         <div class="tab-wrapper">
           <button @click="handleDriverTab" :class="['tab-btn', { active: activeTab === 'driver' }]">
-            <span v-if="activeTab === 'driver'" class="tab-content action-mode">
-              <font-awesome-icon :icon="['fas', 'plus']" class="icon" />
-              Proposer un nouvel EcoRide
-            </span>
-            <span v-else class="tab-content normal-mode">
-              <font-awesome-icon :icon="['fas', 'car']" class="icon" />
+            <span v-if="activeTab === 'driver'" class="tab-content action-mode"
+              ><font-awesome-icon :icon="['fas', 'plus']" /> Proposer un nouvel EcoRide </span
+            ><span v-else class="tab-content normal-mode"
+              ><font-awesome-icon :icon="['fas', 'car']" />
               Voir mes EcoRides proposés
             </span>
           </button>
@@ -49,16 +43,13 @@
         </div>
       </div>
     </div>
-
     <!-- Contenu principal -->
     <div class="trips-container">
       <!-- Vue Conducteur -->
       <div v-if="activeTab === 'driver'" class="driver-content">
         <!-- Vérification si l'utilisateur est conducteur -->
         <div v-if="!isDriver" class="become-driver-state">
-          <div class="become-driver-icon">
-            <font-awesome-icon :icon="['fas', 'car']" />
-          </div>
+          <div class="become-driver-icon"><font-awesome-icon :icon="['fas', 'car']" /></div>
           <h3>Devenez conducteur EcoRide</h3>
           <p>Vous n'êtes pas encore conducteur sur EcoRide.</p>
           <p class="become-driver-description">En devenant conducteur, vous pourrez :</p>
@@ -99,15 +90,13 @@
             </ul>
           </div>
           <div class="become-driver-actions">
-            <router-link to="/become-driver" class="become-driver-btn">
-              <font-awesome-icon :icon="['fas', 'car']" /> Commencer l'inscription chauffeur
-            </router-link>
-            <router-link to="/help" class="learn-more-btn">
-              <font-awesome-icon :icon="['fas', 'book']" /> En savoir plus
+            <router-link to="/become-driver" class="become-driver-btn"
+              ><font-awesome-icon :icon="['fas', 'car']" /> Commencer l'inscription chauffeur </router-link
+            ><router-link to="/help" class="learn-more-btn"
+              ><font-awesome-icon :icon="['fas', 'book']" /> En savoir plus
             </router-link>
           </div>
         </div>
-
         <!-- Contenu conducteur normal -->
         <div v-else>
           <!-- État de chargement -->
@@ -115,22 +104,16 @@
             <div class="loading-spinner"></div>
             <p>Chargement de vos trajets...</p>
           </div>
-
           <!-- État d'erreur -->
           <div v-else-if="error" class="error-state">
-            <div class="error-icon">
-              <font-awesome-icon :icon="['fas', 'xmark']" />
-            </div>
+            <div class="error-icon"><font-awesome-icon :icon="['fas', 'xmark']" /></div>
             <h3>Erreur de chargement</h3>
             <p>{{ error }}</p>
             <button @click="loadTrips" class="retry-btn">Réessayer</button>
           </div>
-
           <!-- Aucun trajet -->
           <div v-else-if="trips.length === 0" class="empty-state">
-            <div class="empty-icon">
-              <font-awesome-icon :icon="['fas', 'car']" />
-            </div>
+            <div class="empty-icon"><font-awesome-icon :icon="['fas', 'car']" /></div>
             <h3>Aucun EcoRide trouvé</h3>
             <p>
               Vous n'avez pas encore créé de covoiturage. Commencez par proposer votre premier
@@ -140,40 +123,38 @@
               Créer mon premier EcoRide
             </router-link>
           </div>
-
           <!-- Liste des trajets conducteur -->
           <div v-else class="trips-list">
             <!-- Statistiques rapides -->
             <div class="trips-stats">
               <div class="stat-card completed-trips">
-                <span class="stat-number">{{ getStatsByStatus('terminé').length }}</span>
-                <span class="stat-label"
+                <span class="stat-number">{{ getStatsByStatus('terminé').length }}</span
+                ><span class="stat-label"
                   >EcoRide{{ getStatsByStatus('terminé').length > 1 ? 's' : '' }} effectué{{
                     getStatsByStatus('terminé').length > 1 ? 's' : ''
                   }}</span
                 >
               </div>
               <div class="stat-card upcoming-trips">
-                <span class="stat-number">{{ getStatsByStatus('prévu').length }}</span>
-                <span class="stat-label">À venir</span>
+                <span class="stat-number">{{ getStatsByStatus('prévu').length }}</span
+                ><span class="stat-label">À venir</span>
               </div>
               <div class="stat-card passengers-transported">
-                <span class="stat-number">{{ getTotalParticipants() }}</span>
-                <span class="stat-label"
+                <span class="stat-number">{{ getTotalParticipants() }}</span
+                ><span class="stat-label"
                   >Passager{{ getTotalParticipants() > 1 ? 's' : '' }} transporté{{
                     getTotalParticipants() > 1 ? 's' : ''
                   }}</span
                 >
               </div>
               <div class="stat-card eco-impact">
-                <span class="stat-number">{{ getCarbonSaved() }}</span>
-                <span class="stat-label">kg CO₂ économisés</span>
-                <span class="stat-subtext"
+                <span class="stat-number">{{ getCarbonSaved() }}</span
+                ><span class="stat-label">kg CO₂ économisés</span
+                ><span class="stat-subtext"
                   ><font-awesome-icon :icon="['fas', 'leaf']" /> Impact écologique</span
                 >
               </div>
             </div>
-
             <!-- Filtres -->
             <div class="trips-filters">
               <div class="filter-group">
@@ -183,27 +164,23 @@
                     @click="selectedStatus = ''"
                     :class="['status-btn', { active: selectedStatus === '' }]"
                   >
-                    Tous
-                  </button>
-                  <button
+                    Tous</button
+                  ><button
                     @click="selectedStatus = 'prévu'"
                     :class="['status-btn', { active: selectedStatus === 'prévu' }]"
                   >
-                    <font-awesome-icon :icon="['fas', 'calendar']" /> Prévus
-                  </button>
-                  <button
+                    <font-awesome-icon :icon="['fas', 'calendar']" /> Prévus</button
+                  ><button
                     @click="selectedStatus = 'démarré'"
                     :class="['status-btn', { active: selectedStatus === 'démarré' }]"
                   >
-                    <font-awesome-icon :icon="['fas', 'car']" /> En cours
-                  </button>
-                  <button
+                    <font-awesome-icon :icon="['fas', 'car']" /> En cours</button
+                  ><button
                     @click="selectedStatus = 'terminé'"
                     :class="['status-btn', { active: selectedStatus === 'terminé' }]"
                   >
-                    <font-awesome-icon :icon="['fas', 'circle-check']" /> Terminés
-                  </button>
-                  <button
+                    <font-awesome-icon :icon="['fas', 'circle-check']" /> Terminés</button
+                  ><button
                     @click="selectedStatus = 'annulé'"
                     :class="['status-btn', { active: selectedStatus === 'annulé' }]"
                   >
@@ -212,15 +189,14 @@
                 </div>
               </div>
               <div class="filter-group">
-                <label for="sort-filter">Trier par :</label>
-                <select id="sort-filter" v-model="sortOrder" class="filter-select">
+                <label for="sort-filter">Trier par :</label
+                ><select id="sort-filter" v-model="sortOrder" class="filter-select">
                   <option value="date-desc">Plus récents</option>
                   <option value="date-asc">Plus anciens</option>
                   <option value="status">Statut</option>
                 </select>
               </div>
             </div>
-
             <!-- Trajets -->
             <div
               v-if="filteredAndSortedTrips.length === 0 && selectedStatus"
@@ -234,53 +210,45 @@
                 !
               </p>
             </div>
-
             <div v-else class="trips-grid">
               <trip-card
                 v-for="trip in filteredAndSortedTrips"
                 :key="trip.id"
                 :trip="trip"
                 :show-earnings="true"
-              >
-                <template #actions>
-                  <button
+                ><template #actions
+                  ><button
                     v-if="trip.status === 'prévu'"
                     @click="handleStartTrip(trip.id)"
                     class="action-btn-small start"
                     title="Démarrer le trajet"
                   >
-                    ▶️
-                  </button>
-                  <button
+                    ▶️</button
+                  ><button
                     v-if="trip.status === 'démarré'"
                     @click="handleFinishTrip(trip.id)"
                     class="action-btn-small finish"
                     title="Terminer le trajet"
                   >
-                    <font-awesome-icon :icon="['fas', 'flag-checkered']" />
-                  </button>
-                  <button
+                    <font-awesome-icon :icon="['fas', 'flag-checkered']" /></button
+                  ><button
                     v-if="['prévu', 'démarré'].includes(trip.status)"
                     @click="handleCancelTrip(trip.id)"
                     class="action-btn-small cancel"
                     title="Annuler le trajet"
                   >
-                    <font-awesome-icon :icon="['fas', 'xmark']" />
-                  </button>
-                  <router-link
+                    <font-awesome-icon :icon="['fas', 'xmark']" /></button
+                  ><router-link
                     :to="`/carpoolings/${trip.id}`"
                     class="action-btn-small view"
                     title="Voir les détails"
-                  >
-                    <font-awesome-icon :icon="['fas', 'eye']" />
-                  </router-link>
-                </template>
+                    ><font-awesome-icon :icon="['fas', 'eye']" /></router-link
+                ></template>
               </trip-card>
             </div>
           </div>
         </div>
       </div>
-
       <!-- Vue Passager -->
       <div v-if="activeTab === 'passenger'" class="passenger-content">
         <!-- État de chargement -->
@@ -288,22 +256,16 @@
           <div class="loading-spinner"></div>
           <p>Chargement de vos participations...</p>
         </div>
-
         <!-- État d'erreur -->
         <div v-else-if="error" class="error-state">
-          <div class="error-icon">
-            <font-awesome-icon :icon="['fas', 'xmark']" />
-          </div>
+          <div class="error-icon"><font-awesome-icon :icon="['fas', 'xmark']" /></div>
           <h3>Erreur de chargement</h3>
           <p>{{ error }}</p>
           <button @click="loadParticipations" class="retry-btn">Réessayer</button>
         </div>
-
         <!-- Aucune participation -->
         <div v-else-if="participations.length === 0" class="empty-state">
-          <div class="empty-icon">
-            <font-awesome-icon :icon="['fas', 'ticket']" />
-          </div>
+          <div class="empty-icon"><font-awesome-icon :icon="['fas', 'ticket']" /></div>
           <h3>Aucune participation trouvée</h3>
           <p>
             Vous n'avez pas encore participé à un covoiturage. Découvrez les EcoRides disponibles !
@@ -312,14 +274,13 @@
             Rechercher un EcoRide
           </router-link>
         </div>
-
         <!-- Liste des participations -->
         <div v-else class="participations-list">
           <!-- Statistiques rapides -->
           <div class="trips-stats">
             <div class="stat-card completed-trips">
-              <span class="stat-number">{{ getParticipationStatsByStatus('terminé').length }}</span>
-              <span class="stat-label"
+              <span class="stat-number">{{ getParticipationStatsByStatus('terminé').length }}</span
+              ><span class="stat-label"
                 >Voyage{{
                   getParticipationStatsByStatus('terminé').length > 1 ? 's' : ''
                 }}
@@ -327,26 +288,24 @@
               >
             </div>
             <div class="stat-card upcoming-trips">
-              <span class="stat-number">{{ getParticipationStatsByStatus('prévu').length }}</span>
-              <span class="stat-label">À venir</span>
+              <span class="stat-number">{{ getParticipationStatsByStatus('prévu').length }}</span
+              ><span class="stat-label">À venir</span>
             </div>
             <div class="stat-card passengers-transported">
-              <span class="stat-number">{{ getTotalSpent() }}</span>
-              <span class="stat-label">Crédits dépensés</span>
+              <span class="stat-number">{{ getTotalSpent() }}</span
+              ><span class="stat-label">Crédits dépensés</span>
             </div>
             <div class="stat-card eco-impact">
-              <span class="stat-number">{{ participations.length }}</span>
-              <span class="stat-label"
+              <span class="stat-number">{{ participations.length }}</span
+              ><span class="stat-label"
                 >Participation{{ participations.length > 1 ? 's' : '' }} total{{
                   participations.length > 1 ? 'es' : 'e'
                 }}</span
-              >
-              <span class="stat-subtext"
+              ><span class="stat-subtext"
                 ><font-awesome-icon :icon="['fas', 'ticket']" /> Historique complet</span
               >
             </div>
           </div>
-
           <!-- Filtres -->
           <div class="trips-filters">
             <div class="filter-group">
@@ -356,27 +315,23 @@
                   @click="selectedStatus = ''"
                   :class="['status-btn', { active: selectedStatus === '' }]"
                 >
-                  Tous
-                </button>
-                <button
+                  Tous</button
+                ><button
                   @click="selectedStatus = 'prévu'"
                   :class="['status-btn', { active: selectedStatus === 'prévu' }]"
                 >
-                  <font-awesome-icon :icon="['fas', 'calendar']" /> Prévus
-                </button>
-                <button
+                  <font-awesome-icon :icon="['fas', 'calendar']" /> Prévus</button
+                ><button
                   @click="selectedStatus = 'démarré'"
                   :class="['status-btn', { active: selectedStatus === 'démarré' }]"
                 >
-                  <font-awesome-icon :icon="['fas', 'car']" /> En cours
-                </button>
-                <button
+                  <font-awesome-icon :icon="['fas', 'car']" /> En cours</button
+                ><button
                   @click="selectedStatus = 'terminé'"
                   :class="['status-btn', { active: selectedStatus === 'terminé' }]"
                 >
-                  <font-awesome-icon :icon="['fas', 'circle-check']" /> Terminés
-                </button>
-                <button
+                  <font-awesome-icon :icon="['fas', 'circle-check']" /> Terminés</button
+                ><button
                   @click="selectedStatus = 'annulé'"
                   :class="['status-btn', { active: selectedStatus === 'annulé' }]"
                 >
@@ -385,15 +340,14 @@
               </div>
             </div>
             <div class="filter-group">
-              <label for="sort-filter-passenger">Trier par :</label>
-              <select id="sort-filter-passenger" v-model="sortOrder" class="filter-select">
+              <label for="sort-filter-passenger">Trier par :</label
+              ><select id="sort-filter-passenger" v-model="sortOrder" class="filter-select">
                 <option value="date-desc">Plus récents</option>
                 <option value="date-asc">Plus anciens</option>
                 <option value="status">Statut</option>
               </select>
             </div>
           </div>
-
           <!-- Participations -->
           <div
             v-if="filteredAndSortedParticipations.length === 0 && selectedStatus"
@@ -407,7 +361,6 @@
               !
             </p>
           </div>
-
           <div v-else class="trips-grid">
             <trip-card
               v-for="participation in filteredAndSortedParticipations"
@@ -429,24 +382,19 @@
                 credits_paid: participation.credits_paid,
               }"
               :show-price="true"
-            >
-              <template #actions>
-                <router-link
+              ><template #actions
+                ><router-link
                   :to="`/carpoolings/${participation.carpooling_id}`"
                   class="action-btn-small view"
                   title="Voir les détails"
-                >
-                  <font-awesome-icon :icon="['fas', 'eye']" />
-                </router-link>
-                <button
+                  ><font-awesome-icon :icon="['fas', 'eye']" /></router-link
+                ><button
                   v-if="canCancelParticipation(participation)"
                   @click="handleCancelParticipation(participation.carpooling_id)"
-                  class="action-btn-small cancel"
                   title="Annuler la participation"
                 >
-                  <font-awesome-icon :icon="['fas', 'xmark']" />
-                </button>
-              </template>
+                  <font-awesome-icon :icon="['fas', 'xmark']" /></button
+              ></template>
             </trip-card>
           </div>
         </div>
@@ -454,7 +402,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import { ref, computed, onMounted } from 'vue'
 import { useNotificationStore } from '@/stores/notification'
@@ -629,4 +576,3 @@ export default {
   },
 }
 </script>
-

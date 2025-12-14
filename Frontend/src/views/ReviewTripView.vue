@@ -1,11 +1,11 @@
-﻿<template>
+<template>
   <div class="review-trip-page">
     <div class="container">
       <!-- Header -->
       <div class="page-header">
         <div class="header-content">
           <div class="logo-section">
-            <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="logo" />
+            <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" />
           </div>
           <div class="title-section">
             <h1><font-awesome-icon :icon="['fas', 'star']" /> Évaluer votre trajet</h1>
@@ -13,13 +13,11 @@
           </div>
         </div>
       </div>
-
       <!-- Loading State -->
       <div v-if="loading" class="loading-container">
         <div class="spinner"></div>
         <p>Chargement des informations du trajet...</p>
       </div>
-
       <!-- Error State -->
       <div v-else-if="error" class="error-container">
         <div class="error-content">
@@ -28,41 +26,37 @@
           <router-link to="/" class="btn-primary">Retour à l'accueil</router-link>
         </div>
       </div>
-
       <!-- Main Content -->
       <div v-else class="review-content">
         <!-- Trip Information -->
-        <div class="trip-info-card" v-if="tripInfo">
+        <div v-if="tripInfo">
           <h3><font-awesome-icon :icon="['fas', 'location-dot']" /> Informations du trajet</h3>
           <div class="trip-details">
             <div class="detail-row">
               <span class="label"
                 ><font-awesome-icon :icon="['fas', 'location-dot']" /> Départ :</span
-              >
-              <span class="value">{{ tripInfo.departure_address }}</span>
+              ><span class="value">{{ tripInfo.departure_address }}</span>
             </div>
             <div class="detail-row">
-              <span class="label"><font-awesome-icon :icon="['fas', 'bullseye']" /> Arrivée :</span>
-              <span class="value">{{ tripInfo.arrival_address }}</span>
+              <span class="label"><font-awesome-icon :icon="['fas', 'bullseye']" /> Arrivée :</span
+              ><span class="value">{{ tripInfo.arrival_address }}</span>
             </div>
             <div class="detail-row">
-              <span class="label"><font-awesome-icon :icon="['fas', 'calendar']" /> Date :</span>
-              <span class="value">{{ formatTripDate(tripInfo.departure_datetime) }}</span>
+              <span class="label"><font-awesome-icon :icon="['fas', 'calendar']" /> Date :</span
+              ><span class="value">{{ formatTripDate(tripInfo.departure_datetime) }}</span>
             </div>
             <div class="detail-row">
-              <span class="label"><font-awesome-icon :icon="['fas', 'user']" /> Chauffeur :</span>
-              <span class="value">{{ tripInfo.driver_pseudo }}</span>
+              <span class="label"><font-awesome-icon :icon="['fas', 'user']" /> Chauffeur :</span
+              ><span class="value">{{ tripInfo.driver_pseudo }}</span>
             </div>
           </div>
         </div>
-
         <!-- Review Form -->
         <div class="review-form-card">
           <div class="form-header">
             <h3><font-awesome-icon :icon="['fas', 'star']" /> Votre évaluation</h3>
             <p>Comment s'est passé votre trajet avec {{ tripInfo?.driver_pseudo }} ?</p>
           </div>
-
           <form @submit.prevent="submitReview" class="review-form">
             <!-- Rating -->
             <div class="form-group">
@@ -83,11 +77,10 @@
               </div>
               <span class="rating-text">{{ getRatingText(reviewForm.rating) }}</span>
             </div>
-
             <!-- Comment -->
             <div class="form-group">
-              <label for="comment" class="form-label">Votre commentaire *</label>
-              <textarea
+              <label for="comment" class="form-label">Votre commentaire *</label
+              ><textarea
                 id="comment"
                 v-model="reviewForm.comment"
                 placeholder="Décrivez votre expérience : ponctualité, conduite, véhicule, ambiance..."
@@ -98,7 +91,6 @@
               ></textarea>
               <div class="char-count">{{ reviewForm.comment.length }}/500 caractères</div>
             </div>
-
             <!-- Problème -->
             <div class="form-group">
               <div class="checkbox-container">
@@ -107,18 +99,16 @@
                   id="hasIssue"
                   v-model="reviewForm.isReported"
                   class="form-checkbox"
-                />
-                <label for="hasIssue" class="checkbox-label">
-                  <font-awesome-icon :icon="['fas', 'triangle-exclamation']" /> J'ai rencontré un
+                /><label for="hasIssue" class="checkbox-label"
+                  ><font-awesome-icon :icon="['fas', 'triangle-exclamation']" /> J'ai rencontré un
                   problème pendant ce trajet
                 </label>
               </div>
             </div>
-
             <!-- Problème Details -->
             <div v-if="reviewForm.isReported" class="form-group problem-details">
-              <label for="reportReason" class="form-label">Décrivez le problème *</label>
-              <textarea
+              <label for="reportReason" class="form-label">Décrivez le problème *</label
+              ><textarea
                 id="reportReason"
                 v-model="reviewForm.reportReason"
                 placeholder="Décrivez précisément le problème rencontré (retard important, conduite dangereuse, véhicule non conforme, etc.)"
@@ -135,20 +125,17 @@
                 </p>
               </div>
             </div>
-
             <!-- Form Actions -->
             <div class="form-actions">
-              <router-link to="/" class="btn-secondary"> Retour à l'accueil </router-link>
-              <button type="submit" class="btn-primary" :disabled="!isFormValid || submitting">
+              <router-link to="/" class="btn-secondary"> Retour à l'accueil </router-link
+              ><button type="submit" class="btn-primary" :disabled="!isFormValid || submitting">
                 <span v-if="submitting"
                   ><font-awesome-icon :icon="['fas', 'spinner']" spin /> Envoi en cours...</span
-                >
-                <span v-else><font-awesome-icon :icon="['fas', 'pen']" /> Publier mon avis</span>
+                ><span v-else><font-awesome-icon :icon="['fas', 'pen']" /> Publier mon avis</span>
               </button>
             </div>
           </form>
         </div>
-
         <!-- Success Message -->
         <div v-if="submitted" class="success-container">
           <div class="success-content">
@@ -156,8 +143,8 @@
             <p>Votre évaluation a été soumise avec succès.</p>
             <p><strong>Elle sera examinée par notre équipe avant publication.</strong></p>
             <div class="success-actions">
-              <router-link to="/" class="btn-primary">Retour à l'accueil</router-link>
-              <router-link to="/my-trips" class="btn-secondary">Mes trajets</router-link>
+              <router-link to="/" class="btn-primary">Retour à l'accueil</router-link
+              ><router-link to="/my-trips" class="btn-secondary">Mes trajets</router-link>
             </div>
           </div>
         </div>
@@ -165,7 +152,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
@@ -289,4 +275,3 @@ onMounted(() => {
   loadTripInfo()
 })
 </script>
-

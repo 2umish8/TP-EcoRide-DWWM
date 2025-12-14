@@ -1,34 +1,28 @@
-<template>
+﻿<template>
   <div class="preferences-card">
     <h3 class="card-title">Mes Préférences de Conduite</h3>
     <div class="preferences-grid">
-      <label class="preference-item">
-        <input
+      <label class="preference-item"
+        ><input
           type="checkbox"
           :checked="preferences.allowsSmoking"
           @change="onChange({ ...preferences, allowsSmoking: $event.target.checked })"
-        />
-        <span class="preference-label"
+        /><span class="preference-label"
           ><font-awesome-icon :icon="['fas', 'smoking']" /> Fumeur autorisé</span
-        >
-      </label>
-
-      <label class="preference-item">
-        <input
+        ></label
+      ><label class="preference-item"
+        ><input
           type="checkbox"
           :checked="preferences.allowsPets"
           @change="onChange({ ...preferences, allowsPets: $event.target.checked })"
-        />
-        <span class="preference-label"
+        /><span class="preference-label"
           ><font-awesome-icon :icon="['fas', 'paw']" /> Animaux autorisés</span
-        >
-      </label>
-
+        ></label
+      >
       <div class="preference-select">
         <label class="form-label"
           ><font-awesome-icon :icon="['fas', 'music']" /> Genre musical préféré</label
-        >
-        <select
+        ><select
           :value="preferences.preferredMusicGenre"
           @change="onChange({ ...preferences, preferredMusicGenre: $event.target.value })"
           class="form-select"
@@ -42,12 +36,10 @@
           <option value="rap">Rap</option>
         </select>
       </div>
-
       <div class="preference-select">
         <label class="form-label"
           ><font-awesome-icon :icon="['fas', 'comment']" /> Niveau de conversation</label
-        >
-        <select
+        ><select
           :value="preferences.conversationLevel"
           @change="onChange({ ...preferences, conversationLevel: $event.target.value })"
           class="form-select"
@@ -58,7 +50,6 @@
         </select>
       </div>
     </div>
-
     <div class="custom-rules">
       <textarea
         :value="preferences.specialRules"
@@ -70,7 +61,6 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {
   name: 'DriverPreferencesSection',

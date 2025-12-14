@@ -1,25 +1,24 @@
-﻿<template>
+<template>
   <div class="register-page">
     <div class="register-container">
       <!-- Section titre à gauche -->
       <div class="register-header-section">
         <div class="logo-section">
-          <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="register-logo" />
+          <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" />
         </div>
         <h1 class="register-title">Rejoignez EcoRide !</h1>
         <p class="register-subtitle">
           Créez votre compte et commencez à voyager de manière éco-responsable
         </p>
       </div>
-
       <div class="register-card">
         <!-- Formulaire d'inscription -->
         <form @submit.prevent="handleRegister" class="register-form">
           <!-- Première ligne : Email et Pseudo -->
           <div class="form-row">
             <div class="form-group">
-              <label for="email" class="form-label">Adresse e-mail *</label>
-              <input
+              <label for="email" class="form-label">Adresse e-mail *</label
+              ><input
                 type="email"
                 id="email"
                 v-model="registerForm.email"
@@ -33,10 +32,9 @@
                 {{ emailError }}
               </div>
             </div>
-
             <div class="form-group">
-              <label for="pseudo" class="form-label">Pseudo *</label>
-              <input
+              <label for="pseudo" class="form-label">Pseudo *</label
+              ><input
                 type="text"
                 id="pseudo"
                 v-model="registerForm.pseudo"
@@ -47,7 +45,6 @@
               />
             </div>
           </div>
-
           <!-- Deuxième ligne : Mot de passe et Confirmation -->
           <div class="form-row">
             <div class="form-group">
@@ -71,18 +68,18 @@
                   @mouseleave="showTooltip = false"
                   @focus="showTooltip = true"
                   @blur="showTooltip = false"
-                />
-                <button
+                /><button
                   type="button"
                   @click="togglePassword"
                   class="password-toggle"
                   :disabled="isLoading"
                 >
-                  <font-awesome-icon v-if="showPassword" :icon="['fas', 'eye']" />
-                  <font-awesome-icon v-else :icon="['fas', 'eye-slash']" />
-                </button>
-                <!-- Tooltip personnalisé -->
-                <div class="password-tooltip" v-show="showTooltip">
+                  <font-awesome-icon v-if="showPassword" :icon="['fas', 'eye']" /><font-awesome-icon
+                    v-else
+                    :icon="['fas', 'eye-slash']"
+                  /></button
+                ><!-- Tooltip personnalisé -->
+                <div v-show="showTooltip">
                   <div class="tooltip-content">
                     <strong>Critères requis :</strong>
                     <ul>
@@ -94,17 +91,15 @@
                   </div>
                 </div>
               </div>
-              <!-- Indicateur de force simplifié -->
-              <PasswordStrengthIndicator
+              <!-- Indicateur de force simplifié --><PasswordStrengthIndicator
                 :password="registerForm.password"
                 :show-requirements="false"
                 @validation-change="handlePasswordValidation"
               />
             </div>
-
             <div class="form-group">
-              <label for="confirmPassword" class="form-label">Confirmer le mot de passe *</label>
-              <input
+              <label for="confirmPassword" class="form-label">Confirmer le mot de passe *</label
+              ><input
                 type="password"
                 id="confirmPassword"
                 v-model="registerForm.confirmPassword"
@@ -118,39 +113,35 @@
                 placeholder="Répétez votre mot de passe"
                 required
                 :disabled="isLoading"
-              />
-              <!-- Composant de validation de confirmation -->
-              <PasswordConfirmationValidator
+              /><!-- Composant de validation de confirmation --><PasswordConfirmationValidator
                 :password="registerForm.password"
                 :confirm-password="registerForm.confirmPassword"
                 @confirmation-change="handlePasswordConfirmationValidation"
               />
             </div>
           </div>
-
           <!-- Message d'erreur -->
           <div v-if="errorMessage" class="error-message">
-            <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="error-icon" />
+            <font-awesome-icon :icon="['fas', 'triangle-exclamation']" />
             {{ errorMessage }}
           </div>
-
           <!-- Message de succès -->
           <div v-if="successMessage" class="success-message">
-            <font-awesome-icon :icon="['fas', 'circle-check']" class="success-icon" />
+            <font-awesome-icon :icon="['fas', 'circle-check']" />
             {{ successMessage }}
           </div>
-
-          <!-- Bouton d'inscription -->
-          <button type="submit" class="register-btn" :disabled="isLoading || !isFormValid">
+          <!-- Bouton d'inscription --><button
+            type="submit"
+            class="register-btn"
+            :disabled="isLoading || !isFormValid"
+          >
             <font-awesome-icon
               v-if="isLoading"
               :icon="['fas', 'hourglass-half']"
               class="loading-spinner"
-            />
-            <span v-else>Créer mon compte</span>
+            /><span v-else>Créer mon compte</span>
           </button>
         </form>
-
         <!-- Lien vers connexion -->
         <div class="login-link">
           <p>Vous avez déjà un compte ?</p>
@@ -160,7 +151,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -285,4 +275,3 @@ const handleRegister = async () => {
   }
 }
 </script>
-

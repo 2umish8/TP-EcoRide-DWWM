@@ -13,15 +13,12 @@ const logout = async () => {
   window.location.href = '/'
 }
 </script>
-
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
     <div class="container-fluid">
-      <RouterLink class="navbar-brand fw-bold" to="/">
-        <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="navbar-logo" />
-      </RouterLink>
-
-      <button
+      <RouterLink to="/"
+        ><img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" /></RouterLink
+      ><button
         class="navbar-toggler"
         type="button"
         data-bs-toggle="collapse"
@@ -29,12 +26,11 @@ const logout = async () => {
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <RouterLink class="nav-link" to="/">
-              <font-awesome-icon
+            <RouterLink to="/"
+              ><font-awesome-icon
                 :icon="['fas', 'house']"
                 class="var(--color-light-primary)-icon me-1"
               />
@@ -42,17 +38,17 @@ const logout = async () => {
             </RouterLink>
           </li>
           <li class="nav-item">
-            <RouterLink class="nav-link" to="/search">
-              <font-awesome-icon
+            <RouterLink to="/search"
+              ><font-awesome-icon
                 :icon="['fas', 'magnifying-glass']"
                 class="var(--color-light-primary)-icon me-1"
               />
               Rechercher
             </RouterLink>
           </li>
-          <li class="nav-item" v-if="isLoggedIn">
-            <RouterLink class="nav-link" to="/my-trips">
-              <font-awesome-icon
+          <li v-if="isLoggedIn">
+            <RouterLink to="/my-trips"
+              ><font-awesome-icon
                 :icon="['fas', 'person-walking-luggage']"
                 class="var(--color-light-primary)-icon me-1"
               />
@@ -60,12 +56,11 @@ const logout = async () => {
             </RouterLink>
           </li>
         </ul>
-
         <ul class="navbar-nav">
-          <template v-if="!isLoggedIn">
-            <li class="nav-item">
-              <GlassButton to="/login" variant="connexion">
-                <font-awesome-icon
+          <template v-if="!isLoggedIn"
+            ><li class="nav-item">
+              <GlassButton to="/login" variant="connexion"
+                ><font-awesome-icon
                   :icon="['fas', 'arrow-right-to-bracket']"
                   class="var(--color-light-primary)-icon me-1"
                 />
@@ -73,50 +68,48 @@ const logout = async () => {
               </GlassButton>
             </li>
             <li class="nav-item">
-              <GlassButton to="/register" variant="inscription">
-                <font-awesome-icon
+              <GlassButton to="/register" variant="inscription"
+                ><font-awesome-icon
                   :icon="['fas', 'user-plus']"
                   class="var(--color-light-primary)-icon me-1"
                 />
                 Inscription
               </GlassButton>
-            </li>
-          </template>
-          <template v-else>
-            <li class="nav-item dropdown">
+            </li></template
+          ><template v-else
+            ><li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle user-dropdown-toggle"
                 href="#"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-              >
-                <font-awesome-icon :icon="['fas', 'user']" class="user-icon me-1" />
+                ><font-awesome-icon :icon="['fas', 'user']" />
                 {{ currentUser?.pseudo || currentUser?.prenom || 'Utilisateur' }}
               </a>
               <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu">
                 <li>
-                  <RouterLink class="dropdown-item" to="/profile">
-                    <font-awesome-icon :icon="['fas', 'user']" class="dropdown-icon" />
+                  <RouterLink to="/profile"
+                    ><font-awesome-icon :icon="['fas', 'user']" />
                     Mon profil
                   </RouterLink>
                 </li>
                 <li>
-                  <RouterLink class="dropdown-item" to="/credits">
-                    <font-awesome-icon :icon="['fas', 'coins']" class="dropdown-icon" />
+                  <RouterLink to="/credits"
+                    ><font-awesome-icon :icon="['fas', 'coins']" />
                     Mes crédits
                   </RouterLink>
                 </li>
-                <li><hr class="dropdown-divider" /></li>
+                <li><hr /></li>
                 <li>
-                  <a class="dropdown-item" href="#" @click.prevent="logout">
-                    <font-awesome-icon :icon="['fas', 'user-xmark']" class="dropdown-icon" />
+                  <a href="#" @click.prevent="logout"
+                    ><font-awesome-icon :icon="['fas', 'user-xmark']" />
                     Déconnexion
                   </a>
                 </li>
               </ul>
-            </li>
-          </template>
+            </li></template
+          >
         </ul>
       </div>
     </div>

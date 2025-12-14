@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { computed } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import AppNavbar from './components/AppNavbar.vue'
@@ -19,22 +19,12 @@ const mainPaddingTop = computed(() => {
   return hideLayout.value ? '0px' : '70px'
 })
 </script>
-
 <template>
   <div id="app">
-    <!-- Navigation -->
-    <AppNavbar v-if="!hideLayout" />
-
-    <!-- Contenu principal -->
-    <div class="main-content" :style="{ paddingTop: mainPaddingTop }">
-      <RouterView />
-    </div>
-
-    <!-- Footer -->
-    <AppFooter v-if="!hideLayout" />
-
-    <!-- Notification globale -->
-    <Notification :notification="notificationStore.current" />
+    <!-- Navigation --><AppNavbar v-if="!hideLayout" /><!-- Contenu principal -->
+    <div :style="{ paddingTop: mainPaddingTop }"><RouterView /></div>
+    <!-- Footer --><AppFooter v-if="!hideLayout" /><!-- Notification globale --><Notification
+      :notification="notificationStore.current"
+    />
   </div>
 </template>
-

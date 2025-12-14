@@ -4,7 +4,6 @@
       <h3>Laisser un avis</h3>
       <p>Évaluez votre expérience avec ce chauffeur</p>
     </div>
-
     <form @submit.prevent="submitReview" class="review-form-content">
       <!-- Note -->
       <div class="rating-input">
@@ -25,42 +24,36 @@
         </div>
         <span class="rating-text">{{ getRatingText(form.rating) }}</span>
       </div>
-
       <!-- Commentaire -->
       <div class="form-group">
-        <label for="comment">Commentaire *</label>
-        <textarea
+        <label for="comment">Commentaire *</label
+        ><textarea
           id="comment"
           v-model="form.comment"
           placeholder="Décrivez votre expérience avec ce chauffeur..."
           rows="4"
           required
           maxlength="500"
-        ></textarea>
-        <span class="char-count">{{ form.comment.length }}/500</span>
+        ></textarea
+        ><span class="char-count">{{ form.comment.length }}/500</span>
       </div>
-
       <!-- Boutons -->
       <div class="form-actions">
         <button type="button" @click="$emit('cancel')" class="btn-cancel" :disabled="loading">
-          Annuler
-        </button>
-        <button type="submit" class="btn-submit" :disabled="!isFormValid || loading">
+          Annuler</button
+        ><button type="submit" class="btn-submit" :disabled="!isFormValid || loading">
           {{ loading ? 'Envoi...' : "Publier l'avis" }}
         </button>
       </div>
     </form>
-
     <!-- Message d'erreur -->
     <div v-if="error" class="error-message">
       {{ error }}
     </div>
-
     <!-- Message de succès -->
     <div v-if="success" class="success-message">Votre avis a été publié avec succès !</div>
   </div>
 </template>
-
 <script setup>
 import { ref, computed } from 'vue'
 import { reviewService } from '@/services/mongoServices.js'
@@ -168,4 +161,3 @@ const submitReview = async () => {
   }
 }
 </script>
-

@@ -1,20 +1,18 @@
-﻿<template>
+<template>
   <div class="user-profile-container">
     <!-- Header avec navigation -->
     <div class="profile-header">
       <button @click="goBack" class="back-button">
-        <font-awesome-icon :icon="['fas', 'arrow-left']" class="back-icon" />
+        <font-awesome-icon :icon="['fas', 'arrow-left']" />
         Retour
       </button>
       <h1>Profil de {{ user?.pseudo || 'Utilisateur' }}</h1>
     </div>
-
     <!-- Loading state -->
     <div v-if="loading" class="loading-container">
       <div class="loading-spinner"></div>
       <p>Chargement du profil...</p>
     </div>
-
     <!-- Error state -->
     <div v-else-if="error" class="error-container">
       <div class="error-card">
@@ -23,43 +21,40 @@
         <button @click="loadUserProfile" class="retry-button">Réessayer</button>
       </div>
     </div>
-
     <!-- Profile content -->
     <div v-else-if="user" class="profile-content">
       <!-- User info section -->
       <div class="user-info-card">
         <div class="user-avatar-container">
-          <img :src="getUserAvatar()" :alt="user.pseudo" class="user-avatar" />
+          <img :src="getUserAvatar()" :alt="user.pseudo" />
         </div>
         <div class="user-details">
           <h2>{{ user.pseudo }}</h2>
           <p class="member-since">Membre depuis {{ formatDate(user.creation_date) }}</p>
           <div class="user-stats">
             <div class="stat-item">
-              <span class="stat-number">{{ userStats.totalTrips }}</span>
-              <span class="stat-label">Trajets</span>
+              <span class="stat-number">{{ userStats.totalTrips }}</span
+              ><span class="stat-label">Trajets</span>
             </div>
             <div class="stat-item">
               <span class="stat-number">{{
                 userStats.rating === '0.0' ? 'Aucune' : userStats.rating || 'N/A'
-              }}</span>
-              <span class="stat-label">Note moyenne</span>
+              }}</span
+              ><span class="stat-label">Note moyenne</span>
             </div>
             <div class="stat-item">
-              <span class="stat-number">{{ userStats.reviewsCount }}</span>
-              <span class="stat-label">Avis reçus</span>
+              <span class="stat-number">{{ userStats.reviewsCount }}</span
+              ><span class="stat-label">Avis reçus</span>
             </div>
           </div>
         </div>
       </div>
-
       <!-- User roles -->
       <div class="user-roles">
         <div v-for="role in user.roles" :key="role.id" class="role-badge">
           {{ getRoleLabel(role.name) }}
         </div>
       </div>
-
       <!-- Reviews section -->
       <div class="reviews-section">
         <h3>Avis reçus ({{ reviews.length }})</h3>
@@ -79,16 +74,14 @@
                   :src="getReviewerAvatar(review.reviewer)"
                   :alt="review.reviewer.pseudo"
                   class="reviewer-avatar"
-                />
-                <span class="reviewer-name">{{ review.reviewer.pseudo }}</span>
+                /><span class="reviewer-name">{{ review.reviewer.pseudo }}</span>
               </div>
               <div class="review-rating">
-                <span v-for="i in 5" :key="i" class="star">
-                  <font-awesome-icon
+                <span v-for="i in 5" :key="i" class="star"
+                  ><font-awesome-icon
                     :icon="['fas', 'star']"
                     :class="{ inactive: i > review.rating }"
-                  />
-                </span>
+                /></span>
               </div>
             </div>
             <p class="review-comment">{{ review.comment }}</p>
@@ -99,7 +92,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -203,4 +195,3 @@ onMounted(() => {
   loadUserProfile()
 })
 </script>
-

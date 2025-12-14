@@ -1,7 +1,6 @@
-<template>
-  <font-awesome-icon :icon="mappedIcon" :class="iconClass" :style="sizeStyle" />
+﻿<template>
+  <font-awesome-icon :icon="mappedIcon" :style="sizeStyle" />
 </template>
-
 <script setup>
 import { computed } from 'vue'
 const props = defineProps({

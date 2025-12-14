@@ -1,23 +1,15 @@
 <template>
-  <div class="password-confirmation-validation" v-if="password || confirmPassword">
+  <div v-if="password || confirmPassword">
     <!-- Message de confirmation -->
-    <div
-      v-if="confirmPassword"
-      :class="{
-        'password-confirmation-success': confirmationResult.isValid,
-        'password-confirmation-error': !confirmationResult.isValid,
-      }"
-    >
+    <div v-if="confirmPassword">
       <span v-if="confirmationResult.isValid"
         ><font-awesome-icon :icon="['fas', 'circle-check']" /> Les mots de passe correspondent</span
-      >
-      <span v-else
+      ><span v-else
         ><font-awesome-icon :icon="['fas', 'xmark']" /> {{ confirmationResult.error }}</span
       >
     </div>
   </div>
 </template>
-
 <script>
 import { validatePasswordConfirmation } from '../utils/passwordValidator.js'
 
