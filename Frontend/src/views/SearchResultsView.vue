@@ -1,25 +1,8 @@
 <template>
   <div class="search-results">
-    <!-- Header avec critères de recherche -->
-    <div class="search-header">
+    <!-- Barre de recherche -->
+    <div class="search-bar-top">
       <SearchBar :initialValues="newSearchParams" @search="performNewSearch" />
-      <div class="search-criteria">
-        <h1 class="results-title">
-          {{ hasSearchCriteria ? 'Résultats de recherche' : 'Tous les covoiturages' }}
-        </h1>
-        <div class="criteria-details" v-if="hasSearchCriteria">
-          <span class="route">{{ searchParams.from }} → {{ searchParams.to }}</span>
-          <span class="date" v-if="searchParams.date">{{ formatDate(searchParams.date) }}</span>
-        </div>
-        <div class="criteria-details" v-else>
-          <span class="browse-message">Parcourez tous les covoiturages disponibles</span>
-        </div>
-      </div>
-      <div class="results-count">
-        {{ formattedResults.length }} trajet{{ formattedResults.length > 1 ? 's' : '' }}
-        {{ hasSearchCriteria ? 'trouvé' : 'disponible'
-        }}{{ formattedResults.length > 1 ? 's' : '' }}
-      </div>
     </div>
 
     <div class="results-container">
@@ -242,15 +225,6 @@ const searchParams = ref({
   to: route.query.destination || route.query.to || '',
   date: route.query.date || '',
   showMyTrips: route.query.showMyTrips === 'true' || false,
-})
-
-// Computed pour vérifier si des critères de recherche ont été fournis
-const hasSearchCriteria = computed(() => {
-  return (
-    searchParams.value.from.trim() !== '' ||
-    searchParams.value.to.trim() !== '' ||
-    searchParams.value.date.trim() !== ''
-  )
 })
 
 // Nouvelles paramètres de recherche pour le formulaire compact
@@ -508,16 +482,10 @@ onMounted(() => {
   color: white;
 }
 
-.search-header {
+.search-bar-top {
   max-width: 1200px;
   margin: 0 auto 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  background: #2a2a2a;
-  padding: 25px 30px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 0 20px;
 }
 
 .loading-state {
@@ -635,46 +603,8 @@ onMounted(() => {
   background: #dc2626;
 }
 
-.results-title {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 8px;
-}
-
-.criteria-details {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.browse-message {
-  color: #34d399;
-  font-style: italic;
-}
-
-.route {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #34d399;
-}
-
-.date {
-  font-size: 0.95rem;
-  color: #ccc;
-}
-
-.results-count {
-  font-size: 1rem;
-  color: #ccc;
-  background: #1a1a1a;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 1px solid #444;
-}
-
 .results-container {
-  min-height: calc(100vh - 220px);
+  min-height: calc(100vh - 100px);
   display: flex;
   flex-direction: row;
   justify-content: center;
