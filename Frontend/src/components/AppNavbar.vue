@@ -1,16 +1,31 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import GlassButton from './GlassButton.vue'
+import NavButton from './ui/NavButton.vue'
+import PrimaryButton from './ui/PrimaryButton.vue'
 
 const authStore = useAuthStore()
 const isLoggedIn = computed(() => authStore.isLoggedIn)
 const currentUser = computed(() => authStore.currentUser)
+const isUserMenuOpen = ref(false)
+const isNavOpen = ref(false)
 
 const logout = async () => {
   await authStore.logout()
   window.location.href = '/'
+}
+
+const toggleUserMenu = () => {
+  isUserMenuOpen.value = !isUserMenuOpen.value
+}
+
+const toggleNav = () => {
+  isNavOpen.value = !isNavOpen.value
+}
+
+const closeNav = () => {
+  isNavOpen.value = false
 }
 
 // expose a simple flag for template to avoid using import.meta in expressions
@@ -18,96 +33,86 @@ const isDev = import.meta.env.MODE !== 'production'
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
-    <div class="container-fluid">
-      <RouterLink class="navbar-brand fw-bold" to="/">
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="navbar-container">
+      <!-- Logo -->
+      <RouterLink class="navbar-brand" to="/">
         <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="navbar-logo" />
       </RouterLink>
 
+      <!-- Hamburger toggle for mobile -->
       <button
         class="navbar-toggler"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
+        @click="toggleNav"
+        :class="{ active: isNavOpen }"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/">
-              <font-awesome-icon :icon="['fas', 'house']" class="white-icon me-1" />
-              Accueil
-            </RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink class="nav-link" to="/search">
-              <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="white-icon me-1" />
-              Rechercher
-            </RouterLink>
-          </li>
-          <li class="nav-item" v-if="isDev">
-            <RouterLink class="nav-link" to="/test/visuals">
-              <font-awesome-icon :icon="['fas', 'shapes']" class="white-icon me-1" />
-              Visuals
-            </RouterLink>
-          </li>
-          <li class="nav-item" v-if="isLoggedIn">
-            <RouterLink class="nav-link" to="/my-trips">
-              <font-awesome-icon
-                :icon="['fas', 'person-walking-luggage']"
-                class="white-icon me-1"
-              />
-              Mes trajets
-            </RouterLink>
-          </li>
-        </ul>
+      <!-- Navigation items wrapper -->
+      <div class="navbar-nav-wrapper" :class="{ open: isNavOpen }">
+        <!-- LEFT: Navigation links -->
+        <div class="navbar-nav-left">
+          <NavButton to="/" @click="closeNav">
+            <font-awesome-icon :icon="['fas', 'house']" class="nav-icon" />
+            Accueil
+          </NavButton>
 
-        <ul class="navbar-nav">
+          <NavButton to="/search" @click="closeNav">
+            <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="nav-icon" />
+            Rechercher
+          </NavButton>
+
+          <NavButton v-if="isDev" to="/test/visuals" @click="closeNav">
+            <font-awesome-icon :icon="['fas', 'shapes']" class="nav-icon" />
+            Visuals
+          </NavButton>
+
+          <NavButton v-if="isLoggedIn" to="/my-trips" @click="closeNav">
+            <font-awesome-icon :icon="['fas', 'person-walking-luggage']" class="nav-icon" />
+            Mes trajets
+          </NavButton>
+        </div>
+
+        <!-- RIGHT: User actions -->
+        <div class="navbar-nav-right">
           <template v-if="!isLoggedIn">
-            <li class="nav-item">
-              <GlassButton to="/login" variant="connexion">
-                <font-awesome-icon
-                  :icon="['fas', 'arrow-right-to-bracket']"
-                  class="white-icon me-1"
-                />
-                Connexion
-              </GlassButton>
-            </li>
-            <li class="nav-item">
-              <GlassButton to="/register" variant="inscription">
-                <font-awesome-icon :icon="['fas', 'user-plus']" class="white-icon me-1" />
-                Inscription
-              </GlassButton>
-            </li>
+            <NavButton to="/register" @click="closeNav">
+              <font-awesome-icon :icon="['fas', 'user-plus']" class="nav-icon" />
+              Inscription
+            </NavButton>
+
+            <PrimaryButton to="/login" @click="closeNav">
+              <font-awesome-icon :icon="['fas', 'arrow-right-to-bracket']" class="nav-icon" />
+              Connexion
+            </PrimaryButton>
           </template>
+
           <template v-else>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle user-dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <font-awesome-icon :icon="['fas', 'user']" class="user-icon me-1" />
-                {{ currentUser?.pseudo || currentUser?.prenom || 'Utilisateur' }}
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu">
+            <div class="user-menu">
+              <button class="user-menu-toggle" @click="toggleUserMenu">
+                <font-awesome-icon :icon="['fas', 'user']" class="user-icon" />
+                <span class="user-name">{{
+                  currentUser?.pseudo || currentUser?.prenom || 'Utilisateur'
+                }}</span>
+                <font-awesome-icon :icon="['fas', 'chevron-down']" class="chevron-icon" />
+              </button>
+
+              <ul class="user-menu-dropdown" v-show="isUserMenuOpen">
                 <li>
-                  <RouterLink class="dropdown-item" to="/profile">
+                  <RouterLink class="dropdown-item" to="/profile" @click="isUserMenuOpen = false">
                     <font-awesome-icon :icon="['fas', 'user']" class="dropdown-icon" />
                     Mon profil
                   </RouterLink>
                 </li>
                 <li>
-                  <RouterLink class="dropdown-item" to="/credits">
+                  <RouterLink class="dropdown-item" to="/credits" @click="isUserMenuOpen = false">
                     <font-awesome-icon :icon="['fas', 'coins']" class="dropdown-icon" />
                     Mes crédits
                   </RouterLink>
                 </li>
-                <li><hr class="dropdown-divider" /></li>
+                <li class="dropdown-divider"></li>
                 <li>
                   <a class="dropdown-item" href="#" @click.prevent="logout">
                     <font-awesome-icon :icon="['fas', 'user-xmark']" class="dropdown-icon" />
@@ -115,9 +120,9 @@ const isDev = import.meta.env.MODE !== 'production'
                   </a>
                 </li>
               </ul>
-            </li>
+            </div>
           </template>
-        </ul>
+        </div>
       </div>
     </div>
   </nav>
@@ -125,160 +130,309 @@ const isDev = import.meta.env.MODE !== 'production'
 
 <style scoped>
 .navbar {
-  margin: 0;
-  padding: 0.3rem 0;
+  background: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
   width: 100%;
-}
-
-.custom-navbar {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
-  border-bottom: 1px solid rgba(52, 211, 153, 0.3);
-}
-
-.navbar .container-fluid {
-  margin: 0;
-  padding: 0 1rem;
-  max-width: none;
-}
-
-.navbar-brand {
-  font-size: 1.5rem;
+  padding: 0.75rem 1rem;
+  max-width: 100%;
 }
 
 .navbar-logo {
-  height: 50px;
-  max-width: 120px;
+  height: 40px;
   width: auto;
-  mix-blend-mode: lighten;
-  object-fit: contain;
 }
 
-.navbar-nav .nav-item:not(:last-child) {
-  margin-right: 15px;
-}
-
-@media (max-width: 768px) {
-  .navbar-nav .nav-item {
-    margin-bottom: 10px;
-  }
-}
-
-.router-link-active {
-  font-weight: bold;
-}
-
-.white-icon {
-  width: 16px;
-  height: 16px;
-  color: #f5f5f5;
-  transition: color 0.3s ease;
-  vertical-align: middle;
-}
-
-.nav-link:hover .white-icon {
-  color: var(--bs-primary);
-}
-
-.user-dropdown-toggle {
-  position: relative;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.user-dropdown-toggle:hover {
-  background-color: rgba(var(--bs-primary-rgb), 0.08);
-  color: var(--bs-primary) !important;
-}
-
-.user-icon {
-  color: #f5f5f5;
-  transition: color 0.3s ease;
-  vertical-align: middle;
-}
-
-.user-dropdown-toggle:hover .user-icon {
-  color: var(--bs-primary);
-}
-
-.user-dropdown-menu {
-  min-width: 200px;
-  background-color: #2d2d2d !important;
-  border: 1px solid rgba(52, 211, 153, 0.3) !important;
-  border-radius: 0.5rem !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
-  padding: 0.5rem 0;
-  margin-top: 0.5rem;
-}
-
-.user-dropdown-menu .dropdown-item {
-  color: #f5f5f5 !important;
-  padding: 0.75rem 1.25rem !important;
-  transition: all 0.3s ease;
-  border: none;
-  background: none !important;
-  white-space: nowrap;
+.navbar-brand {
   display: flex;
   align-items: center;
+  margin-right: 2rem;
+  flex-shrink: 0;
+}
+
+.navbar-toggler {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+.navbar-toggler-icon {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--color-text);
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler.active .navbar-toggler-icon:nth-child(1) {
+  transform: rotate(45deg) translate(10px, 10px);
+}
+
+.navbar-toggler.active .navbar-toggler-icon:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-toggler.active .navbar-toggler-icon:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+.navbar-nav-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 2rem;
+}
+
+.navbar-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.navbar-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.nav-icon {
+  margin-right: 0.5rem;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-menu-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.user-menu-toggle:hover {
+  opacity: 0.8;
+}
+
+.user-menu-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  list-style: none;
+  margin: 0.5rem 0 0 0;
+  padding: 0;
+  min-width: 180px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.user-menu-dropdown li {
+  display: flex;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--color-text);
   text-decoration: none;
+  width: 100%;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
 }
 
-.user-dropdown-menu .dropdown-item:hover,
-.user-dropdown-menu .dropdown-item:focus {
-  background-color: rgba(var(--bs-primary-rgb), 0.08) !important;
-  color: var(--bs-primary) !important;
-  transform: translateX(5px);
+.dropdown-item:hover {
+  background: var(--color-background-soft);
 }
 
-.user-dropdown-menu .dropdown-item:active {
-  background-color: rgba(var(--bs-primary-rgb), 0.16) !important;
-  color: var(--bs-primary) !important;
-}
-
-.user-dropdown-menu .dropdown-item i {
-  width: 18px;
-  color: var(--bs-primary);
-  opacity: 0.9;
+.dropdown-icon {
   flex-shrink: 0;
-  margin-right: 8px;
+  width: 16px;
 }
 
-.user-dropdown-menu .dropdown-item .dropdown-icon {
-  width: 18px;
-  height: 18px;
-  margin-right: 8px;
-  color: var(--bs-primary);
-  opacity: 0.9;
-  display: inline-block;
-  text-align: center;
-  flex-shrink: 0;
-}
-
-.user-dropdown-menu .dropdown-divider {
-  border-color: rgba(var(--bs-primary-rgb), 0.16);
+.dropdown-divider {
+  border-top: 1px solid var(--color-border);
   margin: 0.5rem 0;
 }
 
-.dropdown-menu.show {
-  z-index: 1050;
+.user-name {
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-@media (max-width: 768px) {
-  .user-dropdown-menu {
-    min-width: 180px;
-    right: 0 !important;
-    left: auto !important;
+.user-icon {
+  width: 18px;
+}
+
+.chevron-icon {
+  font-size: 0.75rem;
+  transition: transform 0.3s;
+}
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+  .navbar-container {
+    padding: 0.5rem 1rem;
   }
 
-  .user-dropdown-toggle {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.9rem;
+  .navbar-logo {
+    height: 35px;
   }
 
-  .user-dropdown-menu .dropdown-item {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
+  .navbar-brand {
+    margin-right: 1rem;
+  }
+
+  .navbar-nav-wrapper {
+    gap: 1rem;
+  }
+
+  .navbar-nav-left,
+  .navbar-nav-right {
+    gap: 0.75rem;
+  }
+
+  .user-name {
+    max-width: 60px;
+  }
+}
+
+/* Mobile (< 768px) */
+@media (max-width: 767px) {
+  .navbar-container {
+    position: relative;
+    padding: 0.75rem;
+  }
+
+  .navbar-logo {
+    height: 32px;
+  }
+
+  .navbar-brand {
+    margin-right: 0.5rem;
+  }
+
+  .navbar-toggler {
+    display: flex;
+  }
+
+  .navbar-nav-wrapper {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    width: calc(100% - 1.5rem);
+    margin: 0 0.75rem;
+    padding: 1rem;
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-top: none;
+    border-radius: 0 0 0.5rem 0.5rem;
+    gap: 1rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+      max-height 0.3s ease,
+      opacity 0.3s ease;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .navbar-nav-wrapper.open {
+    max-height: 500px;
+    opacity: 1;
+  }
+
+  .navbar-nav-left,
+  .navbar-nav-right {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .navbar-nav-right {
+    margin-left: 0;
+    border-top: 1px solid var(--color-border);
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .nav-icon {
+    margin-right: 0.75rem;
+  }
+
+  .user-menu-toggle {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .user-name {
+    max-width: 100px;
+  }
+
+  .user-menu-dropdown {
+    position: static;
+    border: none;
+    border-top: 1px solid var(--color-border);
+    background: transparent;
+    margin: 0.5rem 0 0 0;
+    padding: 0.5rem 0;
+    min-width: auto;
+    box-shadow: none;
+  }
+
+  .dropdown-item {
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+/* Very small phones (< 360px) */
+@media (max-width: 359px) {
+  .navbar-logo {
+    height: 28px;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .user-menu-toggle {
+    padding: 0.5rem;
+  }
+
+  .dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
   }
 }
 </style>

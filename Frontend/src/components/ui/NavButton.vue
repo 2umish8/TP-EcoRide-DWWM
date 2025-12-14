@@ -1,40 +1,31 @@
-<script setup>
-import BaseButton from './BaseButton.vue'
-const props = defineProps({
-  disabled: { type: Boolean, default: false },
-  type: { type: String, default: 'button' },
-  to: { type: String, default: null },
-})
-
-const emit = defineEmits(['click'])
-</script>
-
 <template>
   <BaseButton
-    :disabled="props.disabled"
-    :type="props.type"
-    :to="props.to"
-    class="nav-btn"
-    @click="emit('click')"
+    v-bind="$attrs"
+    :size="props.size"
+    :class="['nav-btn', props.size && props.size !== 'md' ? `btn-${props.size}` : '']"
   >
     <slot />
   </BaseButton>
 </template>
 
+<script setup>
+import BaseButton from './BaseButton.vue'
+const props = defineProps({ size: { type: String, default: 'md' } })
+</script>
+
 <style scoped>
 .nav-btn {
-  padding: 8px 12px;
-  font-size: var(--font-size-sm);
   background: transparent;
-  color: var(--light-color);
+  color: var(--color-light);
   border: none;
+  box-shadow: none;
+  padding: 8px 12px;
 }
 .nav-btn:hover {
-  background: rgba(255, 255, 255, 0.04);
-  transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.06);
 }
 .nav-btn[disabled] {
-  opacity: 0.7;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 </style>

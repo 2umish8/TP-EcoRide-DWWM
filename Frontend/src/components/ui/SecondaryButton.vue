@@ -1,41 +1,31 @@
-<script setup>
-import BaseButton from './BaseButton.vue'
-const props = defineProps({
-  disabled: { type: Boolean, default: false },
-  type: { type: String, default: 'button' },
-  to: { type: String, default: null },
-})
-
-const emit = defineEmits(['click'])
-</script>
-
 <template>
-  <BaseButton
-    :disabled="props.disabled"
-    :type="props.type"
-    :to="props.to"
-    class="secondary-btn"
-    @click="emit('click')"
-  >
+  <BaseButton v-bind="$attrs" :size="props.size" :class="computedClass">
     <slot />
   </BaseButton>
 </template>
 
+<script setup>
+import BaseButton from './BaseButton.vue'
+const props = defineProps({ size: { type: String, default: 'md' } })
+const computedClass = `secondary-btn ${props.size && props.size !== 'md' ? `btn-${props.size}` : ''}`
+</script>
+
 <style scoped>
 .secondary-btn {
-  background: transparent;
-  color: var(--main-color);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 10px 16px;
-  border-radius: 8px;
+  background-color: rgba(143, 218, 179, 0.1);
+  backdrop-filter: blur(8px);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
 }
 .secondary-btn:hover {
-  background: var(--main-color);
-  color: var(--dark-color);
-  filter: brightness(0.98);
+  background-color: var(--color-primary);
+  color: var(--color-dark-primary);
+  /* hover raise/box-shadow handled by BaseButton */
 }
 .secondary-btn[disabled] {
-  opacity: 0.7;
+  background-color: rgba(122, 122, 122, 0.2);
+  color: var(--color-gray-primary);
+  border-color: var(--color-gray-primary);
   cursor: not-allowed;
 }
 </style>

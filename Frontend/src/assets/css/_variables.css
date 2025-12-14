@@ -35,11 +35,27 @@
 
   --section-gap: 160px;
 
-  /* Simplified palette - main color and two neutrals. Legacy names mapped for compatibility. */
-  --main-color: #8fdab3;
-  --main-color-dark: #6bc26b;
-  --dark-color: #1a1a1a;
-  --light-color: #ffffff;
+  /* Charte Graphique - Primary palette (EcoRide) */
+  --main-color: #8fdab3; /* Couleur primaire */
+  --main-color-dark: #6bc26b; /* Couleur primaire au survol */
+  --color-secondary: #79d09e; /* Couleur secondaire */
+
+  /* Dark tones */
+  --dark-color: #1a1a1a; /* Sombre primaire - fond principal */
+  --color-dark-secondary: #2d2d2d; /* Sombre secondaire - cartes/sections */
+  --color-dark-tertiary: #24272b; /* Sombre tertiaire - pied de page */
+
+  /* Light tones */
+  --light-color: #ffffff; /* Clair primaire */
+  --color-light-secondary: #cacaca; /* Clair secondaire - texte sur fond sombre */
+  --color-gray-primary: #7a7a7a; /* Gris primaire - texte secondaire, boutons désactivés */
+
+  /* Button component aliases (matches component code) */
+  --color-primary: var(--main-color); /* Primary button background */
+  --color-dark-primary: var(--dark-color); /* Primary text on buttons */
+  --color-light-primary: var(--light-color); /* Light primary text */
+  --color-light: var(--light-color); /* Navigation button text */
+  --border-radius-button: var(--radius-button); /* Button border radius */
 
   /* Legacy aliases (keeps compatibility with older classes) */
   --eco-green: var(--main-color);

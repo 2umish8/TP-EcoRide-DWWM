@@ -1,35 +1,11 @@
 <script setup>
-import { ref } from 'vue'
-import PrimaryButton from '@/components/ui/PrimaryButton.vue'
-import SecondaryButton from '@/components/ui/SecondaryButton.vue'
-import NavButton from '@/components/ui/NavButton.vue'
-
-const disabled = ref(false)
-const showHover = ref(false)
+import ButtonsTemplate from '@/components/test/ButtonsTemplate.vue'
 </script>
 
 <template>
   <section class="visuals-demo">
+    <ButtonsTemplate />
     <div class="row mb-4">
-      <div class="col-md-6">
-        <h3>Buttons</h3>
-        <div class="d-flex gap-2 align-items-center">
-          <PrimaryButton :disabled="disabled" to="/" @click="console.log('Home clicked')"
-            >Home</PrimaryButton
-          >
-          <PrimaryButton :disabled="disabled">Primary</PrimaryButton>
-          <SecondaryButton :disabled="disabled">Secondary</SecondaryButton>
-          <button class="btn btn-outline" :disabled="disabled">Outline</button>
-        </div>
-        <div class="mt-3">
-          <label class="me-3"><input type="checkbox" v-model="disabled" /> Disabled</label>
-          <label><input type="checkbox" v-model="showHover" /> Show hover (simulate)</label>
-        </div>
-        <div class="mt-3">
-          <NavButton>Nav sample</NavButton>
-        </div>
-      </div>
-
       <div class="col-md-6">
         <h3>Color palette</h3>
         <div class="d-flex gap-2 flex-wrap">
