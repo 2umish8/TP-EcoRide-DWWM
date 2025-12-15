@@ -1,27 +1,22 @@
 <template>
   <form @submit.prevent="onSubmit" class="search-field">
-    <input
-      type="text"
-      placeholder="Partir de ..."
-      class="search-input"
-      v-model="localForm.departure"
-      required
-    />
-    <input
-      type="text"
-      placeholder="Aller à ..."
-      class="search-input"
-      v-model="localForm.destination"
-      required
-    />
-    <input
-      type="date"
-      placeholder="dd/mm/yyyy"
-      class="search-input"
-      v-model="localForm.date"
-      lang="fr"
-      :min="minDate"
-    />
+    <div class="search-input-wrapper">
+      <CityAutocomplete
+        v-model="localForm.departure"
+        placeholder="Partir de ..."
+        storage-key="recentCities-departure"
+      />
+    </div>
+    <div class="search-input-wrapper">
+      <CityAutocomplete
+        v-model="localForm.destination"
+        placeholder="Aller à ..."
+        storage-key="recentCities-destination"
+      />
+    </div>
+    <div class="search-input-wrapper">
+      <DateInput v-model="localForm.date" :min="minDate" lang="fr" />
+    </div>
     <SecondaryButton type="submit" class="search-btn">
       <span class="eco">eco</span>RIDEZ
       <font-awesome-icon :icon="['fas', 'search']" class="search-icon" aria-hidden="true" />
@@ -32,6 +27,8 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import SecondaryButton from './ui/SecondaryButton.vue'
+import CityAutocomplete from './ui/CityAutocomplete.vue'
+import DateInput from './ui/DateInput.vue'
 
 // Props and emits
 const props = defineProps({
@@ -101,7 +98,6 @@ const onSubmit = () => {
   background: rgba(213, 213, 213, 0.1);
   border-color: var(--color-grey);
   border-radius: 25px;
-  margin: 0 4px;
   padding: 0 20px;
   font-size: 1rem;
   color: var(--color-light);
@@ -115,6 +111,12 @@ const onSubmit = () => {
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+.search-input-wrapper {
+  flex: 1;
+  margin: 0 2px;
+  min-width: 0;
+}
+
 /* Mobile-first: stack inputs vertically on small screens */
 @media (max-width: 767px) {
   .search-field {
@@ -125,11 +127,11 @@ const onSubmit = () => {
     border-radius: 16px;
   }
 
-  .search-input {
+  .search-input,
+  .search-input-wrapper {
     flex: none;
     width: 100%;
     margin: 0;
-    padding: 0 14px;
     border-radius: 12px;
   }
 
@@ -147,35 +149,30 @@ const onSubmit = () => {
   .search-field {
     flex-direction: row;
     align-items: center;
-    gap: 0;
+    gap: 8px;
   }
 
-  .search-input:nth-of-type(1),
-  .search-input:nth-of-type(2) {
-    flex: 0.35;
+  .search-input-wrapper:nth-of-type(1),
+  .search-input-wrapper:nth-of-type(2) {
+    flex: 1;
   }
 
-  .search-input:nth-of-type(3) {
-    flex: 0.3;
+  .search-input-wrapper:nth-of-type(3) {
+    flex: 0.7;
   }
 
   .search-btn {
-    width: auto;
-    margin-left: 8px;
+    flex: 0.6;
+    margin-left: 0;
   }
 }
 
-.search-input:nth-of-type(1),
-.search-input:nth-of-type(2) {
-  flex: 0.35;
+.search-input-wrapper:nth-of-type(1),
+.search-input-wrapper:nth-of-type(2) {
+  flex: 1;
 }
 
 .search-input:nth-of-type(3) {
-  flex: 0.3;
+  flex: 0.7;
 }
 </style>
-
-
-
-
-

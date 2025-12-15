@@ -22,12 +22,12 @@
           @browse-all="onBrowseAll"
         />
         <div class="qui-sommes-nous">
-          <div class="scroll-icon" @click="onScroll">
+          <div class="en-savoir-plus" @click="onScroll">Qui sommes nous?</div>
+          <div class="scroll-icon bounce" @click="onScroll">
             <slot name="scroll-icon">
               <font-awesome-icon :icon="['fas', 'angles-down']" class="scroll-svg" size="lg" />
             </slot>
           </div>
-          <div class="en-savoir-plus" @click="onScroll">En Savoir Plus</div>
         </div>
       </div>
     </div>
@@ -156,6 +156,24 @@ const onScroll = () => {
   gap: 20px;
 }
 
+.scroll-icon {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--color-primary);
+}
+
+.en-savoir-plus {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-light);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.en-savoir-plus:hover {
+  transform: scale(1.1);
+}
+
 /* Mobile-first visibility:
    - On small screens show only the mobile catch phrase
    - Hide main titles and subtitle on small screens
@@ -180,8 +198,3 @@ const onScroll = () => {
   }
 }
 </style>
-
-
-
-
-

@@ -512,39 +512,39 @@ Cochez votre phase actuelle :
 - [ ] Fondamentaux backend
 - [ ] Express et routage
 - [ ] Variables d'environnement
-- Status: ☐ Pas commencé ☐ En cours ☐ Complété
+- Status: - [ ] Pas commencé - [ ] En cours - [ ] Complété
 
 **PHASE 2 (Semaines 3-4)**
 - [ ] Authentification JWT
 - [ ] Bcrypt et hashage
 - [ ] Zod validation
-- Status: ☐ Pas commencé ☐ En cours ☐ Complété
+- Status: - [ ] Pas commencé - [ ] En cours - [ ] Complété
 
 **PHASE 3 (Semaines 5-6)**
 - [ ] Prisma et MySQL
 - [ ] Mongoose et MongoDB
 - [ ] Relations et migrations
-- Status: ☐ Pas commencé ☐ En cours ☐ Complété
+- Status: - [ ] Pas commencé - [ ] En cours - [ ] Complété
 
 **PHASE 4 (Semaine 7)**
 - [ ] Vue 3 Composition API
 - [ ] Vue Router
 - [ ] Pinia store
 - [ ] Axios configuration
-- Status: ☐ Pas commencé ☐ En cours ☐ Complété
+- Status: - [ ] Pas commencé - [ ] En cours - [ ] Complété
 
 **PHASE 5 (Semaine 8)**
 - [ ] Integration full-stack
 - [ ] Login flow complet
 - [ ] Docker Compose local
-- Status: ☐ Pas commencé ☐ En cours ☐ Complété
+- Status: - [ ] Pas commencé - [ ] En cours - [ ] Complété
 
 **PHASE 6 (Semaines 9-10)**
 - [ ] Déploiement production
 - [ ] Cloud databases
 - [ ] Testing et monitoring
 - [ ] Documentation finale
-- Status: ☐ Pas commencé ☐ En cours ☐ Complété
+- Status: - [ ] Pas commencé - [ ] En cours - [ ] Complété
 
 ---
 

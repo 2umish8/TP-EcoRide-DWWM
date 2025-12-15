@@ -40,7 +40,7 @@
 
 ### 3. **MANUAL_TEST_CHECKLIST.md** (Validation Manuelle)
 - **Contenu**: Checklist pratique pour tester chaque parcours manuellement
-- **Format**: Cases à cocher (☐) pour chaque étape
+- **Format**: Cases à cocher (- [ ]) pour chaque étape
 - **Inclut**:
   - Comptes de test disponibles
   - Parcours complets avec étapes détaillées

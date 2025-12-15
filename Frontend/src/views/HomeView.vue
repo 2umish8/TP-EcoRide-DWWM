@@ -1,7 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import HeroSection from '@/components/HeroSection.vue'
-import ArrowsFooter from '@/components/ArrowsFooter.vue'
 import AboutSection from '@/components/AboutSection.vue'
 import { useSearchForm } from '@/composables/useSearchForm'
 
@@ -41,9 +40,6 @@ const goToCarpooling = () => {
       @search="handleSearch"
       @browse-all="goToCarpooling"
     />
-
-    <!-- Footer arrows section extracted -->
-    <ArrowsFooter />
 
     <!-- Section À propos de nous (extrait) -->
     <AboutSection />

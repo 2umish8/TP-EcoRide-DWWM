@@ -152,7 +152,7 @@ US 10a (Participation) :
 - ✅ Pré-conditions (backend, frontend, DB)
 - ✅ Comptes de test disponibles
 - ✅ Pour chaque US, une checklist avec:
-  - ☐ Cases à cocher pour chaque étape
+  - Cases à cocher (- [ ]) pour chaque étape
   - 📝 Description des actions (taper, cliquer, etc.)
   - ✅ Vérifications attendues
   - ⚠️ Cas d'erreur à tester
@@ -171,10 +171,10 @@ US 10a (Participation) :
 US 1 - Page d'Accueil
 1. Accéder à http://localhost:5173
 2. Vérifier présence:
-   ☐ Logo EcoRide (cliquable)
-   ☐ Section "À Propos" avec texte + images
-   ☐ Barre de recherche
-   ☐ Footer avec email
+   - [ ] Logo EcoRide (cliquable)
+   - [ ] Section "À Propos" avec texte + images
+   - [ ] Barre de recherche
+   - [ ] Footer avec email
 3. Cliquer sur logo → revenir à /
 4. Aucune erreur console (F12)
 ```

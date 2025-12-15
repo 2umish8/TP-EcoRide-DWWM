@@ -34,22 +34,22 @@
 **Parcours**:
 1. Accéder à http://localhost:5173
 2. Vérifier présence:
-   ☐ Logo EcoRide (cliquable)
-   ☐ Titre "EcoRide | Covoiturage écologique"
-   ☐ Section "À Propos" avec texte + images
-   ☐ Barre de recherche avec placeholder "Destination"
-   ☐ Bouton "Trouver un itinéraire"
-   ☐ Footer avec email de contact
-   ☐ Lien "Mentions légales"
+   - [x] Logo EcoRide (cliquable)
+   - [x] Titre "EcoRide | Covoiturage écologique"
+   - [x] Section "À Propos" avec texte + images
+   - [x] Barre de recherche avec placeholder "Destination"
+   - [x] Bouton "ecoRIDEZ"
+   - [x] Footer avec email de contact
+   - [x] Lien "Mentions légales"
 
 3. Interactions:
-   ☐ Cliquer sur logo → revenir à l'accueil
-   ☐ Cliquer sur "Mentions légales" → page légale s'ouvre
-   ☐ Taper "Lyon" dans la barre → texte s'affiche
-   ☐ Cliquer "Trouver un itinéraire" → va à /search avec "Lyon" comme destination
+   - [x] Cliquer sur logo → revenir à l'accueil
+   - [x] Cliquer sur "Mentions légales" → page légale s'ouvre
+   - [x] Taper "Lyon" dans la barre → texte s'affiche
+   - [ ] Cliquer "Trouver un itinéraire" → va à /search avec "Lyon" comme destination
 
 4. Aucune erreur console:
-   ☐ F12 → Console → aucun message d'erreur rouge
+   - [ ] F12 → Console → aucun message d'erreur rouge
 
 
 **Validation**: ✅ Passé / ❌ Échoué
@@ -60,21 +60,21 @@
 
 **Parcours**:
 1. Depuis la page d'accueil, regarder la navbar:
-   ☐ Logo EcoRide visible et cliquable
-   ☐ Lien "Accueil" → / (reload page)
-   ☐ Lien "Covoiturages" → /search
-   ☐ Lien "Connexion / Inscription" → /login
-   ☐ Lien "Contact" (si existe) → fonctionne
+   - [ ] Logo EcoRide visible et cliquable
+   - [ ] Lien "Accueil" → / (reload page)
+   - [ ] Lien "Covoiturages" → /search
+   - [ ] Lien "Connexion / Inscription" → /login
+   - [ ] Lien "Contact" (si existe) → fonctionne
 
 2. Cliquer sur chaque lien:
-   ☐ "Accueil" → page d'accueil (/)
-   ☐ "Covoiturages" → page de recherche (/search)
-   ☐ "Connexion" → page de login (/login)
-   ☐ Logo → page d'accueil (/)
+   - [ ] "Accueil" → page d'accueil (/)
+   - [ ] "Covoiturages" → page de recherche (/search)
+   - [ ] "Connexion" → page de login (/login)
+   - [ ] Logo → page d'accueil (/)
 
 3. Navigation responsive (mobile):
-   ☐ Sur écran petit (< 768px), menu hamburger visible (optionnel)
-   ☐ Cliquer hamburger → menu se déploie
+   - [ ] Sur écran petit (< 768px), menu hamburger visible (optionnel)
+   - [ ] Cliquer hamburger → menu se déploie
 
 
 **Validation**: ✅ Passé / ❌ Échoué
@@ -88,48 +88,48 @@
 1. Aller à /search (ou cliquer "Covoiturages" depuis accueil)
 
 2. Vérifier le formulaire:
-   ☐ Champ "Départ" prérempli (géolocalisation ou "Votre position")
-   ☐ Champ "Arrivée" (vide ou prérempli)
-   ☐ Champ "Date/Heure" (aujourd'hui ou date future)
-   ☐ Bouton "Rechercher"
-   ☐ Section "Filtres" (visible ou déployable)
+   - [ ] Champ "Départ" prérempli (géolocalisation ou "Votre position")
+   - [ ] Champ "Arrivée" (vide ou prérempli)
+   - [ ] Champ "Date/Heure" (aujourd'hui ou date future)
+   - [ ] Bouton "Rechercher"
+   - [ ] Section "Filtres" (visible ou déployable)
 
 3. Remplir et rechercher:
-   ☐ Départ: "Paris"
-   ☐ Arrivée: "Lyon"
-   ☐ Date: demain (sélectionner via date picker)
-   ☐ Cliquer "Rechercher"
+   - [ ] Départ: "Paris"
+   - [ ] Arrivée: "Lyon"
+   - [ ] Date: demain (sélectionner via date picker)
+   - [ ] Cliquer "Rechercher"
 
 4. Vérifier les résultats:
-   ☐ Liste de covoiturages s'affiche
-   ☐ Pour chaque covoiturage:
-      • ☐ Pseudo + photo du chauffeur
-      • ☐ Note du chauffeur (★★★★★)
-      • ☐ Nombre de places ("2 places restantes")
-      • ☐ Prix ("45 €")
-      • ☐ Date/heure départ et arrivée
-      • ☐ Badge "Écologique" si électrique
-      • ☐ Bouton "Détail"
+   - [ ] Liste de covoiturages s'affiche
+   - [ ] Pour chaque covoiturage:
+      • - [ ] Pseudo + photo du chauffeur
+      • - [ ] Note du chauffeur (★★★★★)
+      • - [ ] Nombre de places ("2 places restantes")
+      • - [ ] Prix ("45 €")
+      • - [ ] Date/heure départ et arrivée
+      • - [ ] Badge "Écologique" si électrique
+      • - [ ] Bouton "Détail"
 
 5. Appliquer les filtres:
-   ☐ Cliquer "Filtres" ou déployer la section
-   ☐ Véhicule électrique → toggle/checkbox
-   ☐ Prix max: 50€ → slider ou input
-   ☐ Durée max: 2h → slider ou input
-   ☐ Note chauffeur min: 4.0 → slider ou input
-   ☐ Les résultats se mettent à jour immédiatement
+   - [ ] Cliquer "Filtres" ou déployer la section
+   - [ ] Véhicule électrique → toggle/checkbox
+   - [ ] Prix max: 50€ → slider ou input
+   - [ ] Durée max: 2h → slider ou input
+   - [ ] Note chauffeur min: 4.0 → slider ou input
+   - [ ] Les résultats se mettent à jour immédiatement
 
 6. Cas "Aucun résultat":
-   ☐ Si 0 covoiturage → message "Aucun résultat"
-   ☐ Système propose: "Prochain trajet disponible: [date]"
+   - [ ] Si 0 covoiturage → message "Aucun résultat"
+   - [ ] Système propose: "Prochain trajet disponible: [date]"
 
 7. Cliquer sur "Détail":
-   ☐ Redirection vers /search/:id (ou modal)
-   ☐ Page/modal affiche infos complètes (voir US 5)
+   - [ ] Redirection vers /search/:id (ou modal)
+   - [ ] Page/modal affiche infos complètes (voir US 5)
 
 8. Cliquer "Participer" sans auth:
-   ☐ Redirection vers /login
-   ☐ Message: "Connectez-vous pour participer"
+   - [ ] Redirection vers /login
+   - [ ] Message: "Connectez-vous pour participer"
 
 
 **Validation**: ✅ Passé / ❌ Échoué
@@ -143,36 +143,36 @@
 1. Depuis résultats, cliquer "Détail" d'un covoiturage
 
 2. Vérifier toutes les infos affichées:
-   ☐ Chauffeur: pseudo, photo, note globale
-   ☐ Trajet: départ, arrivée, date, heure, durée
-   ☐ Prix par personne
-   ☐ Places restantes
-   ☐ Badge "Écologique" (si électrique)
+   - [ ] Chauffeur: pseudo, photo, note globale
+   - [ ] Trajet: départ, arrivée, date, heure, durée
+   - [ ] Prix par personne
+   - [ ] Places restantes
+   - [ ] Badge "Écologique" (si électrique)
    
 3. Infos véhicule:
-   ☐ Modèle (ex: "Tesla Model 3")
-   ☐ Marque (ex: "Tesla")
-   ☐ Couleur (ex: "Gris métallisé")
-   ☐ Immatriculation (ex: "AB-123-CD")
-   ☐ Électrique: "Oui" / "Non"
+   - [ ] Modèle (ex: "Tesla Model 3")
+   - [ ] Marque (ex: "Tesla")
+   - [ ] Couleur (ex: "Gris métallisé")
+   - [ ] Immatriculation (ex: "AB-123-CD")
+   - [ ] Électrique: "Oui" / "Non"
 
 4. Préférences du chauffeur:
-   ☐ Fumeur: "Non-fumeur"
-   ☐ Animaux: "Animaux acceptés"
-   ☐ Musique: "Oui" (si renseigné)
-   ☐ Autres préférences (texte libre)
+   - [ ] Fumeur: "Non-fumeur"
+   - [ ] Animaux: "Animaux acceptés"
+   - [ ] Musique: "Oui" (si renseigné)
+   - [ ] Autres préférences (texte libre)
 
 5. Avis du chauffeur:
-   ☐ Liste des avis (si existe)
-   ☐ Pour chaque avis:
-      • ☐ Note (★★★★★)
-      • ☐ Commentaire
-      • ☐ Auteur (pseudo)
-      • ☐ Date
+   - [ ] Liste des avis (si existe)
+   - [ ] Pour chaque avis:
+      • - [ ] Note (★★★★★)
+      • - [ ] Commentaire
+      • - [ ] Auteur (pseudo)
+      • - [ ] Date
 
 6. Bouton "Participer":
-   ☐ Visible (pas d'erreur)
-   ☐ Cliquer → redirection /login (pas connecté)
+   - [ ] Visible (pas d'erreur)
+   - [ ] Cliquer → redirection /login (pas connecté)
 
 
 **Validation**: ✅ Passé / ❌ Échoué
@@ -186,64 +186,64 @@
 1. Cliquer "Inscription" dans navbar → /register
 
 2. Vérifier le formulaire:
-   ☐ Champ "Pseudo" (obligatoire)
-   ☐ Champ "Email" (obligatoire, validation email)
-   ☐ Champ "Mot de passe" (obligatoire)
-   ☐ Champ "Confirmer mot de passe"
-   ☐ Checkbox "J'accepte les CGU et mentions légales"
-   ☐ Bouton "S'inscrire"
-   ☐ Lien "Déjà inscrit? Connexion" → /login
+   - [ ] Champ "Pseudo" (obligatoire)
+   - [ ] Champ "Email" (obligatoire, validation email)
+   - [ ] Champ "Mot de passe" (obligatoire)
+   - [ ] Champ "Confirmer mot de passe"
+   - [ ] Checkbox "J'accepte les CGU et mentions légales"
+   - [ ] Bouton "S'inscrire"
+   - [ ] Lien "Déjà inscrit? Connexion" → /login
 
 3. Remplir correctement:
-   ☐ Pseudo: "TestUser123"
-   ☐ Email: "test.user.123@ecoride.test"
-   ☐ Mot de passe: "SecurePass2025!"
-   ☐ Confirmer: "SecurePass2025!"
-   ☐ Cocher CGU
-   ☐ Cliquer "S'inscrire"
+   - [ ] Pseudo: "TestUser123"
+   - [ ] Email: "test.user.123@ecoride.test"
+   - [ ] Mot de passe: "SecurePass2025!"
+   - [ ] Confirmer: "SecurePass2025!"
+   - [ ] Cocher CGU
+   - [ ] Cliquer "S'inscrire"
 
 4. Vérifier la réussite:
-   ☐ Message de succès: "Inscription réussie!"
-   ☐ Redirection vers /login OU /profile (auto-login)
-   ☐ Si auto-login → utilisateur connecté (pseudo visible dans navbar)
+   - [ ] Message de succès: "Inscription réussie!"
+   - [ ] Redirection vers /login OU /profile (auto-login)
+   - [ ] Si auto-login → utilisateur connecté (pseudo visible dans navbar)
 
 5. Vérifier les crédits:
-   ☐ Aller à /profile ou /credits
-   ☐ Solde initial: 20 crédits
-   ☐ Historique vide (première création)
+   - [ ] Aller à /profile ou /credits
+   - [ ] Solde initial: 20 crédits
+   - [ ] Historique vide (première création)
 
 6. Tester les validations (erreurs):
    
    **Cas: Email déjà existant**
-   ☐ Email: "test@test.com" (compte existant)
-   ☐ Cliquer "S'inscrire"
-   ☐ Erreur: "Email déjà utilisé"
+   - [ ] Email: "test@test.com" (compte existant)
+   - [ ] Cliquer "S'inscrire"
+   - [ ] Erreur: "Email déjà utilisé"
    
    **Cas: Mots de passe non identiques**
-   ☐ Mot de passe: "Pass1234!"
-   ☐ Confirmer: "Pass5678!"
-   ☐ Cliquer "S'inscrire"
-   ☐ Erreur: "Les mots de passe ne correspondent pas"
+   - [ ] Mot de passe: "Pass1234!"
+   - [ ] Confirmer: "Pass5678!"
+   - [ ] Cliquer "S'inscrire"
+   - [ ] Erreur: "Les mots de passe ne correspondent pas"
    
    **Cas: Mot de passe faible**
-   ☐ Mot de passe: "123" (trop court)
-   ☐ Cliquer "S'inscrire"
-   ☐ Erreur: "Mot de passe doit contenir au moins 8 caractères..."
+   - [ ] Mot de passe: "123" (trop court)
+   - [ ] Cliquer "S'inscrire"
+   - [ ] Erreur: "Mot de passe doit contenir au moins 8 caractères..."
    
    **Cas: Email invalide**
-   ☐ Email: "invalid-email"
-   ☐ Cliquer "S'inscrire"
-   ☐ Erreur: "Format email invalide"
+   - [ ] Email: "invalid-email"
+   - [ ] Cliquer "S'inscrire"
+   - [ ] Erreur: "Format email invalide"
    
    **Cas: Pseudo vide**
-   ☐ Pseudo: "" (vide)
-   ☐ Cliquer "S'inscrire"
-   ☐ Erreur: "Le pseudo est obligatoire"
+   - [ ] Pseudo: "" (vide)
+   - [ ] Cliquer "S'inscrire"
+   - [ ] Erreur: "Le pseudo est obligatoire"
 
 7. Après inscription réussie:
-   ☐ Tenter connexion avec les identifiants créés
-   ☐ Connexion réussit
-   ☐ Crédits = 20
+   - [ ] Tenter connexion avec les identifiants créés
+   - [ ] Connexion réussit
+   - [ ] Crédits = 20
 
 
 **Validation**: ✅ Passé / ❌ Échoué
@@ -257,51 +257,51 @@
 1. Cliquer "Connexion" dans navbar → /login
 
 2. Vérifier le formulaire:
-   ☐ Champ "Email"
-   ☐ Champ "Mot de passe"
-   ☐ Case "Rester connecté" (optionnel)
-   ☐ Bouton "Connexion"
-   ☐ Lien "Créer un compte" → /register
-   ☐ Lien "Mot de passe oublié?" (optionnel)
+   - [ ] Champ "Email"
+   - [ ] Champ "Mot de passe"
+   - [ ] Case "Rester connecté" (optionnel)
+   - [ ] Bouton "Connexion"
+   - [ ] Lien "Créer un compte" → /register
+   - [ ] Lien "Mot de passe oublié?" (optionnel)
 
 3. Connexion réussie avec test@test.com:
-   ☐ Email: "test@test.com"
-   ☐ Mot de passe: "Test2025!"
-   ☐ Cliquer "Connexion"
-   ☐ Message: "Connexion réussie"
-   ☐ Redirection vers /profile
-   ☐ Navbar affiche "test" (pseudo)
-   ☐ Menu utilisateur visible (dropdown ou lien vers profil)
+   - [ ] Email: "test@test.com"
+   - [ ] Mot de passe: "Test2025!"
+   - [ ] Cliquer "Connexion"
+   - [ ] Message: "Connexion réussie"
+   - [ ] Redirection vers /profile
+   - [ ] Navbar affiche "test" (pseudo)
+   - [ ] Menu utilisateur visible (dropdown ou lien vers profil)
 
 4. Vérifier la session:
-   ☐ Token JWT stocké en localStorage
-   ☐ Rafraîchir page (F5) → reste connecté
-   ☐ Aller à /search → toujours connecté
+   - [ ] Token JWT stocké en localStorage
+   - [ ] Rafraîchir page (F5) → reste connecté
+   - [ ] Aller à /search → toujours connecté
 
 5. Tester les validations (erreurs):
    
    **Cas: Email inexistant**
-   ☐ Email: "noexist@ecoride.test"
-   ☐ Mot de passe: "Test2025!"
-   ☐ Cliquer "Connexion"
-   ☐ Erreur: "Email ou mot de passe incorrect"
+   - [ ] Email: "noexist@ecoride.test"
+   - [ ] Mot de passe: "Test2025!"
+   - [ ] Cliquer "Connexion"
+   - [ ] Erreur: "Email ou mot de passe incorrect"
    
    **Cas: Mot de passe faux**
-   ☐ Email: "test@test.com"
-   ☐ Mot de passe: "WrongPassword"
-   ☐ Cliquer "Connexion"
-   ☐ Erreur: "Email ou mot de passe incorrect"
+   - [ ] Email: "test@test.com"
+   - [ ] Mot de passe: "WrongPassword"
+   - [ ] Cliquer "Connexion"
+   - [ ] Erreur: "Email ou mot de passe incorrect"
    
    **Cas: Champ vide**
-   ☐ Email: "" (vide)
-   ☐ Cliquer "Connexion"
-   ☐ Erreur: "Ce champ est obligatoire"
+   - [ ] Email: "" (vide)
+   - [ ] Cliquer "Connexion"
+   - [ ] Erreur: "Ce champ est obligatoire"
 
 6. Déconnexion:
-   ☐ Cliquer sur pseudo → menu utilisateur
-   ☐ Cliquer "Déconnexion"
-   ☐ Redirection vers /login
-   ☐ Token supprimé de localStorage
+   - [ ] Cliquer sur pseudo → menu utilisateur
+   - [ ] Cliquer "Déconnexion"
+   - [ ] Redirection vers /login
+   - [ ] Token supprimé de localStorage
 
 
 **Validation**: ✅ Passé / ❌ Échoué
@@ -320,27 +320,27 @@
    → Redirection vers /profile
 
 2. Vérifier la page de profil:
-   ☐ Photo de profil
-   ☐ Pseudo: "test"
-   ☐ Email: "test@test.com"
-   ☐ Crédits actuels: 20 (ou autre solde)
+   - [ ] Photo de profil
+   - [ ] Pseudo: "test"
+   - [ ] Email: "test@test.com"
+   - [ ] Crédits actuels: 20 (ou autre solde)
 
 3. Section "Rôles":
-   ☐ Carte "Passager" (actif par défaut)
-      • ☐ Bouton "Je suis passager" (ou déjà sélectionné)
-      • ☐ Description simple
-   ☐ Carte "Chauffeur"
-      • ☐ Bouton "Je veux devenir chauffeur"
-      • ☐ Lien vers /become-driver
+   - [ ] Carte "Passager" (actif par défaut)
+      • - [ ] Bouton "Je suis passager" (ou déjà sélectionné)
+      • - [ ] Description simple
+   - [ ] Carte "Chauffeur"
+      • - [ ] Bouton "Je veux devenir chauffeur"
+      • - [ ] Lien vers /become-driver
 
 4. Rester passager:
-   ☐ Cliquer "Je suis passager"
-   ☐ État passager activé
-   ☐ Recharger page → rôle persiste
+   - [ ] Cliquer "Je suis passager"
+   - [ ] État passager activé
+   - [ ] Recharger page → rôle persiste
 
 5. Vérifier les crédits:
-   ☐ Section crédits affiche: "20 crédits"
-   ☐ Lien vers /credits visible
+   - [ ] Section crédits affiche: "20 crédits"
+   - [ ] Lien vers /credits visible
 
 
 **Validation**: ✅ Passé / ❌ Échoué
@@ -356,64 +356,64 @@
 1. Aller à /search (depuis navbar "Covoiturages")
 
 2. Chercher un covoiturage avec places disponibles:
-   ☐ Départ: "Paris"
-   ☐ Arrivée: "Lyon"
-   ☐ Date: demain
-   ☐ Cliquer "Rechercher"
+   - [ ] Départ: "Paris"
+   - [ ] Arrivée: "Lyon"
+   - [ ] Date: demain
+   - [ ] Cliquer "Rechercher"
 
 3. Vérifier les résultats:
-   ☐ Liste de covoiturages s'affiche
-   ☐ Chaque covoiturage affiche "Participer" (bouton actif, pas de redirection login)
+   - [ ] Liste de covoiturages s'affiche
+   - [ ] Chaque covoiturage affiche "Participer" (bouton actif, pas de redirection login)
 
 4. Cliquer "Détail" d'un covoiturage avec places:
-   ☐ Page détail s'ouvre
-   ☐ Bouton "Participer - 45 crédits" visible
-   ☐ Crédits actuels visibles: "Vous avez 20 crédits"
+   - [ ] Page détail s'ouvre
+   - [ ] Bouton "Participer - 45 crédits" visible
+   - [ ] Crédits actuels visibles: "Vous avez 20 crédits"
 
 5. Cliquer "Participer":
-   ☐ Modal/dialog: "Confirmer la participation?"
-   ☐ Affiche: prix, places, crédits actuels
-   ☐ Buttons: "Annuler" et "Confirmer"
+   - [ ] Modal/dialog: "Confirmer la participation?"
+   - [ ] Affiche: prix, places, crédits actuels
+   - [ ] Buttons: "Annuler" et "Confirmer"
 
 6. Vérifier suffisance des crédits:
    
    **Cas: Assez de crédits**
-   ☐ Crédits: 20, Prix: 15€
-   ☐ Cliquer "Confirmer"
-   ☐ Message: "Vous participez au trajet!"
-   ☐ Modal ferme, retour à détail covoiturage
-   ☐ Covoiturage rafraîchit: "1 place restante" (au lieu de 2)
-   ☐ Bouton "Participer" disparaît (déjà inscrit)
+   - [ ] Crédits: 20, Prix: 15€
+   - [ ] Cliquer "Confirmer"
+   - [ ] Message: "Vous participez au trajet!"
+   - [ ] Modal ferme, retour à détail covoiturage
+   - [ ] Covoiturage rafraîchit: "1 place restante" (au lieu de 2)
+   - [ ] Bouton "Participer" disparaît (déjà inscrit)
    
    **Cas: Crédits insuffisants**
-   ☐ Crédits: 5, Prix: 45€
-   ☐ Cliquer "Confirmer"
-   ☐ Erreur: "Crédits insuffisants"
-   ☐ Lien vers /credits visible
-   ☐ Participation non effectuée
+   - [ ] Crédits: 5, Prix: 45€
+   - [ ] Cliquer "Confirmer"
+   - [ ] Erreur: "Crédits insuffisants"
+   - [ ] Lien vers /credits visible
+   - [ ] Participation non effectuée
 
 7. Vérifier l'inscription:
-   ☐ Aller à /my-trips
-   ☐ Section "Passager" affiche le trajet
-   ☐ Trajet montre: chauffeur, destination, date, prix
+   - [ ] Aller à /my-trips
+   - [ ] Section "Passager" affiche le trajet
+   - [ ] Trajet montre: chauffeur, destination, date, prix
 
 8. Vérifier les crédits débités:
-   ☐ Aller à /profile → Crédits: 5 (20 - 15)
-   ☐ Aller à /credits → Historique:
+   - [ ] Aller à /profile → Crédits: 5 (20 - 15)
+   - [ ] Aller à /credits → Historique:
       • Transaction: "-15 crédits (Participation trajet Paris → Lyon)"
       • Date: aujourd'hui
 
 9. Cas d'erreur:
    
    **Trajet complet (0 places)**
-   ☐ Rechercher un covoiturage avec 0 places
-   ☐ Bouton "Participer" désactivé (grisé)
-   ☐ Tooltip: "Ce trajet est complet"
+   - [ ] Rechercher un covoiturage avec 0 places
+   - [ ] Bouton "Participer" désactivé (grisé)
+   - [ ] Tooltip: "Ce trajet est complet"
    
    **Trajet déjà passé**
-   ☐ Chercher un covoiturage avec date passée
-   ☐ Bouton "Participer" désactivé
-   ☐ Tooltip: "Ce trajet a déjà commencé"
+   - [ ] Chercher un covoiturage avec date passée
+   - [ ] Bouton "Participer" désactivé
+   - [ ] Tooltip: "Ce trajet a déjà commencé"
 
 
 **Validation**: ✅ Passé / ❌ Échoué
@@ -429,30 +429,30 @@
 1. Aller à /my-trips → section "Passager"
 
 2. Vérifier le trajet en attente:
-   ☐ Affichage: chauffeur, destination, date, prix
-   ☐ Statut: "À venir" ou "Confirmé"
-   ☐ Boutons: "Annuler" et "Détail"
+   - [ ] Affichage: chauffeur, destination, date, prix
+   - [ ] Statut: "À venir" ou "Confirmé"
+   - [ ] Boutons: "Annuler" et "Détail"
 
 3. Cliquer "Annuler":
-   ☐ Modal: "Annuler votre participation?"
-   ☐ Affiche remboursement: "+15 crédits"
-   ☐ Buttons: "Continuer" et "Annuler"
+   - [ ] Modal: "Annuler votre participation?"
+   - [ ] Affiche remboursement: "+15 crédits"
+   - [ ] Buttons: "Continuer" et "Annuler"
 
 4. Cliquer "Continuer":
-   ☐ Message: "Votre participation a été annulée"
-   ☐ Modal ferme
-   ☐ Trajet supprimé de "Mes trajets"
+   - [ ] Message: "Votre participation a été annulée"
+   - [ ] Modal ferme
+   - [ ] Trajet supprimé de "Mes trajets"
 
 5. Vérifier le remboursement:
-   ☐ Aller à /profile → Crédits: 20 (5 + 15 remboursé)
-   ☐ Aller à /credits → Historique:
+   - [ ] Aller à /profile → Crédits: 20 (5 + 15 remboursé)
+   - [ ] Aller à /credits → Historique:
       • Transaction: "+15 crédits (Remboursement annulation trajet)"
 
 6. Vérifier les places libérées:
-   ☐ Aller à /search
-   ☐ Chercher le même trajet
-   ☐ Places: "2 places restantes" (au lieu de 1)
-   ☐ Bouton "Participer" réactivé
+   - [ ] Aller à /search
+   - [ ] Chercher le même trajet
+   - [ ] Places: "2 places restantes" (au lieu de 1)
+   - [ ] Bouton "Participer" réactivé
 
 7. Cas d'erreur:
    
@@ -475,36 +475,36 @@
 1. Trajet est terminé (chauffeur a cliqué "Arrivé à destination")
 
 2. Passager reçoit un email:
-   ☐ (Vérifier console/logs E2E)
-   ☐ Sujet: "Merci pour votre trajet!"
-   ☐ Lien: /review/:tripId
+   - [ ] (Vérifier console/logs E2E)
+   - [ ] Sujet: "Merci pour votre trajet!"
+   - [ ] Lien: /review/:tripId
 
 3. Accéder au formulaire d'avis:
-   ☐ Cliquer lien email → /review/:tripId
-   ☐ OU aller à /my-trips → "Laisser un avis" (optionnel)
+   - [ ] Cliquer lien email → /review/:tripId
+   - [ ] OU aller à /my-trips → "Laisser un avis" (optionnel)
 
 4. Vérifier le formulaire:
-   ☐ Photo/nom du chauffeur
-   ☐ Résumé trajet: départ, arrivée, date
-   ☐ Champ "Note" (sélecteur étoiles 1-5)
-   ☐ Champ "Commentaire" (textarea, max 500 chars)
-   ☐ Checkboxes (optionnelles):
-      • ☐ "Le trajet s'est bien déroulé"
-      • ☐ "Le chauffeur était courtois"
-      • ☐ "Véhicule propre et confortable"
-   ☐ Buttons: "Soumettre" et "Plus tard"
+   - [ ] Photo/nom du chauffeur
+   - [ ] Résumé trajet: départ, arrivée, date
+   - [ ] Champ "Note" (sélecteur étoiles 1-5)
+   - [ ] Champ "Commentaire" (textarea, max 500 chars)
+   - [ ] Checkboxes (optionnelles):
+      • - [ ] "Le trajet s'est bien déroulé"
+      • - [ ] "Le chauffeur était courtois"
+      • - [ ] "Véhicule propre et confortable"
+   - [ ] Buttons: "Soumettre" et "Plus tard"
 
 5. Remplir et soumettre:
-   ☐ Note: 5 étoiles (cliquer sur 5ème étoile)
-   ☐ Commentaire: "Excellent trajet! Recommandé!"
-   ☐ Cocher checkboxes
-   ☐ Cliquer "Soumettre"
-   ☐ Message: "Votre avis a été soumis pour validation"
-   ☐ Redirection vers /my-trips
+   - [ ] Note: 5 étoiles (cliquer sur 5ème étoile)
+   - [ ] Commentaire: "Excellent trajet! Recommandé!"
+   - [ ] Cocher checkboxes
+   - [ ] Cliquer "Soumettre"
+   - [ ] Message: "Votre avis a été soumis pour validation"
+   - [ ] Redirection vers /my-trips
 
 6. Vérifier l'avis en attente:
-   ☐ Trajet dans /my-trips affiche: "Avis en attente de modération"
-   ☐ État: "En attente"
+   - [ ] Trajet dans /my-trips affiche: "Avis en attente de modération"
+   - [ ] État: "En attente"
 
 7. Avis positif vs. problématique:
    
@@ -514,13 +514,13 @@
    ☐ Avis soumis pour validation
    
    **Avis problématique**
-   ☐ Checkbox spéciale: "Le trajet s'est mal déroulé"
-   ☐ Champ commentaire devient obligatoire
-   ☐ Entrer détails: "Le chauffeur a pris une mauvaise route..."
-   ☐ Note peut être basse (1-2 étoiles)
-   ☐ Cliquer "Soumettre"
-   ☐ Message: "Votre rapport a été envoyé à nos modérateurs"
-   ☐ Trajet marké: "Signalé - En attente de traitement"
+   - [ ] Checkbox spéciale: "Le trajet s'est mal déroulé"
+   - [ ] Champ commentaire devient obligatoire
+   - [ ] Entrer détails: "Le chauffeur a pris une mauvaise route..."
+   - [ ] Note peut être basse (1-2 étoiles)
+   - [ ] Cliquer "Soumettre"
+   - [ ] Message: "Votre rapport a été envoyé à nos modérateurs"
+   - [ ] Trajet marké: "Signalé - En attente de traitement"
 
 8. Vérifier dans le profil du chauffeur:
    ☐ (Après validation par employé)

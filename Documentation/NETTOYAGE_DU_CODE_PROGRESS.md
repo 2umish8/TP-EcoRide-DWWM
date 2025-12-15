@@ -215,6 +215,7 @@ console.log("=== État de l'authentification au montage ===")
 
 - ✅ `ProfileView.vue` : Correction de l'usage du store de notification (`notificationStore.notificationStore.showSuccess` → `notificationStore.showSuccess`) et remplacement de `console.warn` par `notificationStore.showError` + `logout` + redirection.
 - ✅ `CreateTripView.vue` : Correction de `notificationStore.notificationStore.showInfo` → `notificationStore.showInfo`.
+- ✅ `Frontend`: Ajout d'une page statique `Mentions légales` (`/mentions-legales`) et remplacement du lien dans `AppFooter.vue` par un `router-link` (conforme aux règles de style et sans wrappers inutiles).
 
 Ces corrections réduisent le risque d'erreurs runtime liées à une double référence au store et améliorent le retour utilisateur.
 

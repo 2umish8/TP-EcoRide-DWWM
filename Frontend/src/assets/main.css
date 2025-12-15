@@ -4,7 +4,5 @@
 @import './css/_base.css';
 @import './css/_default_layout.css';
 @import './css/_cards.css';
-@import './css/_forms.css';
-@import './css/_modals.css';
 @import './css/_animations.css';
 /* Keep only imports in main.css; all content extracted to partials. */

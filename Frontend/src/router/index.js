@@ -3,6 +3,11 @@ import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior(to, from, savedPosition) {
+    // Always scroll to top for new navigations (or restore saved position)
+    if (savedPosition) return savedPosition
+    return { left: 0, top: 0 }
+  },
   routes: [
     {
       path: '/',
@@ -86,6 +91,11 @@ const router = createRouter({
       path: '/test/visuals',
       name: 'Visuals',
       component: () => import('../views/test/VisualsView.vue'),
+    },
+    {
+      path: '/mentions-legales',
+      name: 'LegalMentions',
+      component: () => import('../views/LegalMentionsView.vue'),
     },
   ],
 })
