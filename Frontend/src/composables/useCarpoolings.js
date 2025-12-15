@@ -50,7 +50,10 @@ export const useCarpoolings = () => {
 
   const formattedResults = computed(() => {
     const results = carpoolings.value.map((carpooling) => ({
-      id: carpooling.id,
+      // Keep all raw fields for TripCard compatibility
+      ...carpooling,
+      // Add formatted fields for sorting references
+      driverId: carpooling.driver_id,
       departure: carpooling.departure_address,
       destination: carpooling.arrival_address,
       departureTime: new Date(carpooling.departure_datetime).toLocaleTimeString('fr-FR', {
@@ -64,15 +67,14 @@ export const useCarpoolings = () => {
       duration: formatDuration(carpooling.duration_minutes),
       price: carpooling.price_per_passenger,
       seatsAvailable: carpooling.seats_remaining,
-      driverId: carpooling.driver_id,
-      driver: {
+      formattedDriver: {
         name: carpooling.driver_pseudo,
         avatar:
           carpooling.driver_photo || 'https://i.pravatar.cc/150?img=' + (carpooling.driver_id % 70),
         rating: carpooling.driver_rating ? parseFloat(carpooling.driver_rating).toFixed(1) : 'N/A',
         ridesCount: 0,
       },
-      vehicle: {
+      formattedVehicle: {
         model: carpooling.model,
         brand: carpooling.brand_name,
         color: carpooling.color_name,
@@ -83,17 +85,17 @@ export const useCarpoolings = () => {
 
     // Tri par priorité
     return results.sort((a, b) => {
-      const aIsMyTrip = authStore.currentUser && a.driverId === authStore.currentUser.id
-      const bIsMyTrip = authStore.currentUser && b.driverId === authStore.currentUser.id
+      const aIsMyTrip = authStore.currentUser && a.driver_id === authStore.currentUser.id
+      const bIsMyTrip = authStore.currentUser && b.driver_id === authStore.currentUser.id
 
       if (aIsMyTrip && !bIsMyTrip) return -1
       if (!aIsMyTrip && bIsMyTrip) return 1
 
-      if (a.vehicle.isElectric && !b.vehicle.isElectric) return -1
-      if (!a.vehicle.isElectric && b.vehicle.isElectric) return 1
+      if (a.is_electric && !b.is_electric) return -1
+      if (!a.is_electric && b.is_electric) return 1
 
-      const aRating = a.driver.rating === 'N/A' ? 0 : parseFloat(a.driver.rating)
-      const bRating = b.driver.rating === 'N/A' ? 0 : parseFloat(b.driver.rating)
+      const aRating = a.driver_rating === 'N/A' ? 0 : parseFloat(a.driver_rating)
+      const bRating = b.driver_rating === 'N/A' ? 0 : parseFloat(b.driver_rating)
       return bRating - aRating
     })
   })

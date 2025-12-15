@@ -20,56 +20,52 @@
 
     <div class="filter-group">
       <h4>Aspect écologique</h4>
-      <div class="ecological-filter">
-        <label class="feature-option">
-          <input
-            type="checkbox"
-            :checked="filters.isElectric"
-            @change="updateFilter('isElectric', $event.target.checked)"
-          />
-          Voiture électrique uniquement
-        </label>
-      </div>
+      <label class="checkbox-label">
+        <input
+          type="checkbox"
+          :checked="filters.isElectric"
+          @change="updateFilter('isElectric', $event.target.checked)"
+        />
+        <span class="checkmark"></span>
+        Voiture électrique uniquement
+      </label>
     </div>
 
     <div class="filter-group">
       <h4>Durée maximale</h4>
-      <div class="duration-filter">
-        <select
-          :value="filters.maxDuration"
-          @change="updateFilter('maxDuration', $event.target.value)"
-          class="duration-select"
-        >
-          <option value="480">Toutes durées</option>
-          <option value="60">1h maximum</option>
-          <option value="120">2h maximum</option>
-          <option value="180">3h maximum</option>
-          <option value="240">4h maximum</option>
-          <option value="300">5h maximum</option>
-        </select>
-      </div>
+      <SelectInput
+        :modelValue="filters.maxDuration"
+        @update:modelValue="updateFilter('maxDuration', $event)"
+        class="filter-select"
+      >
+        <option value="480">Toutes durées</option>
+        <option value="60">1h maximum</option>
+        <option value="120">2h maximum</option>
+        <option value="180">3h maximum</option>
+        <option value="240">4h maximum</option>
+        <option value="300">5h maximum</option>
+      </SelectInput>
     </div>
 
     <div class="filter-group">
       <h4>Note minimale du chauffeur</h4>
-      <div class="rating-filter">
-        <select
-          :value="filters.minRating"
-          @change="updateFilter('minRating', $event.target.value)"
-          class="rating-select"
-        >
-          <option value="0">Toutes notes</option>
-          <option value="3">3 étoiles et plus</option>
-          <option value="4">4 étoiles et plus</option>
-          <option value="4.5">4.5 étoiles et plus</option>
-        </select>
-      </div>
+      <SelectInput
+        :modelValue="filters.minRating"
+        @update:modelValue="updateFilter('minRating', $event)"
+        class="filter-select"
+      >
+        <option value="0">Toutes notes</option>
+        <option value="3">3 étoiles et plus</option>
+        <option value="4">4 étoiles et plus</option>
+        <option value="4.5">4.5 étoiles et plus</option>
+      </SelectInput>
     </div>
   </div>
 </template>
 
 <script setup>
 import IconCredit from '@/components/icons/IconCredit.vue'
+import SelectInput from '@/components/ui/SelectInput.vue'
 
 defineProps({
   filters: {
@@ -129,34 +125,53 @@ const updateFilter = (key, value) => {
   color: var(--color-primary);
 }
 
-.ecological-filter,
-.duration-filter,
-.rating-filter {
+.filter-select {
+  width: 100%;
   margin-top: 10px;
 }
 
-.duration-select,
-.rating-select {
-  width: 100%;
-  padding: 8px 12px;
-  background: var(--color-dark);
-  color: var(--color-light);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  margin-top: 8px;
-}
-
-.feature-option {
+.checkbox-label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   cursor: pointer;
-  padding: 4px 0;
-  color: var(--color-light-secondary);
+  user-select: none;
+  margin-top: 10px;
 }
 
-.feature-option input {
-  accent-color: var(--color-primary);
+.checkbox-label input[type='checkbox'] {
+  display: none;
+}
+
+.checkmark {
+  width: 20px;
+  height: 20px;
+  background: var(--color-dark-tertiary);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.checkbox-label input[type='checkbox']:checked + .checkmark {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.checkbox-label input[type='checkbox']:checked + .checkmark::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-dark);
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.checkbox-label {
+  color: var(--color-light-secondary);
 }
 
 @media (max-width: 900px) {

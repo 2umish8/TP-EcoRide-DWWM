@@ -18,9 +18,9 @@
         <SearchResultsError v-else-if="error" :message="error" @retry="loadCarpoolings" />
 
         <!-- Résultats -->
-        <template v-else-if="carpoolings.length > 0">
+        <template v-else-if="formattedResults.length > 0">
           <TripCard
-            v-for="trip in carpoolings"
+            v-for="trip in formattedResults"
             :key="trip.id"
             :trip="trip"
             @select="selectTrip(trip)"
@@ -56,7 +56,8 @@ import SearchResultsEmpty from '@/components/SearchResultsEmpty.vue'
 const route = useRoute()
 const router = useRouter()
 const searchStore = useSearchStore()
-const { loading, error, nextAvailableDate, loadCarpoolings, carpoolings } = useCarpoolings()
+const { loading, error, nextAvailableDate, loadCarpoolings, carpoolings, formattedResults } =
+  useCarpoolings()
 
 // Alias pour le formulaire de recherche (SearchBar utilise departure/destination)
 // Only use URL query params - don't fall back to store, so form resets when URL is clean
