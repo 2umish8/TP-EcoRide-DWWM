@@ -17,7 +17,9 @@
         "test:all": "npm run check && npm run mongo:quick && npm run test",
         "db:clean": "node scripts/cleanDatabase.js clean",
         "db:reset": "node scripts/cleanDatabase.js reset",
-        "db:status": "node scripts/cleanDatabase.js status"
+        "db:status": "node scripts/cleanDatabase.js status",
+        "seed:reviews": "node scripts/seedReviewsForTestUser.js",
+        "test:reviews": "node tests/reviewWorkflow.test.js"
     },
     "keywords": [],
     "author": "",

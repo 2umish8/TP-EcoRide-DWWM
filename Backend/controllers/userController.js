@@ -282,7 +282,6 @@ const getUserById = async (req, res) => {
         const totalTrips = await prisma.carpooling.count({
             where: { driver_id: parseInt(userId) },
         });
-
         // Récupérer les statistiques des avis (MongoDB)
         const reviewStats = await Review.getAverageRating(parseInt(userId));
 
@@ -309,6 +308,15 @@ const getUserById = async (req, res) => {
                     pseudo: true,
                     profile_picture_url: true,
                 },
+            });
+
+            // Créer une map pour accès rapide
+            reviewers.forEach((reviewer) => {
+                reviewerInfo[reviewer.id] = {
+                    id: reviewer.id,
+                    pseudo: reviewer.pseudo,
+                    profile_picture_url: reviewer.profile_picture_url,
+                };
             });
         }
 

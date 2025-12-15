@@ -119,7 +119,7 @@ export const vehicleService = {
 // Services de covoiturage
 export const carpoolingService = {
   async getAvailableTrips(filters = {}) {
-    const response = await api.get('/carpoolings/available', { params: filters })
+    const response = await api.get('/search/advanced', { params: filters })
     return response.data
   },
 

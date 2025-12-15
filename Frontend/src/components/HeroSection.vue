@@ -5,7 +5,7 @@
         <template v-if="isLoggedIn">
           <h1 class="main-title">
             Bienvenu {{ pseudo }} !<br />
-            Tu ne participes pas seulement à un covoiturage, tu participes à un
+            Tu ne participes plus simplement à un covoiturage, tu participes à un
             <span class="eco-highlight">monde meilleur</span>
           </h1>
         </template>

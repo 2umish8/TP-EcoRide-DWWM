@@ -98,6 +98,21 @@ export const getStatusCount = (items, status, statusKey = 'status') => {
 }
 
 /**
+ * Format duration in minutes to hours and minutes format
+ * @param {number} minutes - Duration in minutes
+ * @returns {string} Formatted duration (e.g., '2h30', '1h', '45min')
+ */
+export const formatDurationMinutes = (minutes) => {
+  if (!minutes) return 'N/A'
+  const hours = Math.floor(minutes / 60)
+  const mins = minutes % 60
+  if (hours > 0) {
+    return `${hours}h${mins > 0 ? mins.toString().padStart(2, '0') : ''}`
+  }
+  return `${mins}min`
+}
+
+/**
  * Sum a numeric property across all items
  * @param {Array} items - Items to sum
  * @param {string} key - Property key to sum

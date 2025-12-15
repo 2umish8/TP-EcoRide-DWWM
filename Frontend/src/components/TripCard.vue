@@ -71,7 +71,7 @@
         <div class="detail-content">
           <span class="detail-label">Durée</span>
           <span class="detail-value">
-            {{ trip.duration_minutes ? `${trip.duration_minutes}min` : 'N/A' }}
+            {{ formatDurationMinutes(trip.duration_minutes) }}
           </span>
         </div>
       </div>
@@ -127,7 +127,7 @@
 <script>
 import { formatDate, formatTime, formatDuration } from '@/composables/useDateFormatting'
 import { getStatusLabel, getStatusIcon, getStars } from '@/utils/formatters'
-import { calculateEarnings } from '@/utils/helpers'
+import { calculateEarnings, formatDurationMinutes } from '@/utils/helpers'
 import { computed } from 'vue'
 
 export default {
@@ -172,6 +172,7 @@ export default {
       getStatusIcon,
       getStars,
       calculateEarnings,
+      formatDurationMinutes,
       driverAvatarUrl,
     }
   },

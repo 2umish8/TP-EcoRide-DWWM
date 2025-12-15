@@ -9,8 +9,8 @@ const {
     cancelCarpoolingById,
     autoCancelExpiredCarpoolings,
 } = require("../utils/carpoolingUtils.js");
-// MongoDB models temporarily disabled
-// const Review = require("../models/Review");
+// MongoDB models
+const Review = require("../models/Review");
 // const DriverPreferences = require("../models/DriverPreferences");
 
 /* --------------------------------------------------- Créer un covoiturage -------------------------------------- */
@@ -733,10 +733,11 @@ const getCarpoolingById = async (req, res) => {
             duration_minutes,
         };
 
-        // Données temporaires (MongoDB désactivé)
-        // 1. Note moyenne du chauffeur
-        result.driver_rating = 4.5; // Note par défaut
-        result.total_reviews = 12; // Nombre d'avis par défaut
+        // Données MongoDB: Avis et préférences du chauffeur
+        // 1. Note moyenne du chauffeur et nombre d'avis
+        const ratingStats = await Review.getAverageRating(carpooling.driver_id);
+        result.driver_rating = ratingStats.average;
+        result.total_reviews = ratingStats.total;
 
         // 2. Préférences du chauffeur (par défaut)
         result.driver_preferences = {
@@ -748,21 +749,22 @@ const getCarpoolingById = async (req, res) => {
             customPreferences: [],
         };
 
-        // 3. Avis récents (exemples)
-        result.recent_reviews = [
-            {
-                rating: 5,
-                comment: "Excellent chauffeur, très ponctuel !",
-                createdAt: new Date("2025-01-15"),
-                reviewer_pseudo: "Marie_L",
-            },
-            {
-                rating: 4,
-                comment: "Trajet agréable et sécurisé.",
-                createdAt: new Date("2025-01-10"),
-                reviewer_pseudo: "Pierre_K",
-            },
-        ];
+        // 3. Avis récents (premiers 5 avis approuvés, triés par date décroissante)
+        const approvedReviews = await Review.find({
+            reviewedUserId: carpooling.driver_id,
+            validationStatus: "approved",
+        })
+            .sort({ createdAt: -1 })
+            .limit(5)
+            .select("rating comment createdAt reviewerId")
+            .lean();
+
+        result.recent_reviews = approvedReviews.map((review) => ({
+            rating: review.rating,
+            comment: review.comment,
+            createdAt: review.createdAt,
+            reviewer_pseudo: `User_${review.reviewerId}`, // Placeholder: could be enriched with actual pseudo
+        }));
 
         res.status(200).json({ carpooling: result });
     } catch (error) {
