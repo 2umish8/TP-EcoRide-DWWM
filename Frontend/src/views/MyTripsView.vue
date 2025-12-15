@@ -58,13 +58,24 @@
       <!-- Passenger Tab -->
       <PassengerTripsSection v-if="activeTab === 'passenger'" ref="passengerSection" />
     </div>
+
+    <!-- Become driver confirmation modal -->
+    <ConfirmActionModal
+      :show="showBecomeDriverConfirm"
+      title="Devenir chauffeur"
+      message="Pour créer un trajet, vous devez d'abord devenir chauffeur. Voulez-vous lancer le processus maintenant ?"
+      @confirm="startBecomeDriver"
+      @cancel="cancelBecomeDriver"
+    />
   </div>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import DriverTripsSection from '@/components/DriverTripsSection.vue'
 import PassengerTripsSection from '@/components/PassengerTripsSection.vue'
+import ConfirmActionModal from '@/components/ConfirmActionModal.vue'
 import useDriverStatus from '@/composables/useDriverStatus'
 
 export default {
@@ -72,11 +83,14 @@ export default {
   components: {
     DriverTripsSection,
     PassengerTripsSection,
+    ConfirmActionModal,
   },
   setup() {
+    const router = useRouter()
     const activeTab = ref('passenger')
     const driverSection = ref(null)
     const passengerSection = ref(null)
+    const showBecomeDriverConfirm = ref(false)
     const { isDriver, checkDriverStatus } = useDriverStatus()
 
     const handlePassengerTab = () => {
@@ -90,11 +104,26 @@ export default {
 
     const handleDriverTab = () => {
       if (activeTab.value === 'driver') {
-        window.location.href = '/create-trip'
+        // User is trying to create a trip
+        if (!isDriver.value) {
+          // Prompt user to become a driver first
+          showBecomeDriverConfirm.value = true
+        } else {
+          window.location.href = '/create-trip'
+        }
       } else {
         activeTab.value = 'driver'
         driverSection.value?.loadTrips()
       }
+    }
+
+    const startBecomeDriver = async () => {
+      showBecomeDriverConfirm.value = false
+      await router.push('/become-driver')
+    }
+
+    const cancelBecomeDriver = () => {
+      showBecomeDriverConfirm.value = false
     }
 
     onMounted(() => {
@@ -111,8 +140,11 @@ export default {
       isDriver,
       driverSection,
       passengerSection,
+      showBecomeDriverConfirm,
       handlePassengerTab,
       handleDriverTab,
+      startBecomeDriver,
+      cancelBecomeDriver,
     }
   },
 }

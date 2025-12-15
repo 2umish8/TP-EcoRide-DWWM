@@ -46,13 +46,10 @@
    - [x] Cliquer sur logo → revenir à l'accueil
    - [x] Cliquer sur "Mentions légales" → page légale s'ouvre
    - [x] Taper "Lyon" dans la barre → texte s'affiche
-   - [ ] Cliquer "Trouver un itinéraire" → va à /search avec "Lyon" comme destination
+   - [x] Cliquer "Trouver un itinéraire" → va à /search avec "Lyon" comme destination
 
 4. Aucune erreur console:
-   - [ ] F12 → Console → aucun message d'erreur rouge
-
-
-**Validation**: ✅ Passé / ❌ Échoué
+   - [x] F12 → Console → aucun message d'erreur rouge
 
 ---
 
@@ -60,8 +57,8 @@
 
 **Parcours**:
 1. Depuis la page d'accueil, regarder la navbar:
-   - [ ] Logo EcoRide visible et cliquable
-   - [ ] Lien "Accueil" → / (reload page)
+   - [x] Logo EcoRide visible et cliquable
+   - [x] Lien "Accueil" → / (reload page)
    - [ ] Lien "Covoiturages" → /search
    - [ ] Lien "Connexion / Inscription" → /login
    - [ ] Lien "Contact" (si existe) → fonctionne
@@ -75,9 +72,6 @@
 3. Navigation responsive (mobile):
    - [ ] Sur écran petit (< 768px), menu hamburger visible (optionnel)
    - [ ] Cliquer hamburger → menu se déploie
-
-
-**Validation**: ✅ Passé / ❌ Échoué
 
 ---
 

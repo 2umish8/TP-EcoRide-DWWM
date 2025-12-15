@@ -1,5 +1,14 @@
 <template>
   <div class="create-trip">
+    <!-- Become driver confirmation modal -->
+    <ConfirmActionModal
+      :show="showBecomeDriverConfirm"
+      title="Devenir chauffeur"
+      message="Pour créer un trajet, vous devez d'abord devenir chauffeur. Voulez-vous lancer le processus maintenant ?"
+      @confirm="startBecomeDriver"
+      @cancel="cancelBecomeDriver"
+    />
+
     <!-- Header -->
     <div class="create-trip-header">
       <h1 class="page-title">Proposer un trajet</h1>
@@ -122,42 +131,7 @@
         </div>
 
         <!-- Récapitulatif -->
-        <div class="form-section summary-section">
-          <h3 class="section-title">
-            <font-awesome-icon :icon="['fas', 'clipboard-list']" /> Récapitulatif
-          </h3>
-
-          <div class="trip-summary">
-            <div class="summary-route">
-              <span class="route-point"
-                ><font-awesome-icon :icon="['fas', 'location-dot']" />
-                {{ tripData.departure_address || 'Lieu de départ' }}</span
-              >
-              <div class="route-arrow">→</div>
-              <span class="route-point"
-                ><font-awesome-icon :icon="['fas', 'bullseye']" />
-                {{ tripData.arrival_address || 'Destination' }}</span
-              >
-            </div>
-
-            <div class="summary-details">
-              <div class="summary-item">
-                <span class="summary-label">Date et heure :</span>
-                <span class="summary-value">
-                  {{ formatSummaryDateTime() }}
-                </span>
-              </div>
-              <div class="summary-item">
-                <span class="summary-label">Places disponibles :</span>
-                <span class="summary-value">{{ tripData.initial_seats_offered || 0 }}</span>
-              </div>
-              <div class="summary-item">
-                <span class="summary-label">Prix par passager :</span>
-                <span class="summary-value">{{ tripData.price_per_passenger || 0 }} crédits</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <TripPreview :trip-data="tripData" />
 
         <!-- Actions -->
         <div class="form-actions">
@@ -179,35 +153,38 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { carpoolingService } from '@/services/api'
 import { useNotificationStore } from '@/stores/notification'
+import useDriverStatus from '@/composables/useDriverStatus'
+import ConfirmActionModal from '@/components/ConfirmActionModal.vue'
 import CityAutocomplete from '@/components/ui/CityAutocomplete.vue'
 import TextInput from '@/components/ui/TextInput.vue'
-import DateInput from '@/components/ui/DateInput.vue'
 import DateTimeInput from '@/components/ui/DateTimeInput.vue'
 import DurationInput from '@/components/ui/DurationInput.vue'
 import NumberInput from '@/components/ui/NumberInput.vue'
-import SelectInput from '@/components/ui/SelectInput.vue'
 import TextAreaInput from '@/components/ui/TextAreaInput.vue'
 import PrimaryButton from '@/components/ui/PrimaryButton.vue'
 import SecondaryButton from '@/components/ui/SecondaryButton.vue'
+import TripPreview from '@/components/TripPreview.vue'
 
 export default {
   name: 'CreateTripView',
   components: {
+    ConfirmActionModal,
     CityAutocomplete,
     TextInput,
-    DateInput,
     DateTimeInput,
     DurationInput,
     NumberInput,
-    SelectInput,
     TextAreaInput,
     PrimaryButton,
     SecondaryButton,
+    TripPreview,
   },
   setup() {
     const notificationStore = useNotificationStore()
     const router = useRouter()
     const loading = ref(false)
+    const showBecomeDriverConfirm = ref(false)
+    const { isDriver, checkDriverStatus } = useDriverStatus()
 
     // Données du formulaire
     const tripData = ref({
@@ -229,23 +206,6 @@ export default {
     const today = computed(() => {
       return new Date().toISOString().split('T')[0]
     })
-
-    // Formatage de la date et heure pour le récapitulatif
-    const formatSummaryDateTime = () => {
-      if (!tripData.value.departure_datetime) {
-        return 'Date et heure à définir'
-      }
-
-      const date = new Date(tripData.value.departure_datetime)
-      return date.toLocaleDateString('fr-FR', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      })
-    }
 
     // Calcul de la date/heure d'arrivée basée sur la durée
     const calculateArrivalDateTime = () => {
@@ -309,8 +269,26 @@ export default {
       }
     }
 
+    const startBecomeDriver = async () => {
+      showBecomeDriverConfirm.value = false
+      await router.push('/become-driver')
+    }
+
+    const cancelBecomeDriver = () => {
+      showBecomeDriverConfirm.value = false
+      router.push('/my-trips')
+    }
+
     // Initialisation
     onMounted(() => {
+      // Vérifier si l'utilisateur est chauffeur
+      checkDriverStatus()
+
+      if (!isDriver.value) {
+        showBecomeDriverConfirm.value = true
+        return
+      }
+
       // Pré-remplir avec la date d'aujourd'hui et heure actuelle
       const now = new Date()
       const hours = String(now.getHours()).padStart(2, '0')
@@ -324,8 +302,11 @@ export default {
       tripDuration,
       today,
       loading,
-      formatSummaryDateTime,
       createTrip,
+      isDriver,
+      showBecomeDriverConfirm,
+      startBecomeDriver,
+      cancelBecomeDriver,
     }
   },
 }
@@ -412,72 +393,6 @@ export default {
   font-size: 0.9rem;
 }
 
-/* Section récapitulatif */
-.summary-section {
-  background: linear-gradient(
-    135deg,
-    var(--color-dark-tertiary) 0%,
-    var(--color-dark-secondary) 100%
-  );
-  border: 2px solid var(--color-success);
-  border-radius: 12px;
-  padding: 1.5rem;
-}
-
-.trip-summary {
-  background: var(--color-dark);
-  border-radius: 8px;
-  padding: 1.5rem;
-}
-
-.summary-route {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
-.route-point {
-  flex: 1;
-  color: var(--color-light-secondary);
-}
-
-.route-arrow {
-  color: var(--color-success);
-  font-weight: 700;
-  font-size: 1.3rem;
-}
-
-.summary-details {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.summary-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.summary-item:last-child {
-  border-bottom: none;
-}
-
-.summary-label {
-  color: var(--color-gray);
-  font-weight: 500;
-}
-
-.summary-value {
-  color: var(--color-light-secondary);
-  font-weight: 600;
-}
-
-/* Actions */
 .form-actions {
   display: flex;
   gap: 1rem;
@@ -521,16 +436,6 @@ export default {
 
   .form-actions {
     flex-direction: column;
-  }
-
-  .summary-route {
-    flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
-  }
-
-  .route-arrow {
-    transform: rotate(90deg);
   }
 }
 </style>

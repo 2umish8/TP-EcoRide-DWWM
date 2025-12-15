@@ -146,11 +146,23 @@ const becomeDriver = async (req, res) => {
     try {
         const userId = req.user.id;
 
+        // Récupérer le rôle chauffeur en premier
+        const driverRole = await prisma.role.findFirst({
+            where: { name: "chauffeur" },
+        });
+
+        if (!driverRole) {
+            console.error("Le rôle 'chauffeur' n'existe pas dans la base de données.");
+            return res.status(500).json({
+                message: "Erreur système : rôle chauffeur non configuré.",
+            });
+        }
+
         // Vérifier si l'utilisateur a déjà le rôle chauffeur
         const existing = await prisma.user_Role.findFirst({
             where: {
                 user_id: userId,
-                role: { name: "chauffeur" },
+                role_id: driverRole.id,
             },
         });
 
@@ -171,13 +183,10 @@ const becomeDriver = async (req, res) => {
         }
 
         // Ajouter le rôle chauffeur (permanent et définitif)
-        const role = await prisma.role.findFirst({
-            where: { name: "chauffeur" },
-        });
         await prisma.user_Role.create({
             data: {
                 user_id: userId,
-                role_id: role.id,
+                role_id: driverRole.id,
             },
         });
 

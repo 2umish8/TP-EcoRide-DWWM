@@ -1,12 +1,18 @@
 <template>
   <div
-    class="trip-card"
+    class="ecologic-trip-card"
     :class="[
       `status-${trip.status}`,
       { 'has-participants': trip.participants_count > 0 },
       { 'is-cancelled': trip.cancellation_date },
     ]"
   >
+    <!-- Ecologic Badge -->
+    <div class="ecologic-badge">
+      <font-awesome-icon :icon="['fas', 'leaf']" />
+      Écologique
+    </div>
+
     <!-- Header -->
     <div class="trip-card-header">
       <span :class="['status-badge', `status-${trip.status}`]">
@@ -111,25 +117,16 @@ import { getStatusLabel, getStatusIcon } from '@/utils/formatters'
 import { calculateEarnings } from '@/utils/helpers'
 
 export default {
-  name: 'TripCard',
+  name: 'EcologicTripCard',
   props: {
-    /**
-     * Trip object with all trip details
-     */
     trip: {
       type: Object,
       required: true,
     },
-    /**
-     * Show earnings information (driver view)
-     */
     showEarnings: {
       type: Boolean,
       default: false,
     },
-    /**
-     * Show price information (passenger view)
-     */
     showPrice: {
       type: Boolean,
       default: false,
@@ -149,25 +146,61 @@ export default {
 </script>
 
 <style scoped>
-.trip-card {
-  background: var(--color-dark-tertiary);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.ecologic-trip-card {
+  background:
+    radial-gradient(
+      400px 150px at 50% 100%,
+      rgba(143, 218, 179, 0.15) 0%,
+      var(--color-dark-tertiary) 70%
+    ),
+    var(--color-dark-tertiary);
+  border: 2px solid var(--eco-primary);
   border-radius: 8px;
   padding: 0.75rem 1rem;
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  box-shadow:
+    0 0 20px rgba(143, 218, 179, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+  position: relative;
 }
 
-.trip-card:hover {
-  border-color: rgba(255, 255, 255, 0.16);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+.ecologic-trip-card:hover {
+  border-color: var(--eco-primary);
+  box-shadow:
+    0 0 30px rgba(143, 218, 179, 0.5),
+    0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
-.trip-card.is-cancelled {
+.ecologic-trip-card.is-cancelled {
   opacity: 0.7;
   filter: grayscale(0.3);
+}
+
+/* Ecologic Badge */
+.ecologic-badge {
+  position: absolute;
+  top: -10px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: rgba(0, 255, 140, 0.13);
+  color: var(--bg-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(143, 218, 179, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.ecologic-badge svg {
+  font-size: 0.9rem;
 }
 
 /* Header */
@@ -176,6 +209,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+  margin-top: 0.2rem;
 }
 
 .status-badge {
@@ -199,7 +233,7 @@ export default {
   color: #cd6570;
 }
 
-.status-badge.status-en\ cours {
+.status-badge.status-démarré {
   background: rgba(241, 213, 129, 0.15);
   color: #f1d581;
 }
@@ -212,8 +246,9 @@ export default {
 /* Route */
 .trip-route {
   padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(143, 218, 179, 0.05);
   border-radius: 6px;
+  border: 1px solid rgba(143, 218, 179, 0.15);
 }
 
 .route-addresses {
@@ -315,13 +350,14 @@ export default {
   align-items: center;
   gap: 0.4rem;
   padding: 0.4rem 0.5rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(143, 218, 179, 0.05);
   border-radius: 6px;
   font-size: 0.8rem;
+  border: 1px solid rgba(143, 218, 179, 0.15);
 }
 
 .vehicle-icon {
-  color: var(--eco-secondary);
+  color: var(--eco-primary);
   font-size: 1rem;
 }
 
@@ -336,7 +372,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding-top: 0.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(143, 218, 179, 0.2);
   gap: 0.5rem;
   flex-wrap: wrap;
   font-size: 0.85rem;
@@ -384,8 +420,14 @@ export default {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .trip-card {
+  .ecologic-trip-card {
     padding: 1rem;
+    padding-top: 2rem;
+  }
+
+  .ecologic-badge {
+    top: 8px;
+    right: 8px;
   }
 
   .trip-details {

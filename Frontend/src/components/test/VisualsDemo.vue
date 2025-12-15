@@ -1,6 +1,7 @@
 <script setup>
 import ButtonsTemplate from '@/components/test/ButtonsTemplate.vue'
 import TripCard from '@/components/TripCard.vue'
+import EcologicTripCard from '@/components/EcologicTripCard.vue'
 
 const sampleTrips = [
   {
@@ -32,6 +33,20 @@ const sampleTrips = [
     plate_number: 'CD-456-EF',
     cancellation_date: new Date(2024, 11, 14),
   },
+  {
+    id: 3,
+    departure_address: 'Toulouse',
+    arrival_address: 'Bordeaux',
+    departure_datetime: new Date(2024, 11, 18, 14, 0),
+    arrival_datetime: new Date(2024, 11, 18, 16, 30),
+    price_per_passenger: 18,
+    participants_count: 3,
+    initial_seats_offered: 4,
+    seats_remaining: 1,
+    status: 'démarré',
+    model: 'Tesla Model 3',
+    plate_number: 'EF-789-GH',
+  },
 ]
 </script>
 
@@ -57,15 +72,16 @@ const sampleTrips = [
       <div class="cards-section">
         <h3>Cards</h3>
         <TripCard
-          v-for="trip in sampleTrips"
+          v-for="trip in sampleTrips.slice(0, 2)"
           :key="trip.id"
           :trip="trip"
           :showEarnings="true"
           class="mb-3"
         />
-      </div>
-
-      <div class="typography-section">
+        <div class="ecologic-card-section">
+          <h4>Écologic Trip Card</h4>
+          <EcologicTripCard :trip="sampleTrips[2]" :showEarnings="true" class="mb-3" />
+        </div>
         <h3>Typography</h3>
         <h1>H1 — Titre principal</h1>
         <h2>H2 — Sous-titre</h2>
@@ -141,6 +157,19 @@ const sampleTrips = [
 .typography-section {
   flex: 1;
   min-width: 300px;
+}
+
+.ecologic-card-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(143, 218, 179, 0.2);
+}
+
+.ecologic-card-section h4 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--eco-primary);
+  font-weight: 600;
 }
 
 .content-row {

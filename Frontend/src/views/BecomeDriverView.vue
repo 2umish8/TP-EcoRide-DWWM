@@ -2,14 +2,10 @@
   <div class="become-driver-page">
     <div class="container">
       <!-- Header -->
-      <div class="page-header">
-        <div class="header-content">
-          <div class="title-section">
-            <h1><font-awesome-icon :icon="['fas', 'car']" /> Devenir Chauffeur EcoRide</h1>
-            <p>Rejoignez notre communauté de conducteurs responsables</p>
-          </div>
-        </div>
-      </div>
+      <BaseCard class="page-header">
+        <h1><font-awesome-icon :icon="['fas', 'car']" /> Devenir Chauffeur EcoRide</h1>
+        <p>Rejoignez notre communauté de conducteurs responsables</p>
+      </BaseCard>
 
       <!-- Étapes du processus -->
       <div class="steps-indicator">
@@ -31,7 +27,7 @@
 
       <!-- Étape 1: Informations véhicule -->
       <div v-if="currentStep === 1" class="step-content">
-        <div class="form-card">
+        <BaseCard class="form-card">
           <h3><font-awesome-icon :icon="['fas', 'car']" /> Informations du véhicule</h3>
           <p class="step-description">
             Pour garantir la sécurité de nos utilisateurs, nous devons enregistrer les informations
@@ -42,25 +38,17 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Plaque d'immatriculation *</label>
-                <input
-                  v-model="vehicleData.plate_number"
-                  type="text"
-                  class="form-input"
-                  placeholder="AB-123-CD"
-                  pattern="[A-Z]{2}-[0-9]{3}-[A-Z]{2}"
-                  required
-                />
+                <LicensePlateInput v-model="vehicleData.plate_number" required />
                 <small class="form-hint">Format: AB-123-CD</small>
               </div>
 
               <div class="form-group">
                 <label class="form-label">Date de première immatriculation *</label>
-                <input
+                <TextInput
                   v-model="vehicleData.first_registration_date"
                   type="date"
-                  class="form-input"
+                  :min="minRegistrationDate"
                   :max="today"
-                  required
                 />
               </div>
             </div>
@@ -68,45 +56,38 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Marque *</label>
-                <select v-model="vehicleData.brand_name" class="form-select" required>
-                  <option value="">Sélectionnez une marque</option>
-                  <option v-for="brand in carBrands" :key="brand" :value="brand">
-                    {{ brand }}
-                  </option>
-                </select>
+                <ListAutocomplete
+                  v-model="vehicleData.brand_name"
+                  :options="carBrands"
+                  placeholder="Sélectionnez ou tapez une marque"
+                />
               </div>
 
               <div class="form-group">
                 <label class="form-label">Modèle *</label>
-                <input
-                  v-model="vehicleData.model"
-                  type="text"
-                  class="form-input"
-                  placeholder="ex: Clio, Golf, 208..."
-                  required
-                />
+                <TextInput v-model="vehicleData.model" placeholder="ex: Clio, Golf, 208..." />
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Couleur *</label>
-                <select v-model="vehicleData.color_name" class="form-select" required>
-                  <option value="">Sélectionnez une couleur</option>
-                  <option v-for="color in carColors" :key="color" :value="color">
-                    {{ color }}
-                  </option>
-                </select>
+                <ListAutocomplete
+                  v-model="vehicleData.color_name"
+                  :options="carColors"
+                  placeholder="Sélectionnez ou tapez une couleur"
+                />
               </div>
 
               <div class="form-group">
                 <label class="form-label">Nombre de places disponibles *</label>
-                <select v-model="vehicleData.seats_available" class="form-select" required>
-                  <option value="">Sélectionnez</option>
-                  <option v-for="n in 7" :key="n" :value="n">
-                    {{ n }} place{{ n > 1 ? 's' : '' }}
-                  </option>
-                </select>
+                <NumberInput
+                  v-model="vehicleData.seats_available"
+                  :min="1"
+                  :max="8"
+                  placeholder="Sélectionnez"
+                  unit="places"
+                />
               </div>
             </div>
 
@@ -126,20 +107,22 @@
             </div>
 
             <div class="form-actions">
-              <router-link to="/my-trips" class="btn btn-secondary"
-                ><font-awesome-icon :icon="['fas', 'xmark']" /> Annuler</router-link
-              >
-              <button type="submit" class="btn btn-primary">
+              <router-link to="/my-trips" class="router-link-wrapper">
+                <SecondaryButton>
+                  <font-awesome-icon :icon="['fas', 'xmark']" /> Annuler
+                </SecondaryButton>
+              </router-link>
+              <PrimaryButton type="submit">
                 Suivant: Préférences <font-awesome-icon :icon="['fas', 'chevron-right']" />
-              </button>
+              </PrimaryButton>
             </div>
           </form>
-        </div>
+        </BaseCard>
       </div>
 
       <!-- Étape 2: Préférences de conduite -->
       <div v-if="currentStep === 2" class="step-content">
-        <div class="form-card">
+        <BaseCard class="form-card">
           <h3><font-awesome-icon :icon="['fas', 'gear']" /> Préférences de conduite</h3>
           <p class="step-description">
             Définissez vos préférences pour que les passagers sachent à quoi s'attendre lors du
@@ -150,25 +133,20 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Musique pendant le trajet</label>
-                <select v-model="preferencesData.musicPreference" class="form-select">
-                  <option value="Aucune musique">Aucune musique</option>
-                  <option value="Musique douce">
-                    <font-awesome-icon :icon="['fas', 'music']" /> Musique douce
-                  </option>
-                  <option value="Radio">Radio</option>
-                  <option value="Selon l'humeur">Selon l'humeur</option>
-                </select>
+                <ListAutocomplete
+                  v-model="preferencesData.musicPreference"
+                  :options="musicOptions"
+                  placeholder="Sélectionnez une musique"
+                />
               </div>
 
               <div class="form-group">
                 <label class="form-label">Niveau de conversation</label>
-                <select v-model="preferencesData.conversationLevel" class="form-select">
-                  <option value="Silencieux">Trajet silencieux</option>
-                  <option value="Modérée">
-                    <font-awesome-icon :icon="['fas', 'comment']" /> Conversation modérée
-                  </option>
-                  <option value="Bavard">J'aime parler</option>
-                </select>
+                <ListAutocomplete
+                  v-model="preferencesData.conversationLevel"
+                  :options="conversationLevels"
+                  placeholder="Sélectionnez un niveau"
+                />
               </div>
             </div>
 
@@ -222,29 +200,27 @@
 
             <div class="form-group">
               <label class="form-label">Préférences personnalisées (optionnel)</label>
-              <textarea
+              <TextAreaInput
                 v-model="preferencesData.customPreferences"
-                class="form-textarea"
-                rows="3"
                 placeholder="ex: J'accepte les instruments de musique, j'aime les discussions sur les voyages..."
-              ></textarea>
+              />
             </div>
 
             <div class="form-actions">
-              <button type="button" @click="currentStep = 1" class="btn btn-secondary">
+              <SecondaryButton @click="currentStep = 1" type="button">
                 <font-awesome-icon :icon="['fas', 'arrow-left']" /> Retour
-              </button>
-              <button type="submit" class="btn btn-primary">
+              </SecondaryButton>
+              <PrimaryButton type="submit">
                 Suivant: Confirmation <font-awesome-icon :icon="['fas', 'chevron-right']" />
-              </button>
+              </PrimaryButton>
             </div>
           </form>
-        </div>
+        </BaseCard>
       </div>
 
       <!-- Étape 3: Confirmation et finalisation -->
       <div v-if="currentStep === 3" class="step-content">
-        <div class="confirmation-card">
+        <BaseCard class="confirmation-card">
           <h3><font-awesome-icon :icon="['fas', 'circle-check']" /> Confirmation</h3>
           <p class="step-description">
             Vérifiez vos informations avant de finaliser votre inscription en tant que chauffeur.
@@ -372,13 +348,13 @@
           </div>
 
           <div class="form-actions">
-            <button type="button" @click="currentStep = 2" class="btn btn-secondary">
+            <SecondaryButton @click="currentStep = 2" type="button">
               <font-awesome-icon :icon="['fas', 'arrow-left']" /> Retour
-            </button>
-            <button
+            </SecondaryButton>
+            <PrimaryButton
               @click="submitDriverApplication"
               :disabled="!acceptEngagement || isSubmitting"
-              class="btn btn-primary btn-large"
+              type="button"
             >
               <span v-if="isSubmitting"
                 ><font-awesome-icon :icon="['fas', 'spinner']" spin /> Finalisation en
@@ -387,14 +363,14 @@
               <span v-else
                 ><font-awesome-icon :icon="['fas', 'gift']" /> Devenir Chauffeur EcoRide</span
               >
-            </button>
+            </PrimaryButton>
           </div>
-        </div>
+        </BaseCard>
       </div>
 
       <!-- Étape 4: Succès -->
       <div v-if="currentStep === 4" class="step-content">
-        <div class="success-card">
+        <BaseCard class="success-card">
           <div class="success-icon"><font-awesome-icon :icon="['fas', 'gift']" /></div>
           <h3>Félicitations !</h3>
           <p>Vous êtes maintenant officiellement chauffeur EcoRide !</p>
@@ -422,11 +398,13 @@
           </div>
 
           <div class="form-actions">
-            <router-link to="/profile" class="btn btn-primary btn-large">
-              <font-awesome-icon :icon="['fas', 'user']" /> Retour au profil
+            <router-link to="/profile" class="router-link-wrapper">
+              <PrimaryButton>
+                <font-awesome-icon :icon="['fas', 'user']" /> Retour au profil
+              </PrimaryButton>
             </router-link>
           </div>
-        </div>
+        </BaseCard>
       </div>
     </div>
   </div>
@@ -436,9 +414,27 @@
 import { ref, computed } from 'vue'
 import { authService, vehicleService } from '@/services/api'
 import { preferencesService } from '@/services/mongoServices'
+import BaseCard from '@/components/ui/BaseCard.vue'
+import LicensePlateInput from '@/components/ui/LicensePlateInput.vue'
+import ListAutocomplete from '@/components/ui/ListAutocomplete.vue'
+import TextInput from '@/components/ui/TextInput.vue'
+import TextAreaInput from '@/components/ui/TextAreaInput.vue'
+import NumberInput from '@/components/ui/NumberInput.vue'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import SecondaryButton from '@/components/ui/SecondaryButton.vue'
 
 export default {
   name: 'BecomeDriverView',
+  components: {
+    BaseCard,
+    LicensePlateInput,
+    ListAutocomplete,
+    TextInput,
+    TextAreaInput,
+    NumberInput,
+    PrimaryButton,
+    SecondaryButton,
+  },
   setup() {
     // État des étapes
     const currentStep = ref(1)
@@ -461,7 +457,7 @@ export default {
     // Données des préférences
     const preferencesData = ref({
       musicPreference: 'Aucune musique',
-      conversationLevel: 'Modérée',
+      conversationLevel: 'Silencieux',
       temperaturePreference: 20,
       smokingAllowed: false,
       petsAllowed: false,
@@ -507,6 +503,16 @@ export default {
       'Beige',
       'Rose',
     ]
+
+    const musicOptions = ['Aucune musique', 'Musique douce', 'Radio', "Selon l'humeur"]
+
+    const conversationLevels = ['Silencieux', 'Modérée', 'Bavard']
+
+    const minRegistrationDate = computed(() => {
+      const date = new Date()
+      date.setFullYear(date.getFullYear() - 30) // Pas de voiture de plus de 30 ans
+      return date.toISOString().split('T')[0]
+    })
 
     const today = computed(() => {
       return new Date().toISOString().split('T')[0]
@@ -586,6 +592,9 @@ export default {
       preferencesData,
       carBrands,
       carColors,
+      musicOptions,
+      conversationLevels,
+      minRegistrationDate,
       today,
       acceptEngagement,
       isSubmitting,
@@ -612,26 +621,16 @@ export default {
 }
 
 .page-header {
-  background: var(--color-dark-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  margin-bottom: 30px;
-  overflow: hidden;
-}
-
-.header-content {
-  padding: 30px;
   text-align: center;
 }
 
-.title-section h1 {
+.page-header h1 {
   margin: 0 0 10px 0;
   color: var(--color-light);
   font-size: 2.2rem;
 }
 
-.title-section p {
+.page-header p {
   margin: 0;
   color: var(--color-gray);
   font-size: 1.1rem;
@@ -640,7 +639,7 @@ export default {
 .steps-indicator {
   display: flex;
   justify-content: center;
-  margin-bottom: 40px;
+  margin: 10px 0;
   gap: 20px;
 }
 
@@ -686,23 +685,19 @@ export default {
   font-weight: bold;
 }
 
-.form-card,
-.confirmation-card,
-.success-card {
-  background: var(--color-dark-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  padding: 40px;
-  margin-bottom: 30px;
-}
-
 .form-card h3,
 .confirmation-card h3,
 .success-card h3 {
   margin: 0 0 15px 0;
   color: var(--color-light);
   font-size: 1.5rem;
+}
+
+.form-card,
+.confirmation-card,
+.success-card,
+.page-header {
+  margin-bottom: 30px;
 }
 
 .step-description {
@@ -729,28 +724,6 @@ export default {
   color: var(--color-light-secondary);
 }
 
-.form-input,
-.form-select,
-.form-textarea {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  background-color: var(--color-dark-tertiary);
-  color: var(--color-light-secondary);
-  font-family: inherit;
-  font-size: 1rem;
-  transition: border-color 0.3s;
-  box-sizing: border-box;
-}
-
-.form-input:focus,
-.form-select:focus,
-.form-textarea:focus {
-  outline: none;
-  border-color: var(--color-success);
-}
-
 .form-hint {
   color: var(--color-gray);
   font-size: 0.8rem;
@@ -767,6 +740,8 @@ export default {
 .form-checkbox {
   width: 18px;
   height: 18px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
 }
 
 .checkbox-label {
@@ -787,6 +762,24 @@ export default {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 3px;
   outline: none;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+/* Range slider thumb styling */
+.temperature-slider::-webkit-slider-thumb {
+  accent-color: var(--color-primary);
+}
+
+.temperature-slider::-moz-range-thumb {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.temperature-slider::-moz-range-track {
+  background: transparent;
+  border: none;
 }
 
 .temperature-value {
@@ -986,49 +979,16 @@ input:checked + .slider:before {
   margin-top: 30px;
 }
 
-.btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
+.router-link-wrapper {
   text-decoration: none;
-  cursor: pointer;
-  transition: all 0.3s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.btn-primary {
-  background: var(--color-success);
-  color: white;
+:deep(.primary-button) {
+  color: #000 !important;
 }
 
-.btn-primary:hover:not(:disabled) {
-  background: rgba(67, 197, 97, 0.8);
-  transform: translateY(-2px);
-}
-
-.btn-primary:disabled {
-  background: var(--color-gray);
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background: var(--color-dark-tertiary);
-  color: var(--color-light-secondary);
-  border: 2px solid rgba(255, 255, 255, 0.15);
-}
-
-.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
-}
-
-.btn-large {
-  padding: 15px 30px;
-  font-size: 1.1rem;
+:deep(.primary-button svg) {
+  color: #000 !important;
 }
 
 @media (max-width: 768px) {
