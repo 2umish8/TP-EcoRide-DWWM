@@ -2,16 +2,16 @@
   <div
     class="trip-card"
     :class="[
-      `status-${trip.status}`,
-      { 'has-participants': trip.participants_count > 0 },
+      `status-${trip.status || 'prévu'}`,
+      { 'has-participants': (trip.participants_count || trip._count?.participations || 0) > 0 },
       { 'is-cancelled': trip.cancellation_date },
     ]"
   >
     <!-- Header -->
     <div class="trip-card-header">
-      <span :class="['status-badge', `status-${trip.status}`]">
-        <font-awesome-icon :icon="['fas', getStatusIcon(trip.status)]" />
-        {{ getStatusLabel(trip.status) }}
+      <span :class="['status-badge', `status-${trip.status || 'prévu'}`]">
+        <font-awesome-icon :icon="['fas', getStatusIcon(trip.status || 'prévu')]" />
+        {{ getStatusLabel(trip.status || 'prévu') }}
       </span>
       <div class="trip-actions">
         <slot name="actions"></slot>
@@ -51,7 +51,7 @@
         <div class="detail-content">
           <span class="detail-label">Durée</span>
           <span class="detail-value">
-            {{ formatDuration(trip.departure_datetime, trip.arrival_datetime) }}
+            {{ trip.duration_minutes ? `${trip.duration_minutes}min` : 'N/A' }}
           </span>
         </div>
       </div>
@@ -60,7 +60,7 @@
         <font-awesome-icon :icon="['fas', 'coins']" class="detail-icon" />
         <div class="detail-content">
           <span class="detail-label">Prix</span>
-          <span class="detail-value">{{ trip.price_per_passenger }} crédits</span>
+          <span class="detail-value">{{ trip.price_per_passenger || 'N/A' }} crédits</span>
         </div>
       </div>
 
@@ -69,9 +69,12 @@
         <div class="detail-content">
           <span class="detail-label">Participants</span>
           <span class="detail-value">
-            {{ trip.participants_count || 0 }} / {{ trip.initial_seats_offered }}
+            {{ trip.participants_count || trip._count?.participations || 0 }} /
+            {{ trip.initial_seats_offered || trip.seats_remaining || 'N/A' }}
             <span class="seats-remaining"
-              >({{ trip.seats_remaining }} restante{{ trip.seats_remaining > 1 ? 's' : '' }})</span
+              >({{ trip.seats_remaining || 0 }} restante{{
+                (trip.seats_remaining || 0) > 1 ? 's' : ''
+              }})</span
             >
           </span>
         </div>
@@ -87,7 +90,11 @@
     <!-- Footer -->
     <div class="trip-card-footer">
       <div
-        v-if="showEarnings && trip.status === 'terminé' && trip.participants_count > 0"
+        v-if="
+          showEarnings &&
+          (trip.status === 'terminé' || trip.status === 'completed') &&
+          (trip.participants_count || trip._count?.participations || 0) > 0
+        "
         class="trip-earnings"
       >
         <font-awesome-icon :icon="['fas', 'coins']" class="earnings-icon" />
@@ -143,6 +150,17 @@ export default {
       getStatusLabel,
       getStatusIcon,
       calculateEarnings,
+    }
+  },
+  created() {
+    if (import.meta.env.DEV) {
+      console.log('[TripCard DEBUG] Trip data received:', this.trip)
+      console.log('[TripCard DEBUG] Keys available:', Object.keys(this.trip))
+      console.log('[TripCard DEBUG] departure_datetime:', this.trip.departure_datetime)
+      console.log('[TripCard DEBUG] price_per_passenger:', this.trip.price_per_passenger)
+      console.log('[TripCard DEBUG] participants_count:', this.trip.participants_count)
+      console.log('[TripCard DEBUG] initial_seats_offered:', this.trip.initial_seats_offered)
+      console.log('[TripCard DEBUG] seats_remaining:', this.trip.seats_remaining)
     }
   },
 }

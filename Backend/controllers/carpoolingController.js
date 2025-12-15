@@ -176,6 +176,7 @@ const getAvailableCarpoolings = async (req, res) => {
             include: {
                 driver: {
                     select: {
+                        id: true,
                         pseudo: true,
                         profile_picture_url: true,
                     },
@@ -184,6 +185,13 @@ const getAvailableCarpoolings = async (req, res) => {
                     include: {
                         brand: true,
                         color: true,
+                    },
+                },
+                _count: {
+                    select: {
+                        participations: {
+                            where: { cancellation_date: null },
+                        },
                     },
                 },
             },
@@ -195,6 +203,7 @@ const getAvailableCarpoolings = async (req, res) => {
             ...c,
             driver_pseudo: c.driver.pseudo,
             driver_photo: c.driver.profile_picture_url,
+            driver_id: c.driver.id,
             model: c.vehicle.model,
             plate_number: c.vehicle.plate_number,
             is_electric: c.vehicle.is_electric,
@@ -203,6 +212,7 @@ const getAvailableCarpoolings = async (req, res) => {
             duration_minutes: Math.round(
                 (new Date(c.arrival_datetime) - new Date(c.departure_datetime)) / (1000 * 60)
             ),
+            participants_count: c._count.participations,
         }));
 
         res.status(200).json({

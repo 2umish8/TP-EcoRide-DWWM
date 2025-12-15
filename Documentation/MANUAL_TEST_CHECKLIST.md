@@ -83,29 +83,27 @@
 1. Aller à /search (ou cliquer "Covoiturages" depuis accueil)
 
 2. Vérifier le formulaire:
-   - [ ] Champ "Départ" prérempli (géolocalisation ou "Votre position")
-   - [ ] Champ "Arrivée" (vide ou prérempli)
-   - [ ] Champ "Date/Heure" (aujourd'hui ou date future)
-   - [ ] Bouton "Rechercher"
-   - [ ] Section "Filtres" (visible ou déployable)
+   - [x] Champ "Départ" avec placeholder
+   - [x] Champ "Arrivée" avec placeholder
+   - [x] Champ "Date/Heure" (aujourd'hui ou date future)
+   - [x] Bouton "Rechercher"
 
 3. Remplir et rechercher:
-   - [ ] Départ: "Paris"
-   - [ ] Arrivée: "Lyon"
-   - [ ] Date: demain (sélectionner via date picker)
-   - [ ] Cliquer "Rechercher"
+   - [x] Départ: "Paris"
+   - [x] Arrivée: "Lyon"
+   - [x] Date: demain (sélectionner via date picker)
+   - [x] Cliquer "Rechercher"
 
 4. Vérifier les résultats:
    - [ ] Liste de covoiturages s'affiche
    - [ ] Pour chaque covoiturage:
-      • - [ ] Pseudo + photo du chauffeur
-      • - [ ] Note du chauffeur (★★★★★)
-      • - [ ] Nombre de places ("2 places restantes")
-      • - [ ] Prix ("45 €")
-      • - [ ] Date/heure départ et arrivée
-      • - [ ] Badge "Écologique" si électrique
-      • - [ ] Bouton "Détail"
-
+      - [ ] Pseudo + photo du chauffeur
+      - [ ] Note du chauffeur (★★★★★)
+      - [ ] Nombre de places ("2 places restantes")
+      - [ ] Prix ("45 €")
+      - [ ] Date/heure départ et arrivée
+      - [ ] Badge "Écologique" si électrique
+      - [ ] Bouton "Détail"
 5. Appliquer les filtres:
    - [ ] Cliquer "Filtres" ou déployer la section
    - [ ] Véhicule électrique → toggle/checkbox
@@ -160,10 +158,10 @@
 5. Avis du chauffeur:
    - [ ] Liste des avis (si existe)
    - [ ] Pour chaque avis:
-      • - [ ] Note (★★★★★)
-      • - [ ] Commentaire
-      • - [ ] Auteur (pseudo)
-      • - [ ] Date
+      - [ ] Note (★★★★★)
+      - [ ] Commentaire
+      - [ ] Auteur (pseudo)
+      - [ ] Date
 
 6. Bouton "Participer":
    - [ ] Visible (pas d'erreur)
@@ -322,12 +320,11 @@
 
 3. Section "Rôles":
    - [ ] Carte "Passager" (actif par défaut)
-      • - [ ] Bouton "Je suis passager" (ou déjà sélectionné)
-      • - [ ] Description simple
+      - [ ] Bouton "Je suis passager" (ou déjà sélectionné)
+      - [ ] Description simple
    - [ ] Carte "Chauffeur"
-      • - [ ] Bouton "Je veux devenir chauffeur"
-      • - [ ] Lien vers /become-driver
-
+      - [ ] Bouton "Je veux devenir chauffeur"
+      - [ ] Lien vers /become-driver
 4. Rester passager:
    - [ ] Cliquer "Je suis passager"
    - [ ] État passager activé
@@ -395,8 +392,8 @@
 8. Vérifier les crédits débités:
    - [ ] Aller à /profile → Crédits: 5 (20 - 15)
    - [ ] Aller à /credits → Historique:
-      • Transaction: "-15 crédits (Participation trajet Paris → Lyon)"
-      • Date: aujourd'hui
+      - [ ] Transaction: "-15 crédits (Participation trajet Paris → Lyon)"
+      - [ ] Date: aujourd'hui
 
 9. Cas d'erreur:
    
@@ -441,7 +438,7 @@
 5. Vérifier le remboursement:
    - [ ] Aller à /profile → Crédits: 20 (5 + 15 remboursé)
    - [ ] Aller à /credits → Historique:
-      • Transaction: "+15 crédits (Remboursement annulation trajet)"
+      - [ ] Transaction: "+15 crédits (Remboursement annulation trajet)"
 
 6. Vérifier les places libérées:
    - [ ] Aller à /search
@@ -452,9 +449,9 @@
 7. Cas d'erreur:
    
    **Trajet déjà commencé**
-   ☐ Trajet à démarrer (heure approche)
-   ☐ Bouton "Annuler" désactivé
-   ☐ Tooltip: "Ce trajet a déjà commencé"
+   - [ ] Trajet à démarrer (heure approche)
+   - [ ] Bouton "Annuler" désactivé
+   - [ ] Tooltip: "Ce trajet a déjà commencé"
 
 
 **Validation**: ✅ Passé / ❌ Échoué
@@ -484,9 +481,9 @@
    - [ ] Champ "Note" (sélecteur étoiles 1-5)
    - [ ] Champ "Commentaire" (textarea, max 500 chars)
    - [ ] Checkboxes (optionnelles):
-      • - [ ] "Le trajet s'est bien déroulé"
-      • - [ ] "Le chauffeur était courtois"
-      • - [ ] "Véhicule propre et confortable"
+      - [ ] "Le trajet s'est bien déroulé"
+      - [ ] "Le chauffeur était courtois"
+      - [ ] "Véhicule propre et confortable"
    - [ ] Buttons: "Soumettre" et "Plus tard"
 
 5. Remplir et soumettre:
@@ -504,9 +501,9 @@
 7. Avis positif vs. problématique:
    
    **Avis positif (cas normal - voir étape 5)**
-   ☐ Note: 5 étoiles
-   ☐ Commentaire positif
-   ☐ Avis soumis pour validation
+   - [ ] Note: 5 étoiles
+   - [ ] Commentaire positif
+   - [ ] Avis soumis pour validation
    
    **Avis problématique**
    - [ ] Checkbox spéciale: "Le trajet s'est mal déroulé"
@@ -518,24 +515,23 @@
    - [ ] Trajet marké: "Signalé - En attente de traitement"
 
 8. Vérifier dans le profil du chauffeur:
-   ☐ (Après validation par employé)
-   ☐ Aller à /user/:chauffeurId
-   ☐ Section "Avis" affiche le nouvel avis (si validé)
+   - [ ] (Après validation par employé)
+   - [ ] Aller à /user/:chauffeurId
+   - [ ] Section "Avis" affiche le nouvel avis (si validé)
 
 9. Cas d'erreur:
    
    **Trajet pas encore terminé**
-   ☐ Essayer d'accéder à /review/:tripId manuellement
-   ☐ Erreur: "Ce trajet n'est pas encore terminé"
+   - [ ] Essayer d'accéder à /review/:tripId manuellement
+   - [ ] Erreur: "Ce trajet n'est pas encore terminé"
    
    **Déjà un avis soumis**
-   ☐ Essayer de soumettre 2 avis
-   ☐ Erreur: "Vous avez déjà laissé un avis pour ce trajet"
+   - [ ] Essayer de soumettre 2 avis
+   - [ ] Erreur: "Vous avez déjà laissé un avis pour ce trajet"
    
    **Commentaire trop long**
-   ☐ Entrer 600+ caractères
-   ☐ Erreur: "Le commentaire ne doit pas dépasser 500 caractères"
-
+   - [ ] Entrer 600+ caractères
+   - [ ] Erreur: "Le commentaire ne doit pas dépasser 500 caractères"
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -548,7 +544,7 @@
 **Prérequis**: Utilisateur connecté (nouvel utilisateur ou test@test.com)
 
 **Parcours**:
-
+   
 1. Aller à /profile
    ☐ Cliquer "Je veux devenir chauffeur"
    ☐ Redirection vers /become-driver

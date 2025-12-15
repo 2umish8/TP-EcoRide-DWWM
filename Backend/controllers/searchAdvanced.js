@@ -152,6 +152,13 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
                     color: true,
                 },
             },
+            _count: {
+                select: {
+                    participations: {
+                        where: { cancellation_date: null },
+                    },
+                },
+            },
         };
 
         // Configuration de l'ordre
@@ -196,6 +203,7 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
                 ...carpooling,
                 driver_pseudo: carpooling.driver.pseudo,
                 driver_photo: carpooling.driver.profile_picture_url,
+                driver_id: carpooling.driver.id,
                 model: carpooling.vehicle.model,
                 plate_number: carpooling.vehicle.plate_number,
                 is_electric: carpooling.vehicle.is_electric,
@@ -204,6 +212,7 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
                 color_name: carpooling.vehicle.color?.name || null,
                 duration_minutes,
                 occupancy_rate,
+                participants_count: carpooling._count.participations,
                 driver_rating: 0, // Sera calculé avec MongoDB
                 is_almost_full: carpooling.seats_remaining <= 1,
                 is_departing_soon:

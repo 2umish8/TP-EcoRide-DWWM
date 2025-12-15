@@ -20,10 +20,7 @@
         <PrimaryButton v-if="nextAvailableDate" @click="$emit('search-alternative-date')">
           Voir ces trajets
         </PrimaryButton>
-        <PrimaryButton v-else @click="$emit('create-alert')">Créer une alerte</PrimaryButton>
-        <SecondaryButton @click="$emit('new-search')">
-          {{ nextAvailableDate ? 'Nouvelle recherche' : 'Nouvelle recherche' }}
-        </SecondaryButton>
+        <SecondaryButton @click="$emit('new-search')">Nouvelle recherche</SecondaryButton>
       </div>
     </div>
   </div>
@@ -33,7 +30,7 @@
 import PrimaryButton from '@/components/ui/PrimaryButton.vue'
 import SecondaryButton from '@/components/ui/SecondaryButton.vue'
 
-defineEmits(['search-alternative-date', 'create-alert', 'new-search'])
+defineEmits(['search-alternative-date', 'new-search'])
 
 defineProps({
   nextAvailableDate: {

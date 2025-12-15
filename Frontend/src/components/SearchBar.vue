@@ -46,7 +46,7 @@ const searchStore = useSearchStore()
 const localForm = ref({
   departure: props.initialValues.departure || '',
   destination: props.initialValues.destination || '',
-  date: props.initialValues.date || '',
+  date: props.initialValues.date || new Date().toISOString().split('T')[0],
 })
 
 watch(

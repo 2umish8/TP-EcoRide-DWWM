@@ -2,7 +2,7 @@
   <div class="search-results">
     <!-- Barre de recherche -->
     <div class="search-bar-top">
-      <SearchBar :initialValues="newSearchParams" @search="performNewSearch" />
+      <SearchBar :initialValues="searchFormValues" @search="performNewSearch" />
     </div>
 
     <div class="results-container">
@@ -18,9 +18,9 @@
         <SearchResultsError v-else-if="error" :message="error" @retry="loadCarpoolings" />
 
         <!-- Résultats -->
-        <template v-else-if="formattedResults.length > 0">
+        <template v-else-if="carpoolings.length > 0">
           <TripCard
-            v-for="trip in formattedResults"
+            v-for="trip in carpoolings"
             :key="trip.id"
             :trip="trip"
             @select="selectTrip(trip)"
@@ -56,21 +56,13 @@ import SearchResultsEmpty from '@/components/SearchResultsEmpty.vue'
 const route = useRoute()
 const router = useRouter()
 const searchStore = useSearchStore()
-const { loading, error, nextAvailableDate, loadCarpoolings, formattedResults } = useCarpoolings()
+const { loading, error, nextAvailableDate, loadCarpoolings, carpoolings } = useCarpoolings()
 
-// Paramètres de recherche depuis l'URL et le store
-const searchParams = ref({
-  from: route.query.departure || searchStore.departure || '',
-  to: route.query.destination || searchStore.destination || '',
+// Alias pour le formulaire de recherche (SearchBar utilise departure/destination)
+const searchFormValues = ref({
+  departure: route.query.departure || searchStore.departure || '',
+  destination: route.query.destination || searchStore.destination || '',
   date: route.query.date || searchStore.date || '',
-  showMyTrips: route.query.showMyTrips === 'true' || false,
-})
-
-// Nouvelles paramètres de recherche pour le formulaire compact (avec les bons noms de propriétés)
-const newSearchParams = ref({
-  departure: searchParams.value.from,
-  destination: searchParams.value.to,
-  date: searchParams.value.date,
 })
 
 // Filtres selon le cahier des charges (US 4)
@@ -81,18 +73,18 @@ const filters = ref({
   minRating: 0,
 })
 
-// Construire les paramètres de requête
+// Construire les paramètres de requête pour l'API
 const buildQueryParams = () => {
   const queryParams = {}
 
-  if (searchParams.value.from) {
-    queryParams.departure = searchParams.value.from
+  if (route.query.departure) {
+    queryParams.departure = route.query.departure
   }
-  if (searchParams.value.to) {
-    queryParams.arrival = searchParams.value.to
+  if (route.query.destination) {
+    queryParams.arrival = route.query.destination
   }
-  if (searchParams.value.date) {
-    queryParams.date = searchParams.value.date
+  if (route.query.date) {
+    queryParams.date = route.query.date
   }
 
   if (filters.value.maxPrice < 100) {
@@ -117,9 +109,9 @@ const selectTrip = (trip) => {
     name: 'CarpoolingDetail',
     params: { id: trip.id },
     query: {
-      from: searchParams.value.from,
-      to: searchParams.value.to,
-      date: searchParams.value.date,
+      departure: route.query.departure,
+      destination: route.query.destination,
+      date: route.query.date,
     },
   })
 }
@@ -144,28 +136,17 @@ const viewDriverProfile = (userId) => {
   router.push(`/user/${userId}`)
 }
 
-// Nouvelle recherche depuis le formulaire compact
-const performNewSearch = () => {
-  searchParams.value = {
-    from: newSearchParams.value.departure,
-    to: newSearchParams.value.destination,
-    date: newSearchParams.value.date,
-    showMyTrips: false,
-  }
-  searchStore.setSearchParams({
-    departure: newSearchParams.value.departure,
-    destination: newSearchParams.value.destination,
-    date: newSearchParams.value.date,
-  })
+// Nouvelle recherche depuis le formulaire
+const performNewSearch = (searchValues) => {
+  searchStore.setSearchParams(searchValues)
   router.push({
     name: 'SearchResults',
     query: {
-      departure: newSearchParams.value.departure || '',
-      destination: newSearchParams.value.destination || '',
-      date: newSearchParams.value.date || '',
+      departure: searchValues.departure || '',
+      destination: searchValues.destination || '',
+      date: searchValues.date || '',
     },
   })
-  loadCarpoolings(buildQueryParams())
 }
 
 // Gestion de la mise à jour des filtres
@@ -179,16 +160,11 @@ onMounted(() => {
   loadCarpoolings(buildQueryParams())
 })
 
-watch(route, (newRoute) => {
-  searchParams.value = {
-    from: newRoute.query.departure || searchStore.departure || '',
-    to: newRoute.query.destination || searchStore.destination || '',
-    date: newRoute.query.date || searchStore.date || '',
-  }
-  newSearchParams.value = {
-    departure: searchParams.value.from,
-    destination: searchParams.value.to,
-    date: searchParams.value.date,
+watch(route, () => {
+  searchFormValues.value = {
+    departure: route.query.departure || searchStore.departure || '',
+    destination: route.query.destination || searchStore.destination || '',
+    date: route.query.date || searchStore.date || '',
   }
   loadCarpoolings(buildQueryParams())
 })
@@ -215,6 +191,7 @@ watch(route, (newRoute) => {
   justify-content: center;
   align-items: flex-start;
   padding: 0 40px;
+  gap: 32px;
 }
 
 .results-list {

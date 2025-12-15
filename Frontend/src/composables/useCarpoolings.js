@@ -16,6 +16,13 @@ export const useCarpoolings = () => {
       nextAvailableDate.value = null
 
       const data = await carpoolingService.getAvailableTrips(queryParams)
+      if (import.meta.env.DEV) {
+        console.log('[useCarpoolings DEBUG] Raw response from backend:', data)
+        console.log('[useCarpoolings DEBUG] Carpoolings array:', data.carpoolings)
+        if (data.carpoolings && data.carpoolings.length > 0) {
+          console.log('[useCarpoolings DEBUG] First carpooling from backend:', data.carpoolings[0])
+        }
+      }
       carpoolings.value = data.carpoolings || []
       nextAvailableDate.value = data.nextAvailableDate
     } catch (err) {
