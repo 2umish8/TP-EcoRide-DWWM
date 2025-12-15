@@ -6,8 +6,9 @@
       { 'has-participants': (trip.participants_count || trip._count?.participations || 0) > 0 },
       { 'is-cancelled': trip.cancellation_date },
     ]"
+    @click="$emit('select', trip)"
   >
-    <!-- Header -->
+    <!-- Header: Status & Actions -->
     <div class="trip-card-header">
       <span :class="['status-badge', `status-${trip.status || 'prévu'}`]">
         <font-awesome-icon :icon="['fas', getStatusIcon(trip.status || 'prévu')]" />
@@ -15,6 +16,25 @@
       </span>
       <div class="trip-actions">
         <slot name="actions"></slot>
+      </div>
+    </div>
+
+    <!-- Driver Info Section -->
+    <div class="trip-driver-info">
+      <img
+        v-if="driverAvatarUrl"
+        :src="driverAvatarUrl"
+        :alt="trip.driver_pseudo || 'Driver avatar'"
+        class="driver-avatar"
+        @click.stop="$emit('view-driver-profile', trip.driver_id)"
+      />
+      <div class="driver-details">
+        <div class="driver-name">{{ trip.driver_pseudo || 'Chauffeur' }}</div>
+        <div class="driver-rating">
+          <span class="rating-stars">{{ getStars(trip.driver_rating || 4.5) }}</span>
+          <span class="rating-value">{{ trip.driver_rating || 4.5 }}/5</span>
+          <span class="review-count">({{ trip.total_reviews || 0 }} avis)</span>
+        </div>
       </div>
     </div>
 
@@ -33,14 +53,18 @@
           <span class="address">{{ trip.arrival_address }}</span>
         </div>
       </div>
+      <div v-if="trip.is_electric" class="eco-badge">
+        <font-awesome-icon :icon="['fas', 'leaf']" />
+        Voyage écologique
+      </div>
     </div>
 
-    <!-- Details -->
+    <!-- Details: Date, Time, Duration, Price, Seats -->
     <div class="trip-details">
       <div class="detail-item">
         <font-awesome-icon :icon="['fas', 'calendar']" class="detail-icon" />
         <div class="detail-content">
-          <span class="detail-label">Date</span>
+          <span class="detail-label">Date & Heure</span>
           <span class="detail-value">{{ formatDate(trip.departure_datetime) }}</span>
           <span class="detail-time">{{ formatTime(trip.departure_datetime) }}</span>
         </div>
@@ -59,36 +83,28 @@
       <div class="detail-item">
         <font-awesome-icon :icon="['fas', 'coins']" class="detail-icon" />
         <div class="detail-content">
-          <span class="detail-label">Prix</span>
+          <span class="detail-label">Prix par personne</span>
           <span class="detail-value">{{ trip.price_per_passenger || 'N/A' }} crédits</span>
         </div>
       </div>
 
       <div class="detail-item">
-        <font-awesome-icon :icon="['fas', 'user-group']" class="detail-icon" />
+        <font-awesome-icon :icon="['fas', 'chair']" class="detail-icon" />
         <div class="detail-content">
-          <span class="detail-label">Participants</span>
+          <span class="detail-label">Places</span>
           <span class="detail-value">
-            {{ trip.participants_count || trip._count?.participations || 0 }} /
-            {{ trip.initial_seats_offered || trip.seats_remaining || 'N/A' }}
-            <span class="seats-remaining"
-              >({{ trip.seats_remaining || 0 }} restante{{
-                (trip.seats_remaining || 0) > 1 ? 's' : ''
-              }})</span
-            >
+            {{ trip.seats_remaining || 0 }} restante{{ (trip.seats_remaining || 0) > 1 ? 's' : '' }}
           </span>
         </div>
       </div>
     </div>
 
-    <!-- Vehicle -->
-    <div v-if="trip.model" class="trip-vehicle">
-      <font-awesome-icon :icon="['fas', 'car']" class="vehicle-icon" />
-      <span class="vehicle-info">{{ trip.model }} ({{ trip.plate_number }})</span>
-    </div>
-
-    <!-- Footer -->
+    <!-- Footer: Vehicle Info & ID -->
     <div class="trip-card-footer">
+      <div v-if="trip.model" class="trip-vehicle">
+        <font-awesome-icon :icon="['fas', 'car']" class="vehicle-icon" />
+        <span class="vehicle-info">{{ trip.model }} ({{ trip.plate_number }})</span>
+      </div>
       <div
         v-if="
           showEarnings &&
@@ -98,14 +114,14 @@
         class="trip-earnings"
       >
         <font-awesome-icon :icon="['fas', 'coins']" class="earnings-icon" />
-        <span class="earnings-text"> Revenus : {{ calculateEarnings(trip) }} crédits </span>
+        <span class="earnings-text">{{ calculateEarnings(trip) }} crédits</span>
       </div>
       <div v-if="showPrice && showEarnings" class="trip-price">
         <font-awesome-icon :icon="['fas', 'coins']" class="price-icon" />
         <span class="price-text">{{ trip.credits_paid }} crédits</span>
       </div>
       <div class="trip-id">
-        <span class="id-label">ID :</span>
+        <span class="id-label">ID:</span>
         <span class="id-value">#{{ trip.id }}</span>
       </div>
     </div>
@@ -114,8 +130,9 @@
 
 <script>
 import { formatDate, formatTime, formatDuration } from '@/composables/useDateFormatting'
-import { getStatusLabel, getStatusIcon } from '@/utils/formatters'
+import { getStatusLabel, getStatusIcon, getStars } from '@/utils/formatters'
 import { calculateEarnings } from '@/utils/helpers'
+import { computed } from 'vue'
 
 export default {
   name: 'TripCard',
@@ -142,25 +159,33 @@ export default {
       default: false,
     },
   },
-  setup() {
+  emits: ['select', 'view-driver-profile'],
+  setup(props) {
+    const driverAvatarUrl = computed(() => {
+      if (props.trip.driver_photo) {
+        return props.trip.driver_photo
+      }
+      return `https://i.pravatar.cc/150?img=${(props.trip.driver_id || 0) % 70}`
+    })
+
     return {
       formatDate,
       formatTime,
       formatDuration,
       getStatusLabel,
       getStatusIcon,
+      getStars,
       calculateEarnings,
+      driverAvatarUrl,
     }
   },
   created() {
     if (import.meta.env.DEV) {
       console.log('[TripCard DEBUG] Trip data received:', this.trip)
-      console.log('[TripCard DEBUG] Keys available:', Object.keys(this.trip))
-      console.log('[TripCard DEBUG] departure_datetime:', this.trip.departure_datetime)
-      console.log('[TripCard DEBUG] price_per_passenger:', this.trip.price_per_passenger)
-      console.log('[TripCard DEBUG] participants_count:', this.trip.participants_count)
-      console.log('[TripCard DEBUG] initial_seats_offered:', this.trip.initial_seats_offered)
-      console.log('[TripCard DEBUG] seats_remaining:', this.trip.seats_remaining)
+      console.log('[TripCard DEBUG] Driver info - pseudo:', this.trip.driver_pseudo)
+      console.log('[TripCard DEBUG] Driver info - rating:', this.trip.driver_rating)
+      console.log('[TripCard DEBUG] Driver info - reviews:', this.trip.total_reviews)
+      console.log('[TripCard DEBUG] Is electric:', this.trip.is_electric)
     }
   },
 }
@@ -176,6 +201,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  cursor: pointer;
 }
 
 .trip-card:hover {
@@ -227,11 +253,73 @@ export default {
   gap: 0.5rem;
 }
 
+/* Driver Info */
+.trip-driver-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+}
+
+.driver-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.driver-avatar:hover {
+  transform: scale(1.05);
+}
+
+.driver-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.driver-name {
+  font-weight: 600;
+  color: var(--color-light);
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.driver-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.rating-stars {
+  color: var(--eco-primary);
+  letter-spacing: 0.2px;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: var(--color-light);
+}
+
+.review-count {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 /* Route */
 .trip-route {
   padding: 0.5rem;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .route-addresses {
@@ -270,6 +358,19 @@ export default {
   color: var(--eco-secondary);
   font-size: 1.2rem;
   font-weight: bold;
+}
+
+.eco-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--eco-primary);
+}
+
+.eco-badge svg {
+  font-size: 0.9rem;
 }
 
 /* Details */
@@ -320,21 +421,22 @@ export default {
   line-height: 1;
 }
 
-.seats-remaining {
-  display: block;
+/* Footer */
+.trip-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 0.5rem;
+  flex-wrap: wrap;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.5);
-  margin-top: 0.1rem;
 }
 
-/* Vehicle */
 .trip-vehicle {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.4rem 0.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 6px;
   font-size: 0.8rem;
 }
 
@@ -346,18 +448,6 @@ export default {
 .vehicle-info {
   color: var(--color-light);
   font-weight: 500;
-}
-
-/* Footer */
-.trip-card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  font-size: 0.85rem;
 }
 
 .trip-earnings,

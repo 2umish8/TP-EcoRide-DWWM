@@ -95,8 +95,8 @@
    - [x] Cliquer "Rechercher"
 
 4. Vérifier les résultats:
-   - [ ] Liste de covoiturages s'affiche
-   - [ ] Pour chaque covoiturage:
+   - [x] Liste de covoiturages s'affiche
+   - [x] Pour chaque covoiturage:
       - [ ] Pseudo + photo du chauffeur
       - [ ] Note du chauffeur (★★★★★)
       - [ ] Nombre de places ("2 places restantes")

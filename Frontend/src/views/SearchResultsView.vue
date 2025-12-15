@@ -59,10 +59,11 @@ const searchStore = useSearchStore()
 const { loading, error, nextAvailableDate, loadCarpoolings, carpoolings } = useCarpoolings()
 
 // Alias pour le formulaire de recherche (SearchBar utilise departure/destination)
+// Only use URL query params - don't fall back to store, so form resets when URL is clean
 const searchFormValues = ref({
-  departure: route.query.departure || searchStore.departure || '',
-  destination: route.query.destination || searchStore.destination || '',
-  date: route.query.date || searchStore.date || '',
+  departure: route.query.departure || '',
+  destination: route.query.destination || '',
+  date: route.query.date || '',
 })
 
 // Filtres selon le cahier des charges (US 4)
@@ -162,9 +163,9 @@ onMounted(() => {
 
 watch(route, () => {
   searchFormValues.value = {
-    departure: route.query.departure || searchStore.departure || '',
-    destination: route.query.destination || searchStore.destination || '',
-    date: route.query.date || searchStore.date || '',
+    departure: route.query.departure || '',
+    destination: route.query.destination || '',
+    date: route.query.date || '',
   }
   loadCarpoolings(buildQueryParams())
 })
