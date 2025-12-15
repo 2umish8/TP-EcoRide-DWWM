@@ -19,13 +19,20 @@
 
         <!-- Résultats -->
         <template v-else-if="formattedResults.length > 0">
-          <TripCard
-            v-for="trip in formattedResults"
-            :key="trip.id"
-            :trip="trip"
-            @select="selectTrip(trip)"
-            @view-driver-profile="viewDriverProfile"
-          />
+          <template v-for="trip in formattedResults" :key="trip.id">
+            <EcologicTripCard
+              v-if="trip.is_electric"
+              :trip="trip"
+              @select="selectTrip(trip)"
+              @view-driver-profile="viewDriverProfile"
+            />
+            <TripCard
+              v-else
+              :trip="trip"
+              @select="selectTrip(trip)"
+              @view-driver-profile="viewDriverProfile"
+            />
+          </template>
         </template>
 
         <!-- Aucun résultat -->
@@ -49,6 +56,7 @@ import { useCarpoolings } from '@/composables/useCarpoolings'
 import SearchBar from '@/components/SearchBar.vue'
 import TripFilters from '@/components/TripFilters.vue'
 import TripCard from '@/components/TripCard.vue'
+import EcologicTripCard from '@/components/EcologicTripCard.vue'
 import SearchResultsLoading from '@/components/SearchResultsLoading.vue'
 import SearchResultsError from '@/components/SearchResultsError.vue'
 import SearchResultsEmpty from '@/components/SearchResultsEmpty.vue'

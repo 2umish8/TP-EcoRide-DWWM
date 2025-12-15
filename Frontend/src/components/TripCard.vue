@@ -53,10 +53,6 @@
           <span class="address">{{ trip.arrival_address }}</span>
         </div>
       </div>
-      <div v-if="trip.is_electric" class="eco-badge">
-        <font-awesome-icon :icon="['fas', 'leaf']" />
-        Voyage écologique
-      </div>
     </div>
 
     <!-- Details: Date, Time, Duration, Price, Seats -->
@@ -358,19 +354,6 @@ export default {
   color: var(--eco-secondary);
   font-size: 1.2rem;
   font-weight: bold;
-}
-
-.eco-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--eco-primary);
-}
-
-.eco-badge svg {
-  font-size: 0.9rem;
 }
 
 /* Details */

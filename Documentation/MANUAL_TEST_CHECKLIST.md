@@ -97,15 +97,15 @@
 4. Vérifier les résultats:
    - [x] Liste de covoiturages s'affiche
    - [x] Pour chaque covoiturage:
-      - [ ] Pseudo + photo du chauffeur
-      - [ ] Note du chauffeur (★★★★★)
-      - [ ] Nombre de places ("2 places restantes")
-      - [ ] Prix ("45 €")
-      - [ ] Date/heure départ et arrivée
-      - [ ] Badge "Écologique" si électrique
-      - [ ] Bouton "Détail"
-5. Appliquer les filtres:
-   - [ ] Cliquer "Filtres" ou déployer la section
+      - [x] Pseudo + photo du chauffeur
+      - [ ] Note du chauffeur (★★★★★) (Pas réel, il faut que ça soit réel)
+      - [x] Nombre de places ("2 places restantes")
+      - [x] Prix ("45 €")
+      - [x] Date/heure départ et arrivée
+      - [x] Badge "Écologique" si électrique
+      - [x] Bouton "Détail" (La carte entière est un bouton)
+1. Appliquer les filtres:
+   - [x] Cliquer "Filtres" ou déployer la section
    - [ ] Véhicule électrique → toggle/checkbox
    - [ ] Prix max: 50€ → slider ou input
    - [ ] Durée max: 2h → slider ou input

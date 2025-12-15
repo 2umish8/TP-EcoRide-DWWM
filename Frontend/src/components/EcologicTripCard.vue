@@ -61,14 +61,14 @@ export default {
       var(--color-dark-tertiary) 70%
     ),
     var(--color-dark-tertiary);
-  border: 2px solid var(--eco-primary);
+  border: 2px solid var(--color-primary);
   box-shadow:
     0 0 20px rgba(143, 218, 179, 0.3),
     0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .ecologic-trip-card-wrapper :deep(.trip-card:hover) {
-  border-color: var(--eco-primary);
+  border-color: var(--color-primary);
   box-shadow:
     0 0 30px rgba(143, 218, 179, 0.5),
     0 6px 16px rgba(0, 0, 0, 0.4);
