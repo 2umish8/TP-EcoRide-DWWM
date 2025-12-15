@@ -7,7 +7,9 @@ $cwd = Join-Path $scriptDir '..\Backend'
 
 $npm = 'npm.cmd'
 Write-Output "Starting Backend dev server in background (working dir: $cwd)"
-$proc = Start-Process -FilePath $npm -ArgumentList 'run','dev' -WorkingDirectory $cwd -NoNewWindow -PassThru
+$outLog = Join-Path $scriptDir 'backend.dev.log'
+$errLog = Join-Path $scriptDir 'backend.dev.err.log'
+$proc = Start-Process -FilePath $npm -ArgumentList 'run','dev' -WorkingDirectory $cwd -WindowStyle Hidden -RedirectStandardOutput $outLog -RedirectStandardError $errLog -PassThru
 $pidFile = Join-Path $scriptDir 'backend.pid'
 $proc.Id | Out-File -FilePath $pidFile -Encoding ascii
 Write-Output "Backend started with PID $($proc.Id). PID written to $pidFile"

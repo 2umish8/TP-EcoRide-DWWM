@@ -1,7 +1,4 @@
-const {
-    PrismaClient,
-    PrismaClientKnownRequestError,
-} = require("@prisma/client");
+const { PrismaClient, PrismaClientKnownRequestError } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 /* --------------------------------------------------- Ajouter un véhicule ------------------------------------------ */
@@ -18,31 +15,21 @@ const addVehicle = async (req, res) => {
             color_name,
         } = req.body;
 
-        // Validation des données obligatoires
-        if (
-            !plate_number ||
-            !model ||
-            !seats_available ||
-            !brand_name ||
-            !color_name
-        ) {
-            return res.status(400).json({
-                message:
-                    "Veuillez fournir toutes les informations obligatoires.",
-            });
+        let parsedFirstRegistrationDate = null;
+        if (first_registration_date) {
+            const parsed = new Date(first_registration_date);
+            if (Number.isNaN(parsed.getTime())) {
+                return res.status(400).json({
+                    message: "Date de première immatriculation invalide.",
+                });
+            }
+            parsedFirstRegistrationDate = parsed;
         }
 
-        // Vérifier que l'utilisateur a le rôle chauffeur
-        const hasDriverRole = await prisma.user_Role.findFirst({
-            where: {
-                user_id: userId,
-                role: { name: "chauffeur" },
-            },
-        });
-
-        if (!hasDriverRole) {
-            return res.status(403).json({
-                message: "Vous devez être chauffeur pour ajouter un véhicule.",
+        // Validation des données obligatoires
+        if (!plate_number || !model || !seats_available || !brand_name || !color_name) {
+            return res.status(400).json({
+                message: "Veuillez fournir toutes les informations obligatoires.",
             });
         }
 
@@ -70,7 +57,7 @@ const addVehicle = async (req, res) => {
         const vehicle = await prisma.vehicle.create({
             data: {
                 plate_number,
-                first_registration_date: first_registration_date || null,
+                first_registration_date: parsedFirstRegistrationDate,
                 model,
                 seats_available,
                 is_electric: is_electric || false,
@@ -86,13 +73,9 @@ const addVehicle = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        if (
-            error instanceof PrismaClientKnownRequestError &&
-            error.code === "P2002"
-        ) {
+        if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
             return res.status(409).json({
-                message:
-                    "Un véhicule avec cette plaque d'immatriculation existe déjà.",
+                message: "Un véhicule avec cette plaque d'immatriculation existe déjà.",
             });
         }
         res.status(500).json({
@@ -197,7 +180,17 @@ const updateVehicle = async (req, res) => {
             updateData.plate_number = plate_number;
         }
         if (first_registration_date !== undefined) {
-            updateData.first_registration_date = first_registration_date;
+            if (first_registration_date === null || first_registration_date === "") {
+                updateData.first_registration_date = null;
+            } else {
+                const parsed = new Date(first_registration_date);
+                if (Number.isNaN(parsed.getTime())) {
+                    return res.status(400).json({
+                        message: "Date de première immatriculation invalide.",
+                    });
+                }
+                updateData.first_registration_date = parsed;
+            }
         }
         if (model !== undefined) {
             updateData.model = model;
@@ -216,9 +209,7 @@ const updateVehicle = async (req, res) => {
         }
 
         if (Object.keys(updateData).length === 0) {
-            return res
-                .status(400)
-                .json({ message: "Aucune donnée à mettre à jour." });
+            return res.status(400).json({ message: "Aucune donnée à mettre à jour." });
         }
 
         const updatedVehicle = await prisma.vehicle.update({
@@ -231,13 +222,9 @@ const updateVehicle = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        if (
-            error instanceof PrismaClientKnownRequestError &&
-            error.code === "P2002"
-        ) {
+        if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
             return res.status(409).json({
-                message:
-                    "Un véhicule avec cette plaque d'immatriculation existe déjà.",
+                message: "Un véhicule avec cette plaque d'immatriculation existe déjà.",
             });
         }
         res.status(500).json({

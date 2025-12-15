@@ -53,7 +53,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('❌ Erreur API:', error.message, 'URL:', error.config?.url)
+    console.error('Erreur API:', error.message, 'URL:', error.config?.url)
     if (error.response?.status === 401) {
       // 401 UNIQUEMENT sur les requêtes protégées (pas /login)
       // Ne pas rediriger si on est déjà en train d'essayer de se connecter

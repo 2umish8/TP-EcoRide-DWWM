@@ -14,7 +14,7 @@ const {
 const { authMiddleware, requireRole } = require("../authMiddleware");
 
 // Routes pour les véhicules (toutes nécessitent une authentification)
-router.post("/", authMiddleware, requireRole(["chauffeur"]), addVehicle);
+router.post("/", authMiddleware, addVehicle);
 router.get("/my-vehicles", authMiddleware, getUserVehicles);
 router.put("/:id", authMiddleware, updateVehicle);
 router.delete("/:id", authMiddleware, deleteVehicle);

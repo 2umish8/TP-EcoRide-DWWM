@@ -1,0 +1,232 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "E2E: Profile become driver (chromium, dot)",
+			"type": "shell",
+			"command": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\run-e2e-with-backend.ps1 -TimeoutSeconds 240 -Project chromium -Reporter dot -TestFile Frontend\\e2e\\tests\\profile-become-driver.spec.js",
+			"isBackground": false
+		},
+		{
+			"label": "Stop dev servers (pid files)",
+			"type": "shell",
+			"command": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\stop-dev-by-pid.ps1 -PidFile .\\scripts\\backend.pid; powershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\stop-dev-by-pid.ps1 -PidFile .\\scripts\\frontend.pid",
+			"isBackground": false
+		},
+		{
+			"label": "Cleanup backend.pid",
+			"type": "shell",
+			"command": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Remove-Item .\\scripts\\backend.pid -ErrorAction SilentlyContinue\"",
+			"isBackground": false
+		},
+		{
+			"label": "E2E: Profile become driver (chromium, dot)",
+			"type": "shell",
+			"command": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\run-e2e-with-backend.ps1 -TimeoutSeconds 240 -Project chromium -Reporter dot -TestFile Frontend\\e2e\\tests\\profile-become-driver.spec.js",
+			"isBackground": false
+		},
+		{
+			"label": "E2E: Profile become driver (chromium, dot)",
+			"type": "shell",
+			"command": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\run-e2e-with-backend.ps1 -TimeoutSeconds 240 -Project chromium -Reporter dot -TestFile Frontend\\e2e\\tests\\profile-become-driver.spec.js",
+			"isBackground": false
+		},
+		{
+			"label": "E2E: Profile become driver (chromium, dot)",
+			"type": "shell",
+			"command": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\run-e2e-with-backend.ps1 -TimeoutSeconds 240 -Project chromium -Reporter dot -TestFile Frontend\\e2e\\tests\\profile-become-driver.spec.js",
+			"isBackground": false
+		},
+		{
+			"label": "E2E: profile become driver (chromium)",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"scripts\\run-e2e-with-backend.ps1",
+				"-TestFile",
+				"Frontend/e2e/tests/profile-become-driver.spec.js",
+				"-Project",
+				"chromium",
+				"-Reporter",
+				"dot"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "E2E: profile become driver (chromium)",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"scripts\\run-e2e-with-backend.ps1",
+				"-TestFile",
+				"Frontend/e2e/tests/profile-become-driver.spec.js",
+				"-Project",
+				"chromium",
+				"-Reporter",
+				"list"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "E2E: Profile become driver (chromium, list)",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"scripts\\run-e2e-with-backend.ps1",
+				"-TimeoutSeconds",
+				"240",
+				"-TestFile",
+				"Frontend/e2e/tests/profile-become-driver.spec.js",
+				"-Project",
+				"chromium",
+				"-Reporter",
+				"list"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "E2E: profile become driver (chromium, fast)",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"scripts\\run-e2e-with-backend.ps1",
+				"-TestFile",
+				"Frontend/e2e/tests/profile-become-driver.spec.js",
+				"-Project",
+				"chromium",
+				"-Reporter",
+				"dot"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "E2E: profile become driver (chromium, fast)",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"scripts\\run-e2e-with-backend.ps1",
+				"-TestFile",
+				"Frontend/e2e/tests/profile-become-driver.spec.js",
+				"-Project",
+				"chromium",
+				"-Reporter",
+				"dot"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "E2E: profile become driver (chromium, fast)",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"scripts\\run-e2e-with-backend.ps1",
+				"-TestFile",
+				"Frontend/e2e/tests/profile-become-driver.spec.js",
+				"-Project",
+				"chromium",
+				"-Reporter",
+				"dot"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "E2E: profile become-driver (chromium, parallel)",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"scripts\\run-e2e-with-backend.ps1",
+				"-TestFile",
+				"Frontend/e2e/tests/profile-become-driver.spec.js",
+				"-Project",
+				"chromium",
+				"-Reporter",
+				"list"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "E2E: profile become-driver retry",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"scripts\\run-e2e-with-backend.ps1",
+				"-TestFile",
+				"Frontend/e2e/tests/profile-become-driver.spec.js",
+				"-Project",
+				"chromium",
+				"-Reporter",
+				"list"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "E2E: profile become-driver (wait fix)",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"scripts\\run-e2e-with-backend.ps1",
+				"-TestFile",
+				"Frontend/e2e/tests/profile-become-driver.spec.js",
+				"-Project",
+				"chromium",
+				"-Reporter",
+				"list"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		}
+	]
+}

@@ -284,7 +284,7 @@
 
           <!-- Récapitulatif préférences -->
           <div class="summary-section">
-            <h4>⚙️ Vos préférences</h4>
+            <h4><font-awesome-icon :icon="['fas', 'gear']" /> Vos préférences</h4>
             <div class="summary-grid">
               <div class="summary-item">
                 <span class="label">Musique:</span>
@@ -373,7 +373,7 @@
 
           <div class="form-actions">
             <button type="button" @click="currentStep = 2" class="btn btn-secondary">
-              ⬅️ Retour
+              <font-awesome-icon :icon="['fas', 'arrow-left']" /> Retour
             </button>
             <button
               @click="submitDriverApplication"
@@ -422,9 +422,8 @@
           </div>
 
           <div class="form-actions">
-            <router-link to="/my-trips" class="btn btn-primary btn-large">
-              <font-awesome-icon :icon="['fas', 'rocket']" /> Découvrir mes nouvelles
-              fonctionnalités
+            <router-link to="/profile" class="btn btn-primary btn-large">
+              <font-awesome-icon :icon="['fas', 'user']" /> Retour au profil
             </router-link>
           </div>
         </div>
@@ -435,7 +434,7 @@
 
 <script>
 import { ref, computed } from 'vue'
-import { vehicleService } from '@/services/api'
+import { authService, vehicleService } from '@/services/api'
 import { preferencesService } from '@/services/mongoServices'
 
 export default {
@@ -549,17 +548,7 @@ export default {
         await vehicleService.addVehicle(vehicleData.value)
 
         // 2. Devenir chauffeur
-        const driverResponse = await fetch('/api/users/become-driver', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-            'Content-Type': 'application/json',
-          },
-        })
-
-        if (!driverResponse.ok) {
-          throw new Error("Erreur lors de l'ajout du rôle chauffeur")
-        }
+        await authService.becomeDriver()
 
         // 3. Sauvegarder les préférences
         try {
@@ -583,7 +572,8 @@ export default {
         }
       } catch (error) {
         console.error("Erreur lors de l'inscription chauffeur:", error)
-        alert("Erreur lors de l'inscription. Veuillez réessayer.")
+        const message = error?.response?.data?.message || error?.message
+        alert("Erreur lors de l'inscription. " + (message || 'Veuillez réessayer.'))
       } finally {
         isSubmitting.value = false
       }

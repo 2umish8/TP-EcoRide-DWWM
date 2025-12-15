@@ -55,11 +55,20 @@
       @close="showSuccessModal = false"
       @view-trip="viewCreatedTrip"
     />
+
+    <ConfirmActionModal
+      :show="showBecomeDriverConfirm"
+      title="Devenir chauffeur"
+      message="Pour devenir chauffeur, vous devez d'abord enregistrer un véhicule. Voulez-vous lancer le processus maintenant ?"
+      @confirm="startBecomeDriver"
+      @cancel="cancelBecomeDriver"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { carpoolingService, authService, vehicleService } from '@/services/api'
 import { preferencesService } from '@/services/mongoServices'
@@ -73,10 +82,12 @@ import VehicleListCard from '@/components/VehicleListCard.vue'
 import AddVehicleModal from '@/components/AddVehicleModal.vue'
 import TripSuccessModal from '@/components/TripSuccessModal.vue'
 import DriverPreferencesSection from '@/components/DriverPreferencesSection.vue'
+import ConfirmActionModal from '@/components/ConfirmActionModal.vue'
 
 // Stores
 const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
+const router = useRouter()
 const currentUser = computed(() => authStore.currentUser)
 
 // State
@@ -87,6 +98,7 @@ const isSubmitting = ref(false)
 const showSuccessModal = ref(false)
 const lastCreatedTrip = ref(null)
 const isLoadingProfile = ref(true)
+const showBecomeDriverConfirm = ref(false)
 
 let driverPreferences = ref({
   allowsSmoking: false,
@@ -160,19 +172,19 @@ const loadUserProfile = async () => {
 }
 
 // Role management
-const updateRole = async () => {
-  if (selectedRoles.value.includes('chauffeur')) {
+const updateRole = async (newRoles = selectedRoles.value) => {
+  const roles = Array.isArray(newRoles) ? newRoles : selectedRoles.value
+
+  if (roles.includes('chauffeur')) {
     try {
       const profileData = await authService.getProfile()
       const isAlreadyDriver = profileData.user.roles && profileData.user.roles.includes('chauffeur')
 
       if (!isAlreadyDriver) {
-        await authService.becomeDriver()
-        notificationStore.showSuccess(
-          'Félicitations ! Vous êtes maintenant chauffeur. Reconnectez-vous pour accéder à toutes les fonctionnalités de chauffeur.',
-        )
-        authStore.logout()
-        window.location.href = '/login'
+        // Guided onboarding: confirm -> redirect to wizard.
+        showBecomeDriverConfirm.value = true
+        // Keep UI consistent until onboarding is complete.
+        selectedRoles.value = roles.filter((role) => role !== 'chauffeur')
         return
       } else {
         if (vehicles.value.length === 0) {
@@ -201,6 +213,15 @@ const updateRole = async () => {
       selectedRoles.value = selectedRoles.value.filter((role) => role !== 'chauffeur')
     }
   }
+}
+
+const startBecomeDriver = async () => {
+  showBecomeDriverConfirm.value = false
+  await router.push('/become-driver')
+}
+
+const cancelBecomeDriver = () => {
+  showBecomeDriverConfirm.value = false
 }
 
 // Preferences

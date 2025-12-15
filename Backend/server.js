@@ -8,11 +8,7 @@ const db = require("./Config/db.js");
 // Importer la connexion à MongoDB
 const connectMongoDB = require("./Config/mongodb.js");
 // Importer le middleware d'authentification
-const {
-    authMiddleware,
-    requireRole,
-    requireAnyRole,
-} = require("./authMiddleware.js");
+const { authMiddleware, requireRole, requireAnyRole } = require("./authMiddleware.js");
 // Importer les routes des utilisateurs
 const userRoutes = require("./routes/userRoutes");
 // Importer les autres routes
@@ -43,13 +39,14 @@ connectMongoDB();
 app.use(helmet());
 
 // Appliquer une limitation de débit globale à toutes les requêtes /api/*
+// Relax limits in development/test to allow E2E testing
+const isProduction = process.env.NODE_ENV === "production";
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limite chaque IP à 100 requêtes par fenêtre de 15 minutes
+    max: isProduction ? 100 : 1000, // Production: 100 req/15min, Dev/Test: 1000 req/15min
     standardHeaders: true, // Retourne les informations de limite dans les en-têtes `RateLimit-*`
     legacyHeaders: false, // Désactive les en-têtes `X-RateLimit-*` (obsolètes)
-    message:
-        "Trop de requêtes envoyées depuis cette IP, veuillez réessayer après 15 minutes.",
+    message: "Trop de requêtes envoyées depuis cette IP, veuillez réessayer après 15 minutes.",
 });
 
 app.use("/api", apiLimiter);
@@ -125,8 +122,7 @@ app.get("/api/health", async (req, res) => {
 
         // Test MongoDB connection
         const mongoose = require("mongoose");
-        const mongoStatus =
-            mongoose.connection.readyState === 1 ? "connected" : "disconnected";
+        const mongoStatus = mongoose.connection.readyState === 1 ? "connected" : "disconnected";
 
         res.status(200).json({
             status: "ok",

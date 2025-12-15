@@ -25,7 +25,7 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue'
 
-defineProps({
+const props = defineProps({
   show: {
     type: Boolean,
     required: true,
@@ -40,13 +40,13 @@ defineProps({
   },
 })
 
-defineEmits(['close'])
+const emit = defineEmits(['close'])
 
 const handleOverlayClick = (e) => {
   // Only close on overlay click if property is enabled
   if (e.target === e.currentTarget) {
-    if (this.closeOnOverlay) {
-      this.$emit('close')
+    if (props.closeOnOverlay) {
+      emit('close')
     }
   }
 }
