@@ -6,6 +6,9 @@ const {
     PrismaClientKnownRequestError,
 } = require("@prisma/client");
 const prisma = new PrismaClient();
+const {
+    autoCancelExpiredCarpoolings,
+} = require("../utils/carpoolingUtils.js");
 // MongoDB models temporarily disabled
 // const Review = require("../models/Review");
 
@@ -20,6 +23,9 @@ const prisma = new PrismaClient();
  */
 const getAvailableCarpoolingsAdvanced = async (req, res) => {
     try {
+        // Nettoyer les covoiturages expirés avant de retourner les résultats
+        await autoCancelExpiredCarpoolings();
+
         const {
             departure,
             arrival,

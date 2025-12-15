@@ -24,10 +24,11 @@ model User {
   profile_picture_url String?  @db.VarChar(255)
   creation_date       DateTime @default(now()) @db.DateTime(0)
 
-  roles          User_Role[]
-  vehicles       Vehicle[]
-  driverTrips    Carpooling[]    @relation("DriverTrips")
-  participations Participation[]
+  roles                User_Role[]
+  vehicles             Vehicle[]
+  driverTrips          Carpooling[]       @relation("DriverTrips")
+  participations       Participation[]
+  creditTransactions   CreditTransaction[]
 }
 
 model User_Role {
@@ -103,4 +104,15 @@ model Participation {
 
   passenger  User       @relation(fields: [passenger_id], references: [id])
   carpooling Carpooling @relation(fields: [carpooling_id], references: [id])
+}
+
+model CreditTransaction {
+  id                  Int       @id @default(autoincrement())
+  user_id             Int
+  transaction_type    String    @db.VarChar(50)
+  amount              Int
+  description         String    @db.VarChar(255)
+  transaction_date    DateTime  @default(now()) @db.DateTime(0)
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }

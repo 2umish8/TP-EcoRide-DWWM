@@ -18,24 +18,18 @@
           <div class="form-row">
             <div class="form-group">
               <label for="departure">Lieu de départ</label>
-              <input
+              <CityAutocomplete
                 id="departure"
                 v-model="tripData.departure_address"
-                type="text"
-                class="form-input"
                 placeholder="Ex: Paris, Gare du Nord"
-                required
               />
             </div>
             <div class="form-group">
               <label for="destination">Destination</label>
-              <input
+              <CityAutocomplete
                 id="destination"
                 v-model="tripData.arrival_address"
-                type="text"
-                class="form-input"
                 placeholder="Ex: Lyon, Part-Dieu"
-                required
               />
             </div>
           </div>
@@ -49,42 +43,16 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="departure-date">Date de départ</label>
-              <input
-                id="departure-date"
-                v-model="departureDate"
-                type="date"
-                class="form-input"
+              <label for="departure-datetime">Date et heure de départ</label>
+              <DateTimeInput
+                id="departure-datetime"
+                v-model="tripData.departure_datetime"
                 :min="today"
-                required
               />
             </div>
             <div class="form-group">
-              <label for="departure-time">Heure de départ</label>
-              <input
-                id="departure-time"
-                v-model="departureTime"
-                type="time"
-                class="form-input"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="arrival-date">Date d'arrivée estimée</label>
-              <input
-                id="arrival-date"
-                v-model="arrivalDate"
-                type="date"
-                class="form-input"
-                :min="departureDate || today"
-              />
-            </div>
-            <div class="form-group">
-              <label for="arrival-time">Heure d'arrivée estimée</label>
-              <input id="arrival-time" v-model="arrivalTime" type="time" class="form-input" />
+              <label for="trip-duration">Durée estimée du trajet</label>
+              <DurationInput id="trip-duration" v-model="tripDuration" />
             </div>
           </div>
         </div>
@@ -98,43 +66,32 @@
           <div class="form-row">
             <div class="form-group">
               <label for="seats">Nombre de places disponibles</label>
-              <select
-                id="seats"
-                v-model="tripData.initial_seats_offered"
-                class="form-select"
-                required
-              >
+              <SelectInput id="seats" v-model="tripData.initial_seats_offered">
                 <option value="">Sélectionnez...</option>
                 <option value="1">1 place</option>
                 <option value="2">2 places</option>
                 <option value="3">3 places</option>
                 <option value="4">4 places</option>
-              </select>
+              </SelectInput>
             </div>
             <div class="form-group">
               <label for="price">Prix par passager (crédits)</label>
-              <input
+              <TextInput
                 id="price"
                 v-model="tripData.price_per_passenger"
                 type="number"
-                min="0"
-                step="1"
-                class="form-input"
                 placeholder="Ex: 15"
-                required
               />
             </div>
           </div>
 
           <div class="form-group">
             <label for="description">Description du trajet (optionnel)</label>
-            <textarea
+            <TextAreaInput
               id="description"
               v-model="tripData.description"
-              class="form-textarea"
               placeholder="Ajoutez des détails sur votre trajet, points de rendez-vous, préférences..."
-              rows="4"
-            ></textarea>
+            ></TextAreaInput>
           </div>
         </div>
 
@@ -145,21 +102,17 @@
           <div class="form-row">
             <div class="form-group">
               <label for="vehicle-model">Modèle du véhicule (optionnel)</label>
-              <input
+              <TextInput
                 id="vehicle-model"
                 v-model="tripData.model"
-                type="text"
-                class="form-input"
                 placeholder="Ex: Renault Clio"
               />
             </div>
             <div class="form-group">
               <label for="vehicle-plate">Plaque d'immatriculation (optionnel)</label>
-              <input
+              <TextInput
                 id="vehicle-plate"
                 v-model="tripData.plate_number"
-                type="text"
-                class="form-input"
                 placeholder="Ex: AB-123-CD"
               />
             </div>
@@ -206,11 +159,13 @@
 
         <!-- Actions -->
         <div class="form-actions">
-          <router-link to="/my-trips" class="btn btn-secondary"> Annuler </router-link>
-          <button type="submit" class="btn btn-primary" :disabled="loading">
+          <router-link to="/my-trips" class="router-link-wrapper">
+            <SecondaryButton>Annuler</SecondaryButton>
+          </router-link>
+          <PrimaryButton type="submit" :disabled="loading">
             <span v-if="loading" class="loading-spinner"></span>
             {{ loading ? 'Création...' : 'Créer le trajet' }}
-          </button>
+          </PrimaryButton>
         </div>
       </form>
     </div>
@@ -222,9 +177,29 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { carpoolingService } from '@/services/api'
 import { useNotificationStore } from '@/stores/notification'
+import CityAutocomplete from '@/components/ui/CityAutocomplete.vue'
+import TextInput from '@/components/ui/TextInput.vue'
+import DateInput from '@/components/ui/DateInput.vue'
+import DateTimeInput from '@/components/ui/DateTimeInput.vue'
+import DurationInput from '@/components/ui/DurationInput.vue'
+import SelectInput from '@/components/ui/SelectInput.vue'
+import TextAreaInput from '@/components/ui/TextAreaInput.vue'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import SecondaryButton from '@/components/ui/SecondaryButton.vue'
 
 export default {
   name: 'CreateTripView',
+  components: {
+    CityAutocomplete,
+    TextInput,
+    DateInput,
+    DateTimeInput,
+    DurationInput,
+    SelectInput,
+    TextAreaInput,
+    PrimaryButton,
+    SecondaryButton,
+  },
   setup() {
     const notificationStore = useNotificationStore()
     const router = useRouter()
@@ -243,11 +218,8 @@ export default {
       plate_number: '',
     })
 
-    // Champs séparés pour la date et l'heure
-    const departureDate = ref('')
-    const departureTime = ref('')
-    const arrivalDate = ref('')
-    const arrivalTime = ref('')
+    // Duration du trajet (format HH:MM)
+    const tripDuration = ref('02:00')
 
     // Date d'aujourd'hui pour la validation
     const today = computed(() => {
@@ -256,11 +228,11 @@ export default {
 
     // Formatage de la date et heure pour le récapitulatif
     const formatSummaryDateTime = () => {
-      if (!departureDate.value || !departureTime.value) {
+      if (!tripData.value.departure_datetime) {
         return 'Date et heure à définir'
       }
 
-      const date = new Date(`${departureDate.value}T${departureTime.value}`)
+      const date = new Date(tripData.value.departure_datetime)
       return date.toLocaleDateString('fr-FR', {
         weekday: 'long',
         day: 'numeric',
@@ -271,25 +243,21 @@ export default {
       })
     }
 
-    // Mise à jour des datetime quand les champs changent
-    const updateDateTime = () => {
-      if (departureDate.value && departureTime.value) {
-        tripData.value.departure_datetime = `${departureDate.value}T${departureTime.value}:00`
+    // Calcul de la date/heure d'arrivée basée sur la durée
+    const calculateArrivalDateTime = () => {
+      if (!tripData.value.departure_datetime) {
+        return
       }
 
-      if (arrivalDate.value && arrivalTime.value) {
-        tripData.value.arrival_datetime = `${arrivalDate.value}T${arrivalTime.value}:00`
-      } else if (departureDate.value && departureTime.value) {
-        // Si pas d'heure d'arrivée spécifiée, estimer +2h
-        const depDateTime = new Date(`${departureDate.value}T${departureTime.value}`)
-        depDateTime.setHours(depDateTime.getHours() + 2)
-        tripData.value.arrival_datetime = depDateTime.toISOString().slice(0, 19)
-      }
-    }
+      const [hours, minutes] = tripDuration.value.split(':').map(Number)
+      const departureDate = new Date(tripData.value.departure_datetime)
+      const arrivalDate = new Date(departureDate)
 
-    // Watcher pour mettre à jour les datetime
-    const watchDateTimeFields = () => {
-      updateDateTime()
+      arrivalDate.setHours(arrivalDate.getHours() + hours)
+      arrivalDate.setMinutes(arrivalDate.getMinutes() + minutes)
+
+      // Format: YYYY-MM-DDTHH:MM:00
+      tripData.value.arrival_datetime = arrivalDate.toISOString().slice(0, 19)
     }
 
     // Création du trajet
@@ -297,8 +265,8 @@ export default {
       try {
         loading.value = true
 
-        // Mise à jour des datetime avant envoi
-        updateDateTime()
+        // Calcul de la date/heure d'arrivée
+        calculateArrivalDateTime()
 
         // Validation basique
         if (!tripData.value.departure_address || !tripData.value.arrival_address) {
@@ -339,22 +307,21 @@ export default {
 
     // Initialisation
     onMounted(() => {
-      // Pré-remplir avec la date d'aujourd'hui
-      departureDate.value = today.value
-      arrivalDate.value = today.value
+      // Pré-remplir avec la date d'aujourd'hui et heure actuelle
+      const now = new Date()
+      const hours = String(now.getHours()).padStart(2, '0')
+      const minutes = String(now.getMinutes()).padStart(2, '0')
+      const todayDate = today.value
+      tripData.value.departure_datetime = `${todayDate}T${hours}:${minutes}`
     })
 
     return {
       tripData,
-      departureDate,
-      departureTime,
-      arrivalDate,
-      arrivalTime,
+      tripDuration,
       today,
       loading,
       formatSummaryDateTime,
       createTrip,
-      watchDateTimeFields,
     }
   },
 }
@@ -441,38 +408,13 @@ export default {
   font-size: 0.9rem;
 }
 
-/* Champs de saisie */
-.form-input,
-.form-select,
-.form-textarea {
-  padding: 0.75rem;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  background: var(--color-dark-tertiary);
-  color: var(--color-light-secondary);
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.form-input:focus,
-.form-select:focus,
-.form-textarea:focus {
-  outline: none;
-  border-color: var(--color-success);
-}
-
-.form-input::placeholder {
-  color: var(--color-gray);
-}
-
-.form-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
 /* Section récapitulatif */
 .summary-section {
-  background: linear-gradient(135deg, var(--color-dark-tertiary) 0%, var(--color-dark-secondary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-dark-tertiary) 0%,
+    var(--color-dark-secondary) 100%
+  );
   border: 2px solid var(--color-success);
   border-radius: 12px;
   padding: 1.5rem;
@@ -537,45 +479,11 @@ export default {
   gap: 1rem;
   justify-content: flex-end;
   margin-top: 2rem;
-
   border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
+.router-link-wrapper {
   text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.btn-secondary {
-  background: var(--color-gray);
-  color: white;
-}
-
-.btn-secondary:hover {
-  background: var(--color-gray);
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--color-success) 0%, var(--color-secondary) 100%);
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 /* Loading spinner */
@@ -622,8 +530,3 @@ export default {
   }
 }
 </style>
-
-
-
-
-

@@ -456,8 +456,246 @@ Merci de contribuer à une mobilité plus durable ! 🌱
     }
 };
 
+/**
+ * Envoie un email de notification d'annulation automatique à un passager
+ * @param {Object} params - Paramètres de l'email
+ * @param {string} params.passengerEmail - Email du passager
+ * @param {string} params.passengerName - Nom/pseudo du passager
+ * @param {string} params.driverName - Nom/pseudo du chauffeur
+ * @param {string} params.departureAddress - Adresse de départ
+ * @param {string} params.arrivalAddress - Adresse d'arrivée
+ * @param {string} params.departureDate - Date du trajet
+ * @param {number} params.refundAmount - Montant remboursé
+ * @param {number} params.carpoolingId - ID du covoiturage
+ */
+const sendCancellationNotification = async ({
+    passengerEmail,
+    passengerName,
+    driverName,
+    departureAddress,
+    arrivalAddress,
+    departureDate,
+    refundAmount,
+    carpoolingId,
+}) => {
+    try {
+        const transporter = createTransporter();
+
+        const formattedDate = new Date(departureDate).toLocaleDateString(
+            "fr-FR",
+            {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+            }
+        );
+
+        const subject = `❌ Covoiturage annulé automatiquement - ${refundAmount} crédits remboursés`;
+
+        const htmlContent = `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Covoiturage annulé - EcoRide</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        .header { 
+            background: linear-gradient(135deg, #f1d581, #e8c547); 
+            color: #333; 
+            padding: 20px; 
+            text-align: center; 
+            border-radius: 10px 10px 0 0; 
+        }
+        .content { 
+            background: #f9f9f9; 
+            padding: 30px; 
+            border-radius: 0 0 10px 10px; 
+            border: 1px solid #ddd; 
+        }
+        .warning-box { 
+            background: #fff3cd; 
+            border: 2px solid #f1d581; 
+            padding: 20px; 
+            border-radius: 8px; 
+            margin: 20px 0; 
+        }
+        .refund-box { 
+            background: #e8f5e8; 
+            border: 2px solid #4CAF50; 
+            padding: 20px; 
+            text-align: center; 
+            border-radius: 10px; 
+            margin: 20px 0; 
+        }
+        .trip-details { 
+            background: white; 
+            padding: 20px; 
+            margin: 20px 0; 
+            border-radius: 8px; 
+            border-left: 4px solid #f1d581; 
+        }
+        .footer { 
+            text-align: center; 
+            font-size: 12px; 
+            color: #666; 
+            margin-top: 30px; 
+            padding-top: 20px; 
+            border-top: 1px solid #ddd; 
+        }
+        ul { 
+            list-style-type: none; 
+            padding: 0; 
+        }
+        li { 
+            padding: 8px 0; 
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>❌ Covoiturage annulé</h1>
+        <p>Un trajet a été annulé automatiquement</p>
+    </div>
+    
+    <div class="content">
+        <p>Bonjour ${passengerName},</p>
+        
+        <p>Nous vous informons que le covoiturage suivant a été <strong>annulé automatiquement</strong> car la date de départ est passée :</p>
+
+        <div class="trip-details">
+            <h3>📍 Détails du trajet</h3>
+            <ul>
+                <li><strong>🚀 Départ :</strong> ${departureAddress}</li>
+                <li><strong>🎯 Arrivée :</strong> ${arrivalAddress}</li>
+                <li><strong>📅 Date :</strong> ${formattedDate}</li>
+                <li><strong>👤 Chauffeur :</strong> ${driverName}</li>
+                <li><strong>Numéro trajet :</strong> #${carpoolingId}</li>
+            </ul>
+        </div>
+
+        <div class="refund-box">
+            <h3>💰 Remboursement appliqué</h3>
+            <p><strong>${refundAmount} crédits</strong> ont été remboursés sur votre compte</p>
+        </div>
+
+        <div class="warning-box">
+            <h3>ℹ️ Qu'est-ce qui s'est passé ?</h3>
+            <p>Le covoiturage a été <strong>annulé automatiquement</strong> car la date de départ est passée. Voici ce que nous avons fait :</p>
+            <ul>
+                <li>✅ Annulation du trajet</li>
+                <li>✅ Remboursement intégral de vos crédits</li>
+                <li>✅ Mise à jour de votre solde de crédits</li>
+            </ul>
+        </div>
+
+        <h3>📋 Que pouvez-vous faire maintenant ?</h3>
+        <ul>
+            <li>🔍 Rechercher d'autres covoiturages disponibles</li>
+            <li>📞 Contacter le chauffeur si vous avez des questions</li>
+            <li>💬 Signaler un problème à notre équipe de support</li>
+        </ul>
+
+        <p style="margin-top: 30px;">
+            <strong>Merci de votre compréhension.</strong><br>
+            Vous pouvez continuer à utiliser EcoRide pour vos prochains trajets.
+        </p>
+    </div>
+    
+    <div class="footer">
+        <p>© ${new Date().getFullYear()} EcoRide - Plateforme de covoiturage éco-responsable</p>
+        <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+    </div>
+</body>
+</html>`;
+
+        const textContent = `
+❌ COVOITURAGE ANNULÉ AUTOMATIQUEMENT
+
+Bonjour ${passengerName},
+
+Le covoiturage suivant a été annulé automatiquement car la date de départ est passée:
+
+📍 DÉTAILS DU TRAJET
+🚀 Départ : ${departureAddress}
+🎯 Arrivée : ${arrivalAddress}
+📅 Date : ${formattedDate}
+👤 Chauffeur : ${driverName}
+Numéro trajet : #${carpoolingId}
+
+💰 REMBOURSEMENT
+${refundAmount} crédits ont été remboursés sur votre compte
+
+QU'EST-CE QUI S'EST PASSÉ ?
+Le covoiturage a été annulé automatiquement car la date de départ est passée. Voici ce que nous avons fait :
+✅ Annulation du trajet
+✅ Remboursement intégral de vos crédits
+✅ Mise à jour de votre solde de crédits
+
+QUE POUVEZ-VOUS FAIRE MAINTENANT ?
+🔍 Rechercher d'autres covoiturages disponibles
+📞 Contacter le chauffeur si vous avez des questions
+💬 Signaler un problème à notre équipe de support
+
+Merci de votre compréhension. Vous pouvez continuer à utiliser EcoRide pour vos prochains trajets.
+
+---
+© ${new Date().getFullYear()} EcoRide - Plateforme de covoiturage éco-responsable
+Cet email a été envoyé automatiquement, merci de ne pas y répondre.
+`;
+
+        const mailOptions = {
+            from: `"EcoRide" <${
+                process.env.SMTP_FROM || "noreply@ecoride.com"
+            }>`,
+            to: passengerEmail,
+            subject: subject,
+            text: textContent,
+            html: htmlContent,
+        };
+
+        if (process.env.NODE_ENV === "production") {
+            const result = await transporter.sendMail(mailOptions);
+            console.log(
+                `✅ Email d'annulation envoyé à ${passengerEmail}:`,
+                result.messageId
+            );
+            return { success: true, messageId: result.messageId };
+        } else {
+            console.log("\n" + "=".repeat(80));
+            console.log("📧 SIMULATION D'ENVOI D'EMAIL - ANNULATION AUTOMATIQUE");
+            console.log("=".repeat(80));
+            console.log(`À: ${passengerEmail}`);
+            console.log(`Sujet: ${subject}`);
+            console.log("\n--- CONTENU ---");
+            console.log(textContent);
+            console.log("=".repeat(80) + "\n");
+
+            return { success: true, messageId: `dev-${Date.now()}` };
+        }
+    } catch (error) {
+        console.error(
+            "❌ Erreur lors de l'envoi de l'email d'annulation:",
+            error
+        );
+        return { success: false, error: error.message };
+    }
+};
+
 module.exports = {
     sendReviewInvitation,
     sendTripCompletionNotification,
+    sendCancellationNotification,
     createTransporter,
 };

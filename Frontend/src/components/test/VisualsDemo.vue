@@ -1,62 +1,77 @@
 <script setup>
 import ButtonsTemplate from '@/components/test/ButtonsTemplate.vue'
+import TripCard from '@/components/TripCard.vue'
+
+const sampleTrips = [
+  {
+    id: 1,
+    departure_address: 'Paris',
+    arrival_address: 'Lyon',
+    departure_datetime: new Date(2024, 11, 12, 8, 30),
+    arrival_datetime: new Date(2024, 11, 12, 12, 30),
+    price_per_passenger: 25,
+    participants_count: 2,
+    initial_seats_offered: 4,
+    seats_remaining: 2,
+    status: 'terminé',
+    model: 'Toyota Prius',
+    plate_number: 'AB-123-CD',
+  },
+  {
+    id: 2,
+    departure_address: 'Marseille',
+    arrival_address: 'Nice',
+    departure_datetime: new Date(2024, 11, 15, 10, 0),
+    arrival_datetime: new Date(2024, 11, 15, 12, 0),
+    price_per_passenger: 15,
+    participants_count: 0,
+    initial_seats_offered: 3,
+    seats_remaining: 3,
+    status: 'annulé',
+    model: 'Renault Clio',
+    plate_number: 'CD-456-EF',
+    cancellation_date: new Date(2024, 11, 14),
+  },
+]
 </script>
 
 <template>
   <section class="visuals-demo">
     <ButtonsTemplate />
-    <div class="row mb-4">
-      <div class="col-md-6">
-        <h3>Color palette</h3>
-        <div class="d-flex gap-2 flex-wrap">
-          <div class="swatch" style="background: var(--eco-primary)"><span>#8fdab3</span></div>
-          <div class="swatch" style="background: var(--eco-primary-hover)">
-            <span>#6bc26b</span>
-          </div>
-          <div class="swatch" style="background: var(--eco-secondary)"><span>#79d09e</span></div>
-          <div class="swatch" style="background: var(--bg-dark)"><span>var(--color-dark)</span></div>
-          <div class="swatch" style="background: var(--bg-dark-2)"><span>#2d2d2d</span></div>
+    <div class="palette-section">
+      <h3>Color palette</h3>
+      <div class="d-flex gap-2 flex-wrap">
+        <div class="swatch" style="background: var(--eco-primary)"><span>#8fdab3</span></div>
+        <div class="swatch" style="background: var(--eco-primary-hover)">
+          <span>#6bc26b</span>
         </div>
+        <div class="swatch" style="background: var(--eco-secondary)"><span>#79d09e</span></div>
+        <div class="swatch" style="background: var(--bg-dark)">
+          <span>var(--color-dark)</span>
+        </div>
+        <div class="swatch" style="background: var(--bg-dark-2)"><span>#2d2d2d</span></div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-6">
+    <div class="content-row">
+      <div class="cards-section">
         <h3>Cards</h3>
-        <div class="card-demo">
-          <div class="trip-card p-3 mb-3">
-            <div class="d-flex justify-content-between align-items-start">
-              <div>
-                <h4 class="mb-1">Paris → Lyon</h4>
-                <div class="text-muted small">12 déc • 08:30 • 4h</div>
-              </div>
-              <div class="status badge bg-success">Terminé</div>
-            </div>
-            <p class="mt-2 mb-0">Conducteur: Alice • Voiture: Toyota • 2 places</p>
-          </div>
-
-          <div class="trip-card p-3 mb-3 canceled">
-            <div class="d-flex justify-content-between align-items-start">
-              <div>
-                <h4 class="mb-1">Marseille → Nice</h4>
-                <div class="text-muted small">15 déc • 10:00 • 2h</div>
-              </div>
-              <div class="status badge bg-secondary">Annulé</div>
-            </div>
-            <p class="mt-2 mb-0">Conducteur: Bob • Voiture: Renault • 0 places</p>
-          </div>
-        </div>
+        <TripCard
+          v-for="trip in sampleTrips"
+          :key="trip.id"
+          :trip="trip"
+          :showEarnings="true"
+          class="mb-3"
+        />
       </div>
 
-      <div class="col-md-6">
+      <div class="typography-section">
         <h3>Typography</h3>
-        <div class="typography-samples">
-          <h1>H1 — Titre principal</h1>
-          <h2>H2 — Sous-titre</h2>
-          <p class="lead">
-            Paragraphe d'exemple, taille normale et hauteur de ligne conforme à la charte.
-          </p>
-        </div>
+        <h1>H1 — Titre principal</h1>
+        <h2>H2 — Sous-titre</h2>
+        <p class="lead">
+          Paragraphe d'exemple, taille normale et hauteur de ligne conforme à la charte.
+        </p>
       </div>
     </div>
   </section>
@@ -121,26 +136,23 @@ import ButtonsTemplate from '@/components/test/ButtonsTemplate.vue'
   border-radius: 4px;
 }
 
-.trip-card {
-  background: var(--bg-dark-2);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  box-shadow: var(--shadow-card);
-}
-.trip-card.canceled {
-  opacity: 0.7;
-  filter: grayscale(0.3);
-}
-.status {
-  font-size: 0.7rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 999px;
+.palette-section,
+.cards-section,
+.typography-section {
+  flex: 1;
+  min-width: 300px;
 }
 
-.typography-samples h1 {
+.content-row {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.typography-section h1 {
   font-size: 1.5rem;
 }
-.typography-samples h2 {
+.typography-section h2 {
   font-size: 1.25rem;
 }
 .typography-samples p.lead {
@@ -148,8 +160,3 @@ import ButtonsTemplate from '@/components/test/ButtonsTemplate.vue'
   color: var(--text-muted);
 }
 </style>
-
-
-
-
-

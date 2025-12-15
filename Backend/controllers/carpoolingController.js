@@ -6,7 +6,12 @@ const prisma = new PrismaClient();
 const {
     sendReviewInvitation,
     sendTripCompletionNotification,
+    sendCancellationNotification,
 } = require("../utils/emailService.js");
+const {
+    cancelCarpoolingById,
+    autoCancelExpiredCarpoolings,
+} = require("../utils/carpoolingUtils.js");
 // MongoDB models temporarily disabled
 // const Review = require("../models/Review");
 // const DriverPreferences = require("../models/DriverPreferences");
@@ -141,6 +146,9 @@ const createCarpooling = async (req, res) => {
 /* --------------------------------------------------- Obtenir covoiturages disponibles -------------------------- */
 const getAvailableCarpoolings = async (req, res) => {
     try {
+        // Nettoyer les covoiturages expirés avant de retourner les résultats
+        await autoCancelExpiredCarpoolings();
+
         const { departure, arrival, date } = req.query;
 
         const whereClause = {
@@ -241,6 +249,9 @@ const getAvailableCarpoolings = async (req, res) => {
 /* --------------------------------------------------- Obtenir covoiturages d'un chauffeur ---------------------- */
 const getDriverCarpoolings = async (req, res) => {
     try {
+        // Nettoyer les covoiturages expirés avant de retourner les résultats
+        await autoCancelExpiredCarpoolings();
+
         const userId = req.user.id;
 
         const carpoolings = await prisma.carpooling.findMany({
@@ -394,78 +405,79 @@ const cancelCarpooling = async (req, res) => {
         const userId = req.user.id;
         const carpoolingId = req.params.id;
 
-        // Démarrer une transaction
-        const result = await prisma.$transaction(async (transactionPrisma) => {
-            // Vérifier que le covoiturage appartient à l'utilisateur
-            const carpooling = await transactionPrisma.carpooling.findUnique({
-                where: { id: parseInt(carpoolingId) },
-                select: {
-                    driver_id: true,
-                    status: true,
-                    price_per_passenger: true,
+        // Vérifier que le covoiturage appartient à l'utilisateur
+        const carpooling = await prisma.carpooling.findUnique({
+            where: { id: parseInt(carpoolingId) },
+            select: {
+                driver_id: true,
+                status: true,
+                departure_address: true,
+                arrival_address: true,
+                departure_datetime: true,
+                driver: {
+                    select: { pseudo: true },
                 },
-            });
-
-            if (!carpooling) {
-                throw new Error("Covoiturage non trouvé.");
-            }
-
-            if (carpooling.driver_id !== userId) {
-                throw new Error(
-                    "Vous ne pouvez annuler que vos propres covoiturages."
-                );
-            }
-
-            if (carpooling.status !== "prévu") {
-                throw new Error(
-                    "Seuls les covoiturages prévus peuvent être annulés."
-                );
-            }
-
-            // Récupérer les participants pour les rembourser
-            const participants = await transactionPrisma.participation.findMany(
-                {
-                    where: {
-                        carpooling_id: parseInt(carpoolingId),
-                        cancellation_date: null,
+                participations: {
+                    where: { cancellation_date: null },
+                    include: {
+                        passenger: {
+                            select: { email: true, pseudo: true },
+                        },
                     },
-                }
-            );
-
-            // Rembourser tous les participants
-            for (const participant of participants) {
-                // Créditer le passager
-                await transactionPrisma.user.update({
-                    where: { id: participant.passenger_id },
-                    data: { credits: { increment: participant.price_paid } },
-                });
-
-                // Marquer la participation comme annulée
-                await transactionPrisma.participation.update({
-                    where: { id: participant.id },
-                    data: { cancellation_date: new Date() },
-                });
-
-                // Enregistrer l'historique des crédits
-                await transactionPrisma.credit_transaction.create({
-                    data: {
-                        user_id: participant.passenger_id,
-                        transaction_type: "crédit",
-                        amount: participant.price_paid,
-                        description: `Remboursement annulation covoiturage #${carpoolingId}`,
-                        transaction_date: new Date(),
-                    },
-                });
-            }
-
-            // Marquer le covoiturage comme annulé
-            await transactionPrisma.carpooling.update({
-                where: { id: parseInt(carpoolingId) },
-                data: { status: "annulé" },
-            });
-
-            return { participantsCount: participants.length };
+                },
+            },
         });
+
+        if (!carpooling) {
+            return res.status(404).json({ message: "Covoiturage non trouvé." });
+        }
+
+        if (carpooling.driver_id !== userId) {
+            return res.status(403).json({
+                message:
+                    "Vous ne pouvez annuler que vos propres covoiturages.",
+            });
+        }
+
+        if (carpooling.status !== "prévu") {
+            return res.status(400).json({
+                message: "Seuls les covoiturages prévus peuvent être annulés.",
+            });
+        }
+
+        // Utiliser la fonction utilitaire pour annuler le covoiturage
+        const result = await cancelCarpoolingById(carpoolingId, {
+            isAutoCancelled: false,
+        });
+
+        if (!result.success) {
+            return res.status(400).json({
+                message: "Erreur lors de l'annulation du covoiturage.",
+                error: result.error,
+            });
+        }
+
+        // Envoyer des notifications d'annulation aux passagers
+        try {
+            for (const participation of carpooling.participations) {
+                await sendCancellationNotification({
+                    passengerEmail: participation.passenger.email,
+                    passengerName: participation.passenger.pseudo,
+                    driverName: carpooling.driver.pseudo,
+                    departureAddress: carpooling.departure_address,
+                    arrivalAddress: carpooling.arrival_address,
+                    departureDate: carpooling.departure_datetime,
+                    refundAmount: participation.credits_paid,
+                    carpoolingId: parseInt(carpoolingId),
+                });
+            }
+        } catch (emailError) {
+            console.warn(
+                "⚠️ Erreur envoi notifications annulation:",
+                emailError.message
+            );
+            // Ne pas échouer si les emails ne s'envoient pas
+        }
 
         res.status(200).json({
             message: "Covoiturage annulé avec succès !",
@@ -481,17 +493,6 @@ const cancelCarpooling = async (req, res) => {
                     process.env.NODE_ENV === "development"
                         ? error.message
                         : undefined,
-            });
-        }
-
-        // Erreurs métier
-        if (
-            error.message.includes("covoiturage") ||
-            error.message.includes("appartient") ||
-            error.message.includes("annuler")
-        ) {
-            return res.status(400).json({
-                message: error.message,
             });
         }
 

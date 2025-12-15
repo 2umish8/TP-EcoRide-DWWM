@@ -154,11 +154,271 @@ export default {
 </script>
 
 <style scoped>
-/* Component-specific overrides moved to assets/css/_cards.css */
-/* Keep this block for future tweaks that are truly local to TripCard */
+.trip-card {
+  background: var(--bg-dark-2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.trip-card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.trip-card.is-cancelled {
+  opacity: 0.7;
+  filter: grayscale(0.3);
+}
+
+/* Header */
+.trip-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.trip-status {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-badge.status-terminé {
+  background: rgba(67, 197, 97, 0.15);
+  color: #43c561;
+}
+
+.status-badge.status-annulé {
+  background: rgba(205, 101, 112, 0.15);
+  color: #cd6570;
+}
+
+.status-badge.status-en\ cours {
+  background: rgba(241, 213, 129, 0.15);
+  color: #f1d581;
+}
+
+.cancellation-badge {
+  padding: 0.4rem 0.8rem;
+  background: rgba(205, 101, 112, 0.2);
+  color: #cd6570;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.trip-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Route */
+.trip-route {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+}
+
+.route-addresses {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.departure,
+.arrival {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 1 auto;
+}
+
+.icon {
+  color: var(--eco-primary);
+  font-size: 0.9rem;
+}
+
+.address {
+  font-weight: 500;
+  color: var(--color-light);
+}
+
+.route-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+}
+
+.arrow {
+  color: var(--eco-secondary);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Details */
+.trip-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.detail-icon {
+  color: var(--eco-primary);
+  font-size: 1.1rem;
+  min-width: 1.2rem;
+  margin-top: 0.2rem;
+}
+
+.detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.detail-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.detail-value {
+  font-size: 0.95rem;
+  color: var(--color-light);
+  font-weight: 500;
+}
+
+.detail-time {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.seats-remaining {
+  display: block;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.1rem;
+}
+
+/* Vehicle */
+.trip-vehicle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.vehicle-icon {
+  color: var(--eco-secondary);
+  font-size: 1rem;
+}
+
+.vehicle-info {
+  color: var(--color-light);
+  font-weight: 500;
+}
+
+/* Footer */
+.trip-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.trip-earnings,
+.trip-price {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.earnings-icon,
+.price-icon {
+  color: var(--eco-primary);
+  font-size: 1rem;
+}
+
+.earnings-text,
+.price-text {
+  color: var(--color-light);
+}
+
+.trip-id {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.id-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+}
+
+.id-value {
+  font-size: 0.95rem;
+  color: var(--eco-primary);
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .trip-card {
+    padding: 1rem;
+  }
+
+  .trip-details {
+    grid-template-columns: 1fr;
+  }
+
+  .route-addresses {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .trip-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .trip-id {
+    margin-left: 0;
+  }
+}
 </style>
-
-
-
-
-

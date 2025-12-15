@@ -1,11 +1,12 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
 const currentUser = computed(() => authStore.currentUser)
 const isOpen = ref(false)
+const userMenuElement = ref(null)
 
 const toggleMenu = () => {
   isOpen.value = !isOpen.value
@@ -15,6 +16,20 @@ const closeMenu = () => {
   isOpen.value = false
 }
 
+const handleClickOutside = (event) => {
+  if (userMenuElement.value && !userMenuElement.value.contains(event.target)) {
+    closeMenu()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
+
 const logout = async () => {
   await authStore.logout()
   window.location.href = '/'
@@ -22,7 +37,7 @@ const logout = async () => {
 </script>
 
 <template>
-  <div class="user-menu">
+  <div class="user-menu" ref="userMenuElement">
     <button class="user-menu-toggle" @click="toggleMenu">
       <font-awesome-icon :icon="['fas', 'user']" class="user-icon" />
       <span class="user-name">{{
@@ -189,8 +204,3 @@ const logout = async () => {
   }
 }
 </style>
-
-
-
-
-
