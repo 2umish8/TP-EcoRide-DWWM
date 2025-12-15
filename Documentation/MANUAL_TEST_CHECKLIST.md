@@ -59,19 +59,20 @@
 1. Depuis la page d'accueil, regarder la navbar:
    - [x] Logo EcoRide visible et cliquable
    - [x] Lien "Accueil" → / (reload page)
-   - [ ] Lien "Covoiturages" → /search
-   - [ ] Lien "Connexion / Inscription" → /login
-   - [ ] Lien "Contact" (si existe) → fonctionne
+   - [x] Lien "Covoiturages" → /search
+   - [x] Lien "Connexion / Inscription" → /login
+   - [x] Lien "Mes trajets"
 
 2. Cliquer sur chaque lien:
-   - [ ] "Accueil" → page d'accueil (/)
-   - [ ] "Covoiturages" → page de recherche (/search)
-   - [ ] "Connexion" → page de login (/login)
-   - [ ] Logo → page d'accueil (/)
+   - [x] "Accueil" → page d'accueil (/)
+   - [x] "Covoiturages" → page de recherche (/search)
+   - [x] "Connexion" → page de login (/login)
+   - [x] Logo → page d'accueil (/)
+   - [x] Mes trajets envoie vers /trips, sinon /login si deconnecté
 
 3. Navigation responsive (mobile):
-   - [ ] Sur écran petit (< 768px), menu hamburger visible (optionnel)
-   - [ ] Cliquer hamburger → menu se déploie
+   - [x] Sur écran petit (< 768px), menu hamburger visible (optionnel)
+   - [x] Cliquer hamburger → menu se déploie
 
 ---
 

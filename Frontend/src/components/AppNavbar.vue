@@ -1,9 +1,12 @@
 <script setup>
 import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 import NavMenu from './navbar/NavMenu.vue'
 import NavActions from './navbar/NavActions.vue'
 
+const authStore = useAuthStore()
+const route = useRoute()
 const isNavOpen = ref(false)
 
 const toggleNav = () => {
@@ -13,12 +16,18 @@ const toggleNav = () => {
 const closeNav = () => {
   isNavOpen.value = false
 }
+
+const handleLogoClick = () => {
+  if (route.path === '/') {
+    window.location.reload()
+  }
+}
 </script>
 
 <template>
   <nav class="navbar">
     <!-- Logo -->
-    <RouterLink class="navbar-brand" to="/">
+    <RouterLink class="navbar-brand" to="/" @click="handleLogoClick">
       <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="navbar-logo" />
     </RouterLink>
 
@@ -29,7 +38,7 @@ const closeNav = () => {
 
     <!-- Navigation items wrapper -->
     <div class="navbar-nav-wrapper" :class="{ open: isNavOpen }">
-      <NavMenu :isLoggedIn="true" @navigate="closeNav" />
+      <NavMenu :isLoggedIn="authStore.isLoggedIn" @navigate="closeNav" />
       <NavActions @navigate="closeNav" />
     </div>
   </nav>
@@ -171,8 +180,3 @@ const closeNav = () => {
   }
 }
 </style>
-
-
-
-
-

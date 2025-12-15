@@ -37,7 +37,6 @@ h6 {
 }
 
 p,
-span,
 label {
   color: var(--color-light-secondary);
 }

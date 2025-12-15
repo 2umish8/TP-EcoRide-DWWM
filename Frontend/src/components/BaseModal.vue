@@ -6,7 +6,7 @@
         <h3 class="modal-title">
           <slot name="header">{{ title }}</slot>
         </h3>
-        <button @click="$emit('close')" class="modal-close-btn" aria-label="Close modal">×</button>
+        <IconButton @click="$emit('close')" aria-label="Close modal">×</IconButton>
       </div>
 
       <!-- Body content -->
@@ -24,6 +24,7 @@
 
 <script setup>
 import { defineProps, defineEmits } from 'vue'
+import IconButton from '@/components/ui/IconButton.vue'
 
 const props = defineProps({
   show: {

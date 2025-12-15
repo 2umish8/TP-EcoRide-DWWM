@@ -16,20 +16,54 @@
       <div class="user-details">
         <h2 class="user-name">{{ user.pseudo }}</h2>
         <p class="user-email">{{ user.email }}</p>
+        <div class="user-roles">
+          <span v-if="isPassenger" class="role-badge role-passenger">
+            <font-awesome-icon :icon="['fas', 'car']" class="role-icon" />
+            Passager
+          </span>
+          <span v-if="isDriver" class="role-badge role-driver">
+            <font-awesome-icon :icon="['fas', 'truck']" class="role-icon" />
+            Chauffeur
+          </span>
+        </div>
       </div>
+    </div>
+
+    <!-- Become Driver Button -->
+    <div v-if="user && !isDriver" class="become-driver-section">
+      <PrimaryButton @click="navigateToBecomeDriver" class="become-driver-button">
+        <font-awesome-icon :icon="['fas', 'steering-wheel']" class="button-icon" />
+        Devenir chauffeur
+      </PrimaryButton>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import PrimaryButton from './ui/PrimaryButton.vue'
 
-defineProps({
+const router = useRouter()
+
+const props = defineProps({
   user: {
     type: Object,
     default: null,
   },
 })
+
+const isPassenger = computed(() => {
+  return props.user?.roles?.includes('passager') || false
+})
+
+const isDriver = computed(() => {
+  return props.user?.roles?.includes('chauffeur') || false
+})
+
+const navigateToBecomeDriver = () => {
+  router.push({ name: 'BecomeDriver' })
+}
 </script>
 
 <style scoped>
@@ -97,7 +131,57 @@ defineProps({
 .user-email {
   color: var(--color-light-secondary);
   font-size: 1rem;
-  margin: 0;
+  margin: 0 0 10px 0;
+}
+
+.user-roles {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.role-icon {
+  font-size: 0.85rem;
+}
+
+.role-passenger {
+  background: rgba(143, 218, 179, 0.2);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.role-driver {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid #4caf50;
+}
+
+.become-driver-section {
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+}
+
+.become-driver-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.button-icon {
+  font-size: 1rem;
 }
 
 @media (max-width: 768px) {
@@ -112,6 +196,10 @@ defineProps({
 
   .user-details {
     text-align: center;
+  }
+
+  .user-roles {
+    justify-content: center;
   }
 }
 </style>

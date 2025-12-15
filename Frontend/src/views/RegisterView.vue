@@ -72,15 +72,10 @@
                   @focus="showTooltip = true"
                   @blur="showTooltip = false"
                 />
-                <button
-                  type="button"
-                  @click="togglePassword"
-                  class="password-toggle"
-                  :disabled="isLoading"
-                >
+                <IconButton type="button" @click="togglePassword" :disabled="isLoading">
                   <font-awesome-icon v-if="showPassword" :icon="['fas', 'eye']" />
                   <font-awesome-icon v-else :icon="['fas', 'eye-slash']" />
-                </button>
+                </IconButton>
                 <!-- Tooltip personnalisé -->
                 <div class="password-tooltip" v-show="showTooltip">
                   <div class="tooltip-content">
@@ -141,20 +136,20 @@
           </div>
 
           <!-- Bouton d'inscription -->
-          <button type="submit" class="register-btn" :disabled="isLoading || !isFormValid">
+          <PrimaryButton type="submit" :disabled="isLoading || !isFormValid">
             <font-awesome-icon
               v-if="isLoading"
               :icon="['fas', 'hourglass-half']"
               class="loading-spinner"
             />
             <span v-else>Créer mon compte</span>
-          </button>
+          </PrimaryButton>
         </form>
 
         <!-- Lien vers connexion -->
         <div class="login-link">
           <p>Vous avez déjà un compte ?</p>
-          <router-link to="/login" class="login-btn-link"> Se connecter </router-link>
+          <InlineLink to="/login">Se connecter</InlineLink>
         </div>
       </div>
     </div>
@@ -168,6 +163,9 @@ import { isValidEmail, getEmailErrorMessage } from '@/utils/emailValidator'
 import PasswordStrengthIndicator from '@/components/PasswordStrengthIndicator.vue'
 import PasswordConfirmationValidator from '@/components/PasswordConfirmationValidator.vue'
 import { authService } from '@/services/api'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import IconButton from '@/components/ui/IconButton.vue'
+import InlineLink from '@/components/ui/InlineLink.vue'
 
 const router = useRouter()
 
@@ -680,8 +678,3 @@ const handleRegister = async () => {
   }
 }
 </style>
-
-
-
-
-

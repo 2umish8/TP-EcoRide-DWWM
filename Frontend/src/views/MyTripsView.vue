@@ -14,10 +14,7 @@
           <div v-else class="action-hint left invisible">
             <span class="hint-text">Cliquez à nouveau pour</span>
           </div>
-          <button
-            @click="handlePassengerTab"
-            :class="['tab-btn', { active: activeTab === 'passenger' }]"
-          >
+          <TabButton @click="handlePassengerTab" :active="activeTab === 'passenger'">
             <span v-if="activeTab === 'passenger'" class="tab-content action-mode">
               <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="icon" />
               Rechercher un EcoRide
@@ -26,11 +23,11 @@
               <font-awesome-icon :icon="['fas', 'calendar']" class="icon" />
               Voir mes réservations
             </span>
-          </button>
+          </TabButton>
         </div>
 
         <div class="tab-wrapper">
-          <button @click="handleDriverTab" :class="['tab-btn', { active: activeTab === 'driver' }]">
+          <TabButton @click="handleDriverTab" :active="activeTab === 'driver'">
             <span v-if="activeTab === 'driver'" class="tab-content action-mode">
               <font-awesome-icon :icon="['fas', 'plus']" class="icon" />
               Proposer un nouvel EcoRide
@@ -39,7 +36,7 @@
               <font-awesome-icon :icon="['fas', 'car']" class="icon" />
               Voir mes EcoRides proposés
             </span>
-          </button>
+          </TabButton>
           <div v-if="activeTab === 'driver'" class="action-hint right">
             <span class="hint-text">Cliquez à nouveau pour</span>
           </div>
@@ -77,6 +74,7 @@ import DriverTripsSection from '@/components/DriverTripsSection.vue'
 import PassengerTripsSection from '@/components/PassengerTripsSection.vue'
 import ConfirmActionModal from '@/components/ConfirmActionModal.vue'
 import useDriverStatus from '@/composables/useDriverStatus'
+import TabButton from '@/components/ui/TabButton.vue'
 
 export default {
   name: 'MyTripsView',
@@ -84,6 +82,7 @@ export default {
     DriverTripsSection,
     PassengerTripsSection,
     ConfirmActionModal,
+    TabButton,
   },
   setup() {
     const router = useRouter()

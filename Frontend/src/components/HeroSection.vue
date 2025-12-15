@@ -2,17 +2,38 @@
   <div class="hero-background">
     <div class="hero-content">
       <div class="catch-phrase">
-        <h1 class="main-title">Ta Voiture, Ton Empreinte Carbone.</h1>
-        <h1 class="main-title">Et Si On <span class="eco-highlight">EcoRidait</span> Ensemble ?</h1>
+        <template v-if="isLoggedIn">
+          <h1 class="main-title">
+            Bienvenu {{ pseudo }} !<br />
+            Tu ne participes pas seulement à un covoiturage, tu participes à un
+            <span class="eco-highlight">monde meilleur</span>
+          </h1>
+        </template>
+        <template v-else>
+          <h1 class="main-title">Ta Voiture, Ton Empreinte Carbone.</h1>
+          <h1 class="main-title">
+            Et Si On <span class="eco-highlight">EcoRidait</span> Ensemble ?
+          </h1>
+        </template>
         <h2 class="mobile-catch-phrase">
           Il y aura moins d'emboutaillage et de pollution, et ca sera grâce à
           <span class="eco-highlight">Vous</span> !
         </h2>
-        <p class="subtitle">
-          Chaque trajet en solo pèse sur la planète. Avec EcoRide, partagez vos trajets, réduisez
-          vos émissions et faites des économies. Il est temps de changer la façon dont nous nous
-          déplaçons. EcoRoulons vers un avenir plus vert.
-        </p>
+        <template v-if="isLoggedIn">
+          <p class="subtitle">
+            Rouler seul, tout le monde sait faire.<br />
+            Penser aux autres (et à la planète), un peu moins.<br />
+            Toi, t'as choisi le bon camp : EcoRide. <br />
+            Ravis de t'avoir parmi nous !
+          </p>
+        </template>
+        <template v-else>
+          <p class="subtitle">
+            Chaque trajet en solo pèse sur la planète. Avec EcoRide, partagez vos trajets, réduisez
+            vos émissions et faites des économies. Il est temps de changer la façon dont nous nous
+            déplaçons. EcoRoulons vers un avenir plus vert.
+          </p>
+        </template>
       </div>
 
       <div class="bottom-section">
@@ -35,8 +56,10 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import { useScroll } from '@/composables/useScroll'
+import { useAuthStore } from '@/stores/auth'
 
 defineProps({
   initialSearchValues: {
@@ -45,6 +68,10 @@ defineProps({
   },
 })
 const emit = defineEmits(['search', 'browse-all'])
+
+const authStore = useAuthStore()
+const isLoggedIn = computed(() => authStore.isLoggedIn)
+const pseudo = computed(() => authStore.currentUser?.pseudo || '')
 
 const { scrollToId } = useScroll()
 
@@ -69,11 +96,19 @@ const onScroll = () => {
   border-radius: 0px 0px 80px 0px;
   display: flex;
   align-items: center;
-  padding: 40px 60px;
+  padding: 20px;
   min-height: calc(100vh - 50px);
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .hero-background {
+    padding: 40px 60px;
+    border-radius: 0px 0px 80px 0px;
+  }
 }
 
 .hero-background::after {
@@ -104,9 +139,15 @@ const onScroll = () => {
 
 .catch-phrase {
   margin-top: 20px;
-  max-width: 70%;
+  max-width: 100%;
   z-index: 3;
   position: relative;
+}
+
+@media (min-width: 768px) {
+  .catch-phrase {
+    max-width: 70%;
+  }
 }
 
 .main-title {
@@ -147,6 +188,8 @@ const onScroll = () => {
   padding-bottom: 20px;
   position: relative;
   z-index: 10;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .qui-sommes-nous {

@@ -4,18 +4,20 @@
     <slot />
 
     <template #footer>
-      <button type="button" class="btn btn-secondary" @click="$emit('cancel')">
+      <SecondaryButton type="button" @click="$emit('cancel')">
         <font-awesome-icon :icon="['fas', 'xmark']" /> Annuler
-      </button>
-      <button type="button" class="btn btn-primary" @click="$emit('confirm')">
+      </SecondaryButton>
+      <PrimaryButton type="button" @click="$emit('confirm')">
         <font-awesome-icon :icon="['fas', 'arrow-right']" /> Continuer
-      </button>
+      </PrimaryButton>
     </template>
   </BaseModal>
 </template>
 
 <script setup>
 import BaseModal from './BaseModal.vue'
+import SecondaryButton from '@/components/ui/SecondaryButton.vue'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
 
 defineProps({
   show: {

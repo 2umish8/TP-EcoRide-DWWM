@@ -1,22 +1,16 @@
 <template>
   <div class="profile-page">
     <div class="profile-container">
-      <!-- Profile header -->
+      <!-- Profile header with role display and become driver button -->
       <ProfileHeader :user="currentUser" />
 
-      <!-- Role selection -->
-      <RoleSelectionCard
-        v-model="selectedRoles"
-        :is-loading="isLoadingProfile"
-        @role-changed="updateRole"
-      />
-
-      <!-- Propose ride form (driver only) -->
-      <ProposeRideForm
-        v-if="selectedRoles.includes('chauffeur')"
-        :vehicles="vehicles"
-        @submit="handleProposeRide"
-      />
+      <!-- Create trip button (driver only) -->
+      <div v-if="selectedRoles.includes('chauffeur')" class="create-trip-section">
+        <PrimaryButton @click="goToCreateTrip">
+          <font-awesome-icon :icon="['fas', 'plus']" />
+          Créer un trajet
+        </PrimaryButton>
+      </div>
 
       <!-- Driver section (driver only) -->
       <div v-if="selectedRoles.includes('chauffeur')" class="driver-section">
@@ -47,22 +41,6 @@
       @submit="addVehicle"
       @close="showAddVehicle = false"
     />
-
-    <!-- Success modal -->
-    <TripSuccessModal
-      :show="showSuccessModal"
-      :trip="lastCreatedTrip"
-      @close="showSuccessModal = false"
-      @view-trip="viewCreatedTrip"
-    />
-
-    <ConfirmActionModal
-      :show="showBecomeDriverConfirm"
-      title="Devenir chauffeur"
-      message="Pour devenir chauffeur, vous devez d'abord enregistrer un véhicule. Voulez-vous lancer le processus maintenant ?"
-      @confirm="startBecomeDriver"
-      @cancel="cancelBecomeDriver"
-    />
   </div>
 </template>
 
@@ -70,19 +48,16 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { carpoolingService, authService, vehicleService } from '@/services/api'
+import { authService, vehicleService } from '@/services/api'
 import { preferencesService } from '@/services/mongoServices'
 import { useNotificationStore } from '@/stores/notification'
 
 // Components
 import ProfileHeader from '@/components/ProfileHeader.vue'
-import RoleSelectionCard from '@/components/RoleSelectionCard.vue'
-import ProposeRideForm from '@/components/ProposeRideForm.vue'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
 import VehicleListCard from '@/components/VehicleListCard.vue'
 import AddVehicleModal from '@/components/AddVehicleModal.vue'
-import TripSuccessModal from '@/components/TripSuccessModal.vue'
 import DriverPreferencesSection from '@/components/DriverPreferencesSection.vue'
-import ConfirmActionModal from '@/components/ConfirmActionModal.vue'
 
 // Stores
 const authStore = useAuthStore()
@@ -95,10 +70,7 @@ const selectedRoles = ref(['passager'])
 const vehicles = ref([])
 const showAddVehicle = ref(false)
 const isSubmitting = ref(false)
-const showSuccessModal = ref(false)
-const lastCreatedTrip = ref(null)
 const isLoadingProfile = ref(true)
-const showBecomeDriverConfirm = ref(false)
 
 let driverPreferences = ref({
   allowsSmoking: false,
@@ -171,59 +143,6 @@ const loadUserProfile = async () => {
   }
 }
 
-// Role management
-const updateRole = async (newRoles = selectedRoles.value) => {
-  const roles = Array.isArray(newRoles) ? newRoles : selectedRoles.value
-
-  if (roles.includes('chauffeur')) {
-    try {
-      const profileData = await authService.getProfile()
-      const isAlreadyDriver = profileData.user.roles && profileData.user.roles.includes('chauffeur')
-
-      if (!isAlreadyDriver) {
-        // Guided onboarding: confirm -> redirect to wizard.
-        showBecomeDriverConfirm.value = true
-        // Keep UI consistent until onboarding is complete.
-        selectedRoles.value = roles.filter((role) => role !== 'chauffeur')
-        return
-      } else {
-        if (vehicles.value.length === 0) {
-          await loadUserVehicles()
-        }
-      }
-    } catch (error) {
-      console.error('Erreur lors de la mise à jour du rôle:', error)
-
-      if (error.response?.status === 401 || error.response?.status === 403) {
-        notificationStore.showError('Session expirée. Veuillez vous reconnecter.')
-        authStore.logout()
-        window.location.href = '/login'
-        return
-      }
-
-      if (error.response?.data?.message?.includes('déjà chauffeur')) {
-        return
-      }
-
-      notificationStore.showError(
-        'Erreur lors de la mise à jour du rôle: ' +
-          (error.response?.data?.message || error.message),
-      )
-
-      selectedRoles.value = selectedRoles.value.filter((role) => role !== 'chauffeur')
-    }
-  }
-}
-
-const startBecomeDriver = async () => {
-  showBecomeDriverConfirm.value = false
-  await router.push('/become-driver')
-}
-
-const cancelBecomeDriver = () => {
-  showBecomeDriverConfirm.value = false
-}
-
 // Preferences
 const updatePreferences = async () => {
   try {
@@ -278,79 +197,9 @@ const removeVehicle = async (vehicleId) => {
   }
 }
 
-// Trip proposal
-const handleProposeRide = async (formData) => {
-  try {
-    const departureDateTime = `${formData.date}T${formData.time}:00`
-    const departureDate = new Date(departureDateTime)
-    const arrivalDate = new Date(departureDate.getTime() + 2 * 60 * 60 * 1000)
-
-    const formatDateTime = (date) => {
-      const year = date.getFullYear()
-      const month = String(date.getMonth() + 1).padStart(2, '0')
-      const day = String(date.getDate()).padStart(2, '0')
-      const hours = String(date.getHours()).padStart(2, '0')
-      const minutes = String(date.getMinutes()).padStart(2, '0')
-      const seconds = String(date.getSeconds()).padStart(2, '0')
-      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
-    }
-
-    const arrivalDateTime = formatDateTime(arrivalDate)
-
-    if (departureDate <= new Date()) {
-      notificationStore.showError('La date de départ doit être dans le futur.')
-      return
-    }
-
-    if (arrivalDate <= departureDate) {
-      notificationStore.showError('Erreur de calcul des dates. Veuillez réessayer.')
-      return
-    }
-
-    const tripData = {
-      departure_address: formData.departure,
-      arrival_address: formData.destination,
-      departure_datetime: departureDateTime,
-      arrival_datetime: arrivalDateTime,
-      price_per_passenger: parseFloat(formData.price),
-      seats_offered: parseInt(formData.seats),
-      vehicle_id: parseInt(formData.vehicleId),
-    }
-
-    await carpoolingService.createTrip(tripData)
-
-    lastCreatedTrip.value = {
-      departure: formData.departure,
-      destination: formData.destination,
-      date: formData.date,
-      time: formData.time,
-      price: formData.price,
-      seats: formData.seats,
-    }
-
-    showSuccessModal.value = true
-
-    // Reset form through component ref if needed
-  } catch (error) {
-    console.error('Erreur lors de la proposition du trajet:', error)
-    notificationStore.showError(
-      'Erreur lors de la proposition du trajet: ' +
-        (error.response?.data?.message || error.message),
-    )
-  }
-}
-
-const viewCreatedTrip = () => {
-  if (lastCreatedTrip.value) {
-    const searchParams = new URLSearchParams({
-      departure: lastCreatedTrip.value.departure,
-      destination: lastCreatedTrip.value.destination,
-      date: lastCreatedTrip.value.date,
-      showMyTrips: 'true',
-    })
-
-    window.location.href = `/search?${searchParams.toString()}`
-  }
+// Navigation
+const goToCreateTrip = () => {
+  router.push('/create-trip')
 }
 
 // Lifecycle
@@ -379,6 +228,11 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 30px;
+}
+
+.create-trip-section {
+  display: flex;
+  justify-content: center;
 }
 
 .driver-section {

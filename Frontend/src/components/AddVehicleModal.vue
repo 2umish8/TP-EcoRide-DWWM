@@ -51,13 +51,13 @@
       </div>
 
       <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" @click="closeModal">
+        <SecondaryButton type="button" @click="closeModal">
           <font-awesome-icon :icon="['fas', 'xmark']" /> Annuler
-        </button>
-        <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
+        </SecondaryButton>
+        <PrimaryButton type="submit" :disabled="isSubmitting">
           <span v-if="isSubmitting" class="loading-spinner"></span>
           {{ isSubmitting ? 'Ajout...' : 'Ajouter le véhicule' }}
-        </button>
+        </PrimaryButton>
       </div>
     </form>
   </BaseModal>
@@ -72,6 +72,8 @@ import NumberInput from './ui/NumberInput.vue'
 import LicensePlateInput from './ui/LicensePlateInput.vue'
 import { vehicleService } from '@/services/api'
 import { useNotificationStore } from '@/stores/notification'
+import SecondaryButton from '@/components/ui/SecondaryButton.vue'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
 
 defineProps({
   show: {

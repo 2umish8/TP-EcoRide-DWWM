@@ -95,37 +95,36 @@
         "
       >
         <template #default="{ item }">
-          <button
+          <PrimaryButton
             v-if="item.trip.status === 'prévu'"
             @click="handleStartTrip(item.trip.id)"
-            class="action-btn-small start"
+            size="sm"
             title="Démarrer le trajet"
           >
             ▶️
-          </button>
-          <button
+          </PrimaryButton>
+          <PrimaryButton
             v-if="item.trip.status === 'démarré'"
             @click="handleFinishTrip(item.trip.id)"
-            class="action-btn-small finish"
+            size="sm"
             title="Terminer le trajet"
           >
             <font-awesome-icon :icon="['fas', 'flag-checkered']" />
-          </button>
-          <button
+          </PrimaryButton>
+          <PrimaryButton
             v-if="['prévu', 'démarré'].includes(item.trip.status)"
             @click="handleCancelTrip(item.trip.id)"
-            class="action-btn-small cancel"
+            size="sm"
             title="Annuler le trajet"
           >
             <font-awesome-icon :icon="['fas', 'xmark']" />
-          </button>
-          <router-link
-            :to="`/carpoolings/${item.trip.id}`"
-            class="action-btn-small view"
+          </PrimaryButton>
+          <IconButton
+            @click="$router.push(`/carpoolings/${item.trip.id}`)"
             title="Voir les détails"
           >
             <font-awesome-icon :icon="['fas', 'eye']" />
-          </router-link>
+          </IconButton>
         </template>
       </TripsGrid>
     </div>
@@ -140,6 +139,8 @@ import EmptyState from './EmptyState.vue'
 import FilterBar from './FilterBar.vue'
 import TripsGrid from './TripsGrid.vue'
 import BaseStatCard from './ui/BaseStatCard.vue'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import IconButton from '@/components/ui/IconButton.vue'
 import useTrips from '@/composables/useTrips'
 import useTripsActions from '@/composables/useTripsActions'
 import { calculateCarbonSaved } from '@/utils/helpers'

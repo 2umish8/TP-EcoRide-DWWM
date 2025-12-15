@@ -96,21 +96,20 @@
       "
     >
       <template #default="{ item }">
-        <router-link
-          :to="`/carpoolings/${item.carpoolingId}`"
-          class="action-btn-small view"
+        <IconButton
+          @click="$router.push(`/carpoolings/${item.carpoolingId}`)"
           title="Voir les détails"
         >
           <font-awesome-icon :icon="['fas', 'eye']" />
-        </router-link>
-        <button
+        </IconButton>
+        <PrimaryButton
           v-if="canCancelParticipation(item)"
           @click="handleCancelParticipation(item.carpoolingId)"
-          class="action-btn-small cancel"
+          size="sm"
           title="Annuler la participation"
         >
           <font-awesome-icon :icon="['fas', 'xmark']" />
-        </button>
+        </PrimaryButton>
       </template>
     </TripsGrid>
   </div>
@@ -123,9 +122,14 @@ import EmptyState from './EmptyState.vue'
 import FilterBar from './FilterBar.vue'
 import TripsGrid from './TripsGrid.vue'
 import BaseStatCard from './ui/BaseStatCard.vue'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import IconButton from '@/components/ui/IconButton.vue'
 import useParticipations from '@/composables/useParticipations'
 import useParticipationActions from '@/composables/useParticipationActions'
+import { useRouter } from 'vue-router'
 import { getStatusEmptyMessage } from '@/utils/formatters'
+
+const router = useRouter()
 
 const {
   participations,

@@ -115,10 +115,10 @@
 
       <!-- Submit button -->
       <div class="propose-ride-actions">
-        <button type="submit" class="propose-btn" :disabled="!canSubmit || vehicles.length === 0">
+        <PrimaryButton type="submit" :disabled="!canSubmit || vehicles.length === 0">
           <font-awesome-icon :icon="['fas', 'car']" class="propose-icon" />
           Proposer un EcoRide
-        </button>
+        </PrimaryButton>
       </div>
     </form>
   </div>
@@ -126,6 +126,7 @@
 
 <script setup>
 import { ref, computed, watch, defineProps, defineEmits } from 'vue'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
 
 const props = defineProps({
   vehicles: {

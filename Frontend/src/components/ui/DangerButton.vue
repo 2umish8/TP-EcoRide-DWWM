@@ -1,5 +1,5 @@
 <template>
-  <BaseButton v-bind="$attrs" :size="props.size" :class="['btn-primary', computedClass]">
+  <BaseButton v-bind="$attrs" :size="props.size" :class="computedClass">
     <slot />
   </BaseButton>
 </template>
@@ -11,12 +11,17 @@ const computedClass = props.size && props.size !== 'md' ? `btn-${props.size}` : 
 </script>
 
 <style scoped>
-.btn-primary {
-  background: var(--color-primary);
-  color: var(--color-dark);
+.danger-btn {
+  background-color: var(--color-error);
+  color: var(--color-light);
 }
 
-.btn-primary:hover:not(:disabled) {
-  background: var(--color-primary-hover);
+.danger-btn:hover {
+  background-color: #a8505a;
+}
+
+.danger-btn[disabled] {
+  background-color: var(--color-gray);
+  color: var(--color-light);
 }
 </style>

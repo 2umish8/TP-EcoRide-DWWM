@@ -6,14 +6,16 @@
     <template #title>{{ title }}</template>
     <template #message>{{ message }}</template>
     <template #actions>
-      <button v-if="showRetry" @click="$emit('retry')" class="retry-btn">
+      <PrimaryButton v-if="showRetry" @click="$emit('retry')">
         {{ retryLabel }}
-      </button>
+      </PrimaryButton>
     </template>
   </BaseState>
 </template>
 
 <script setup>
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+
 defineProps({
   title: {
     type: String,

@@ -3,21 +3,18 @@
     <div class="filter-group">
       <label>Filtrer par statut :</label>
       <div class="status-buttons">
-        <button
-          @click="$emit('update:selectedStatus', '')"
-          :class="['status-btn', { active: selectedStatus === '' }]"
-        >
+        <TabButton @click="$emit('update:selectedStatus', '')" :active="selectedStatus === ''">
           Tous
-        </button>
-        <button
+        </TabButton>
+        <TabButton
           v-for="status in statuses"
           :key="status"
           @click="$emit('update:selectedStatus', status)"
-          :class="['status-btn', { active: selectedStatus === status }]"
+          :active="selectedStatus === status"
         >
           <font-awesome-icon v-if="statusIcons[status]" :icon="statusIcons[status]" />
           {{ formatStatusLabel(status) }}
-        </button>
+        </TabButton>
       </div>
     </div>
     <div class="filter-group">
@@ -37,6 +34,8 @@
 </template>
 
 <script setup>
+import TabButton from '@/components/ui/TabButton.vue'
+
 defineProps({
   selectedStatus: {
     type: String,

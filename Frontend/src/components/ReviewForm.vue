@@ -42,12 +42,12 @@
 
       <!-- Boutons -->
       <div class="form-actions">
-        <button type="button" @click="$emit('cancel')" class="btn-cancel" :disabled="loading">
+        <SecondaryButton type="button" @click="$emit('cancel')" :disabled="loading">
           Annuler
-        </button>
-        <button type="submit" class="btn-submit" :disabled="!isFormValid || loading">
+        </SecondaryButton>
+        <PrimaryButton type="submit" :disabled="!isFormValid || loading">
           {{ loading ? 'Envoi...' : "Publier l'avis" }}
-        </button>
+        </PrimaryButton>
       </div>
     </form>
 
@@ -64,6 +64,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { reviewService } from '@/services/mongoServices.js'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import SecondaryButton from '@/components/ui/SecondaryButton.vue'
 
 const props = defineProps({
   driverId: {
@@ -351,8 +353,3 @@ const submitReview = async () => {
   }
 }
 </style>
-
-
-
-
-

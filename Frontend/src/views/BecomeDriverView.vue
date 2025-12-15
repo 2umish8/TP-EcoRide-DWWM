@@ -150,45 +150,27 @@
               </div>
             </div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Température préférée (°C)</label>
-                <div class="temperature-control">
-                  <input
-                    v-model="preferencesData.temperaturePreference"
-                    type="range"
-                    min="16"
-                    max="26"
-                    class="temperature-slider"
-                  />
-                  <span class="temperature-value" :style="{ color: temperatureColor }"
-                    >{{ preferencesData.temperaturePreference }}°C</span
-                  >
+            <div class="form-group">
+              <label class="form-label">Préférences</label>
+              <div class="preferences-inline">
+                <div class="preference-inline-item">
+                  <div>
+                    <h5><font-awesome-icon :icon="['fas', 'smoking']" /> Tabac</h5>
+                  </div>
+                  <label class="switch-small">
+                    <input v-model="preferencesData.smokingAllowed" type="checkbox" />
+                    <span class="slider"></span>
+                  </label>
                 </div>
-              </div>
 
-              <div class="form-group">
-                <label class="form-label">Préférences</label>
-                <div class="preferences-inline">
-                  <div class="preference-inline-item">
-                    <div>
-                      <h5><font-awesome-icon :icon="['fas', 'smoking']" /> Tabac</h5>
-                    </div>
-                    <label class="switch-small">
-                      <input v-model="preferencesData.smokingAllowed" type="checkbox" />
-                      <span class="slider"></span>
-                    </label>
+                <div class="preference-inline-item">
+                  <div>
+                    <h5><font-awesome-icon :icon="['fas', 'paw']" /> Animaux</h5>
                   </div>
-
-                  <div class="preference-inline-item">
-                    <div>
-                      <h5><font-awesome-icon :icon="['fas', 'paw']" /> Animaux</h5>
-                    </div>
-                    <label class="switch-small">
-                      <input v-model="preferencesData.petsAllowed" type="checkbox" />
-                      <span class="slider"></span>
-                    </label>
-                  </div>
+                  <label class="switch-small">
+                    <input v-model="preferencesData.petsAllowed" type="checkbox" />
+                    <span class="slider"></span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -264,10 +246,6 @@
               <div class="summary-item">
                 <span class="label">Conversation:</span>
                 <span class="value">{{ preferencesData.conversationLevel }}</span>
-              </div>
-              <div class="summary-item">
-                <span class="label">Température:</span>
-                <span class="value">{{ preferencesData.temperaturePreference }}°C</span>
               </div>
               <div class="summary-item">
                 <span class="label">Tabac:</span>
@@ -453,7 +431,6 @@ export default {
     const preferencesData = ref({
       musicPreference: 'Aucune musique',
       conversationLevel: 'Silencieux',
-      temperaturePreference: 20,
       smokingAllowed: false,
       petsAllowed: false,
       customPreferences: '',
@@ -511,24 +488,6 @@ export default {
 
     const today = computed(() => {
       return new Date().toISOString().split('T')[0]
-    })
-
-    const temperatureColor = computed(() => {
-      const minTemp = 16
-      const maxTemp = 26
-      const normalized =
-        (preferencesData.value.temperaturePreference - minTemp) / (maxTemp - minTemp)
-
-      // Cool blue: rgb(100, 150, 200)
-      // Hot red: rgb(200, 120, 120)
-      const coolBlue = { r: 100, g: 150, b: 200 }
-      const hotRed = { r: 200, g: 120, b: 120 }
-
-      const r = Math.round(coolBlue.r + (hotRed.r - coolBlue.r) * normalized)
-      const g = Math.round(coolBlue.g + (hotRed.g - coolBlue.g) * normalized)
-      const b = Math.round(coolBlue.b + (hotRed.b - coolBlue.b) * normalized)
-
-      return `rgb(${r}, ${g}, ${b})`
     })
 
     // Validation étape véhicule
@@ -609,7 +568,6 @@ export default {
       conversationLevels,
       minRegistrationDate,
       today,
-      temperatureColor,
       acceptEngagement,
       isSubmitting,
       validateVehicleStep,
@@ -767,79 +725,6 @@ export default {
   margin: 0;
   cursor: pointer;
   color: var(--color-light-secondary);
-}
-
-.temperature-control {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.temperature-slider {
-  flex: 1;
-  height: 6px;
-  background: linear-gradient(to right, rgb(100, 150, 200), rgb(200, 120, 120));
-  border-radius: 3px;
-  outline: none;
-  cursor: pointer;
-  accent-color: var(--color-primary);
-}
-
-/* Range slider thumb styling */
-.temperature-slider::-webkit-slider-thumb {
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  cursor: pointer;
-  border: none;
-}
-
-.temperature-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  border: none;
-  cursor: pointer;
-}
-
-.temperature-slider::-moz-range-track {
-  background: transparent;
-  border: none;
-}
-
-.temperature-value {
-  font-weight: bold;
-  min-width: 50px;
-}
-
-.preferences-items {
-  margin: 30px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.preference-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.preference-item div h4 {
-  margin: 0 0 5px 0;
-  color: var(--color-light);
-  font-size: 1rem;
-}
-
-.preference-item div p {
-  margin: 0;
-  color: var(--color-gray);
-  font-size: 0.9rem;
 }
 
 .preferences-inline {

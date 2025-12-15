@@ -17,23 +17,22 @@
       </p>
 
       <div class="no-results-actions">
-        <button
-          v-if="nextAvailableDate"
-          class="btn-primary"
-          @click="$emit('search-alternative-date')"
-        >
+        <PrimaryButton v-if="nextAvailableDate" @click="$emit('search-alternative-date')">
           Voir ces trajets
-        </button>
-        <button v-else class="btn-primary" @click="$emit('create-alert')">Créer une alerte</button>
-        <button class="btn-secondary" @click="$emit('new-search')">
+        </PrimaryButton>
+        <PrimaryButton v-else @click="$emit('create-alert')">Créer une alerte</PrimaryButton>
+        <SecondaryButton @click="$emit('new-search')">
           {{ nextAvailableDate ? 'Nouvelle recherche' : 'Nouvelle recherche' }}
-        </button>
+        </SecondaryButton>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import SecondaryButton from '@/components/ui/SecondaryButton.vue'
+
 defineEmits(['search-alternative-date', 'create-alert', 'new-search'])
 
 defineProps({
@@ -145,8 +144,3 @@ const formatDate = (dateString) => {
   }
 }
 </style>
-
-
-
-
-

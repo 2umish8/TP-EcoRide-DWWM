@@ -1,7 +1,9 @@
 <script setup>
+import { useRoute } from 'vue-router'
 import NavButton from '../ui/NavButton.vue'
 
 const isDev = import.meta.env.MODE !== 'production'
+const route = useRoute()
 
 defineProps({
   isLoggedIn: {
@@ -10,12 +12,19 @@ defineProps({
   },
 })
 
-defineEmits(['navigate'])
+const emit = defineEmits(['navigate'])
+
+const handleAccueilClick = () => {
+  emit('navigate')
+  if (route.path === '/') {
+    window.location.reload()
+  }
+}
 </script>
 
 <template>
   <div class="navbar-nav-left">
-    <NavButton to="/" @click="$emit('navigate')">
+    <NavButton to="/" @click="handleAccueilClick">
       <font-awesome-icon :icon="['fas', 'house']" class="nav-icon" />
       Accueil
     </NavButton>
@@ -54,8 +63,3 @@ defineEmits(['navigate'])
   }
 }
 </style>
-
-
-
-
-

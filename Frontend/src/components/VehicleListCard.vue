@@ -2,10 +2,10 @@
   <div class="vehicles-card">
     <div class="card-header">
       <h3 class="card-title">Mes Véhicules</h3>
-      <button @click="showAddVehicleModal = true" class="add-btn">
+      <PrimaryButton @click="showAddVehicleModal = true" size="sm">
         <font-awesome-icon :icon="['fas', 'plus']" class="add-icon" />
         Ajouter un véhicule
-      </button>
+      </PrimaryButton>
     </div>
 
     <!-- Add vehicle modal -->
@@ -34,9 +34,9 @@
             </span>
           </p>
         </div>
-        <button @click="removeVehicle(vehicle.id)" class="remove-btn">
+        <IconButton @click="removeVehicle(vehicle.id)" danger>
           <font-awesome-icon :icon="['fas', 'trash']" />
-        </button>
+        </IconButton>
       </div>
     </div>
   </div>
@@ -48,6 +48,8 @@ import { defineProps } from 'vue'
 import AddVehicleModal from './AddVehicleModal.vue'
 import { vehicleService } from '@/services/api'
 import { useNotificationStore } from '@/stores/notification'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import IconButton from '@/components/ui/IconButton.vue'
 
 defineProps({
   vehicles: {

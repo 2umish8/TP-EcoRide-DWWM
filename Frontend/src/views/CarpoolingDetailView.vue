@@ -2,7 +2,7 @@
   <div class="carpooling-detail">
     <!-- En-tête avec bouton retour -->
     <div class="header">
-      <button @click="$router.go(-1)" class="back-btn">← Retour</button>
+      <NavButton @click="$router.go(-1)">← Retour</NavButton>
       <h1>Détail du covoiturage</h1>
     </div>
 
@@ -14,7 +14,7 @@
 
     <div v-else-if="error" class="error">
       <p><font-awesome-icon :icon="['fas', 'xmark']" /> {{ error }}</p>
-      <button @click="$router.go(-1)" class="retry-btn">Retourner à la recherche</button>
+      <SecondaryButton @click="$router.go(-1)">Retourner à la recherche</SecondaryButton>
     </div>
 
     <!-- Contenu principal -->
@@ -175,8 +175,7 @@
 
       <!-- Actions -->
       <div class="actions">
-        <button
-          class="participate-btn"
+        <PrimaryButton
           :disabled="carpooling.seats_remaining <= 0 || isParticipating"
           @click="initiateParticipation"
         >
@@ -189,13 +188,13 @@
             </template>
             <template v-else> <font-awesome-icon :icon="['fas', 'xmark']" /> Complet </template>
           </span>
-        </button>
-        <button class="details-btn" @click="showMoreDetails = !showMoreDetails">
+        </PrimaryButton>
+        <SecondaryButton @click="showMoreDetails = !showMoreDetails">
           <span v-if="showMoreDetails"
             ><font-awesome-icon :icon="['fas', 'file-lines']" /> Moins de détails</span
           >
           <span v-else><font-awesome-icon :icon="['fas', 'file-lines']" /> Plus de détails</span>
-        </button>
+        </SecondaryButton>
       </div>
 
       <!-- Détails supplémentaires (expandable) -->
@@ -280,10 +279,10 @@
         </div>
 
         <div class="modal-actions">
-          <button class="cancel-btn" @click="closeConfirmationModal" :disabled="isConfirming">
+          <SecondaryButton @click="closeConfirmationModal" :disabled="isConfirming">
             <font-awesome-icon :icon="['fas', 'xmark']" /> Annuler
-          </button>
-          <button class="confirm-btn" @click="confirmParticipation" :disabled="isConfirming">
+          </SecondaryButton>
+          <PrimaryButton @click="confirmParticipation" :disabled="isConfirming">
             <span v-if="isConfirming"
               ><font-awesome-icon :icon="['fas', 'hourglass-half']" /> Confirmation...</span
             >
@@ -291,14 +290,14 @@
               ><font-awesome-icon :icon="['fas', 'circle-check']" /> Confirmer ma
               participation</span
             >
-          </button>
+          </PrimaryButton>
         </div>
       </div>
     </div>
 
     <div v-else class="not-found">
       <p><font-awesome-icon :icon="['fas', 'magnifying-glass']" /> Aucun covoiturage trouvé.</p>
-      <button @click="$router.push('/search')" class="search-btn">Retourner à la recherche</button>
+      <PrimaryButton @click="$router.push('/search')">Retourner à la recherche</PrimaryButton>
     </div>
   </div>
 </template>
@@ -309,6 +308,9 @@ import { useRoute, useRouter } from 'vue-router'
 import api, { participationService } from '@/services/api.js'
 import IconCredit from '@/components/icons/IconCredit.vue'
 import ClickableAvatar from '@/components/ClickableAvatar.vue'
+import SecondaryButton from '@/components/ui/SecondaryButton.vue'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import NavButton from '@/components/ui/NavButton.vue'
 
 const route = useRoute()
 const router = useRouter()

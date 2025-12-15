@@ -3,12 +3,14 @@
     <div class="error-state">
       <h3>Erreur</h3>
       <p>{{ message }}</p>
-      <button @click="$emit('retry')" class="retry-btn">Réessayer</button>
+      <PrimaryButton @click="$emit('retry')">Réessayer</PrimaryButton>
     </div>
   </div>
 </template>
 
 <script setup>
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+
 defineProps({
   message: {
     type: String,
@@ -58,8 +60,3 @@ defineEmits(['retry'])
   transform: translateY(-1px);
 }
 </style>
-
-
-
-
-

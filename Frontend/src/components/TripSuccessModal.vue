@@ -33,11 +33,11 @@
     </div>
 
     <template #footer>
-      <button @click="$emit('view-trip')" class="view-trip-btn">
+      <PrimaryButton @click="$emit('view-trip')">
         <font-awesome-icon :icon="['fas', 'eye']" class="btn-icon" />
         Voir mon trajet
-      </button>
-      <button @click="$emit('close')" class="dismiss-btn">Non merci</button>
+      </PrimaryButton>
+      <SecondaryButton @click="$emit('close')">Non merci</SecondaryButton>
     </template>
   </BaseModal>
 </template>
@@ -45,6 +45,8 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue'
 import BaseModal from './BaseModal.vue'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import SecondaryButton from '@/components/ui/SecondaryButton.vue'
 
 defineProps({
   show: {

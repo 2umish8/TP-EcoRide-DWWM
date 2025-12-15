@@ -38,15 +38,10 @@
                 required
                 :disabled="isLoading"
               />
-              <button
-                type="button"
-                @click="togglePassword"
-                class="password-toggle"
-                :disabled="isLoading"
-              >
+              <IconButton type="button" @click="togglePassword" :disabled="isLoading">
                 <font-awesome-icon v-if="showPassword" :icon="['fas', 'eye']" />
                 <font-awesome-icon v-else :icon="['fas', 'eye-slash']" />
-              </button>
+              </IconButton>
             </div>
           </div>
 
@@ -72,7 +67,7 @@
           </div>
 
           <!-- Bouton de connexion -->
-          <button type="submit" class="login-btn" :disabled="isLoading || !isFormValid">
+          <PrimaryButton type="submit" :disabled="isLoading || !isFormValid">
             <font-awesome-icon
               v-if="isLoading"
               :icon="['fas', 'spinner']"
@@ -80,13 +75,13 @@
               class="loading-spinner"
             />
             <span v-else>Se connecter</span>
-          </button>
+          </PrimaryButton>
         </form>
 
         <!-- Lien vers inscription -->
         <div class="signup-link">
           <p>Vous n'avez pas encore de compte ?</p>
-          <router-link to="/register" class="signup-btn"> Créer un compte </router-link>
+          <InlineLink to="/register">Créer un compte</InlineLink>
         </div>
       </div>
     </div>
@@ -98,6 +93,9 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { authService } from '@/services/api'
+import PrimaryButton from '@/components/ui/PrimaryButton.vue'
+import IconButton from '@/components/ui/IconButton.vue'
+import InlineLink from '@/components/ui/InlineLink.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -270,23 +268,18 @@ const handleLogin = async () => {
 
 .password-input-group {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.password-toggle {
+.password-input-group .form-input {
+  flex: 1;
+  padding-right: 45px;
+}
+
+.password-input-group :deep(.icon-btn) {
   position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: background 0.3s ease;
-}
-
-.password-toggle:hover {
-  background: rgba(255, 255, 255, 0.15);
+  right: 8px;
 }
 
 .form-options {
@@ -333,34 +326,6 @@ const handleLogin = async () => {
   font-size: 0.9rem;
 }
 
-.login-btn {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  padding: 16px 24px;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.login-btn:hover:not(:disabled) {
-  background: var(--bs-primary);
-  color: var(--color-light);
-  transform: translateY(-1px);
-}
-
-.login-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
 .signup-link {
   text-align: center;
   margin-top: 20px;
@@ -369,20 +334,6 @@ const handleLogin = async () => {
 .signup-link p {
   color: var(--color-light-secondary);
   margin-bottom: 12px;
-}
-
-.signup-btn {
-  color: var(--color-primary);
-  text-decoration: none;
-  font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-.signup-btn:hover {
-  background: var(--bs-primary);
-  color: var(--color-light);
 }
 
 /* Responsive */
@@ -404,8 +355,3 @@ const handleLogin = async () => {
   }
 }
 </style>
-
-
-
-
-

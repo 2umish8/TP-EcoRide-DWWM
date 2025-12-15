@@ -157,6 +157,8 @@ onBeforeUnmount(() => document.removeEventListener('click', onClickOutside))
 .autocomplete-input {
   position: relative;
   flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .suggestions {
@@ -173,6 +175,8 @@ onBeforeUnmount(() => document.removeEventListener('click', onClickOutside))
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
   padding: 6px 0;
   list-style: none;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .suggestion {
