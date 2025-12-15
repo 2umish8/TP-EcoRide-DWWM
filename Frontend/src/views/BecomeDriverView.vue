@@ -161,39 +161,34 @@
                     max="26"
                     class="temperature-slider"
                   />
-                  <span class="temperature-value"
+                  <span class="temperature-value" :style="{ color: temperatureColor }"
                     >{{ preferencesData.temperaturePreference }}°C</span
                   >
                 </div>
               </div>
-            </div>
 
-            <div class="preferences-grid">
-              <div class="preference-card">
-                <div class="preference-icon"><font-awesome-icon :icon="['fas', 'smoking']" /></div>
-                <div class="preference-content">
-                  <h4>Tabac</h4>
-                  <label class="switch">
-                    <input v-model="preferencesData.smokingAllowed" type="checkbox" />
-                    <span class="slider"></span>
-                  </label>
-                  <p>
-                    {{
-                      preferencesData.smokingAllowed ? 'Fumeur accepté' : 'Non-fumeur uniquement'
-                    }}
-                  </p>
-                </div>
-              </div>
+              <div class="form-group">
+                <label class="form-label">Préférences</label>
+                <div class="preferences-inline">
+                  <div class="preference-inline-item">
+                    <div>
+                      <h5><font-awesome-icon :icon="['fas', 'smoking']" /> Tabac</h5>
+                    </div>
+                    <label class="switch-small">
+                      <input v-model="preferencesData.smokingAllowed" type="checkbox" />
+                      <span class="slider"></span>
+                    </label>
+                  </div>
 
-              <div class="preference-card">
-                <div class="preference-icon"><font-awesome-icon :icon="['fas', 'paw']" /></div>
-                <div class="preference-content">
-                  <h4>Animaux</h4>
-                  <label class="switch">
-                    <input v-model="preferencesData.petsAllowed" type="checkbox" />
-                    <span class="slider"></span>
-                  </label>
-                  <p>{{ preferencesData.petsAllowed ? 'Animaux acceptés' : "Pas d'animaux" }}</p>
+                  <div class="preference-inline-item">
+                    <div>
+                      <h5><font-awesome-icon :icon="['fas', 'paw']" /> Animaux</h5>
+                    </div>
+                    <label class="switch-small">
+                      <input v-model="preferencesData.petsAllowed" type="checkbox" />
+                      <span class="slider"></span>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -518,6 +513,24 @@ export default {
       return new Date().toISOString().split('T')[0]
     })
 
+    const temperatureColor = computed(() => {
+      const minTemp = 16
+      const maxTemp = 26
+      const normalized =
+        (preferencesData.value.temperaturePreference - minTemp) / (maxTemp - minTemp)
+
+      // Cool blue: rgb(100, 150, 200)
+      // Hot red: rgb(200, 120, 120)
+      const coolBlue = { r: 100, g: 150, b: 200 }
+      const hotRed = { r: 200, g: 120, b: 120 }
+
+      const r = Math.round(coolBlue.r + (hotRed.r - coolBlue.r) * normalized)
+      const g = Math.round(coolBlue.g + (hotRed.g - coolBlue.g) * normalized)
+      const b = Math.round(coolBlue.b + (hotRed.b - coolBlue.b) * normalized)
+
+      return `rgb(${r}, ${g}, ${b})`
+    })
+
     // Validation étape véhicule
     const validateVehicleStep = () => {
       if (
@@ -596,6 +609,7 @@ export default {
       conversationLevels,
       minRegistrationDate,
       today,
+      temperatureColor,
       acceptEngagement,
       isSubmitting,
       validateVehicleStep,
@@ -715,6 +729,11 @@ export default {
 
 .form-group {
   margin-bottom: 20px;
+  width: 100%;
+}
+
+:deep(textarea) {
+  width: 100%;
 }
 
 .form-label {
@@ -759,7 +778,7 @@ export default {
 .temperature-slider {
   flex: 1;
   height: 6px;
-  background: rgba(255, 255, 255, 0.15);
+  background: linear-gradient(to right, rgb(100, 150, 200), rgb(200, 120, 120));
   border-radius: 3px;
   outline: none;
   cursor: pointer;
@@ -768,12 +787,21 @@ export default {
 
 /* Range slider thumb styling */
 .temperature-slider::-webkit-slider-thumb {
-  accent-color: var(--color-primary);
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  border: none;
 }
 
 .temperature-slider::-moz-range-thumb {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: none;
   cursor: pointer;
 }
 
@@ -784,33 +812,53 @@ export default {
 
 .temperature-value {
   font-weight: bold;
-  color: var(--color-success);
   min-width: 50px;
 }
 
-.preferences-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+.preferences-items {
   margin: 30px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.preference-card {
-  background: var(--color-dark-tertiary);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
+.preference-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.preference-icon {
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-.preference-content h4 {
-  margin: 0 0 15px 0;
+.preference-item div h4 {
+  margin: 0 0 5px 0;
   color: var(--color-light);
+  font-size: 1rem;
+}
+
+.preference-item div p {
+  margin: 0;
+  color: var(--color-gray);
+  font-size: 0.9rem;
+}
+
+.preferences-inline {
+  display: flex;
+  gap: 20px;
+}
+
+.preference-inline-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.preference-inline-item div h5 {
+  margin: 0;
+  color: var(--color-light);
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .switch {
@@ -827,6 +875,19 @@ export default {
   height: 0;
 }
 
+.switch-small {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch-small input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
 .slider {
   position: absolute;
   cursor: pointer;
@@ -834,9 +895,10 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: var(--color-error);
   transition: 0.4s;
   border-radius: 34px;
+  opacity: 0.5;
 }
 
 .slider:before {
@@ -851,12 +913,47 @@ export default {
   border-radius: 50%;
 }
 
+.switch-small .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-error);
+  transition: 0.4s;
+  border-radius: 24px;
+  opacity: 0.5;
+}
+
+.switch-small .slider:before {
+  position: absolute;
+  content: '';
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
 input:checked + .slider {
   background-color: var(--color-success);
+  opacity: 1;
 }
 
 input:checked + .slider:before {
   transform: translateX(26px);
+}
+
+.switch-small input:checked + .slider {
+  background-color: var(--color-success);
+  opacity: 1;
+}
+
+.switch-small input:checked + .slider:before {
+  transform: translateX(18px);
 }
 
 .summary-section {
@@ -983,20 +1080,8 @@ input:checked + .slider:before {
   text-decoration: none;
 }
 
-:deep(.primary-button) {
-  color: #000 !important;
-}
-
-:deep(.primary-button svg) {
-  color: #000 !important;
-}
-
 @media (max-width: 768px) {
   .form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .preferences-grid {
     grid-template-columns: 1fr;
   }
 

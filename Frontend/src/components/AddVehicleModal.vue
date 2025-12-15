@@ -1,260 +1,281 @@
 <template>
-  <BaseModal :show="show" title="Ajouter un véhicule" @close="handleClose">
-    <form @submit.prevent="handleSubmit" class="vehicle-form">
+  <BaseModal :show="show" title="Ajouter un véhicule" @close="closeModal">
+    <form @submit.prevent="submitVehicle" class="vehicle-form">
       <div class="form-group">
-        <label class="form-label">Plaque d'immatriculation</label>
-        <input
-          type="text"
-          v-model="formData.plate_number"
-          class="form-input"
-          placeholder="AA-123-BB"
+        <label for="brand">Marque</label>
+        <AutoCompleteInput
+          id="brand"
+          v-model="vehicleForm.brand_name"
+          :suggestions="carBrandSuggestions"
+          placeholder="Ex: Renault"
           required
         />
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Marque</label>
-          <input
-            type="text"
-            v-model="formData.brand"
-            class="form-input"
-            placeholder="Peugeot"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Modèle</label>
-          <input
-            type="text"
-            v-model="formData.model"
-            class="form-input"
-            placeholder="308"
-            required
-          />
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Nombre de places</label>
-          <select v-model="formData.seats_available" class="form-input" required>
-            <option value="">Sélectionner</option>
-            <option value="1">1 place</option>
-            <option value="2">2 places</option>
-            <option value="3">3 places</option>
-            <option value="4">4 places</option>
-            <option value="5">5 places</option>
-            <option value="6">6 places</option>
-            <option value="7">7 places</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Couleur</label>
-          <input
-            type="text"
-            v-model="formData.color"
-            class="form-input"
-            placeholder="Blanc"
-            required
-          />
-        </div>
+      <div class="form-group">
+        <label for="model">Modèle</label>
+        <TextInput id="model" v-model="vehicleForm.model" placeholder="Ex: Clio" required />
       </div>
 
       <div class="form-group">
-        <label class="checkbox-label">
-          <input type="checkbox" v-model="formData.is_electric" />
-          <span><font-awesome-icon :icon="['fas', 'bolt']" /> Véhicule électrique</span>
-        </label>
+        <label for="plate">Plaque d'immatriculation</label>
+        <LicensePlateInput
+          id="plate"
+          v-model="vehicleForm.plate_number"
+          placeholder="AB-123-CD"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="seats">Nombre de places disponibles</label>
+        <NumberInput
+          id="seats"
+          v-model="vehicleForm.seats_available"
+          :min="1"
+          :max="8"
+          placeholder="0"
+          unit="places"
+          required
+        />
+      </div>
+
+      <div class="form-group checkbox-group">
+        <input
+          id="electric"
+          v-model="vehicleForm.is_electric"
+          type="checkbox"
+          class="checkbox-input"
+        />
+        <label for="electric" class="checkbox-label">Véhicule électrique</label>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" @click="closeModal">
+          <font-awesome-icon :icon="['fas', 'xmark']" /> Annuler
+        </button>
+        <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
+          <span v-if="isSubmitting" class="loading-spinner"></span>
+          {{ isSubmitting ? 'Ajout...' : 'Ajouter le véhicule' }}
+        </button>
       </div>
     </form>
-
-    <template #footer>
-      <button type="button" @click="handleClose" class="cancel-btn">Annuler</button>
-      <button type="submit" class="submit-btn" :disabled="isSubmitting" @click="handleSubmit">
-        <font-awesome-icon v-if="isSubmitting" :icon="['fas', 'spinner']" class="spinner-icon" />
-        <span v-else>Ajouter</span>
-      </button>
-    </template>
   </BaseModal>
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref } from 'vue'
 import BaseModal from './BaseModal.vue'
+import AutoCompleteInput from './ui/AutoCompleteInput.vue'
+import TextInput from './ui/TextInput.vue'
+import NumberInput from './ui/NumberInput.vue'
+import LicensePlateInput from './ui/LicensePlateInput.vue'
+import { vehicleService } from '@/services/api'
+import { useNotificationStore } from '@/stores/notification'
 
 defineProps({
   show: {
     type: Boolean,
     required: true,
   },
-  isSubmitting: {
-    type: Boolean,
-    default: false,
-  },
 })
 
-const emit = defineEmits(['submit', 'close'])
+const emit = defineEmits(['close', 'vehicle-added'])
 
-const formData = ref({
-  plate_number: '',
-  brand: '',
+const notificationStore = useNotificationStore()
+const isSubmitting = ref(false)
+
+// Liste des marques de voitures populaires
+const carBrandSuggestions = [
+  'Renault',
+  'Peugeot',
+  'Citroën',
+  'Volkswagen',
+  'Audi',
+  'BMW',
+  'Mercedes-Benz',
+  'Toyota',
+  'Honda',
+  'Nissan',
+  'Hyundai',
+  'Kia',
+  'Mazda',
+  'Seat',
+  'Skoda',
+  'Volvo',
+  'Ford',
+  'Fiat',
+  'Alfa Romeo',
+  'Lancia',
+  'Chevrolet',
+  'Jeep',
+  'Tesla',
+  'Porsche',
+  'Ferrari',
+  'Lamborghini',
+  'Bentley',
+  'Rolls-Royce',
+]
+
+const vehicleForm = ref({
+  brand_name: '',
   model: '',
+  plate_number: '',
   seats_available: '',
-  color: '',
   is_electric: false,
 })
 
-const handleSubmit = () => {
-  emit('submit', {
-    plate_number: formData.value.plate_number,
-    brand_name: formData.value.brand,
-    model: formData.value.model,
-    seats_available: parseInt(formData.value.seats_available),
-    color_name: formData.value.color,
-    is_electric: formData.value.is_electric || false,
-  })
-  resetForm()
-}
-
-const handleClose = () => {
-  resetForm()
-  emit('close')
-}
-
 const resetForm = () => {
-  formData.value = {
-    plate_number: '',
-    brand: '',
+  vehicleForm.value = {
+    brand_name: '',
     model: '',
+    plate_number: '',
     seats_available: '',
-    color: '',
     is_electric: false,
   }
 }
 
-defineExpose({
-  resetForm,
-})
+const closeModal = () => {
+  resetForm()
+  emit('close')
+}
+
+const submitVehicle = async () => {
+  try {
+    isSubmitting.value = true
+
+    // Validation
+    if (
+      !vehicleForm.value.brand_name ||
+      !vehicleForm.value.model ||
+      !vehicleForm.value.plate_number ||
+      !vehicleForm.value.seats_available
+    ) {
+      notificationStore.showError('Veuillez remplir tous les champs obligatoires')
+      return
+    }
+
+    const submitData = {
+      ...vehicleForm.value,
+      seats_available: parseInt(vehicleForm.value.seats_available),
+    }
+
+    await vehicleService.addVehicle(submitData)
+
+    notificationStore.showInfo('Véhicule ajouté avec succès !', 'Succès')
+    resetForm()
+    emit('vehicle-added')
+    emit('close')
+  } catch (error) {
+    console.error("Erreur lors de l'ajout du véhicule:", error)
+    notificationStore.showError(
+      "Erreur lors de l'ajout du véhicule : " + (error.response?.data?.message || error.message),
+    )
+  } finally {
+    isSubmitting.value = false
+  }
+}
 </script>
 
 <style scoped>
 .vehicle-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1.5rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
-.form-label {
-  color: var(--color-light);
+.form-group label {
   font-weight: 600;
+  color: var(--color-light-secondary);
   font-size: 0.9rem;
 }
 
-.form-input {
-  padding: 12px 16px;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
-  background: var(--color-dark-secondary);
-  color: var(--color-light);
-  font-size: 0.95rem;
-  width: 100%;
-  transition: all 0.3s ease;
+.checkbox-group {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.form-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(143, 218, 179, 0.18);
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
+.checkbox-input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
 }
 
 .checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--color-light);
+  margin: 0;
   cursor: pointer;
-  user-select: none;
+  font-weight: 500;
+  color: var(--color-light-secondary);
 }
 
-.checkbox-label input[type='checkbox'] {
-  accent-color: var(--color-primary);
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
-}
-
-.checkbox-label span {
+.modal-actions {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.cancel-btn {
-  background: var(--color-gray);
-  color: white;
+.btn {
   border: none;
-  padding: 12px 24px;
   border-radius: 10px;
-  font-weight: 600;
+  padding: 12px 18px;
   cursor: pointer;
+  font-weight: 600;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
 }
 
-.cancel-btn:hover {
-  opacity: 0.8;
-  transform: translateY(-1px);
+.btn-secondary {
+  background: var(--color-dark-tertiary);
+  color: var(--color-light-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.submit-btn {
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-dark-tertiary);
+  border-color: var(--color-gray);
+}
+
+.btn-primary {
   background: var(--color-primary);
   color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
-.submit-btn:hover:not(:disabled) {
+.btn-primary:hover:not(:disabled) {
   background: var(--color-primary-hover);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
-.submit-btn:disabled {
+.btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.spinner-icon {
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
   to {
     transform: rotate(360deg);
-  }
-}
-
-@media (max-width: 768px) {
-  .form-row {
-    grid-template-columns: 1fr;
   }
 }
 </style>

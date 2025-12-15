@@ -126,8 +126,8 @@ export default {
       showBecomeDriverConfirm.value = false
     }
 
-    onMounted(() => {
-      checkDriverStatus()
+    onMounted(async () => {
+      await checkDriverStatus()
       if (activeTab.value === 'passenger') {
         passengerSection.value?.loadParticipations()
       } else {

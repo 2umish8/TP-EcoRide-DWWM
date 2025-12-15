@@ -2,11 +2,18 @@
   <div class="vehicles-card">
     <div class="card-header">
       <h3 class="card-title">Mes Véhicules</h3>
-      <button @click="$emit('add-vehicle')" class="add-btn">
+      <button @click="showAddVehicleModal = true" class="add-btn">
         <font-awesome-icon :icon="['fas', 'plus']" class="add-icon" />
         Ajouter un véhicule
       </button>
     </div>
+
+    <!-- Add vehicle modal -->
+    <AddVehicleModal
+      :show="showAddVehicleModal"
+      @close="showAddVehicleModal = false"
+      @vehicle-added="handleVehicleAdded"
+    />
 
     <!-- Empty state -->
     <div v-if="vehicles.length === 0" class="empty-state">
@@ -27,7 +34,7 @@
             </span>
           </p>
         </div>
-        <button @click="$emit('remove-vehicle', vehicle.id)" class="remove-btn">
+        <button @click="removeVehicle(vehicle.id)" class="remove-btn">
           <font-awesome-icon :icon="['fas', 'trash']" />
         </button>
       </div>
@@ -36,7 +43,11 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { ref } from 'vue'
+import { defineProps } from 'vue'
+import AddVehicleModal from './AddVehicleModal.vue'
+import { vehicleService } from '@/services/api'
+import { useNotificationStore } from '@/stores/notification'
 
 defineProps({
   vehicles: {
@@ -45,7 +56,28 @@ defineProps({
   },
 })
 
-defineEmits(['add-vehicle', 'remove-vehicle'])
+const emit = defineEmits(['vehicle-removed', 'vehicle-added'])
+const notificationStore = useNotificationStore()
+const showAddVehicleModal = ref(false)
+
+const removeVehicle = async (vehicleId) => {
+  try {
+    await vehicleService.removeVehicle(vehicleId)
+    notificationStore.showInfo('Véhicule supprimé avec succès', 'Succès')
+    emit('vehicle-removed', vehicleId)
+  } catch (error) {
+    console.error('Erreur lors de la suppression du véhicule:', error)
+    notificationStore.showError(
+      'Erreur lors de la suppression du véhicule : ' +
+        (error.response?.data?.message || error.message),
+    )
+  }
+}
+
+const handleVehicleAdded = () => {
+  showAddVehicleModal.value = false
+  emit('vehicle-added')
+}
 </script>
 
 <style scoped>

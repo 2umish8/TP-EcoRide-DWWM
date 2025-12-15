@@ -9,6 +9,13 @@
       @cancel="cancelBecomeDriver"
     />
 
+    <!-- Add vehicle modal -->
+    <AddVehicleModal
+      :show="showAddVehicleModal"
+      @close="showAddVehicleModal = false"
+      @vehicle-added="handleVehicleAdded"
+    />
+
     <!-- Header -->
     <div class="create-trip-header">
       <h1 class="page-title">Proposer un trajet</h1>
@@ -110,22 +117,24 @@
         <div class="form-section">
           <h3 class="section-title"><font-awesome-icon :icon="['fas', 'car']" /> Véhicule</h3>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="vehicle-model">Modèle du véhicule (optionnel)</label>
-              <TextInput
-                id="vehicle-model"
-                v-model="tripData.model"
-                placeholder="Ex: Renault Clio"
-              />
-            </div>
-            <div class="form-group">
-              <label for="vehicle-plate">Plaque d'immatriculation (optionnel)</label>
-              <TextInput
-                id="vehicle-plate"
-                v-model="tripData.plate_number"
-                placeholder="Ex: AB-123-CD"
-              />
+          <div class="form-group">
+            <label for="vehicle-select">Sélectionner un véhicule</label>
+            <div class="vehicle-select-wrapper">
+              <SelectInput id="vehicle-select" v-model="selectedVehicleId" class="vehicle-select">
+                <option value="">-- Sélectionner un véhicule --</option>
+                <option v-for="vehicle in userVehicles" :key="vehicle.id" :value="vehicle.id">
+                  {{ vehicle.brand_name || vehicle.brand }} {{ vehicle.model }} -
+                  {{ vehicle.plate_number }}
+                </option>
+              </SelectInput>
+              <button
+                type="button"
+                @click="showAddVehicleModal = true"
+                class="add-vehicle-btn"
+                title="Ajouter un nouveau véhicule"
+              >
+                <font-awesome-icon :icon="['fas', 'plus']" /> Ajouter un véhicule
+              </button>
             </div>
           </div>
         </div>
@@ -151,12 +160,13 @@
 <script>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { carpoolingService } from '@/services/api'
+import { carpoolingService, vehicleService } from '@/services/api'
 import { useNotificationStore } from '@/stores/notification'
 import useDriverStatus from '@/composables/useDriverStatus'
 import ConfirmActionModal from '@/components/ConfirmActionModal.vue'
+import AddVehicleModal from '@/components/AddVehicleModal.vue'
 import CityAutocomplete from '@/components/ui/CityAutocomplete.vue'
-import TextInput from '@/components/ui/TextInput.vue'
+import SelectInput from '@/components/ui/SelectInput.vue'
 import DateTimeInput from '@/components/ui/DateTimeInput.vue'
 import DurationInput from '@/components/ui/DurationInput.vue'
 import NumberInput from '@/components/ui/NumberInput.vue'
@@ -169,8 +179,9 @@ export default {
   name: 'CreateTripView',
   components: {
     ConfirmActionModal,
+    AddVehicleModal,
     CityAutocomplete,
-    TextInput,
+    SelectInput,
     DateTimeInput,
     DurationInput,
     NumberInput,
@@ -184,7 +195,12 @@ export default {
     const router = useRouter()
     const loading = ref(false)
     const showBecomeDriverConfirm = ref(false)
+    const showAddVehicleModal = ref(false)
     const { isDriver, checkDriverStatus } = useDriverStatus()
+
+    // Véhicules de l'utilisateur
+    const userVehicles = ref([])
+    const selectedVehicleId = ref('')
 
     // Données du formulaire
     const tripData = ref({
@@ -206,6 +222,29 @@ export default {
     const today = computed(() => {
       return new Date().toISOString().split('T')[0]
     })
+
+    // Charger les véhicules de l'utilisateur
+    const loadUserVehicles = async () => {
+      try {
+        const response = await vehicleService.getUserVehicles()
+        if (import.meta.env.DEV) {
+          console.log('API Response for vehicles:', response)
+        }
+
+        // Handle different response structures
+        const vehiclesArray = Array.isArray(response)
+          ? response
+          : response.data || response.vehicles || []
+        userVehicles.value = vehiclesArray
+
+        if (import.meta.env.DEV) {
+          console.log('Loaded vehicles:', userVehicles.value)
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des véhicules:', error)
+        notificationStore.showError('Impossible de charger vos véhicules')
+      }
+    }
 
     // Calcul de la date/heure d'arrivée basée sur la durée
     const calculateArrivalDateTime = () => {
@@ -243,19 +282,24 @@ export default {
           return
         }
 
+        if (!selectedVehicleId.value) {
+          notificationStore.showError('Veuillez sélectionner un véhicule')
+          return
+        }
+
         // Conversion des types
         const submitData = {
           ...tripData.value,
           initial_seats_offered: parseInt(tripData.value.initial_seats_offered),
           price_per_passenger: parseInt(tripData.value.price_per_passenger),
           seats_remaining: parseInt(tripData.value.initial_seats_offered),
+          vehicle_id: selectedVehicleId.value,
         }
 
         // Appel API
         await carpoolingService.createTrip(submitData)
 
         // Redirection vers la liste des trajets
-        // Utilisation correcte du store de notifications
         notificationStore.showInfo('Trajet créé avec succès !', 'Succès')
         router.push('/my-trips?tab=driver')
       } catch (error) {
@@ -269,6 +313,10 @@ export default {
       }
     }
 
+    const handleVehicleAdded = () => {
+      loadUserVehicles()
+    }
+
     const startBecomeDriver = async () => {
       showBecomeDriverConfirm.value = false
       await router.push('/become-driver')
@@ -280,14 +328,17 @@ export default {
     }
 
     // Initialisation
-    onMounted(() => {
+    onMounted(async () => {
       // Vérifier si l'utilisateur est chauffeur
-      checkDriverStatus()
+      await checkDriverStatus()
 
       if (!isDriver.value) {
         showBecomeDriverConfirm.value = true
         return
       }
+
+      // Charger les véhicules de l'utilisateur
+      await loadUserVehicles()
 
       // Pré-remplir avec la date d'aujourd'hui et heure actuelle
       const now = new Date()
@@ -307,6 +358,10 @@ export default {
       showBecomeDriverConfirm,
       startBecomeDriver,
       cancelBecomeDriver,
+      userVehicles,
+      selectedVehicleId,
+      showAddVehicleModal,
+      handleVehicleAdded,
     }
   },
 }
@@ -393,6 +448,38 @@ export default {
   font-size: 0.9rem;
 }
 
+/* Vehicle select wrapper */
+.vehicle-select-wrapper {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.vehicle-select {
+  flex: 1;
+}
+
+.add-vehicle-btn {
+  background: var(--color-success);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.add-vehicle-btn:hover {
+  background: var(--color-primary);
+  transform: translateY(-2px);
+}
+
 .form-actions {
   display: flex;
   gap: 1rem;
@@ -413,6 +500,12 @@ export default {
   border-top: 2px solid currentColor;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive */
@@ -436,6 +529,16 @@ export default {
 
   .form-actions {
     flex-direction: column;
+  }
+
+  .vehicle-select-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .add-vehicle-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>
