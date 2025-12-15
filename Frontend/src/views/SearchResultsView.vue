@@ -44,6 +44,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useSearchStore } from '@/stores/search'
 import { useCarpoolings } from '@/composables/useCarpoolings'
 import SearchBar from '@/components/SearchBar.vue'
 import TripFilters from '@/components/TripFilters.vue'
@@ -54,20 +55,21 @@ import SearchResultsEmpty from '@/components/SearchResultsEmpty.vue'
 
 const route = useRoute()
 const router = useRouter()
+const searchStore = useSearchStore()
 const { loading, error, nextAvailableDate, loadCarpoolings, formattedResults } = useCarpoolings()
 
-// Paramètres de recherche depuis l'URL
+// Paramètres de recherche depuis l'URL et le store
 const searchParams = ref({
-  from: route.query.departure || route.query.from || '',
-  to: route.query.destination || route.query.to || '',
-  date: route.query.date || '',
+  from: route.query.departure || searchStore.departure || '',
+  to: route.query.destination || searchStore.destination || '',
+  date: route.query.date || searchStore.date || '',
   showMyTrips: route.query.showMyTrips === 'true' || false,
 })
 
-// Nouvelles paramètres de recherche pour le formulaire compact
+// Nouvelles paramètres de recherche pour le formulaire compact (avec les bons noms de propriétés)
 const newSearchParams = ref({
-  from: searchParams.value.from,
-  to: searchParams.value.to,
+  departure: searchParams.value.from,
+  destination: searchParams.value.to,
   date: searchParams.value.date,
 })
 
@@ -144,12 +146,22 @@ const viewDriverProfile = (userId) => {
 
 // Nouvelle recherche depuis le formulaire compact
 const performNewSearch = () => {
-  searchParams.value = { ...newSearchParams.value }
+  searchParams.value = {
+    from: newSearchParams.value.departure,
+    to: newSearchParams.value.destination,
+    date: newSearchParams.value.date,
+    showMyTrips: false,
+  }
+  searchStore.setSearchParams({
+    departure: newSearchParams.value.departure,
+    destination: newSearchParams.value.destination,
+    date: newSearchParams.value.date,
+  })
   router.push({
     name: 'SearchResults',
     query: {
-      from: newSearchParams.value.from || '',
-      to: newSearchParams.value.to || '',
+      departure: newSearchParams.value.departure || '',
+      destination: newSearchParams.value.destination || '',
       date: newSearchParams.value.date || '',
     },
   })
@@ -169,11 +181,15 @@ onMounted(() => {
 
 watch(route, (newRoute) => {
   searchParams.value = {
-    from: newRoute.query.from || '',
-    to: newRoute.query.to || '',
-    date: newRoute.query.date || '',
+    from: newRoute.query.departure || searchStore.departure || '',
+    to: newRoute.query.destination || searchStore.destination || '',
+    date: newRoute.query.date || searchStore.date || '',
   }
-  newSearchParams.value = { ...searchParams.value }
+  newSearchParams.value = {
+    departure: searchParams.value.from,
+    destination: searchParams.value.to,
+    date: searchParams.value.date,
+  }
   loadCarpoolings(buildQueryParams())
 })
 </script>

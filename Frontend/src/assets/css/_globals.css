@@ -1,5 +1,19 @@
-/* EcoRide Base Styles */
+/* Global Foundation: Reset + Base Styles + Layout */
 
+/* ===== CSS Reset ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ===== Base Styles ===== */
 body {
   min-height: 100vh;
   margin: 0;
@@ -26,4 +40,14 @@ p,
 span,
 label {
   color: var(--color-light-secondary);
+}
+
+/* ===== App Layout ===== */
+#app {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-dark);
+  position: relative;
 }

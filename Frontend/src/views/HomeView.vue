@@ -1,19 +1,26 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { useSearchStore } from '@/stores/search'
 import HeroSection from '@/components/HeroSection.vue'
 import AboutSection from '@/components/AboutSection.vue'
 import { useSearchForm } from '@/composables/useSearchForm'
 
 // Configuration future pour l'authentification
 const router = useRouter()
+const searchStore = useSearchStore()
 
 // Variables réactives pour le formulaire de recherche
 const { searchForm, submitSearch } = useSearchForm()
 
 // Fonction pour gérer la recherche depuis le SearchBar (reçoit la payload)
 const handleSearch = (values) => {
-  // Met à jour localement le formulaire et navigation via composable
+  // Met à jour le store et navigation via composable
   if (values) {
+    searchStore.setSearchParams({
+      departure: values.departure,
+      destination: values.destination,
+      date: values.date,
+    })
     searchForm.value = { ...values }
   }
   submitSearch(router, values)
@@ -611,8 +618,3 @@ const goToCarpooling = () => {
   animation: bounce 2s infinite;
 }
 </style>
-
-
-
-
-

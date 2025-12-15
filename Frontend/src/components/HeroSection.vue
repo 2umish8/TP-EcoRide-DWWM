@@ -159,7 +159,7 @@ const onScroll = () => {
 .scroll-icon {
   cursor: pointer;
   font-size: 1.5rem;
-  color: var(--color-primary);
+  color: var(--color-light);
 }
 
 .en-savoir-plus {

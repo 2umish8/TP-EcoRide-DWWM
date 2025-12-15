@@ -26,6 +26,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useSearchStore } from '@/stores/search'
 import SecondaryButton from './ui/SecondaryButton.vue'
 import CityAutocomplete from './ui/CityAutocomplete.vue'
 import DateInput from './ui/DateInput.vue'
@@ -39,6 +40,8 @@ const props = defineProps({
   compact: { type: Boolean, default: false },
 })
 const emit = defineEmits(['search', 'browse-all'])
+
+const searchStore = useSearchStore()
 
 const localForm = ref({
   departure: props.initialValues.departure || '',
@@ -56,6 +59,7 @@ watch(
 const minDate = computed(() => new Date().toISOString().split('T')[0])
 
 const onSubmit = () => {
+  searchStore.setSearchParams({ ...localForm.value })
   emit('search', { ...localForm.value })
 }
 </script>
