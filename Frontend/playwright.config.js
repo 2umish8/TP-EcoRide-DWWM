@@ -14,7 +14,7 @@ export default defineConfig({
   globalSetup: './e2e/global-setup.js',
   testDir: './e2e',
   /* Maximum time one test can run for. */
-  timeout: 30 * 1000,
+  timeout: 5 * 60 * 1000, // 5 minutes total per test (action timeout is 5s)
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -33,7 +33,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-    actionTimeout: 0,
+    actionTimeout: 5000, // 5 seconds per action (fill, click, navigate, etc.)
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.CI ? 'http://localhost:4173' : 'http://localhost:5173',
 

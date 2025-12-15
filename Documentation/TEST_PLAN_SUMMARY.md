@@ -156,25 +156,25 @@ test.beforeEach(async ({ page }) => {
 
 ### Vitest: 13 Existants ✅
 
-| Couverture | Fichiers |
-|-----------|----------|
-| ✅ Vues | HomeView, ProfileView, VisualsView |
-| ✅ Composables | useSearchForm, useScroll |
+| Couverture      | Fichiers                                                                                                 |
+| --------------- | -------------------------------------------------------------------------------------------------------- |
+| ✅ Vues          | HomeView, ProfileView, VisualsView                                                                       |
+| ✅ Composables   | useSearchForm, useScroll                                                                                 |
 | ✅ UI Components | BaseButton, NavButton, PrimarySecondary, HeroSection, SearchBar, ArrowsFooter, AboutSection, VisualsDemo |
-| ⚠️ Métier | ❌ (À créer: useParticipationActions, useTripsActions, services API) |
+| ⚠️ Métier        | ❌ (À créer: useParticipationActions, useTripsActions, services API)                                      |
 
 ### E2E: 8 Existants ✅
 
-| Couverture | Fichiers |
-|-----------|----------|
-| ✅ Auth | login.spec.js |
-| ✅ Chauffeur | become-driver.spec.js, driver-upgrade.spec.js, driver-preferences.spec.js |
-| ✅ Historique | my-trips.spec.js |
-| ✅ Workflow | carpooling-workflow.spec.js (basique) |
-| ✅ UI | icon-rendering.spec.js |
-| ⚠️ Passager | ❌ (À créer: passenger-workflow, participation-cancel, review-submit) |
-| ⚠️ Employé | ❌ (À créer: employee-moderation) |
-| ⚠️ Admin | ❌ (À créer: admin-accounts, admin-statistics) |
+| Couverture   | Fichiers                                                                  |
+| ------------ | ------------------------------------------------------------------------- |
+| ✅ Auth       | login.spec.js                                                             |
+| ✅ Chauffeur  | become-driver.spec.js, driver-upgrade.spec.js, driver-preferences.spec.js |
+| ✅ Historique | my-trips.spec.js                                                          |
+| ✅ Workflow   | carpooling-workflow.spec.js (basique)                                     |
+| ✅ UI         | icon-rendering.spec.js                                                    |
+| ⚠️ Passager   | ❌ (À créer: passenger-workflow, participation-cancel, review-submit)      |
+| ⚠️ Employé    | ❌ (À créer: employee-moderation)                                          |
+| ⚠️ Admin      | ❌ (À créer: admin-accounts, admin-statistics)                             |
 
 ---
 

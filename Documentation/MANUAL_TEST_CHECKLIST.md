@@ -19,11 +19,11 @@
 
 ### 📝 Comptes de Test Disponibles
 
-| Rôle | Pseudo | Email | Mot de passe | Notes |
-|------|--------|-------|--------------|-------|
-| Passager | test | test@test.com | Test2025! | Utilisateur de test global |
-| Admin | Admin | admin@ecoride.test | Admin2025! | Admin (créer employés, voir stats) |
-| Nouvel User | (À créer) | test-XXX@ecoride.test | Test2025! | Pour tester inscription |
+| Rôle        | Pseudo    | Email                 | Mot de passe | Notes                              |
+| ----------- | --------- | --------------------- | ------------ | ---------------------------------- |
+| Passager    | test      | test@test.com         | Test2025!    | Utilisateur de test global         |
+| Admin       | Admin     | admin@ecoride.test    | Admin2025!   | Admin (créer employés, voir stats) |
+| Nouvel User | (À créer) | test-XXX@ecoride.test | Test2025!    | Pour tester inscription            |
 
 ---
 
@@ -1207,11 +1207,11 @@
 
 **Problèmes trouvés**:
 ```
-|  | Cas | Erreur | Comportement attendu | Statut |
-|---|---|---|---|---|
-| US 1 | Accueil → logo | Redirection 404 | Revenir à / | À fixer |
-| US 7 | Login | Erreur "Invalid token" | Connexion réussit | À investiguer |
-| ... | ... | ... | ... | ... |
+|      | Cas            | Erreur                 | Comportement attendu | Statut        |
+| ---- | -------------- | ---------------------- | -------------------- | ------------- |
+| US 1 | Accueil → logo | Redirection 404        | Revenir à /          | À fixer       |
+| US 7 | Login          | Erreur "Invalid token" | Connexion réussit    | À investiguer |
+| ...  | ...            | ...                    | ...                  | ...           |
 ```
 
 **Communication avec l'équipe dev**:

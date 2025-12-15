@@ -321,33 +321,33 @@ copilot-instructions.md (How to test - Code)
 
 ## 🎯 Checklist Rapide: Qu'est-ce que j'utilise pour...?
 
-| Besoin | Document | Section |
-|--------|----------|---------|
-| **Comprendre le projet** | TEST_PLAN_SUMMARY.md | Entier |
-| **Savoir quelle US tester** | TEST_STRATEGY_PLAN.md | Chercher "US X" |
-| **Lister les tests à créer** | TEST_COVERAGE_MAPPING.md | Vitest/E2E à créer |
-| **Prioriser les tâches** | TEST_COVERAGE_MAPPING.md | Implementation Sequence |
-| **Tester manuellement** | MANUAL_TEST_CHECKLIST.md | US correspondante |
-| **Voir du code exemple** | copilot-instructions.md | Testing Strategy |
-| **Réinitialiser l'environnement** | TEST_STRATEGY_PLAN.md | Environment Reset Strategy |
-| **Comprendre le workflow** | TEST_PLAN_SUMMARY.md | Workflow de Régression |
-| **Savoir si c'est complet** | TEST_COVERAGE_MAPPING.md | Success Criteria |
+| Besoin                            | Document                 | Section                    |
+| --------------------------------- | ------------------------ | -------------------------- |
+| **Comprendre le projet**          | TEST_PLAN_SUMMARY.md     | Entier                     |
+| **Savoir quelle US tester**       | TEST_STRATEGY_PLAN.md    | Chercher "US X"            |
+| **Lister les tests à créer**      | TEST_COVERAGE_MAPPING.md | Vitest/E2E à créer         |
+| **Prioriser les tâches**          | TEST_COVERAGE_MAPPING.md | Implementation Sequence    |
+| **Tester manuellement**           | MANUAL_TEST_CHECKLIST.md | US correspondante          |
+| **Voir du code exemple**          | copilot-instructions.md  | Testing Strategy           |
+| **Réinitialiser l'environnement** | TEST_STRATEGY_PLAN.md    | Environment Reset Strategy |
+| **Comprendre le workflow**        | TEST_PLAN_SUMMARY.md     | Workflow de Régression     |
+| **Savoir si c'est complet**       | TEST_COVERAGE_MAPPING.md | Success Criteria           |
 
 ---
 
 ## 📊 Statistiques du Plan de Test
 
-| Métrique | Nombre |
-|----------|--------|
+| Métrique                     | Nombre                                                                                 |
+| ---------------------------- | -------------------------------------------------------------------------------------- |
 | **US du Cahier des charges** | 13 (Visiteur 7, Utilisateur 3+1+1, Chauffeur 3+1, Employé 1, Admin 2, Crédits système) |
-| **Rôles testés** | 6 (Visiteur, Passager, Chauffeur, Employé, Admin, Système) |
-| **Vitest existants** | 13 ✅ |
-| **Vitest à créer** | 15-20 (Phase 1: 4, Phase 2: 10+, Phase 3: edge cases) |
-| **E2E existants** | 8 ✅ |
-| **E2E à créer** | 10+ (Phase 1: 4, Phase 2: 8+) |
-| **Endpoints API à créer** | 3 (/admin/test/reset-user, /cleanup-user, /cleanup-carpooling) |
-| **Documents créés** | 4 (+ mise à jour copilot-instructions.md) |
-| **Lignes totales du plan** | ~4000+ (très détaillé) |
+| **Rôles testés**             | 6 (Visiteur, Passager, Chauffeur, Employé, Admin, Système)                             |
+| **Vitest existants**         | 13 ✅                                                                                   |
+| **Vitest à créer**           | 15-20 (Phase 1: 4, Phase 2: 10+, Phase 3: edge cases)                                  |
+| **E2E existants**            | 8 ✅                                                                                    |
+| **E2E à créer**              | 10+ (Phase 1: 4, Phase 2: 8+)                                                          |
+| **Endpoints API à créer**    | 3 (/admin/test/reset-user, /cleanup-user, /cleanup-carpooling)                         |
+| **Documents créés**          | 4 (+ mise à jour copilot-instructions.md)                                              |
+| **Lignes totales du plan**   | ~4000+ (très détaillé)                                                                 |
 
 ---
 

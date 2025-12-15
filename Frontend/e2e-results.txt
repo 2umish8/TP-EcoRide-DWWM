@@ -1,0 +1,201 @@
+
+Playwright globalSetup - seeding backend for E2E tests
+Waiting for backend to be available (timeout 120s)...
+Registering test users...
+Could not register (might already exist), continuing to login ...
+Non-driver test user registered
+Add role may already exist or endpoint prevented it: Vous ├¬tes d├®j├á chauffeur.
+Could not create vehicle (maybe exists). Trying to fetch existing vehicles...
+Found existing vehicle 28
+Wrote test-data to C:\Users\umisc\OneDrive\Documents\ECF\TP-EcoRide-DWWM\Frontend\e2e\test-data.json
+globalSetup complete
+
+Running 53 tests using 1 worker
+
+[1A[2K[1/53] [chromium] ÔÇ║ e2e\tests\basic.spec.js:3:1 ÔÇ║ home page has correct title and login link
+[1A[2K[2/53] [chromium] ÔÇ║ e2e\tests\become-driver.spec.js:9:3 ÔÇ║ Become Driver Flow (E2E) ÔÇ║ should complete the become-driver workflow successfully
+[1A[2K[chromium] ÔÇ║ e2e\tests\become-driver.spec.js:9:3 ÔÇ║ Become Driver Flow (E2E) ÔÇ║ should complete the become-driver workflow successfully
+Step 1: Filling vehicle information...
+
+[1A[2K  1) [chromium] ÔÇ║ e2e\tests\become-driver.spec.js:9:3 ÔÇ║ Become Driver Flow (E2E) ÔÇ║ should complete the become-driver workflow successfully 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: page.fill: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="number"]')[22m
+
+
+      54 |
+      55 |     // Seats
+    > 56 |     await page.fill('input[type="number"]', '4')
+         |                ^
+      57 |
+      58 |     // Click next button (submit form)
+      59 |     const nextBtn = page.locator('button:has-text("Suivant")')
+        at C:\Users\umisc\OneDrive\Documents\ECF\TP-EcoRide-DWWM\Frontend\e2e\tests\become-driver.spec.js:56:16
+
+    Error Context: test-results\tests-become-driver-Become-3cd8b-river-workflow-successfully-chromium\error-context.md
+
+
+[1A[2K[3/53] [chromium] ÔÇ║ e2e\tests\become-driver.spec.js:143:3 ÔÇ║ Become Driver Flow (E2E) ÔÇ║ should show validation errors for invalid vehicle data
+[1A[2K[chromium] ÔÇ║ e2e\tests\become-driver.spec.js:143:3 ÔÇ║ Become Driver Flow (E2E) ÔÇ║ should show validation errors for invalid vehicle data
+Validation test completed successfully!
+
+[1A[2K[4/53] [chromium] ÔÇ║ e2e\tests\become-driver.spec.js:176:3 ÔÇ║ Become Driver Flow (E2E) ÔÇ║ should handle API errors gracefully
+[1A[2K  2) [chromium] ÔÇ║ e2e\tests\become-driver.spec.js:176:3 ÔÇ║ Become Driver Flow (E2E) ÔÇ║ should handle API errors gracefully 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: page.fill: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="number"]')[22m
+
+
+      206 |     await colorSelect.selectOption('Noir')
+      207 |
+    > 208 |     await page.fill('input[type="number"]', '4')
+          |                ^
+      209 |
+      210 |     // Proceed to step 2
+      211 |     const nextBtn = page.locator('button:has-text("Suivant")')
+        at C:\Users\umisc\OneDrive\Documents\ECF\TP-EcoRide-DWWM\Frontend\e2e\tests\become-driver.spec.js:208:16
+
+    Error Context: test-results\tests-become-driver-Become-e652d-andle-API-errors-gracefully-chromium\error-context.md
+
+
+[1A[2K[5/53] [chromium] ÔÇ║ e2e\tests\complete-driver-journey.spec.js:25:3 ÔÇ║ Complete Driver Journey (A to Z) ÔÇ║ Full driver workflow: Register ÔåÆ Become Driver ÔåÆ Create ÔåÆ Start ÔåÆ Finish ÔåÆ Delete ÔåÆ Logout
+[1A[2K[chromium] ÔÇ║ e2e\tests\complete-driver-journey.spec.js:25:3 ÔÇ║ Complete Driver Journey (A to Z) ÔÇ║ Full driver workflow: Register ÔåÆ Become Driver ÔåÆ Create ÔåÆ Start ÔåÆ Finish ÔåÆ Delete ÔåÆ Logout
+ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+
+[1A[2K­ƒÜù Starting Complete Driver Journey
+
+[1A[2KÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+
+[1A[2K
+Ô£ô Step 1: Registering new driver user
+
+[1A[2K  3) [chromium] ÔÇ║ e2e\tests\complete-driver-journey.spec.js:25:3 ÔÇ║ Complete Driver Journey (A to Z) ÔÇ║ Full driver workflow: Register ÔåÆ Become Driver ÔåÆ Create ÔåÆ Start ÔåÆ Finish ÔåÆ Delete ÔåÆ Logout 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/register
+    Call log:
+    [2m  - navigating to "http://localhost:5174/register", waiting until "load"[22m
+
+
+      32 |     // ========== STEP 1: REGISTRATION ==========
+      33 |     console.log('\nÔ£ô Step 1: Registering new driver user')
+    > 34 |     await page.goto(`${process.env.BASE_URL || 'http://localhost:5174'}/register`)
+         |                ^
+      35 |     await page.fill('[data-testid="pseudo-input"], input[placeholder*="Pseudo"]', DRIVER_PSEUDO)
+      36 |     await page.fill('[data-testid="email-input"], input[type="email"]', DRIVER_EMAIL)
+      37 |     await page.fill(
+        at C:\Users\umisc\OneDrive\Documents\ECF\TP-EcoRide-DWWM\Frontend\e2e\tests\complete-driver-journey.spec.js:34:16
+
+    Error Context: test-results\tests-complete-driver-jour-bf21b--ÔåÆ-Finish-ÔåÆ-Delete-ÔåÆ-Logout-chromium\error-context.md
+
+
+[1A[2K[6/53] [chromium] ÔÇ║ e2e\tests\complete-passenger-journey.spec.js:24:3 ÔÇ║ Complete Passenger Journey (A to Z) ÔÇ║ Full passenger workflow: Register ÔåÆ Search ÔåÆ Join ÔåÆ Review ÔåÆ Cancel ÔåÆ Logout
+[1A[2K[chromium] ÔÇ║ e2e\tests\complete-passenger-journey.spec.js:24:3 ÔÇ║ Complete Passenger Journey (A to Z) ÔÇ║ Full passenger workflow: Register ÔåÆ Search ÔåÆ Join ÔåÆ Review ÔåÆ Cancel ÔåÆ Logout
+ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+
+[1A[2K­ƒÜÇ Starting Complete Passenger Journey
+
+[1A[2KÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+
+[1A[2K
+Ô£ô Step 1: Registering new passenger user
+
+[1A[2K  4) [chromium] ÔÇ║ e2e\tests\complete-passenger-journey.spec.js:24:3 ÔÇ║ Complete Passenger Journey (A to Z) ÔÇ║ Full passenger workflow: Register ÔåÆ Search ÔåÆ Join ÔåÆ Review ÔåÆ Cancel ÔåÆ Logout 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/register
+    Call log:
+    [2m  - navigating to "http://localhost:5174/register", waiting until "load"[22m
+
+
+      31 |     // ========== STEP 1: REGISTRATION ==========
+      32 |     console.log('\nÔ£ô Step 1: Registering new passenger user')
+    > 33 |     await page.goto(`${process.env.BASE_URL || 'http://localhost:5174'}/register`)
+         |                ^
+      34 |     await page.fill('[data-testid="pseudo-input"], input[placeholder*="Pseudo"]', PASSENGER_PSEUDO)
+      35 |     await page.fill('[data-testid="email-input"], input[type="email"]', PASSENGER_EMAIL)
+      36 |     await page.fill(
+        at C:\Users\umisc\OneDrive\Documents\ECF\TP-EcoRide-DWWM\Frontend\e2e\tests\complete-passenger-journey.spec.js:33:16
+
+    Error Context: test-results\tests-complete-passenger-j-2e143--ÔåÆ-Review-ÔåÆ-Cancel-ÔåÆ-Logout-chromium\error-context.md
+
+
+[1A[2K[7/53] [chromium] ÔÇ║ e2e\tests\complete-review-journey.spec.js:23:3 ÔÇ║ Complete Review & Rating Journey (A to Z) ÔÇ║ Full review workflow: Complete trip ÔåÆ Rate ÔåÆ Leave review ÔåÆ Verify on profile ÔåÆ Logout
+[1A[2K[chromium] ÔÇ║ e2e\tests\complete-review-journey.spec.js:23:3 ÔÇ║ Complete Review & Rating Journey (A to Z) ÔÇ║ Full review workflow: Complete trip ÔåÆ Rate ÔåÆ Leave review ÔåÆ Verify on profile ÔåÆ Logout
+ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+
+[1A[2KÔ¡É Starting Complete Review & Rating Journey
+
+[1A[2KÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+
+[1A[2K
+Ô£ô Step 1: Logging in as test passenger
+
+[1A[2K  5) [chromium] ÔÇ║ e2e\tests\complete-review-journey.spec.js:23:3 ÔÇ║ Complete Review & Rating Journey (A to Z) ÔÇ║ Full review workflow: Complete trip ÔåÆ Rate ÔåÆ Leave review ÔåÆ Verify on profile ÔåÆ Logout 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/login
+    Call log:
+    [2m  - navigating to "http://localhost:5174/login", waiting until "load"[22m
+
+
+      30 |     // ========== STEP 1: LOGIN ==========
+      31 |     console.log('\nÔ£ô Step 1: Logging in as test passenger')
+    > 32 |     await page.goto(`${process.env.BASE_URL || 'http://localhost:5174'}/login`)
+         |                ^
+      33 |
+      34 |     const emailInput = page.locator('[data-testid="email-input"], input[type="email"]').first()
+      35 |     const passwordInput = page
+        at C:\Users\umisc\OneDrive\Documents\ECF\TP-EcoRide-DWWM\Frontend\e2e\tests\complete-review-journey.spec.js:32:16
+
+    Error Context: test-results\tests-complete-review-jour-fcc9b--Verify-on-profile-ÔåÆ-Logout-chromium\error-context.md
+
+
+[1A[2K[8/53] [chromium] ÔÇ║ e2e\tests\covoiturage-flow.spec.js:33:1 ÔÇ║ covoiturage critical flow: login error, login succeed, add vehicle, delete vehicle, logout
+[1A[2K  6) [chromium] ÔÇ║ e2e\tests\covoiturage-flow.spec.js:33:1 ÔÇ║ covoiturage critical flow: login error, login succeed, add vehicle, delete vehicle, logout 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('button.user-dropdown-toggle, .user-dropdown-toggle, .dropdown-toggle').first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('button.user-dropdown-toggle, .user-dropdown-toggle, .dropdown-toggle').first()[22m
+
+
+      72 |     'button.user-dropdown-toggle, .user-dropdown-toggle, .dropdown-toggle',
+      73 |   )
+    > 74 |   await expect(userDropdown.first()).toBeVisible()
+         |                                      ^
+      75 |   await userDropdown.first().click()
+      76 |   const logoutBtn = page.locator('text=D├®connexion')
+      77 |   await expect(logoutBtn).toBeVisible()
+        at C:\Users\umisc\OneDrive\Documents\ECF\TP-EcoRide-DWWM\Frontend\e2e\tests\covoiturage-flow.spec.js:74:38
+
+    Error Context: test-results\tests-covoiturage-flow-cov-0980d-hicle-delete-vehicle-logout-chromium\error-context.md
+
+
+[1A[2K[9/53] [chromium] ÔÇ║ e2e\tests\driver-workflow.spec.js:26:3 ÔÇ║ Driver Workflow (US 10c) ÔÇ║ driver can access create trip page (US 10c - step 1)
+[1A[2K  7) [chromium] ÔÇ║ e2e\tests\driver-workflow.spec.js:26:3 ÔÇ║ Driver Workflow (US 10c) ÔÇ║ driver can access create trip page (US 10c - step 1) 
+
+    Error: page.fill: Target page, context or browser has been closed
+    Call log:
+    [2m  - waiting for locator('input[type="email"]')[22m
+
+
+       8 |     // Login with driver account from test setup
+       9 |     await page.goto('/login')
+    > 10 |     await page.fill('input[type="email"]', 'test@test.com')
+         |                ^
+      11 |     await page.fill('input[type="password"]', testPassword)
+      12 |     await page.click('button[type="submit"]')
+      13 |     await page.waitForURL('/', { timeout: 10000 })
+        at C:\Users\umisc\OneDrive\Documents\ECF\TP-EcoRide-DWWM\Frontend\e2e\tests\driver-workflow.spec.js:10:16
+
+
