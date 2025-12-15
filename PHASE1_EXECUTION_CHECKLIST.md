@@ -256,15 +256,15 @@ db.reviews.find({ reviewedUserId: 123 }).pretty()
 
 ## Summary: What Should Be True After Phase 1
 
-| Feature | Before | After ✅ |
-|---------|--------|---------|
-| Review Count | Hardcoded `12` | Real from MongoDB: `6` |
-| Driver Rating | Hardcoded `4.5` | Real calculated: `4.7` |
-| Reviews List | Placeholder data | Real reviews from MongoDB |
-| Reviewer Names | "Utilisateur supprimé" | Real names from MySQL |
-| Recent Reviews | Hardcoded examples | Real recent reviews |
-| Test Environment | None | Complete test setup |
-| Test Coverage | None | 6 integration tests |
+| Feature          | Before                 | After ✅                   |
+| ---------------- | ---------------------- | ------------------------- |
+| Review Count     | Hardcoded `12`         | Real from MongoDB: `6`    |
+| Driver Rating    | Hardcoded `4.5`        | Real calculated: `4.7`    |
+| Reviews List     | Placeholder data       | Real reviews from MongoDB |
+| Reviewer Names   | "Utilisateur supprimé" | Real names from MySQL     |
+| Recent Reviews   | Hardcoded examples     | Real recent reviews       |
+| Test Environment | None                   | Complete test setup       |
+| Test Coverage    | None                   | 6 integration tests       |
 
 ---
 

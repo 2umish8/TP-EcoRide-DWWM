@@ -106,11 +106,11 @@
       - [x] Bouton "Détail" (La carte entière est un bouton)
 1. Appliquer les filtres:
    - [x] Cliquer "Filtres" ou déployer la section
-   - [ ] Véhicule électrique → toggle/checkbox
-   - [ ] Prix max: 50€ → slider ou input
-   - [ ] Durée max: 2h → slider ou input
+   - [x] Véhicule électrique → toggle/checkbox
+   - [x] Prix max: 50€ → slider ou input
+   - [x] Durée max: 2h → slider ou input
    - [ ] Note chauffeur min: 4.0 → slider ou input
-   - [ ] Les résultats se mettent à jour immédiatement
+   - [x] Les résultats se mettent à jour immédiatement
 
 6. Cas "Aucun résultat":
    - [ ] Si 0 covoiturage → message "Aucun résultat"

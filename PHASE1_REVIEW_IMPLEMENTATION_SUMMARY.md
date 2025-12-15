@@ -166,14 +166,14 @@ Frontend displays real reviews (Phase 2)
 
 ## ✨ Key Improvements
 
-| Before | After |
-|--------|-------|
-| Reviews were placeholder data | Reviews are real MongoDB data |
-| Hardcoded `12` reviews | Dynamic count from database |
-| Hardcoded `4.5` rating | Calculated average rating |
-| Reviewer names missing | Reviewer data properly fetched |
-| No way to create test reviews | Automated seed script |
-| No test coverage | Full integration test suite |
+| Before                        | After                          |
+| ----------------------------- | ------------------------------ |
+| Reviews were placeholder data | Reviews are real MongoDB data  |
+| Hardcoded `12` reviews        | Dynamic count from database    |
+| Hardcoded `4.5` rating        | Calculated average rating      |
+| Reviewer names missing        | Reviewer data properly fetched |
+| No way to create test reviews | Automated seed script          |
+| No test coverage              | Full integration test suite    |
 
 ---
 

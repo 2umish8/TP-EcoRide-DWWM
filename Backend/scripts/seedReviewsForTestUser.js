@@ -22,8 +22,7 @@ const prisma = new PrismaClient();
 
 // Configuration
 const TEST_USER_EMAIL = "test@test.com";
-const MONGODB_URI =
-    process.env.MONGODB_URI || "mongodb://localhost:27017/ecoride_reviews";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/ecoride_reviews";
 const REVIEW_COUNT = 6; // Number of reviews to create
 
 // Sample review data
@@ -89,9 +88,7 @@ async function getOrCreateTestUser() {
         });
 
         if (testUser) {
-            console.log(
-                `✅ Test user found: ${testUser.pseudo} (ID: ${testUser.id})`
-            );
+            console.log(`✅ Test user found: ${testUser.pseudo} (ID: ${testUser.id})`);
         } else {
             // Create test user
             const hashedPassword = await bcrypt.hash("password123", 10);
@@ -116,9 +113,7 @@ async function getOrCreateTestUser() {
         });
 
         if (!driverRole) {
-            console.warn(
-                "⚠️  Driver role not found. Creating it..."
-            );
+            console.warn("⚠️  Driver role not found. Creating it...");
             await prisma.role.create({
                 data: { name: "chauffeur" },
             });
@@ -306,10 +301,7 @@ async function createApprovedReviews(testUser, reviewers, carpoolings) {
 async function verifyReviews(testUser) {
     try {
         const stats = await Review.getAverageRating(testUser.id);
-        console.log(
-            `\n📊 Review Statistics for ${testUser.pseudo}:`,
-            stats
-        );
+        console.log(`\n📊 Review Statistics for ${testUser.pseudo}:`, stats);
 
         const reviews = await Review.find({
             reviewedUserId: testUser.id,
@@ -319,7 +311,9 @@ async function verifyReviews(testUser) {
         console.log(`\n📋 Reviews in Database: ${reviews.length}`);
         reviews.forEach((review, index) => {
             console.log(
-                `  ${index + 1}. [${review.rating}⭐] from Reviewer ${review.reviewerId} on Carpooling ${review.carpoolingId}`
+                `  ${index + 1}. [${review.rating}⭐] from Reviewer ${
+                    review.reviewerId
+                } on Carpooling ${review.carpoolingId}`
             );
             if (review.comment) {
                 console.log(`     "${review.comment}"`);
@@ -352,35 +346,22 @@ async function main() {
         const reviewers = await getOrCreateReviewers(REVIEW_COUNT);
 
         // Create completed carpoolings
-        const carpoolings = await createCompletedCarpoolings(
-            testUser,
-            REVIEW_COUNT
-        );
+        const carpoolings = await createCompletedCarpoolings(testUser, REVIEW_COUNT);
 
         // Create participations
         await createParticipations(carpoolings, reviewers);
 
         // Create and approve reviews
-        const reviews = await createApprovedReviews(
-            testUser,
-            reviewers,
-            carpoolings
-        );
+        const reviews = await createApprovedReviews(testUser, reviewers, carpoolings);
 
         // Verify everything
         console.log("\n✨ Verification:");
         await verifyReviews(testUser);
 
         console.log("\n✅ Review seed script completed successfully!");
-        console.log(
-            `\n📌 Next steps:`
-        );
-        console.log(
-            `   1. Start backend: cd Backend && npm run dev`
-        );
-        console.log(
-            `   2. Call API: GET http://localhost:3000/api/users/${testUser.id}`
-        );
+        console.log(`\n📌 Next steps:`);
+        console.log(`   1. Start backend: cd Backend && npm run dev`);
+        console.log(`   2. Call API: GET http://localhost:3000/api/users/${testUser.id}`);
         console.log(
             `   3. Verify 'reviews' array in response contains ${REVIEW_COUNT} approved reviews`
         );
