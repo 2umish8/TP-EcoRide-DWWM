@@ -10,12 +10,12 @@
 
 ### ✅ Avant de commencer
 
-- [ ] Backend démarré: `npm run dev` dans `Backend/`
-- [ ] Frontend démarré: `npm run dev` dans `Frontend/`
-- [ ] Base de données initialisée
-- [ ] Serveur accessible sur `http://localhost:3000` (API)
-- [ ] App accessible sur `http://localhost:5173` (Frontend)
-- [ ] Navigateur console ouverte (F12) - aucune erreur rouge
+- [x] Backend démarré: `npm run dev` dans `Backend/`
+- [x] Frontend démarré: `npm run dev` dans `Frontend/`
+- [x] Base de données initialisée
+- [x] Serveur accessible sur `http://localhost:3000` (API)
+- [x] App accessible sur `http://localhost:5173` (Frontend)
+- [x] Navigateur console ouverte (F12) - aucune erreur rouge
 
 ### 📝 Comptes de Test Disponibles
 
@@ -32,7 +32,6 @@
 ### US 1 - Page d'Accueil
 
 **Parcours**:
-```
 1. Accéder à http://localhost:5173
 2. Vérifier présence:
    ☐ Logo EcoRide (cliquable)
@@ -51,7 +50,7 @@
 
 4. Aucune erreur console:
    ☐ F12 → Console → aucun message d'erreur rouge
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -60,7 +59,6 @@
 ### US 2 - Navigation
 
 **Parcours**:
-```
 1. Depuis la page d'accueil, regarder la navbar:
    ☐ Logo EcoRide visible et cliquable
    ☐ Lien "Accueil" → / (reload page)
@@ -77,7 +75,7 @@
 3. Navigation responsive (mobile):
    ☐ Sur écran petit (< 768px), menu hamburger visible (optionnel)
    ☐ Cliquer hamburger → menu se déploie
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -86,7 +84,7 @@
 ### US 3 & 4 - Recherche et Filtres (Visiteur)
 
 **Parcours**:
-```
+
 1. Aller à /search (ou cliquer "Covoiturages" depuis accueil)
 
 2. Vérifier le formulaire:
@@ -132,7 +130,7 @@
 8. Cliquer "Participer" sans auth:
    ☐ Redirection vers /login
    ☐ Message: "Connectez-vous pour participer"
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -141,7 +139,7 @@
 ### US 5 - Vue Détaillée
 
 **Parcours**:
-```
+
 1. Depuis résultats, cliquer "Détail" d'un covoiturage
 
 2. Vérifier toutes les infos affichées:
@@ -175,7 +173,7 @@
 6. Bouton "Participer":
    ☐ Visible (pas d'erreur)
    ☐ Cliquer → redirection /login (pas connecté)
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -184,7 +182,7 @@
 ### US 6 - Inscription (Visiteur → Nouvel Utilisateur)
 
 **Parcours**:
-```
+
 1. Cliquer "Inscription" dans navbar → /register
 
 2. Vérifier le formulaire:
@@ -246,7 +244,7 @@
    ☐ Tenter connexion avec les identifiants créés
    ☐ Connexion réussit
    ☐ Crédits = 20
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -255,7 +253,7 @@
 ### US 7 - Connexion (Visiteur)
 
 **Parcours**:
-```
+
 1. Cliquer "Connexion" dans navbar → /login
 
 2. Vérifier le formulaire:
@@ -304,7 +302,7 @@
    ☐ Cliquer "Déconnexion"
    ☐ Redirection vers /login
    ☐ Token supprimé de localStorage
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -317,7 +315,7 @@
 **Prérequis**: Utilisateur connecté (test@test.com ou nouvel utilisateur)
 
 **Parcours**:
-```
+
 1. Cliquer sur "test" (pseudo) dans navbar
    → Redirection vers /profile
 
@@ -343,7 +341,7 @@
 5. Vérifier les crédits:
    ☐ Section crédits affiche: "20 crédits"
    ☐ Lien vers /credits visible
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -354,7 +352,7 @@
 **Prérequis**: Utilisateur connecté en tant que passager
 
 **Parcours**:
-```
+
 1. Aller à /search (depuis navbar "Covoiturages")
 
 2. Chercher un covoiturage avec places disponibles:
@@ -416,7 +414,7 @@
    ☐ Chercher un covoiturage avec date passée
    ☐ Bouton "Participer" désactivé
    ☐ Tooltip: "Ce trajet a déjà commencé"
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -427,7 +425,7 @@
 **Prérequis**: Passager avec participation active
 
 **Parcours**:
-```
+
 1. Aller à /my-trips → section "Passager"
 
 2. Vérifier le trajet en attente:
@@ -462,7 +460,7 @@
    ☐ Trajet à démarrer (heure approche)
    ☐ Bouton "Annuler" désactivé
    ☐ Tooltip: "Ce trajet a déjà commencé"
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -473,7 +471,7 @@
 **Prérequis**: Trajet terminé par le chauffeur, participation complète
 
 **Parcours**:
-```
+
 1. Trajet est terminé (chauffeur a cliqué "Arrivé à destination")
 
 2. Passager reçoit un email:
@@ -542,7 +540,7 @@
    **Commentaire trop long**
    ☐ Entrer 600+ caractères
    ☐ Erreur: "Le commentaire ne doit pas dépasser 500 caractères"
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -555,7 +553,7 @@
 **Prérequis**: Utilisateur connecté (nouvel utilisateur ou test@test.com)
 
 **Parcours**:
-```
+
 1. Aller à /profile
    ☐ Cliquer "Je veux devenir chauffeur"
    ☐ Redirection vers /become-driver
@@ -654,7 +652,7 @@
     ☐ (À implémenter) Endpoint: DELETE /user/driver-profile
     ☐ OU: Utiliser nouvel utilisateur pour chaque test
     ☐ OU: Rétrograder le rôle: POST /user/role {role: "passenger"}
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -665,7 +663,7 @@
 **Prérequis**: Utilisateur est chauffeur (voir US 8)
 
 **Parcours**:
-```
+
 1. Aller à /create-trip (ou menu /profile → "Créer un trajet")
 
 2. Vérifier le formulaire:
@@ -733,7 +731,7 @@
 8. Réinitialisation pour test suivant:
    ☐ (À implémenter) DELETE /carpooling/:tripId
    ☐ OU: test utilise beforeEach() pour trajet frais
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -744,7 +742,7 @@
 **Prérequis**: Trajet créé avec au moins 1 participant
 
 **Parcours**:
-```
+
 1. Aller à /my-trips → section "Chauffeur"
 
 2. Vérifier le trajet:
@@ -825,7 +823,7 @@
 11. Réinitialisation pour test suivant:
     ☐ Trajet créé → test annuler → état neutre
     ☐ Trajet créé → test démarrer/terminer → suppression (DELETE /carpooling/:id)
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -838,7 +836,7 @@
 **Prérequis**: Employé créé par admin
 
 **Parcours**:
-```
+
 1. Employé se connecte:
    ☐ Email: employee@ecoride.test
    ☐ Mot de passe: Employee2025! (créé par admin)
@@ -922,7 +920,7 @@
 10. Réinitialisation pour test:
     ☐ Avis validé → supprimer (DELETE /admin/review/:id)
     ☐ Rapport traité → supprimer (DELETE /admin/report/:id)
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -935,7 +933,7 @@
 **Prérequis**: Admin connecté (Admin / Admin2025!)
 
 **Parcours**:
-```
+
 1. Admin se connecte:
    ☐ Email: admin@ecoride.test
    ☐ Mot de passe: Admin2025!
@@ -1026,7 +1024,7 @@
 11. Réinitialisation:
     ☐ Employé créé → supprimer (DELETE /admin/employee/:id)
     ☐ Utilisateur suspendu → réactiver
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -1037,7 +1035,7 @@
 **Prérequis**: Admin connecté
 
 **Parcours**:
-```
+
 1. Admin accède à /admin → onglet "Statistiques"
 
 2. Voir le dashboard avec 2 graphiques:
@@ -1090,7 +1088,7 @@
    ☐ Graphique "Covoiturages par jour" augmente
    ☐ Graphique "Crédits gagnés" augmente (commission 2€ par trajet)
    ☐ Statistiques globales augmentent
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -1103,7 +1101,7 @@
 **Prérequis**: Utilisateur avec plusieurs transactions
 
 **Parcours**:
-```
+
 1. Aller à /credits (ou /profile → onglet "Crédits")
 
 2. Affichage du solde:
@@ -1144,7 +1142,7 @@
    ☐ Afficher "Showing 1-20 of 45 transactions"
    ☐ Boutons "Précédent" / "Suivant"
    ☐ Cliquer pour voir pages suivantes
-```
+
 
 **Validation**: ✅ Passé / ❌ Échoué
 
@@ -1205,14 +1203,15 @@
 3. Créer un issue GitHub ou note de bug
 4. Refaire le test après correction
 
+
 **Problèmes trouvés**:
-```
+
 |      | Cas            | Erreur                 | Comportement attendu | Statut        |
 | ---- | -------------- | ---------------------- | -------------------- | ------------- |
 | US 1 | Accueil → logo | Redirection 404        | Revenir à /          | À fixer       |
 | US 7 | Login          | Erreur "Invalid token" | Connexion réussit    | À investiguer |
 | ...  | ...            | ...                    | ...                  | ...           |
-```
+
 
 **Communication avec l'équipe dev**:
 - Si test échoue → vérifier le code source
