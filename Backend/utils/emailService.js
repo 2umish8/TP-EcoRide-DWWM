@@ -58,17 +58,14 @@ const sendReviewInvitation = async ({
         const transporter = createTransporter();
 
         // Formater la date
-        const formattedDate = new Date(departureDate).toLocaleDateString(
-            "fr-FR",
-            {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-            }
-        );
+        const formattedDate = new Date(departureDate).toLocaleDateString("fr-FR", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
 
         // Contenu de l'email
         const subject = `🚗 Votre trajet EcoRide est terminé - Laissez un avis`;
@@ -264,9 +261,7 @@ Cet email a été envoyé automatiquement, merci de ne pas y répondre.
 `;
 
         const mailOptions = {
-            from: `"EcoRide" <${
-                process.env.SMTP_FROM || "noreply@ecoride.com"
-            }>`,
+            from: `"EcoRide" <${process.env.SMTP_FROM || "noreply@ecoride.com"}>`,
             to: passengerEmail,
             subject: subject,
             text: textContent,
@@ -294,10 +289,7 @@ Cet email a été envoyé automatiquement, merci de ne pas y répondre.
             return { success: true, messageId: `dev-${Date.now()}` };
         }
     } catch (error) {
-        console.error(
-            "❌ Erreur lors de l'envoi de l'email d'invitation à l'avis:",
-            error
-        );
+        console.error("❌ Erreur lors de l'envoi de l'email d'invitation à l'avis:", error);
         return { success: false, error: error.message };
     }
 };
@@ -325,17 +317,14 @@ const sendTripCompletionNotification = async ({
     try {
         const transporter = createTransporter();
 
-        const formattedDate = new Date(departureDate).toLocaleDateString(
-            "fr-FR",
-            {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-            }
-        );
+        const formattedDate = new Date(departureDate).toLocaleDateString("fr-FR", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
 
         const subject = `🎉 Trajet terminé avec succès - Gains: ${earnings} crédits`;
 
@@ -364,9 +353,7 @@ const sendTripCompletionNotification = async ({
         <div class="earnings-box">
             <h2>💰 Vos gains</h2>
             <h1 style="color: #4CAF50; margin: 0;">${earnings} crédits</h1>
-            <p>Avec ${participantsCount} passager${
-            participantsCount > 1 ? "s" : ""
-        }</p>
+            <p>Avec ${participantsCount} passager${participantsCount > 1 ? "s" : ""}</p>
         </div>
         
         <div class="trip-details">
@@ -417,9 +404,7 @@ Merci de contribuer à une mobilité plus durable ! 🌱
 `;
 
         const mailOptions = {
-            from: `"EcoRide" <${
-                process.env.SMTP_FROM || "noreply@ecoride.com"
-            }>`,
+            from: `"EcoRide" <${process.env.SMTP_FROM || "noreply@ecoride.com"}>`,
             to: driverEmail,
             subject: subject,
             text: textContent,
@@ -435,9 +420,7 @@ Merci de contribuer à une mobilité plus durable ! 🌱
             return { success: true, messageId: result.messageId };
         } else {
             console.log("\n" + "=".repeat(80));
-            console.log(
-                "📧 SIMULATION D'ENVOI D'EMAIL - CONFIRMATION CHAUFFEUR"
-            );
+            console.log("📧 SIMULATION D'ENVOI D'EMAIL - CONFIRMATION CHAUFFEUR");
             console.log("=".repeat(80));
             console.log(`À: ${driverEmail}`);
             console.log(`Sujet: ${subject}`);
@@ -448,10 +431,7 @@ Merci de contribuer à une mobilité plus durable ! 🌱
             return { success: true, messageId: `dev-${Date.now()}` };
         }
     } catch (error) {
-        console.error(
-            "❌ Erreur lors de l'envoi de l'email de confirmation au chauffeur:",
-            error
-        );
+        console.error("❌ Erreur lors de l'envoi de l'email de confirmation au chauffeur:", error);
         return { success: false, error: error.message };
     }
 };
@@ -481,17 +461,14 @@ const sendCancellationNotification = async ({
     try {
         const transporter = createTransporter();
 
-        const formattedDate = new Date(departureDate).toLocaleDateString(
-            "fr-FR",
-            {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-            }
-        );
+        const formattedDate = new Date(departureDate).toLocaleDateString("fr-FR", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
 
         const subject = `❌ Covoiturage annulé automatiquement - ${refundAmount} crédits remboursés`;
 
@@ -656,9 +633,7 @@ Cet email a été envoyé automatiquement, merci de ne pas y répondre.
 `;
 
         const mailOptions = {
-            from: `"EcoRide" <${
-                process.env.SMTP_FROM || "noreply@ecoride.com"
-            }>`,
+            from: `"EcoRide" <${process.env.SMTP_FROM || "noreply@ecoride.com"}>`,
             to: passengerEmail,
             subject: subject,
             text: textContent,
@@ -667,10 +642,7 @@ Cet email a été envoyé automatiquement, merci de ne pas y répondre.
 
         if (process.env.NODE_ENV === "production") {
             const result = await transporter.sendMail(mailOptions);
-            console.log(
-                `✅ Email d'annulation envoyé à ${passengerEmail}:`,
-                result.messageId
-            );
+            console.log(`✅ Email d'annulation envoyé à ${passengerEmail}:`, result.messageId);
             return { success: true, messageId: result.messageId };
         } else {
             console.log("\n" + "=".repeat(80));
@@ -685,10 +657,7 @@ Cet email a été envoyé automatiquement, merci de ne pas y répondre.
             return { success: true, messageId: `dev-${Date.now()}` };
         }
     } catch (error) {
-        console.error(
-            "❌ Erreur lors de l'envoi de l'email d'annulation:",
-            error
-        );
+        console.error("❌ Erreur lors de l'envoi de l'email d'annulation:", error);
         return { success: false, error: error.message };
     }
 };

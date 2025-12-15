@@ -1,7 +1,4 @@
-const {
-    PrismaClient,
-    PrismaClientKnownRequestError,
-} = require("@prisma/client");
+const { PrismaClient, PrismaClientKnownRequestError } = require("@prisma/client");
 const prisma = new PrismaClient();
 const {
     sendReviewInvitation,
@@ -41,8 +38,7 @@ const createCarpooling = async (req, res) => {
             !vehicle_id
         ) {
             return res.status(400).json({
-                message:
-                    "Veuillez fournir toutes les informations obligatoires.",
+                message: "Veuillez fournir toutes les informations obligatoires.",
             });
         }
 
@@ -58,8 +54,7 @@ const createCarpooling = async (req, res) => {
 
         if (vehicle.user_id !== userId) {
             return res.status(403).json({
-                message:
-                    "Vous ne pouvez créer un covoiturage qu'avec vos propres véhicules.",
+                message: "Vous ne pouvez créer un covoiturage qu'avec vos propres véhicules.",
             });
         }
 
@@ -88,8 +83,7 @@ const createCarpooling = async (req, res) => {
         }
 
         // Calculer la commission de la plateforme (5% du prix par passager)
-        const platform_commission_earned =
-            Math.round(price_per_passenger * 0.05 * 100) / 100;
+        const platform_commission_earned = Math.round(price_per_passenger * 0.05 * 100) / 100;
 
         // Créer le covoiturage
         const carpooling = await prisma.carpooling.create({
@@ -126,19 +120,13 @@ const createCarpooling = async (req, res) => {
         if (error instanceof PrismaClientKnownRequestError) {
             return res.status(400).json({
                 message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
+                error: process.env.NODE_ENV === "development" ? error.message : undefined,
             });
         }
 
         res.status(500).json({
             message: "Erreur lors de la création du covoiturage.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };
@@ -213,9 +201,7 @@ const getAvailableCarpoolings = async (req, res) => {
             brand_name: c.vehicle.brand?.name || null,
             color_name: c.vehicle.color?.name || null,
             duration_minutes: Math.round(
-                (new Date(c.arrival_datetime) -
-                    new Date(c.departure_datetime)) /
-                    (1000 * 60)
+                (new Date(c.arrival_datetime) - new Date(c.departure_datetime)) / (1000 * 60)
             ),
         }));
 
@@ -229,19 +215,13 @@ const getAvailableCarpoolings = async (req, res) => {
         if (error instanceof PrismaClientKnownRequestError) {
             return res.status(400).json({
                 message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
+                error: process.env.NODE_ENV === "development" ? error.message : undefined,
             });
         }
 
         res.status(500).json({
             message: "Erreur lors de la récupération des covoiturages.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };
@@ -294,19 +274,13 @@ const getDriverCarpoolings = async (req, res) => {
         if (error instanceof PrismaClientKnownRequestError) {
             return res.status(400).json({
                 message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
+                error: process.env.NODE_ENV === "development" ? error.message : undefined,
             });
         }
 
         res.status(500).json({
             message: "Erreur lors de la récupération des covoiturages.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };
@@ -330,8 +304,7 @@ const updateCarpooling = async (req, res) => {
 
         if (existingCarpooling.driver_id !== userId) {
             return res.status(403).json({
-                message:
-                    "Vous ne pouvez modifier que vos propres covoiturages.",
+                message: "Vous ne pouvez modifier que vos propres covoiturages.",
             });
         }
 
@@ -349,21 +322,13 @@ const updateCarpooling = async (req, res) => {
         if (updateData.arrival_address)
             prismaUpdateData.arrival_address = updateData.arrival_address;
         if (updateData.departure_datetime)
-            prismaUpdateData.departure_datetime = new Date(
-                updateData.departure_datetime
-            );
+            prismaUpdateData.departure_datetime = new Date(updateData.departure_datetime);
         if (updateData.arrival_datetime)
-            prismaUpdateData.arrival_datetime = new Date(
-                updateData.arrival_datetime
-            );
+            prismaUpdateData.arrival_datetime = new Date(updateData.arrival_datetime);
         if (updateData.price_per_passenger) {
-            prismaUpdateData.price_per_passenger = parseFloat(
-                updateData.price_per_passenger
-            );
+            prismaUpdateData.price_per_passenger = parseFloat(updateData.price_per_passenger);
             prismaUpdateData.platform_commission_earned =
-                Math.round(
-                    parseFloat(updateData.price_per_passenger) * 0.05 * 100
-                ) / 100;
+                Math.round(parseFloat(updateData.price_per_passenger) * 0.05 * 100) / 100;
         }
 
         // Mettre à jour le covoiturage
@@ -382,19 +347,13 @@ const updateCarpooling = async (req, res) => {
         if (error instanceof PrismaClientKnownRequestError) {
             return res.status(400).json({
                 message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
+                error: process.env.NODE_ENV === "development" ? error.message : undefined,
             });
         }
 
         res.status(500).json({
             message: "Erreur lors de la modification du covoiturage.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };
@@ -434,8 +393,7 @@ const cancelCarpooling = async (req, res) => {
 
         if (carpooling.driver_id !== userId) {
             return res.status(403).json({
-                message:
-                    "Vous ne pouvez annuler que vos propres covoiturages.",
+                message: "Vous ne pouvez annuler que vos propres covoiturages.",
             });
         }
 
@@ -472,10 +430,7 @@ const cancelCarpooling = async (req, res) => {
                 });
             }
         } catch (emailError) {
-            console.warn(
-                "⚠️ Erreur envoi notifications annulation:",
-                emailError.message
-            );
+            console.warn("⚠️ Erreur envoi notifications annulation:", emailError.message);
             // Ne pas échouer si les emails ne s'envoient pas
         }
 
@@ -489,19 +444,13 @@ const cancelCarpooling = async (req, res) => {
         if (error instanceof PrismaClientKnownRequestError) {
             return res.status(400).json({
                 message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
+                error: process.env.NODE_ENV === "development" ? error.message : undefined,
             });
         }
 
         res.status(500).json({
             message: "Erreur lors de l'annulation du covoiturage.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };
@@ -524,8 +473,7 @@ const startCarpooling = async (req, res) => {
 
         if (carpooling.driver_id !== userId) {
             return res.status(403).json({
-                message:
-                    "Vous ne pouvez démarrer que vos propres covoiturages.",
+                message: "Vous ne pouvez démarrer que vos propres covoiturages.",
             });
         }
 
@@ -550,19 +498,13 @@ const startCarpooling = async (req, res) => {
         if (error instanceof PrismaClientKnownRequestError) {
             return res.status(400).json({
                 message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
+                error: process.env.NODE_ENV === "development" ? error.message : undefined,
             });
         }
 
         res.status(500).json({
             message: "Erreur lors du démarrage du covoiturage.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };
@@ -591,60 +533,51 @@ const finishCarpooling = async (req, res) => {
             }
 
             if (carpooling.driver_id !== userId) {
-                throw new Error(
-                    "Vous ne pouvez terminer que vos propres covoiturages."
-                );
+                throw new Error("Vous ne pouvez terminer que vos propres covoiturages.");
             }
 
             if (carpooling.status !== "démarré") {
-                throw new Error(
-                    "Seuls les covoiturages démarrés peuvent être terminés."
-                );
+                throw new Error("Seuls les covoiturages démarrés peuvent être terminés.");
             }
 
             // Récupérer les informations détaillées du covoiturage pour les emails
-            const carpoolingInfo =
-                await transactionPrisma.carpooling.findUnique({
-                    where: { id: parseInt(carpoolingId) },
-                    include: {
-                        driver: {
-                            select: {
-                                pseudo: true,
-                                email: true,
-                            },
+            const carpoolingInfo = await transactionPrisma.carpooling.findUnique({
+                where: { id: parseInt(carpoolingId) },
+                include: {
+                    driver: {
+                        select: {
+                            pseudo: true,
+                            email: true,
                         },
                     },
-                    select: {
-                        departure_address: true,
-                        arrival_address: true,
-                        departure_datetime: true,
-                        driver: true,
-                    },
-                });
+                },
+                select: {
+                    departure_address: true,
+                    arrival_address: true,
+                    departure_datetime: true,
+                    driver: true,
+                },
+            });
 
             // Récupérer les participants pour calculer les gains ET pour envoyer les emails
-            const participants = await transactionPrisma.participation.findMany(
-                {
-                    where: {
-                        carpooling_id: parseInt(carpoolingId),
-                        cancellation_date: null,
-                    },
-                    include: {
-                        passenger: {
-                            select: {
-                                pseudo: true,
-                                email: true,
-                            },
+            const participants = await transactionPrisma.participation.findMany({
+                where: {
+                    carpooling_id: parseInt(carpoolingId),
+                    cancellation_date: null,
+                },
+                include: {
+                    passenger: {
+                        select: {
+                            pseudo: true,
+                            email: true,
                         },
                     },
-                }
-            );
+                },
+            });
 
             const participantsCount = participants.length;
-            const totalEarnings =
-                participantsCount * carpooling.price_per_passenger;
-            const commission =
-                participantsCount * carpooling.platform_commission_earned;
+            const totalEarnings = participantsCount * carpooling.price_per_passenger;
+            const commission = participantsCount * carpooling.platform_commission_earned;
             const driverEarnings = totalEarnings - commission;
 
             // Créditer le chauffeur
@@ -693,8 +626,7 @@ const finishCarpooling = async (req, res) => {
 
             // Email aux passagers
             for (const participant of result.participants) {
-                const passengerSubject =
-                    "Covoiturage terminé - Merci pour votre participation";
+                const passengerSubject = "Covoiturage terminé - Merci pour votre participation";
                 const passengerMessage = `
                     Bonjour ${participant.passenger.pseudo},
                     
@@ -723,10 +655,7 @@ const finishCarpooling = async (req, res) => {
         if (error instanceof PrismaClientKnownRequestError) {
             return res.status(400).json({
                 message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
+                error: process.env.NODE_ENV === "development" ? error.message : undefined,
             });
         }
 
@@ -743,10 +672,7 @@ const finishCarpooling = async (req, res) => {
 
         res.status(500).json({
             message: "Erreur lors de la fin du covoiturage.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };
@@ -780,8 +706,7 @@ const getCarpoolingById = async (req, res) => {
 
         // Calculer la durée
         const duration_minutes = Math.round(
-            (new Date(carpooling.arrival_datetime) -
-                new Date(carpooling.departure_datetime)) /
+            (new Date(carpooling.arrival_datetime) - new Date(carpooling.departure_datetime)) /
                 (1000 * 60)
         );
 
@@ -836,19 +761,13 @@ const getCarpoolingById = async (req, res) => {
         if (error instanceof PrismaClientKnownRequestError) {
             return res.status(400).json({
                 message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
+                error: process.env.NODE_ENV === "development" ? error.message : undefined,
             });
         }
 
         res.status(500).json({
             message: "Erreur lors de la récupération du covoiturage.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };

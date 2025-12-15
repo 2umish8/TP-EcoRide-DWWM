@@ -66,21 +66,23 @@
           <div class="form-row">
             <div class="form-group">
               <label for="seats">Nombre de places disponibles</label>
-              <SelectInput id="seats" v-model="tripData.initial_seats_offered">
-                <option value="">Sélectionnez...</option>
-                <option value="1">1 place</option>
-                <option value="2">2 places</option>
-                <option value="3">3 places</option>
-                <option value="4">4 places</option>
-              </SelectInput>
+              <NumberInput
+                id="seats"
+                v-model="tripData.initial_seats_offered"
+                :min="1"
+                :max="8"
+                placeholder="0"
+                unit="places"
+              />
             </div>
             <div class="form-group">
-              <label for="price">Prix par passager (crédits)</label>
-              <TextInput
+              <label for="price">Prix par passager</label>
+              <NumberInput
                 id="price"
                 v-model="tripData.price_per_passenger"
-                type="number"
-                placeholder="Ex: 15"
+                :min="0"
+                placeholder="0"
+                unit="crédits"
               />
             </div>
           </div>
@@ -182,6 +184,7 @@ import TextInput from '@/components/ui/TextInput.vue'
 import DateInput from '@/components/ui/DateInput.vue'
 import DateTimeInput from '@/components/ui/DateTimeInput.vue'
 import DurationInput from '@/components/ui/DurationInput.vue'
+import NumberInput from '@/components/ui/NumberInput.vue'
 import SelectInput from '@/components/ui/SelectInput.vue'
 import TextAreaInput from '@/components/ui/TextAreaInput.vue'
 import PrimaryButton from '@/components/ui/PrimaryButton.vue'
@@ -195,6 +198,7 @@ export default {
     DateInput,
     DateTimeInput,
     DurationInput,
+    NumberInput,
     SelectInput,
     TextAreaInput,
     PrimaryButton,

@@ -1,14 +1,9 @@
 // Script pour améliorer la logique de recherche d'itinéraires
 // Ce script ajoute des fonctionnalités avancées à la recherche
 
-const {
-    PrismaClient,
-    PrismaClientKnownRequestError,
-} = require("@prisma/client");
+const { PrismaClient, PrismaClientKnownRequestError } = require("@prisma/client");
 const prisma = new PrismaClient();
-const {
-    autoCancelExpiredCarpoolings,
-} = require("../utils/carpoolingUtils.js");
+const { autoCancelExpiredCarpoolings } = require("../utils/carpoolingUtils.js");
 // MongoDB models temporarily disabled
 // const Review = require("../models/Review");
 
@@ -52,9 +47,7 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
             "duration_minutes",
             "driver_rating",
         ];
-        const sortField = validSortFields.includes(sortBy)
-            ? sortBy
-            : "departure_datetime";
+        const sortField = validSortFields.includes(sortBy) ? sortBy : "departure_datetime";
         const order = sortOrder.toUpperCase() === "DESC" ? "desc" : "asc";
         const pageNum = Math.max(1, parseInt(page) || 1);
         const limitNum = Math.min(50, Math.max(1, parseInt(limit) || 20));
@@ -187,15 +180,13 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
         // Enrichir avec les calculs nécessaires
         const enrichedCarpoolings = carpoolings.map((carpooling) => {
             const duration_minutes = Math.round(
-                (new Date(carpooling.arrival_datetime) -
-                    new Date(carpooling.departure_datetime)) /
+                (new Date(carpooling.arrival_datetime) - new Date(carpooling.departure_datetime)) /
                     (1000 * 60)
             );
 
             const occupancy_rate =
                 Math.round(
-                    ((carpooling.initial_seats_offered -
-                        carpooling.seats_remaining) /
+                    ((carpooling.initial_seats_offered - carpooling.seats_remaining) /
                         carpooling.initial_seats_offered) *
                         100 *
                         10
@@ -216,8 +207,7 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
                 driver_rating: 0, // Sera calculé avec MongoDB
                 is_almost_full: carpooling.seats_remaining <= 1,
                 is_departing_soon:
-                    new Date(carpooling.departure_datetime) - new Date() <=
-                    24 * 60 * 60 * 1000,
+                    new Date(carpooling.departure_datetime) - new Date() <= 24 * 60 * 60 * 1000,
                 eco_friendly: carpooling.vehicle.is_electric,
             };
         });
@@ -237,9 +227,7 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
 
         // Enrichir avec les notes MongoDB des chauffeurs
         if (filteredCarpoolings.length > 0) {
-            const driverIds = [
-                ...new Set(filteredCarpoolings.map((c) => c.driver_id)),
-            ];
+            const driverIds = [...new Set(filteredCarpoolings.map((c) => c.driver_id))];
 
             // Récupérer les moyennes des notes depuis MongoDB
             const driverRatings = {};
@@ -250,18 +238,14 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
                     // const rating = await Review.getAverageRating(driverId);
                     // driverRatings[driverId] = rating.average || 0;
                 } catch (error) {
-                    console.warn(
-                        `Erreur récupération note chauffeur ${driverId}:`,
-                        error.message
-                    );
+                    console.warn(`Erreur récupération note chauffeur ${driverId}:`, error.message);
                     driverRatings[driverId] = 0;
                 }
             }
 
             // Ajouter les notes aux covoiturages
             filteredCarpoolings.forEach((carpooling) => {
-                carpooling.driver_rating =
-                    driverRatings[carpooling.driver_id] || 0;
+                carpooling.driver_rating = driverRatings[carpooling.driver_id] || 0;
             });
 
             // Filtrer par note minimale si spécifiée
@@ -274,8 +258,7 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
             // Tri par rating ou durée si demandé
             if (sortField === "driver_rating") {
                 filteredCarpoolings.sort((a, b) => {
-                    const comparison =
-                        (b.driver_rating || 0) - (a.driver_rating || 0);
+                    const comparison = (b.driver_rating || 0) - (a.driver_rating || 0);
                     return order === "desc" ? comparison : -comparison;
                 });
             } else if (sortField === "duration_minutes") {
@@ -296,14 +279,11 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
             averagePrice:
                 filteredCarpoolings.length > 0
                     ? Math.round(
-                          filteredCarpoolings.reduce(
-                              (sum, c) => sum + c.price_per_passenger,
-                              0
-                          ) / filteredCarpoolings.length
+                          filteredCarpoolings.reduce((sum, c) => sum + c.price_per_passenger, 0) /
+                              filteredCarpoolings.length
                       )
                     : 0,
-            electricCount: filteredCarpoolings.filter((c) => c.is_electric)
-                .length,
+            electricCount: filteredCarpoolings.filter((c) => c.is_electric).length,
             departsToday: filteredCarpoolings.filter((c) => {
                 const today = new Date().toDateString();
                 return new Date(c.departure_datetime).toDateString() === today;
@@ -311,10 +291,7 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
         };
 
         // Si aucun résultat après filtrage par note
-        if (
-            filteredCarpoolings.length === 0 &&
-            enrichedCarpoolings.length > 0
-        ) {
+        if (filteredCarpoolings.length === 0 && enrichedCarpoolings.length > 0) {
             return res.status(200).json({
                 carpoolings: [],
                 stats,
@@ -336,8 +313,7 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
                     hasPrev: false,
                 },
                 suggestions,
-                message:
-                    "Aucun covoiturage trouvé avec ces critères. Consultez nos suggestions.",
+                message: "Aucun covoiturage trouvé avec ces critères. Consultez nos suggestions.",
             });
         }
 
@@ -359,19 +335,13 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
         if (error instanceof PrismaClientKnownRequestError) {
             return res.status(400).json({
                 message: "Erreur de base de données.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
+                error: process.env.NODE_ENV === "development" ? error.message : undefined,
             });
         }
 
         res.status(500).json({
             message: "Erreur lors de la recherche de covoiturages.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };
@@ -547,8 +517,7 @@ const getSearchStatistics = async (req, res) => {
 
         stats.averagePrices = routeStats.map((route) => ({
             route: `${route.departure_address} → ${route.arrival_address}`,
-            avg_price:
-                Math.round((route._avg.price_per_passenger || 0) * 100) / 100,
+            avg_price: Math.round((route._avg.price_per_passenger || 0) * 100) / 100,
             trip_count: route._count.id,
         }));
 
@@ -594,8 +563,7 @@ const getSearchStatistics = async (req, res) => {
                 ? Math.round(
                       carpoolingsForDuration.reduce((sum, c) => {
                           const duration =
-                              (new Date(c.arrival_datetime) -
-                                  new Date(c.departure_datetime)) /
+                              (new Date(c.arrival_datetime) - new Date(c.departure_datetime)) /
                               (1000 * 60);
                           return sum + duration;
                       }, 0) / carpoolingsForDuration.length
@@ -605,10 +573,7 @@ const getSearchStatistics = async (req, res) => {
         stats.vehicleStats = {
             total_trips: vehicleStatsResult._count.id,
             electric_trips: electricTripsCount,
-            avg_price:
-                Math.round(
-                    (vehicleStatsResult._avg.price_per_passenger || 0) * 100
-                ) / 100,
+            avg_price: Math.round((vehicleStatsResult._avg.price_per_passenger || 0) * 100) / 100,
             avg_duration_minutes: avgDuration,
         };
 
@@ -618,21 +583,14 @@ const getSearchStatistics = async (req, res) => {
 
         if (error instanceof PrismaClientKnownRequestError) {
             return res.status(400).json({
-                message:
-                    "Erreur de base de données lors de la récupération des statistiques.",
-                error:
-                    process.env.NODE_ENV === "development"
-                        ? error.message
-                        : undefined,
+                message: "Erreur de base de données lors de la récupération des statistiques.",
+                error: process.env.NODE_ENV === "development" ? error.message : undefined,
             });
         }
 
         res.status(500).json({
             message: "Erreur lors de la récupération des statistiques.",
-            error:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : undefined,
+            error: process.env.NODE_ENV === "development" ? error.message : undefined,
         });
     }
 };

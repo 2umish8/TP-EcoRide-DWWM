@@ -56,11 +56,17 @@ const updateDuration = (field, value) => {
   if (field === 'hours') {
     const limitedHours = Math.min(numValue, 24)
     const mins = parseInt(minutes.value) || 0
-    emit('update:modelValue', `${String(limitedHours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`)
+    emit(
+      'update:modelValue',
+      `${String(limitedHours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`,
+    )
   } else if (field === 'minutes') {
     const limitedMins = Math.min(numValue, 59)
     const hrs = parseInt(hours.value) || 0
-    emit('update:modelValue', `${String(hrs).padStart(2, '0')}:${String(limitedMins).padStart(2, '0')}`)
+    emit(
+      'update:modelValue',
+      `${String(hrs).padStart(2, '0')}:${String(limitedMins).padStart(2, '0')}`,
+    )
   }
 }
 </script>

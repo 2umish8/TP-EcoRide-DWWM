@@ -9,13 +9,10 @@
   >
     <!-- Header -->
     <div class="trip-card-header">
-      <div class="trip-status">
-        <span :class="['status-badge', `status-${trip.status}`]">
-          <font-awesome-icon :icon="['fas', getStatusIcon(trip.status)]" />
-          {{ getStatusLabel(trip.status) }}
-        </span>
-        <span v-if="trip.cancellation_date" class="cancellation-badge"> Annulée </span>
-      </div>
+      <span :class="['status-badge', `status-${trip.status}`]">
+        <font-awesome-icon :icon="['fas', getStatusIcon(trip.status)]" />
+        {{ getStatusLabel(trip.status) }}
+      </span>
       <div class="trip-actions">
         <slot name="actions"></slot>
       </div>
@@ -23,19 +20,17 @@
 
     <!-- Route -->
     <div class="trip-route">
-      <div class="route-info">
-        <div class="route-addresses">
-          <div class="departure">
-            <font-awesome-icon :icon="['fas', 'check']" class="icon" />
-            <span class="address">{{ trip.departure_address }}</span>
-          </div>
-          <div class="route-arrow">
-            <span class="arrow">→</span>
-          </div>
-          <div class="arrival">
-            <font-awesome-icon :icon="['fas', 'check']" class="icon" />
-            <span class="address">{{ trip.arrival_address }}</span>
-          </div>
+      <div class="route-addresses">
+        <div class="departure">
+          <font-awesome-icon :icon="['fas', 'check']" class="icon" />
+          <span class="address">{{ trip.departure_address }}</span>
+        </div>
+        <div class="route-arrow">
+          <span class="arrow">→</span>
+        </div>
+        <div class="arrival">
+          <font-awesome-icon :icon="['fas', 'check']" class="icon" />
+          <span class="address">{{ trip.arrival_address }}</span>
         </div>
       </div>
     </div>
@@ -179,15 +174,8 @@ export default {
 .trip-card-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.trip-status {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
   align-items: center;
+  gap: 1rem;
 }
 
 .status-badge {
@@ -198,6 +186,7 @@ export default {
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .status-badge.status-terminé {
@@ -213,15 +202,6 @@ export default {
 .status-badge.status-en\ cours {
   background: rgba(241, 213, 129, 0.15);
   color: #f1d581;
-}
-
-.cancellation-badge {
-  padding: 0.4rem 0.8rem;
-  background: rgba(205, 101, 112, 0.2);
-  color: #cd6570;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-weight: 500;
 }
 
 .trip-actions {
@@ -265,7 +245,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 2rem;
+  flex-shrink: 0;
 }
 
 .arrow {
