@@ -18,7 +18,7 @@ const handleSearch = (values) => {
   if (values) {
     searchStore.setSearchParams({
       departure: values.departure,
-      destination: values.destination,
+      arrival: values.arrival,
       date: values.date,
     })
     searchForm.value = { ...values }
@@ -31,8 +31,8 @@ const goToCarpooling = () => {
   router.push({
     name: 'SearchResults',
     query: {
-      from: '',
-      to: '',
+      departure: '',
+      arrival: '',
       date: '',
     },
   })

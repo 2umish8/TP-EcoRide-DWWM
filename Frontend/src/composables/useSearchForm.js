@@ -1,16 +1,16 @@
 import { ref } from 'vue'
 
-export function useSearchForm(initial = { departure: '', destination: '', date: '' }) {
+export function useSearchForm(initial = { departure: '', arrival: '', date: '' }) {
   const searchForm = ref({ ...initial })
 
   const resetSearchForm = () => {
-    searchForm.value = { departure: '', destination: '', date: '' }
+    searchForm.value = { departure: '', arrival: '', date: '' }
   }
 
   const buildQuery = (values) => {
     return {
-      from: values.departure || '',
-      to: values.destination || '',
+      departure: values.departure || '',
+      arrival: values.arrival || '',
       date: values.date || '',
     }
   }

@@ -114,7 +114,8 @@
 
 6. Cas "Aucun résultat":
    - [ ] Si 0 covoiturage → message "Aucun résultat"
-   - [ ] Système propose: "Prochain trajet disponible: [date]"
+   - [ ] Permettre chercher patiellement avec la barre de recherche. Voir les inputs comme des filtres. Chercher sans rien affiche tout, chercher avec une date affiche tous les trajets cette date, chercher uniquement un départ affiche tout avec ce départ, chercher avec départ un jour, ou départ et arrivée, ou arrivée et un jour etc... est possible.
+   - [ ] Système propose: "Regarder les autres dates pour {Départ} {Arrivée}"
 
 7. Cliquer sur "Détail":
    - [ ] Redirection vers /search/:id (ou modal)

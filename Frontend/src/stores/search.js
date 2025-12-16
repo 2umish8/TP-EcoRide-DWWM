@@ -3,14 +3,14 @@ import { defineStore } from 'pinia'
 export const useSearchStore = defineStore('search', {
   state: () => ({
     departure: localStorage.getItem('searchDeparture') || '',
-    destination: localStorage.getItem('searchDestination') || '',
+    arrival: localStorage.getItem('searchArrival') || '',
     date: localStorage.getItem('searchDate') || '',
   }),
 
   getters: {
     getSearchParams: (state) => ({
       departure: state.departure,
-      destination: state.destination,
+      arrival: state.arrival,
       date: state.date,
     }),
   },
@@ -18,11 +18,11 @@ export const useSearchStore = defineStore('search', {
   actions: {
     setSearchParams(params) {
       this.departure = params.departure || ''
-      this.destination = params.destination || ''
+      this.arrival = params.arrival || ''
       this.date = params.date || ''
 
       localStorage.setItem('searchDeparture', this.departure)
-      localStorage.setItem('searchDestination', this.destination)
+      localStorage.setItem('searchArrival', this.arrival)
       localStorage.setItem('searchDate', this.date)
     },
 

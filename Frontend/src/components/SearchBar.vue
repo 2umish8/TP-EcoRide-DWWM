@@ -9,9 +9,9 @@
     </div>
     <div class="search-input-wrapper">
       <CityAutocomplete
-        v-model="localForm.destination"
+        v-model="localForm.arrival"
         placeholder="Aller à ..."
-        storage-key="recentCities-destination"
+        storage-key="recentCities-arrival"
       />
     </div>
     <div class="search-input-wrapper">
@@ -35,7 +35,7 @@ import DateInput from './ui/DateInput.vue'
 const props = defineProps({
   initialValues: {
     type: Object,
-    default: () => ({ departure: '', destination: '', date: '' }),
+    default: () => ({ departure: '', arrival: '', date: '' }),
   },
   compact: { type: Boolean, default: false },
 })
@@ -45,7 +45,7 @@ const searchStore = useSearchStore()
 
 const localForm = ref({
   departure: props.initialValues.departure || '',
-  destination: props.initialValues.destination || '',
+  arrival: props.initialValues.arrival || '',
   date: props.initialValues.date || new Date().toISOString().split('T')[0],
 })
 

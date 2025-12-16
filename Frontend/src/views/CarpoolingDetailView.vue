@@ -23,148 +23,120 @@
 
     <!-- Contenu principal -->
     <div v-else-if="carpooling">
-      <!-- Ligne supérieure: Route & Chauffeur -->
-      <div class="top-section">
-        <!-- Informations du trajet -->
-        <div class="trip-info">
+      <!-- Trip & Driver Row -->
+      <div class="top-row">
+        <!-- Trip Information -->
+        <div class="trip-card">
           <div class="route-header">
             <h2>{{ carpooling.departure_address }} → {{ carpooling.arrival_address }}</h2>
-            <div class="eco-badge" v-if="carpooling.is_electric">
-              <font-awesome-icon :icon="['fas', 'leaf']" /> Écologique
+          </div>
+
+          <div class="trip-times">
+            <div class="time-slot">
+              <span class="time">{{ formatTime(carpooling.departure_datetime) }}</span>
+              <span class="date">{{ formatDate(carpooling.departure_datetime) }}</span>
+            </div>
+            <span class="arrow">→</span>
+            <div class="time-slot">
+              <span class="time">{{ formatTime(carpooling.arrival_datetime) }}</span>
+              <span class="date">{{ formatDate(carpooling.arrival_datetime) }}</span>
             </div>
           </div>
 
-          <div class="datetime-compact">
-            <div class="time-slot-compact">
-              <span class="label">Départ</span>
-              <span class="time-compact">{{ formatTime(carpooling.departure_datetime) }}</span>
-              <span class="date-compact">{{ formatDate(carpooling.departure_datetime) }}</span>
+          <div class="trip-stats">
+            <div class="stat">
+              <span class="label">Durée</span>
+              <span class="value">{{ formatDuration(carpooling.duration_minutes) }}</span>
             </div>
-            <div class="arrow-separator">→</div>
-            <div class="time-slot-compact">
-              <span class="label">Arrivée</span>
-              <span class="time-compact">{{ formatTime(carpooling.arrival_datetime) }}</span>
-              <span class="date-compact">{{ formatDate(carpooling.arrival_datetime) }}</span>
-            </div>
-            <div class="duration-compact">
-              <font-awesome-icon :icon="['fas', 'clock-rotate-left']" />
-              <span>{{ formatDuration(carpooling.duration_minutes) }}</span>
-            </div>
-          </div>
-
-          <div class="trip-highlights">
-            <div class="highlight-item price">
-              <span class="label"><font-awesome-icon :icon="['fas', 'coins']" /> Prix</span>
+            <div class="stat">
+              <span class="label">Prix</span>
               <span class="value">{{ carpooling.price_per_passenger }} €</span>
             </div>
-            <div class="highlight-item seats">
-              <span class="label"><font-awesome-icon :icon="['fas', 'chair']" /> Places</span>
+            <div class="stat">
+              <span class="label">Places</span>
               <span class="value">{{ carpooling.seats_remaining }}</span>
+            </div>
+            <div v-if="carpooling.is_electric" class="stat eco">
+              <font-awesome-icon :icon="['fas', 'leaf']" /> Électrique
             </div>
           </div>
         </div>
 
-        <!-- Informations du chauffeur et avis -->
-        <div class="driver-info">
-          <!-- Chauffeur (gauche) -->
-          <div class="driver-left">
-            <div class="driver-card-compact">
-              <ClickableAvatar
-                :userId="carpooling.driver_id"
-                :profilePictureUrl="
-                  carpooling.driver_photo ||
-                  `https://i.pravatar.cc/150?img=${carpooling.driver_id % 70}`
-                "
-                :alt="carpooling.driver_pseudo"
-                class="driver-avatar-compact"
-                @click="viewDriverProfile"
-              />
-              <div class="driver-details-compact">
-                <h4 class="driver-name" @click="viewDriverProfile(carpooling.driver_id)">
-                  {{ carpooling.driver_pseudo }}
-                </h4>
-                <div class="rating-compact">
-                  <span class="stars">{{ getStars(carpooling.driver_rating) }}</span>
-                  <span class="rating-value">{{ carpooling.driver_rating }}/5</span>
-                </div>
-                <span class="review-count">({{ carpooling.total_reviews }} avis)</span>
+        <!-- Driver Card -->
+        <div class="driver-card">
+          <div class="driver-info-simple">
+            <ClickableAvatar
+              :userId="carpooling.driver_id"
+              :profilePictureUrl="
+                carpooling.driver_photo ||
+                `https://i.pravatar.cc/150?img=${carpooling.driver_id % 70}`
+              "
+              :alt="carpooling.driver_pseudo"
+              class="driver-avatar"
+              @click="viewDriverProfile"
+            />
+            <div class="driver-details">
+              <h4 class="driver-name" @click="viewDriverProfile(carpooling.driver_id)">
+                {{ carpooling.driver_pseudo }}
+              </h4>
+              <div class="rating">
+                <span class="stars">{{ getStars(carpooling.driver_rating) }}</span>
+                <span>{{ carpooling.driver_rating }}/5</span>
               </div>
+              <span class="review-count">({{ carpooling.total_reviews }} avis)</span>
             </div>
           </div>
 
-          <!-- Avis (droite) -->
-          <div class="driver-right">
-            <h4><font-awesome-icon :icon="['fas', 'comment']" /> Avis récents</h4>
-            <div class="reviews-scroll-container">
+          <div class="reviews-list">
+            <h5>Avis récents</h5>
+            <div class="reviews-scroll">
               <div v-if="carpooling.recent_reviews && carpooling.recent_reviews.length > 0">
                 <div
-                  class="review-item-compact"
+                  class="review-item"
                   v-for="review in carpooling.recent_reviews"
                   :key="review.reviewer_pseudo"
                 >
-                  <div class="review-header-compact">
+                  <div class="review-header">
                     <span class="reviewer-name">{{ review.reviewer_pseudo }}</span>
-                    <span class="review-rating">{{ getStars(review.rating) }}</span>
+                    <span class="rating-stars">{{ getStars(review.rating) }}</span>
                   </div>
-                  <p class="review-comment-compact">{{ review.comment }}</p>
-                  <span class="review-date">{{ formatReviewDate(review.createdAt) }}</span>
+                  <p class="review-text">{{ review.comment }}</p>
                 </div>
               </div>
-              <div v-else class="no-reviews-compact">
-                <p>Aucun avis disponible.</p>
+              <div v-else class="no-reviews">
+                <p>Aucun avis.</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Véhicule & Préférences en ligne -->
-      <div class="middle-section">
-        <!-- Informations du véhicule -->
+      <!-- Vehicle & Preferences -->
+      <div class="info-row">
         <div class="vehicle-info">
           <h3><font-awesome-icon :icon="['fas', 'car']" /> Véhicule</h3>
-          <div class="vehicle-compact">
-            <div>
-              <h4>{{ carpooling.brand_name }} {{ carpooling.model }}</h4>
-              <div class="vehicle-specs-compact">
-                <span class="spec-compact">
-                  <strong>Couleur:</strong> {{ carpooling.color_name }}
-                </span>
-                <span class="spec-compact">
-                  <strong>Plaque:</strong> <code>{{ carpooling.plate_number }}</code>
-                </span>
-                <span v-if="carpooling.is_electric" class="eco-vehicle">
-                  <font-awesome-icon :icon="['fas', 'bolt']" /> Électrique
-                </span>
-              </div>
-            </div>
-          </div>
+          <p>{{ carpooling.brand_name }} {{ carpooling.model }}</p>
+          <p class="small">
+            {{ carpooling.color_name }} - <code>{{ carpooling.plate_number }}</code>
+          </p>
+          <p v-if="carpooling.is_electric" class="small eco-tag">
+            <font-awesome-icon :icon="['fas', 'bolt']" /> Électrique
+          </p>
         </div>
 
-        <!-- Préférences du chauffeur -->
         <div class="preferences-info">
           <h3><font-awesome-icon :icon="['fas', 'gear']" /> Préférences</h3>
-          <div class="preferences-compact">
-            <div class="pref-item-compact">
-              <font-awesome-icon :icon="['fas', 'smoking']" class="pref-icon" />
-              <span>{{
-                carpooling.driver_preferences?.allowsSmoking ? '✓ Fumeur' : '✗ Non-fumeur'
-              }}</span>
-            </div>
-            <div class="pref-item-compact">
-              <font-awesome-icon :icon="['fas', 'paw']" class="pref-icon" />
-              <span>{{
-                carpooling.driver_preferences?.allowsPets ? '✓ Animaux' : "✗ Pas d'animaux"
-              }}</span>
-            </div>
-            <div class="pref-item-compact">
-              <font-awesome-icon :icon="['fas', 'comment']" class="pref-icon" />
-              <span>{{ carpooling.driver_preferences?.conversationLevel || 'Modérée' }}</span>
-            </div>
-            <div v-if="carpooling.driver_preferences?.specialRules" class="pref-item-compact">
-              <font-awesome-icon :icon="['fas', 'clipboard-list']" class="pref-icon" />
-              <span>{{ carpooling.driver_preferences.specialRules }}</span>
-            </div>
+          <div class="prefs">
+            <span>{{
+              carpooling.driver_preferences?.allowsSmoking ? '✓ Fumeur' : '✗ Non-fumeur'
+            }}</span>
+            <span>{{
+              carpooling.driver_preferences?.allowsPets ? '✓ Animaux' : "✗ Pas d'animaux"
+            }}</span>
+            <span>{{ carpooling.driver_preferences?.conversationLevel || 'Modérée' }}</span>
+            <span v-if="carpooling.driver_preferences?.specialRules">
+              {{ carpooling.driver_preferences.specialRules }}
+            </span>
           </div>
         </div>
       </div>
@@ -195,7 +167,7 @@
       </div>
 
       <!-- Détails supplémentaires (expandable) -->
-      <div v-if="showMoreDetails" class="additional-details">
+      <BaseCard v-if="showMoreDetails" class="additional-details-card">
         <h3><font-awesome-icon :icon="['fas', 'circle-info']" /> Informations complémentaires</h3>
         <div class="extra-info">
           <p><strong>ID du covoiturage:</strong> {{ carpooling.id }}</p>
@@ -208,7 +180,7 @@
             {{ carpooling.platform_commission_earned }} crédits
           </p>
         </div>
-      </div>
+      </BaseCard>
 
       <!-- Modal de confirmation de participation -->
       <BaseModal :show="showConfirmationModal" @close="closeConfirmationModal">
@@ -293,28 +265,11 @@
     </div>
 
     <div v-else class="not-found">
-      <div class="no-carpooling" v-if="!driverTrips || driverTrips.length === 0">
-        <p v-if="driverIsActive" class="no-trips-message">
-          <font-awesome-icon :icon="['fas', 'inbox']" /> Ce chauffeur n'a aucun covoiturage prévu ou
-          en cours
-        </p>
-        <p v-else class="no-driver-message">
+      <div class="no-carpooling">
+        <p class="no-driver-message">
           <font-awesome-icon :icon="['fas', 'magnifying-glass']" /> Aucun covoiturage trouvé
         </p>
         <PrimaryButton @click="$router.push('/search')">Retourner à la recherche</PrimaryButton>
-      </div>
-
-      <div class="driver-trips" v-else>
-        <h2><font-awesome-icon :icon="['fas', 'car']" /> Autres voyages de ce chauffeur</h2>
-        <div class="trips-grid">
-          <TripCard
-            v-for="trip in driverTrips"
-            :key="trip.id"
-            :trip="trip"
-            @select="selectTrip"
-            @view-driver-profile="viewDriverProfile"
-          />
-        </div>
       </div>
     </div>
   </div>
@@ -330,10 +285,10 @@ import ClickableAvatar from '@/components/ClickableAvatar.vue'
 import SecondaryButton from '@/components/ui/SecondaryButton.vue'
 import PrimaryButton from '@/components/ui/PrimaryButton.vue'
 import NavButton from '@/components/ui/NavButton.vue'
-import TripCard from '@/components/TripCard.vue'
 import LoadingState from '@/components/LoadingState.vue'
 import ErrorState from '@/components/ErrorState.vue'
 import BaseModal from '@/components/BaseModal.vue'
+import BaseCard from '@/components/ui/BaseCard.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -348,10 +303,6 @@ const showConfirmationModal = ref(false)
 const participationCheck = ref(null)
 const isParticipating = ref(false)
 const isConfirming = ref(false)
-
-// Variables pour afficher les voyages du chauffeur
-const driverTrips = ref(null)
-const driverIsActive = ref(false)
 
 // Vérifie si l'utilisateur est le chauffeur du covoiturage
 const isUserDriver = computed(() => {
@@ -392,15 +343,6 @@ const formatDuration = (minutes) => {
     return `${hours}h${mins > 0 ? mins.toString().padStart(2, '0') : ''}`
   }
   return `${mins}min`
-}
-
-const formatReviewDate = (date) => {
-  if (!date) return ''
-  return new Date(date).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })
 }
 
 const getStars = (rating) => {
@@ -482,31 +424,6 @@ const closeConfirmationModal = () => {
   participationCheck.value = null
 }
 
-// Fonction pour charger les voyages du chauffeur
-const loadDriverTrips = async (driverId) => {
-  try {
-    // Endpoint pour obtenir tous les covoiturages du chauffeur
-    // Si l'endpoint n'existe pas encore, on peut l'implémenter dans le backend
-    // Pour l'instant, on initialise les variables
-    const response = await api.get(`/carpoolings/driver/${driverId}`)
-    driverTrips.value = response.data.carpoolings || []
-    driverIsActive.value = true
-  } catch {
-    // L'endpoint n'existe peut-être pas encore
-    // On initialise simplement sans afficher d'erreur
-    if (import.meta.env.DEV) {
-      console.log('[CarpoolingDetailView] Endpoint carpoolings/driver/ non disponible')
-    }
-    driverTrips.value = []
-    driverIsActive.value = true // Le chauffeur est actif si on peut voir ses détails
-  }
-}
-
-// Fonction pour sélectionner un autre voyage du chauffeur
-const selectTrip = (trip) => {
-  router.push(`/carpooling/${trip.id}`)
-}
-
 onMounted(async () => {
   try {
     loading.value = true
@@ -524,11 +441,6 @@ onMounted(async () => {
     if (!carpooling.value) {
       throw new Error('Données du covoiturage non trouvées')
     }
-
-    // Charger les autres voyages du chauffeur
-    if (carpooling.value.driver_id) {
-      await loadDriverTrips(carpooling.value.driver_id)
-    }
   } catch (err) {
     console.error('Erreur lors du chargement du covoiturage:', err)
     error.value = err.response?.data?.message || err.message || 'Erreur de connexion'
@@ -540,538 +452,358 @@ onMounted(async () => {
 
 <style scoped>
 .carpooling-detail {
-  max-width: 1400px;
-  margin: 20px auto;
-  padding: 20px;
+  max-width: 100%;
+  padding: 16px;
   color: var(--color-light);
-  min-height: 100vh;
 }
 
 /* Header */
 .header {
   display: flex;
   align-items: center;
-  margin-bottom: 25px;
-  gap: 20px;
-  padding: 0 10px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .header h1 {
-  color: var(--color-light);
   margin: 0;
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 700;
-  letter-spacing: -0.5px;
 }
 
-/* Top Section: Route + Chauffeur */
-.top-section {
+/* Top Row: Trip + Driver */
+.top-row {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 16px;
-  margin-bottom: 16px;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
-.vehicle-info h3,
-.preferences-info h3,
-.additional-details h3 {
+/* Trip Card */
+.trip-card {
+  padding: 16px;
+  background: var(--color-dark-secondary);
+  border-radius: 4px;
+}
+
+.route-header h2 {
   margin: 0 0 12px 0;
   font-size: 16px;
   font-weight: 600;
-  color: var(--eco-primary);
+  line-height: 1.3;
+}
+
+.trip-times {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
 }
 
-/* Trip Info Compact */
-.trip-info {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.route-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.route h2 {
-  margin: 0;
-  font-size: 18px;
-  color: var(--color-light);
-  font-weight: 600;
-}
-
-.eco-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: rgba(143, 218, 179, 0.15);
-  color: var(--eco-primary);
-}
-
-/* Datetime Compact */
-.datetime-compact {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.time-slot-compact {
+.time-slot {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.time-slot-compact .label {
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.2px;
+.time-slot .time {
+  font-weight: 700;
+  font-size: 0.95rem;
 }
 
-.time-compact {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--eco-primary);
-}
-
-.date-compact {
+.time-slot .date {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-gray);
 }
 
-.arrow-separator {
-  color: var(--eco-primary);
-  font-size: 16px;
-  font-weight: bold;
-  opacity: 0.6;
-}
-
-.duration-compact {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px 12px;
-  background: rgba(143, 218, 179, 0.1);
-  border-radius: 6px;
-  font-size: 0.85rem;
+.arrow {
+  opacity: 0.5;
   font-weight: 600;
-  color: var(--eco-primary);
 }
 
-/* Trip Highlights */
-.trip-highlights {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+.trip-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
 }
 
-.highlight-item {
+.stat {
   display: flex;
   flex-direction: column;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: var(--color-dark);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 2px;
 }
 
-.highlight-item.price {
-  border-left: 3px solid #ffd700;
-}
-
-.highlight-item.price .value {
-  color: #ffd700;
-}
-
-.highlight-item.seats {
-  border-left: 3px solid #ff69b4;
-}
-
-.highlight-item.seats .value {
-  color: #ff69b4;
-}
-
-.highlight-item .label {
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
+.stat .label {
+  font-size: 0.75rem;
+  color: var(--color-gray);
   font-weight: 600;
-  margin-bottom: 2px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.highlight-item .value {
-  font-size: 16px;
+.stat .value {
   font-weight: 700;
 }
 
-/* Driver Info Compact */
-.driver-info {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+.stat.eco {
+  color: var(--color-primary);
+  font-weight: 600;
+  align-items: flex-start;
 }
 
-.driver-info h3 {
-  display: none;
-}
-
-/* Driver Left Column */
-.driver-left {
+/* Driver Card */
+.driver-card {
+  padding: 16px;
+  background: var(--color-dark-secondary);
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-}
-
-.driver-card-compact {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: 12px;
-  text-align: center;
 }
 
-.driver-avatar-compact {
-  width: 80px;
-  height: 80px;
+.driver-info-simple {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.driver-avatar {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--eco-primary);
+  flex-shrink: 0;
   cursor: pointer;
 }
 
-.driver-details-compact {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.driver-details {
+  flex: 1;
+  font-size: 0.9rem;
 }
 
 .driver-name {
   margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--eco-primary);
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  color: var(--color-primary);
 }
 
-.driver-name:hover {
-  color: var(--color-light);
-}
-
-.rating-compact {
+.rating {
   display: flex;
-  align-items: center;
-  justify-content: center;
   gap: 4px;
   font-size: 0.85rem;
+  font-weight: 600;
 }
 
-.rating-compact .stars {
-  color: var(--eco-primary);
-  font-size: 0.8rem;
+.rating .stars {
   letter-spacing: 1px;
 }
 
-.rating-compact .rating-value {
-  font-weight: 600;
-  color: var(--color-light);
-}
-
 .review-count {
+  display: block;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-gray);
+  margin-top: 2px;
 }
 
-/* Driver Right Column - Reviews */
-.driver-right {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.reviews-list {
+  flex: 1;
 }
 
-.driver-right h4 {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--eco-primary);
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.reviews-list h5 {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
-.reviews-scroll-container {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  max-height: 280px;
+.reviews-scroll {
+  max-height: 150px;
   overflow-y: auto;
-  padding-right: 4px;
-  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-/* Scrollbar styling - only visible when overflowing */
-.reviews-scroll-container::-webkit-scrollbar {
-  width: 6px;
+.reviews-scroll::-webkit-scrollbar {
+  width: 3px;
 }
 
-.reviews-scroll-container::-webkit-scrollbar-track {
-  background: transparent;
+.reviews-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
 }
 
-.reviews-scroll-container::-webkit-scrollbar-thumb {
-  background: rgba(143, 218, 179, 0.4);
+.review-item {
+  font-size: 0.8rem;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 3px;
 }
 
-.reviews-scroll-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(143, 218, 179, 0.6);
-}
-
-.review-item-compact {
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  border-left: 2px solid var(--eco-primary);
-  font-size: 0.75rem;
-  flex-shrink: 0;
-}
-
-.review-header-compact {
+.review-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 4px;
-  gap: 6px;
+  margin-bottom: 3px;
+  gap: 4px;
 }
 
 .reviewer-name {
   font-weight: 600;
-  color: var(--eco-primary);
   font-size: 0.8rem;
 }
 
-.review-rating {
-  color: #ffd700;
-  font-size: 0.75rem;
-  letter-spacing: 0.5px;
-}
-
-.review-comment-compact {
-  margin: 4px 0;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.75rem;
-  line-height: 1.2;
-}
-
-.review-date {
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.no-reviews-compact {
-  text-align: center;
-  color: rgba(255, 255, 255, 0.4);
-  font-style: italic;
-  padding: 12px 0;
+.rating-stars {
   font-size: 0.75rem;
 }
 
-/* Middle Section: Vehicle + Preferences */
-.middle-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-/* Vehicle Compact */
-.vehicle-compact {
-  display: flex;
-  gap: 12px;
-}
-
-.vehicle-compact h4 {
-  margin: 0 0 6px 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-light);
-}
-
-.vehicle-specs-compact {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.spec-compact {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.spec-compact strong {
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 600;
-}
-
-.spec-compact code {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: 'Courier New', monospace;
-  color: var(--eco-primary);
-  font-weight: 600;
-}
-
-.eco-vehicle {
-  color: var(--eco-primary);
-  font-weight: 600;
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* Preferences Compact */
-.preferences-compact {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.pref-item-compact {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-  background: var(--color-dark);
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.8rem;
+.review-text {
+  margin: 0;
+  line-height: 1.3;
   color: rgba(255, 255, 255, 0.8);
 }
 
-.pref-item-compact .pref-icon {
-  font-size: 0.9rem;
-  color: var(--eco-primary);
-  flex-shrink: 0;
+.no-reviews {
+  font-size: 0.8rem;
+  color: var(--color-gray);
+  text-align: center;
+  padding: 8px;
 }
 
-.pref-item-compact span {
-  white-space: nowrap;
+/* Info Row: Vehicle + Preferences */
+.info-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.vehicle-info,
+.preferences-info {
+  padding: 12px;
+  background: var(--color-dark-secondary);
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.vehicle-info h3,
+.preferences-info h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.vehicle-info p,
+.preferences-info p {
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+.vehicle-info code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 4px;
+  border-radius: 2px;
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+.small {
+  font-size: 0.85rem;
+  color: var(--color-gray);
+}
+
+.eco-tag {
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.prefs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+.prefs span {
+  line-height: 1.3;
 }
 
 /* Actions */
 .actions {
   display: flex;
   gap: 12px;
-  margin: 16px 0;
+  margin-bottom: 20px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 /* Additional details */
-.additional-details {
-  animation: slideDown 0.3s ease-out;
-  margin-top: 16px;
+.additional-details-card {
+  padding: 12px;
+  background: var(--color-dark-secondary);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.additional-details-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .extra-info {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  font-size: 0.85rem;
 }
 
 .extra-info p {
   margin: 0;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
-  padding: 8px;
-  background: var(--color-dark);
-  border-left: 2px solid var(--eco-primary);
-  border-radius: 4px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .extra-info strong {
-  color: var(--color-light);
+  display: block;
+  font-weight: 700;
+  margin-bottom: 2px;
 }
 
-.participate-btn,
-.details-btn {
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: none;
-}
-
-.participate-btn {
-  background: linear-gradient(135deg, var(--eco-primary), #6bc26b);
-  color: var(--color-dark);
-}
-
-.participate-btn:not(:disabled):hover {
-  background: linear-gradient(135deg, #6bc26b, var(--eco-primary));
-  transform: translateY(-2px);
-}
-
-.participate-btn:disabled {
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--color-gray);
-  cursor: not-allowed;
-}
-
-.details-btn {
-  background: rgba(255, 255, 255, 0.15);
-  color: var(--color-light);
-  border: 1px solid var(--color-gray);
-}
-
-.details-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: var(--eco-primary);
-}
-
+/* Modal */
 .modal-header-content {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--eco-green);
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .participation-summary {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: var(--color-dark-secondary);
+  border-radius: 4px;
 }
 
 .participation-summary h4 {
-  color: var(--color-light);
-  margin: 0 0 16px;
-  font-size: 16px;
-  font-weight: 600;
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .summary-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--color-dark-secondary);
+  padding: 4px 0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .summary-item:last-child {
@@ -1080,51 +812,49 @@ onMounted(async () => {
 
 .summary-item .label {
   color: var(--color-gray);
-  font-size: 14px;
 }
 
 .summary-item .value {
-  color: var(--color-light);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .cost-highlight {
-  color: var(--eco-green) !important;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  color: var(--color-primary) !important;
+  font-weight: 700;
 }
 
 .credits-info {
+  margin-bottom: 16px;
+  padding: 12px;
   background: var(--color-dark-secondary);
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 24px;
+  border-radius: 4px;
+  font-size: 0.9rem;
 }
 
 .credits-current,
 .credits-after {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 4px 0;
 }
 
-.credits-current .label,
-.credits-after .label {
-  color: var(--color-gray);
-  font-size: 14px;
-}
-
-.credits-current .value {
-  color: var(--color-light);
-  font-weight: 500;
-}
-
 .credits-after .value {
-  color: var(--color-warning);
-  font-weight: 600;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.confirmation-warning {
+  padding: 12px;
+  background: rgba(255, 193, 7, 0.1);
+  border-left: 3px solid var(--color-warning);
+  border-radius: 3px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.confirmation-warning p {
+  margin: 4px 0;
+  line-height: 1.4;
 }
 
 .modal-actions {
@@ -1132,284 +862,73 @@ onMounted(async () => {
   gap: 12px;
 }
 
-.cancel-btn,
-.confirm-btn {
-  flex: 1;
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: none;
-}
-
-.cancel-btn {
-  background: rgba(255, 255, 255, 0.15);
-  color: var(--color-light);
-  border: 1px solid var(--color-gray);
-}
-
-.cancel-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: var(--color-gray);
-}
-
-.confirm-btn {
-  background: linear-gradient(135deg, var(--eco-green), var(--eco-green-hover));
-  color: var(--color-dark);
-}
-
-.confirm-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--eco-green-hover), var(--eco-green));
-}
-
-.cancel-btn:disabled,
-.confirm-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Additional details */
-.additional-details {
-  animation: slideDown 0.3s ease-out;
-}
-
-.extra-info p {
-  margin: 8px 0;
-  font-size: 14px;
-  color: var(--color-light-secondary);
-}
-
-.extra-info strong {
-  color: var(--eco-green);
-}
-
 /* Not found */
 .not-found {
   margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
 
 .no-carpooling {
   text-align: center;
   padding: 40px 20px;
   background: var(--color-dark-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  border-radius: 4px;
 }
 
-.no-trips-message,
 .no-driver-message {
-  margin: 0 0 20px;
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 16px 0;
+  font-size: 15px;
+  color: var(--color-gray);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
 
-.no-trips-message svg,
-.no-driver-message svg {
-  font-size: 20px;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.driver-trips {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.driver-trips h2 {
-  margin: 0;
-  color: var(--color-light);
-  font-size: 20px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 10px;
-}
-
-.driver-trips h2 svg {
-  color: var(--eco-primary);
-  font-size: 22px;
-}
-
-.trips-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
-}
-
-/* Driver name clickable styling */
-.driver-name {
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: var(--eco-green);
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 2px;
-}
-
-.driver-name:hover {
-  color: var(--bs-primary);
-  text-decoration-color: var(--bs-primary);
-  transform: translateY(-1px);
-}
-
 /* Responsive */
-/* Responsive Design */
-@media (max-width: 1200px) {
-  .carpooling-detail {
-    max-width: 100%;
-  }
-
-  .top-section {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .middle-section {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .driver-info {
+@media (max-width: 1024px) {
+  .top-row,
+  .info-row {
     grid-template-columns: 1fr;
   }
 
-  .driver-right {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 12px;
+  .driver-info-simple {
+    flex-direction: column;
+  }
+
+  .driver-avatar {
+    width: 50px;
+    height: 50px;
   }
 }
 
-@media (max-width: 768px) {
-  .carpooling-detail {
-    padding: 12px;
-    margin: 8px;
-  }
-
-  .top-section {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .trip-highlights {
-    grid-template-columns: 1fr;
-  }
-
-  .middle-section {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .preferences-compact {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-
-  .actions {
+@media (max-width: 640px) {
+  .header {
     flex-direction: column;
-    gap: 8px;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
   }
 
-  .participate-btn,
-  .details-btn {
-    width: 100%;
+  .header h1 {
+    font-size: 18px;
   }
 
-  .driver-card-compact {
+  .route-header h2 {
+    font-size: 15px;
+  }
+
+  .trip-times {
+    font-size: 0.85rem;
+  }
+
+  .top-row,
+  .info-row {
+    grid-template-columns: 1fr;
     gap: 12px;
   }
 
   .extra-info {
     grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .reviews-list {
-    max-height: 200px;
-  }
-
-  .review-item {
-    padding: 10px;
-    margin-bottom: 6px;
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .carpooling-detail {
-    padding: 10px;
-    margin: 5px;
-  }
-
-  h2 {
-    font-size: 1.25rem;
-    margin: 0 0 10px 0;
-  }
-
-  h3 {
-    font-size: 1rem;
-    margin: 0 0 10px 0;
-  }
-
-  .trip-highlights {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-
-  .preferences-compact {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-
-  .driver-avatar {
-    width: 60px;
-    height: 60px;
-    font-size: 28px;
-  }
-
-  .reviews-list {
-    max-height: 180px;
-  }
-}
-
-/* Animations */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
   }
 }
 </style>

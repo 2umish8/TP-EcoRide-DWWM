@@ -1,32 +1,27 @@
 <template>
   <div class="register-page">
     <div class="register-container">
-      <!-- Section titre à gauche -->
+      <!-- Header section left -->
       <div class="register-header-section">
-        <div class="logo-section">
-          <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="register-logo" />
-        </div>
+        <img src="@/assets/Logo ecoride transparent.PNG" alt="EcoRide" class="register-logo" />
         <h1 class="register-title">Rejoignez EcoRide !</h1>
         <p class="register-subtitle">
           Créez votre compte et commencez à voyager de manière éco-responsable
         </p>
       </div>
 
-      <div class="register-card">
-        <!-- Formulaire d'inscription -->
+      <BaseCard class="register-card">
+        <!-- Registration form -->
         <form @submit.prevent="handleRegister" class="register-form">
-          <!-- Première ligne : Email et Pseudo -->
+          <!-- First row: Email and Pseudo -->
           <div class="form-row">
             <div class="form-group">
               <label for="email" class="form-label">Adresse e-mail *</label>
-              <input
-                type="email"
+              <TextInput
                 id="email"
                 v-model="registerForm.email"
-                class="form-input"
-                :class="{ error: emailError && registerForm.email }"
+                type="email"
                 placeholder="votre@email.com"
-                required
                 :disabled="isLoading"
               />
               <div v-if="emailError && registerForm.email" class="field-error">
@@ -36,35 +31,26 @@
 
             <div class="form-group">
               <label for="pseudo" class="form-label">Pseudo *</label>
-              <input
-                type="text"
+              <TextInput
                 id="pseudo"
                 v-model="registerForm.pseudo"
-                class="form-input"
+                type="text"
                 placeholder="votre_pseudo"
-                required
                 :disabled="isLoading"
               />
             </div>
           </div>
 
-          <!-- Deuxième ligne : Mot de passe et Confirmation -->
+          <!-- Second row: Password and Confirmation -->
           <div class="form-row">
             <div class="form-group">
               <label for="password" class="form-label">Mot de passe *</label>
               <div class="password-input-group">
-                <input
-                  :type="showPassword ? 'text' : 'password'"
+                <TextInput
                   id="password"
                   v-model="registerForm.password"
-                  class="form-input"
-                  :class="{
-                    'password-valid': passwordValidation.isValid,
-                    'password-invalid': registerForm.password && !passwordValidation.isValid,
-                    'password-medium': passwordValidation.strength === 'moyen',
-                  }"
+                  :type="showPassword ? 'text' : 'password'"
                   placeholder="Minimum 8 caractères"
-                  required
                   :disabled="isLoading"
                   :title="passwordTooltip"
                   @mouseenter="showTooltip = true"
@@ -76,7 +62,7 @@
                   <font-awesome-icon v-if="showPassword" :icon="['fas', 'eye']" />
                   <font-awesome-icon v-else :icon="['fas', 'eye-slash']" />
                 </IconButton>
-                <!-- Tooltip personnalisé -->
+                <!-- Password criteria tooltip -->
                 <div class="password-tooltip" v-show="showTooltip">
                   <div class="tooltip-content">
                     <strong>Critères requis :</strong>
@@ -89,7 +75,7 @@
                   </div>
                 </div>
               </div>
-              <!-- Indicateur de force simplifié -->
+              <!-- Password strength indicator -->
               <PasswordStrengthIndicator
                 :password="registerForm.password"
                 :show-requirements="false"
@@ -99,22 +85,14 @@
 
             <div class="form-group">
               <label for="confirmPassword" class="form-label">Confirmer le mot de passe *</label>
-              <input
-                type="password"
+              <TextInput
                 id="confirmPassword"
                 v-model="registerForm.confirmPassword"
-                class="form-input"
-                :class="{
-                  'password-valid':
-                    passwordConfirmationValidation.isValid && registerForm.confirmPassword,
-                  'password-invalid':
-                    registerForm.confirmPassword && !passwordConfirmationValidation.isValid,
-                }"
+                type="password"
                 placeholder="Répétez votre mot de passe"
-                required
                 :disabled="isLoading"
               />
-              <!-- Composant de validation de confirmation -->
+              <!-- Password confirmation validator -->
               <PasswordConfirmationValidator
                 :password="registerForm.password"
                 :confirm-password="registerForm.confirmPassword"
@@ -123,19 +101,19 @@
             </div>
           </div>
 
-          <!-- Message d'erreur -->
+          <!-- Error message -->
           <div v-if="errorMessage" class="error-message">
             <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="error-icon" />
             {{ errorMessage }}
           </div>
 
-          <!-- Message de succès -->
+          <!-- Success message -->
           <div v-if="successMessage" class="success-message">
             <font-awesome-icon :icon="['fas', 'circle-check']" class="success-icon" />
             {{ successMessage }}
           </div>
 
-          <!-- Bouton d'inscription -->
+          <!-- Register button -->
           <PrimaryButton type="submit" :disabled="isLoading || !isFormValid">
             <font-awesome-icon
               v-if="isLoading"
@@ -146,12 +124,12 @@
           </PrimaryButton>
         </form>
 
-        <!-- Lien vers connexion -->
+        <!-- Link to login -->
         <div class="login-link">
           <p>Vous avez déjà un compte ?</p>
           <InlineLink to="/login">Se connecter</InlineLink>
         </div>
-      </div>
+      </BaseCard>
     </div>
   </div>
 </template>
@@ -166,6 +144,8 @@ import { authService } from '@/services/api'
 import PrimaryButton from '@/components/ui/PrimaryButton.vue'
 import IconButton from '@/components/ui/IconButton.vue'
 import InlineLink from '@/components/ui/InlineLink.vue'
+import BaseCard from '@/components/ui/BaseCard.vue'
+import TextInput from '@/components/ui/TextInput.vue'
 
 const router = useRouter()
 
@@ -362,7 +342,7 @@ const handleRegister = async () => {
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 8px;
 }
 
 .form-label {
@@ -371,81 +351,17 @@ const handleRegister = async () => {
   font-size: 0.9rem;
 }
 
-.form-input {
-  padding: 15px 16px;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background: var(--color-dark-secondary);
-  color: var(--color-light);
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  background: var(--color-dark-secondary);
-  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2);
-}
-
-.form-input::placeholder {
-  color: var(--color-gray);
-}
-
-.form-input.error {
-  border-color: var(--color-error);
-  background: rgba(239, 68, 68, 0.1);
-}
-
-.form-input.error:focus {
-  border-color: var(--color-error);
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
-}
-
 .field-error {
   color: var(--color-error);
   font-size: 0.85rem;
   font-weight: 500;
-  margin-top: 4px;
+}
+
+.password-input-group {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 4px;
-}
-
-.field-error::before {
-  content: '⚠️';
-  font-size: 0.75rem;
-}
-
-.form-input:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.password-input-group {
-  position: relative;
-}
-
-.password-toggle {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: background 0.3s ease;
-}
-
-.password-toggle:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-/* Tooltip pour les critères de mot de passe */
-.password-input-group {
-  position: relative;
+  gap: 8px;
 }
 
 .password-tooltip {
@@ -485,87 +401,6 @@ const handleRegister = async () => {
   line-height: 1.4;
 }
 
-.password-strength {
-  margin-top: 8px;
-}
-
-.strength-bar {
-  width: 100%;
-  height: 4px;
-  background: var(--color-light);
-  border-radius: 2px;
-  overflow: hidden;
-  margin-bottom: 4px;
-}
-
-.strength-fill {
-  height: 100%;
-  transition: all 0.3s ease;
-}
-
-.strength-fill.weak {
-  background: var(--color-error);
-}
-.strength-fill.medium {
-  background: var(--color-warning);
-}
-.strength-fill.good {
-  background: var(--color-primary);
-}
-.strength-fill.strong {
-  background: var(--color-success);
-}
-
-.strength-text {
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
-.strength-text.weak {
-  color: var(--color-error);
-}
-.strength-text.medium {
-  color: var(--color-warning);
-}
-.strength-text.good {
-  color: var(--color-primary);
-}
-.strength-text.strong {
-  color: var(--color-success);
-}
-
-.password-error {
-  color: var(--color-error);
-  font-size: 0.8rem;
-  margin-top: 4px;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  color: var(--color-light-secondary);
-  line-height: 1.5;
-}
-
-.checkbox-label input[type='checkbox'] {
-  accent-color: var(--color-primary);
-  margin: 0;
-}
-
-.link {
-  color: var(--color-primary);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.link:hover {
-  color: var(--bs-primary);
-  text-decoration: underline;
-}
-
 .error-message {
   background: rgba(205, 101, 112, 0.1);
   border: 1px solid rgba(205, 101, 112, 0.2);
@@ -590,35 +425,6 @@ const handleRegister = async () => {
   font-size: 0.9rem;
 }
 
-.register-btn {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  padding: 16px 24px;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.register-btn:hover:not(:disabled) {
-  background: var(--bs-primary);
-  color: var(--color-light);
-  transform: translateY(-1px);
-}
-
-.register-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
 .loading-spinner {
   animation: spin 1s linear infinite;
 }
@@ -633,18 +439,24 @@ const handleRegister = async () => {
   margin-bottom: 12px;
 }
 
-.login-btn-link {
-  color: var(--color-primary);
-  text-decoration: none;
-  font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.login-btn-link:hover {
-  background: var(--bs-primary);
-  color: var(--color-light);
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive */
@@ -671,7 +483,6 @@ const handleRegister = async () => {
     padding: 30px 20px;
   }
 
-  /* Passer en layout vertical sur mobile */
   .form-row {
     grid-template-columns: 1fr;
     gap: 20px;

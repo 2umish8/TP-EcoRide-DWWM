@@ -55,7 +55,7 @@ export const useCarpoolings = () => {
       // Add formatted fields for sorting references
       driverId: carpooling.driver_id,
       departure: carpooling.departure_address,
-      destination: carpooling.arrival_address,
+      arrival: carpooling.arrival_address,
       departureTime: new Date(carpooling.departure_datetime).toLocaleTimeString('fr-FR', {
         hour: '2-digit',
         minute: '2-digit',

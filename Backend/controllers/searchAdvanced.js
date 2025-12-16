@@ -73,14 +73,12 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
         if (departure) {
             where.departure_address = {
                 contains: departure,
-                mode: "insensitive",
             };
         }
 
         if (arrival) {
             where.arrival_address = {
                 contains: arrival,
-                mode: "insensitive",
             };
         }
 

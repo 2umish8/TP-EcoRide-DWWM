@@ -64,7 +64,7 @@ import { useAuthStore } from '@/stores/auth'
 defineProps({
   initialSearchValues: {
     type: Object,
-    default: () => ({ departure: '', destination: '', date: '' }),
+    default: () => ({ departure: '', arrival: '', date: '' }),
   },
 })
 const emit = defineEmits(['search', 'browse-all'])
