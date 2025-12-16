@@ -86,10 +86,7 @@ driverPreferencesSchema.statics.findByDriverId = function (driverId) {
     return this.findOne({ driverId });
 };
 
-driverPreferencesSchema.statics.createOrUpdate = async function (
-    driverId,
-    preferences
-) {
+driverPreferencesSchema.statics.createOrUpdate = async function (driverId, preferences) {
     return this.findOneAndUpdate(
         { driverId },
         { ...preferences, driverId, updatedAt: new Date() },
@@ -98,18 +95,12 @@ driverPreferencesSchema.statics.createOrUpdate = async function (
 };
 
 // Méthodes d'instance
-driverPreferencesSchema.methods.addCustomPreference = function (
-    type,
-    value,
-    description = ""
-) {
+driverPreferencesSchema.methods.addCustomPreference = function (type, value, description = "") {
     this.customPreferences.push({ type, value, description });
     return this.save();
 };
 
-driverPreferencesSchema.methods.removeCustomPreference = function (
-    preferenceId
-) {
+driverPreferencesSchema.methods.removeCustomPreference = function (preferenceId) {
     this.customPreferences.id(preferenceId).remove();
     return this.save();
 };

@@ -101,16 +101,27 @@
             </div>
           </div>
 
+          <!-- Legal mentions checkbox -->
+          <div class="legal-checkbox">
+            <input
+              id="acceptTerms"
+              type="checkbox"
+              v-model="acceptTerms"
+              :disabled="isLoading"
+              class="checkbox-input"
+            />
+            <label for="acceptTerms" class="checkbox-label">
+              Je confirme avoir lu les
+              <router-link to="/legal" target="_blank" class="legal-link">
+                mentions légales
+              </router-link>
+            </label>
+          </div>
+
           <!-- Error message -->
           <div v-if="errorMessage" class="error-message">
             <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="error-icon" />
             {{ errorMessage }}
-          </div>
-
-          <!-- Success message -->
-          <div v-if="successMessage" class="success-message">
-            <font-awesome-icon :icon="['fas', 'circle-check']" class="success-icon" />
-            {{ successMessage }}
           </div>
 
           <!-- Register button -->
@@ -146,8 +157,10 @@ import IconButton from '@/components/ui/buttons/IconButton.vue'
 import InlineLink from '@/components/ui/InlineLink.vue'
 import BaseCard from '@/components/ui/cards/BaseCard.vue'
 import TextInput from '@/components/ui/inputs/TextInput.vue'
+import { useNotificationStore } from '@/stores/notification'
 
 const router = useRouter()
+const notificationStore = useNotificationStore()
 
 // État du formulaire
 const registerForm = ref({
@@ -162,7 +175,7 @@ const isLoading = ref(false)
 const showPassword = ref(false)
 const showTooltip = ref(false)
 const errorMessage = ref('')
-const successMessage = ref('')
+const acceptTerms = ref(false)
 
 // Tooltip pour les critères de mot de passe
 const passwordTooltip = computed(() => {
@@ -208,7 +221,8 @@ const isFormValid = computed(() => {
     passwordsMatch.value &&
     isEmailValid.value &&
     passwordValidation.value.isValid &&
-    passwordConfirmationValidation.value.isValid
+    passwordConfirmationValidation.value.isValid &&
+    acceptTerms.value
   )
 })
 
@@ -230,7 +244,6 @@ const handlePasswordConfirmationValidation = (validation) => {
 const handleRegister = async () => {
   isLoading.value = true
   errorMessage.value = ''
-  successMessage.value = ''
 
   try {
     // Appel à l'API d'inscription
@@ -241,15 +254,16 @@ const handleRegister = async () => {
     })
 
     // Inscription réussie
-    successMessage.value = 'Compte créé avec succès ! Redirection vers la connexion...'
+    notificationStore.showSuccess('Compte créé avec succès ! Redirection vers la connexion...')
 
     // Redirection vers la page de connexion après un délai
     setTimeout(() => {
       router.push('/login')
     }, 2000)
   } catch (error) {
-    console.error("Erreur lors de l'inscription:", error)
-
+    if (import.meta.env.DEV) {
+      console.log("Erreur lors de l'inscription:", error)
+    }
     // Gestion des erreurs spécifiques
     if (error.response?.data?.message) {
       errorMessage.value = error.response.data.message
@@ -401,6 +415,41 @@ const handleRegister = async () => {
   line-height: 1.4;
 }
 
+.legal-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+.checkbox-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.checkbox-label {
+  color: var(--color-light-secondary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.legal-link {
+  color: var(--color-primary);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.legal-link:hover {
+  color: var(--color-primary-hover);
+}
+
 .error-message {
   background: rgba(205, 101, 112, 0.1);
   border: 1px solid rgba(205, 101, 112, 0.2);
@@ -418,18 +467,6 @@ const handleRegister = async () => {
   border: 1px solid rgba(67, 197, 97, 0.2);
   color: var(--color-success);
   padding: 12px 16px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-}
-
-.loading-spinner {
-  animation: spin 1s linear infinite;
-}
-
-.login-link {
   text-align: center;
   margin-top: 20px;
 }

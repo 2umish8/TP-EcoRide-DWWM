@@ -140,7 +140,11 @@
         </div>
 
         <!-- Récapitulatif -->
-        <TripPreview :trip-data="tripData" />
+        <TripPreview
+          :trip-data="tripData"
+          :selected-vehicle="selectedVehicle"
+          :duration-minutes="durationMinutes"
+        />
 
         <!-- Actions -->
         <div class="form-actions">
@@ -221,6 +225,17 @@ export default {
     // Date d'aujourd'hui pour la validation
     const today = computed(() => {
       return new Date().toISOString().split('T')[0]
+    })
+
+    // Véhicule sélectionné
+    const selectedVehicle = computed(() => {
+      return userVehicles.value.find((vehicle) => vehicle.id === selectedVehicleId.value)
+    })
+
+    // Durée en minutes (pour TripPreview)
+    const durationMinutes = computed(() => {
+      const [hours, minutes] = tripDuration.value.split(':').map(Number)
+      return hours * 60 + minutes
     })
 
     // Charger les véhicules de l'utilisateur
@@ -360,6 +375,8 @@ export default {
       cancelBecomeDriver,
       userVehicles,
       selectedVehicleId,
+      selectedVehicle,
+      durationMinutes,
       showAddVehicleModal,
       handleVehicleAdded,
     }

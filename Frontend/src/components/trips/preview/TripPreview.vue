@@ -31,24 +31,43 @@ const props = defineProps({
       plate_number: '',
     }),
   },
+  selectedVehicle: {
+    type: Object,
+    default: null,
+  },
+  durationMinutes: {
+    type: Number,
+    default: 0,
+  },
 })
 
-const previewTrip = computed(() => ({
-  id: props.tripData.id || 0,
-  departure_address: props.tripData.departure_address || 'Lieu de départ',
-  arrival_address: props.tripData.arrival_address || 'Destination',
-  departure_datetime: props.tripData.departure_datetime || new Date().toISOString(),
-  arrival_datetime: props.tripData.arrival_datetime || new Date().toISOString(),
-  initial_seats_offered: props.tripData.initial_seats_offered || 0,
-  seats_remaining: props.tripData.seats_remaining || props.tripData.initial_seats_offered || 0,
-  price_per_passenger: props.tripData.price_per_passenger || 0,
-  status: 'prévu',
-  participants_count: 0,
-  model: props.tripData.model || '',
-  plate_number: props.tripData.plate_number || '',
-  cancellation_date: null,
-  credits_paid: 0,
-}))
+const previewTrip = computed(() => {
+  // Construire le modèle complet : "Brand Model"
+  let vehicleModel = ''
+  if (props.selectedVehicle) {
+    const brandName = props.selectedVehicle.brand_name || props.selectedVehicle.brand || ''
+    const model = props.selectedVehicle.model || ''
+    vehicleModel = [brandName, model].filter(Boolean).join(' ')
+  }
+
+  return {
+    id: props.tripData.id || 0,
+    departure_address: props.tripData.departure_address || 'Lieu de départ',
+    arrival_address: props.tripData.arrival_address || 'Destination',
+    departure_datetime: props.tripData.departure_datetime || new Date().toISOString(),
+    arrival_datetime: props.tripData.arrival_datetime || new Date().toISOString(),
+    initial_seats_offered: props.tripData.initial_seats_offered || 0,
+    seats_remaining: props.tripData.seats_remaining || props.tripData.initial_seats_offered || 0,
+    price_per_passenger: props.tripData.price_per_passenger || 0,
+    status: 'prévu',
+    participants_count: 0,
+    duration_minutes: props.durationMinutes || 0,
+    model: vehicleModel,
+    plate_number: props.selectedVehicle?.plate_number || '',
+    cancellation_date: null,
+    credits_paid: 0,
+  }
+})
 </script>
 
 <style scoped>

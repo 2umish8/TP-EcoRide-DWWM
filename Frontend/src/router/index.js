@@ -48,6 +48,16 @@ const router = createRouter({
       path: '/create-trip',
       name: 'CreateTrip',
       component: () => import('../views/CreateTripView.vue'),
+      beforeEnter: (to, from, next) => {
+        const user = JSON.parse(localStorage.getItem('user') || 'null')
+        const isDriver = user && user.driver_role === true
+
+        if (!isDriver) {
+          next('/become-driver')
+        } else {
+          next()
+        }
+      },
     },
     {
       path: '/profile',

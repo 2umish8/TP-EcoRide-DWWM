@@ -526,7 +526,13 @@ export default {
         await vehicleService.addVehicle(vehicleData.value)
 
         // 2. Devenir chauffeur
-        await authService.becomeDriver()
+        const response = await authService.becomeDriver()
+
+        // Si le backend retourne un nouveau token avec les rôles mis à jour, le stocker
+        if (response.token && response.user) {
+          localStorage.setItem('authToken', response.token)
+          localStorage.setItem('user', JSON.stringify(response.user))
+        }
 
         // 3. Sauvegarder les préférences
         try {
@@ -537,17 +543,6 @@ export default {
 
         // 4. Succès !
         currentStep.value = 4
-
-        // Mettre à jour le localStorage pour refléter le nouveau statut
-        const userStr = localStorage.getItem('user')
-        if (userStr) {
-          const user = JSON.parse(userStr)
-          user.roles = user.roles || []
-          if (!user.roles.includes('chauffeur')) {
-            user.roles.push('chauffeur')
-          }
-          localStorage.setItem('user', JSON.stringify(user))
-        }
       } catch (error) {
         console.error("Erreur lors de l'inscription chauffeur:", error)
         const message = error?.response?.data?.message || error?.message

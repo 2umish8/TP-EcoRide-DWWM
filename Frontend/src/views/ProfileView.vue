@@ -102,6 +102,13 @@ const loadUserProfile = async () => {
 
     selectedRoles.value = userRoles
 
+    // Synchroniser les rôles dans localStorage avec les rôles frais de la DB
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}')
+    if (storedUser && profileData.user.roles) {
+      storedUser.roles = profileData.user.roles
+      localStorage.setItem('user', JSON.stringify(storedUser))
+    }
+
     if (userRoles.includes('chauffeur')) {
       await loadUserVehicles()
       try {

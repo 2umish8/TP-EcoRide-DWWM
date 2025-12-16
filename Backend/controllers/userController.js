@@ -190,10 +190,44 @@ const becomeDriver = async (req, res) => {
             },
         });
 
+        // Récupérer les rôles mis à jour
+        const userWithRoles = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                roles: {
+                    include: {
+                        role: true,
+                    },
+                },
+            },
+        });
+        const updatedRoles = userWithRoles.roles.map((ur) => ur.role.name);
+
+        // Générer un nouveau token avec les rôles mis à jour
+        const newToken = jwt.sign(
+            {
+                id: userWithRoles.id,
+                pseudo: userWithRoles.pseudo,
+                email: userWithRoles.email,
+                roles: updatedRoles,
+                credits: userWithRoles.credits,
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+
         res.status(200).json({
             message:
                 "Félicitations ! Vous êtes maintenant chauffeur EcoRide. Ce statut est permanent.",
             isPermanent: true,
+            token: newToken,
+            user: {
+                id: userWithRoles.id,
+                pseudo: userWithRoles.pseudo,
+                email: userWithRoles.email,
+                roles: updatedRoles,
+                credits: userWithRoles.credits,
+            },
         });
     } catch (error) {
         console.error("Erreur lors de la création du chauffeur:", error);

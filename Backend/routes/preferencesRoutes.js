@@ -17,32 +17,12 @@ const { authMiddleware, requireRole } = require("../authMiddleware");
 router.get("/driver/:driverId", getDriverPreferences); // Voir les préférences d'un chauffeur
 
 // Routes protégées (chauffeurs uniquement)
-router.get(
-    "/my-preferences",
-    authMiddleware,
-    requireRole(["chauffeur"]),
-    getMyPreferences
-);
-router.post(
-    "/",
-    authMiddleware,
-    requireRole(["chauffeur"]),
-    createOrUpdatePreferences
-);
-router.put(
-    "/",
-    authMiddleware,
-    requireRole(["chauffeur"]),
-    createOrUpdatePreferences
-);
+router.get("/my-preferences", authMiddleware, requireRole(["chauffeur"]), getMyPreferences);
+router.post("/", authMiddleware, requireRole(["chauffeur"]), createOrUpdatePreferences);
+router.put("/", authMiddleware, requireRole(["chauffeur"]), createOrUpdatePreferences);
 
 // Gestion des préférences personnalisées
-router.post(
-    "/custom",
-    authMiddleware,
-    requireRole(["chauffeur"]),
-    addCustomPreference
-);
+router.post("/custom", authMiddleware, requireRole(["chauffeur"]), addCustomPreference);
 router.delete(
     "/custom/:preferenceId",
     authMiddleware,

@@ -1,10 +1,9 @@
-// MongoDB models temporarily disabled
-// const DriverPreferences = require("../models/DriverPreferences");
+const DriverPreferences = require("../models/DriverPreferences");
 
 /* --------------------------------------------------- Créer/Mettre à jour les préférences ---------------------------------- */
 const createOrUpdatePreferences = async (req, res) => {
     try {
-        const driverId = req.user.id;
+        const driverId = parseInt(req.user.id, 10);
         const {
             allowsSmoking,
             allowsPets,
@@ -23,10 +22,7 @@ const createOrUpdatePreferences = async (req, res) => {
             specialRules: specialRules || "",
         };
 
-        const preferences = await DriverPreferences.createOrUpdate(
-            driverId,
-            preferencesData
-        );
+        const preferences = await DriverPreferences.createOrUpdate(driverId, preferencesData);
 
         res.status(200).json({
             message: "Préférences sauvegardées avec succès.",
@@ -191,8 +187,7 @@ const removeCustomPreference = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message:
-                "Erreur lors de la suppression de la préférence personnalisée.",
+            message: "Erreur lors de la suppression de la préférence personnalisée.",
         });
     }
 };

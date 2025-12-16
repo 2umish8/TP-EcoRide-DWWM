@@ -122,7 +122,7 @@
    - [x] Page/modal affiche infos complètes (voir US 5)
 
 8. Cliquer "Participer" sans auth:
-   - [ ] Redirection vers /login
+   - [x] Redirection vers /login
    - [x] Message: "Connectez-vous pour participer" (Automatique)
 
 
@@ -137,27 +137,27 @@
 1. Depuis résultats, cliquer "Détail" d'un covoiturage
 
 2. Vérifier toutes les infos affichées:
-   - [ ] Chauffeur: pseudo, photo, note globale
-   - [ ] Trajet: départ, arrivée, date, heure, durée
-   - [ ] Prix par personne
-   - [ ] Places restantes
-   - [ ] Badge "Écologique" (si électrique)
+   - [x] Chauffeur: pseudo, photo, note globale
+   - [x] Trajet: départ, arrivée, date, heure, durée
+   - [x] Prix par personne
+   - [x] Places restantes
+   - [x] Badge "Écologique" (si électrique)
    
 3. Infos véhicule:
-   - [ ] Modèle (ex: "Tesla Model 3")
-   - [ ] Marque (ex: "Tesla")
-   - [ ] Couleur (ex: "Gris métallisé")
-   - [ ] Immatriculation (ex: "AB-123-CD")
-   - [ ] Électrique: "Oui" / "Non"
+   - [x] Modèle (ex: "Tesla Model 3")
+   - [x] Marque (ex: "Tesla")
+   - [x] Couleur (ex: "Gris métallisé")
+   - [x] Immatriculation (ex: "AB-123-CD")
+   - [x] Électrique: "Oui" / "Non"
 
 4. Préférences du chauffeur:
-   - [ ] Fumeur: "Non-fumeur"
-   - [ ] Animaux: "Animaux acceptés"
-   - [ ] Musique: "Oui" (si renseigné)
-   - [ ] Autres préférences (texte libre)
+   - [x] Fumeur: "Non-fumeur"
+   - [x] Animaux: "Animaux acceptés"
+   - [x] Musique: "Oui" (si renseigné)
+   - [x] Autres préférences (texte libre)
 
 5. Avis du chauffeur:
-   - [ ] Liste des avis (si existe)
+   - [x] Liste des avis (si existe)
    - [ ] Pour chaque avis:
       - [ ] Note (★★★★★)
       - [ ] Commentaire
@@ -165,8 +165,8 @@
       - [ ] Date
 
 6. Bouton "Participer":
-   - [ ] Visible (pas d'erreur)
-   - [ ] Cliquer → redirection /login (pas connecté)
+   - [x] Visible (pas d'erreur)
+   - [x] Cliquer → redirection /login (pas connecté)
 
 
 **Validation**: ✅ Passé / ❌ Échoué
@@ -180,29 +180,29 @@
 1. Cliquer "Inscription" dans navbar → /register
 
 2. Vérifier le formulaire:
-   - [ ] Champ "Pseudo" (obligatoire)
-   - [ ] Champ "Email" (obligatoire, validation email)
-   - [ ] Champ "Mot de passe" (obligatoire)
-   - [ ] Champ "Confirmer mot de passe"
-   - [ ] Checkbox "J'accepte les CGU et mentions légales"
-   - [ ] Bouton "S'inscrire"
-   - [ ] Lien "Déjà inscrit? Connexion" → /login
+   - [x] Champ "Pseudo" (obligatoire)
+   - [x] Champ "Email" (obligatoire, validation email)
+   - [x] Champ "Mot de passe" (obligatoire)
+   - [x] Champ "Confirmer mot de passe"
+   - [x] Checkbox "J'accepte les CGU et mentions légales"
+   - [x] Bouton "S'inscrire"
+   - [x] Lien "Déjà inscrit? Connexion" → /login
 
 3. Remplir correctement:
-   - [ ] Pseudo: "TestUser123"
-   - [ ] Email: "test.user.123@ecoride.test"
-   - [ ] Mot de passe: "SecurePass2025!"
-   - [ ] Confirmer: "SecurePass2025!"
-   - [ ] Cocher CGU
-   - [ ] Cliquer "S'inscrire"
+   - [x] Pseudo: "TestUser123"
+   - [x] Email: "test.user.123@ecoride.test"
+   - [x] Mot de passe: "SecurePass2025!"
+   - [x] Confirmer: "SecurePass2025!"
+   - [x] Cocher CGU
+   - [x] Cliquer "S'inscrire"
 
 4. Vérifier la réussite:
-   - [ ] Message de succès: "Inscription réussie!"
-   - [ ] Redirection vers /login OU /profile (auto-login)
-   - [ ] Si auto-login → utilisateur connecté (pseudo visible dans navbar)
+   - [x] Message de succès: "Inscription réussie!"
+   - [x] Redirection vers /login OU /profile (auto-login)
+   - [x] Si auto-login → utilisateur connecté (pseudo visible dans navbar)
 
 5. Vérifier les crédits:
-   - [ ] Aller à /profile ou /credits
+   - [x] Aller à /profile ou /credits
    - [ ] Solde initial: 20 crédits
    - [ ] Historique vide (première création)
 

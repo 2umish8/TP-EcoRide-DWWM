@@ -228,10 +228,29 @@ export const creditsService = {
     return response.data
   },
 
-  async getTransactions() {
-    const response = await api.get('/credits/transactions')
+  async getTransactions(queryParams = {}) {
+    const { page = 1, limit = 20 } = queryParams
+    const response = await api.get('/credits/transactions', {
+      params: { page, limit },
+    })
+    return response.data
+  },
+
+  async getStats() {
+    const response = await api.get('/credits/stats')
+    return response.data
+  },
+
+  async purchaseCredits(amount) {
+    const response = await api.post('/credits/purchase', { amount })
+    return response.data
+  },
+
+  async transferCredits(recipientId, amount) {
+    const response = await api.post('/credits/transfer', { recipientId, amount })
     return response.data
   },
 }
 
+export { api }
 export default api
