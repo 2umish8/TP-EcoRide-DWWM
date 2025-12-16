@@ -1,7 +1,7 @@
 <script setup>
 import ButtonsTemplate from '@/components/test/ButtonsTemplate.vue'
-import TripCard from '@/components/TripCard.vue'
-import EcologicTripCard from '@/components/EcologicTripCard.vue'
+import TripCard from '@/components/trips/cards/TripCard.vue'
+import EcologicTripCard from '@/components/trips/cards/EcologicTripCard.vue'
 
 const sampleTrips = [
   {

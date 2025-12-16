@@ -53,11 +53,11 @@ import { preferencesService } from '@/services/mongoServices'
 import { useNotificationStore } from '@/stores/notification'
 
 // Components
-import ProfileHeader from '@/components/ProfileHeader.vue'
-import PrimaryButton from '@/components/ui/PrimaryButton.vue'
-import VehicleListCard from '@/components/VehicleListCard.vue'
-import AddVehicleModal from '@/components/AddVehicleModal.vue'
-import DriverPreferencesSection from '@/components/DriverPreferencesSection.vue'
+import ProfileHeader from '@/components/user/profile/ProfileHeader.vue'
+import PrimaryButton from '@/components/ui/buttons/PrimaryButton.vue'
+import VehicleListCard from '@/components/user/vehicles/VehicleListCard.vue'
+import AddVehicleModal from '@/components/user/vehicles/modals/AddVehicleModal.vue'
+import DriverPreferencesSection from '@/components/driver/preferences/DriverPreferencesSection.vue'
 
 // Stores
 const authStore = useAuthStore()

@@ -37,10 +37,10 @@
 </template>
 
 <script setup>
-import BaseButton from '@/components/ui/BaseButton.vue'
-import PrimaryButton from '@/components/ui/PrimaryButton.vue'
-import SecondaryButton from '@/components/ui/SecondaryButton.vue'
-import NavButton from '@/components/ui/NavButton.vue'
+import BaseButton from '@/components/ui/buttons/BaseButton.vue'
+import PrimaryButton from '@/components/ui/buttons/PrimaryButton.vue'
+import SecondaryButton from '@/components/ui/buttons/SecondaryButton.vue'
+import NavButton from '@/components/ui/buttons/NavButton.vue'
 import InlineLink from '@/components/ui/InlineLink.vue'
 import { ref } from 'vue'
 
@@ -65,8 +65,3 @@ const log = (msg) => (last.value = msg)
   border-radius: 8px;
 }
 </style>
-
-
-
-
-

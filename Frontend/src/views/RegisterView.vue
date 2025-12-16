@@ -138,14 +138,14 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { isValidEmail, getEmailErrorMessage } from '@/utils/emailValidator'
-import PasswordStrengthIndicator from '@/components/PasswordStrengthIndicator.vue'
-import PasswordConfirmationValidator from '@/components/PasswordConfirmationValidator.vue'
+import PasswordStrengthIndicator from '@/components/shared/icons/PasswordStrengthIndicator.vue'
+import PasswordConfirmationValidator from '@/components/shared/icons/PasswordConfirmationValidator.vue'
 import { authService } from '@/services/api'
-import PrimaryButton from '@/components/ui/PrimaryButton.vue'
-import IconButton from '@/components/ui/IconButton.vue'
+import PrimaryButton from '@/components/ui/buttons/PrimaryButton.vue'
+import IconButton from '@/components/ui/buttons/IconButton.vue'
 import InlineLink from '@/components/ui/InlineLink.vue'
-import BaseCard from '@/components/ui/BaseCard.vue'
-import TextInput from '@/components/ui/TextInput.vue'
+import BaseCard from '@/components/ui/cards/BaseCard.vue'
+import TextInput from '@/components/ui/inputs/TextInput.vue'
 
 const router = useRouter()
 

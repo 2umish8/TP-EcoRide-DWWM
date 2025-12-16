@@ -1,8 +1,8 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { useSearchStore } from '@/stores/search'
-import HeroSection from '@/components/HeroSection.vue'
-import AboutSection from '@/components/AboutSection.vue'
+import HeroSection from '@/components/layout/sections/HeroSection.vue'
+import AboutSection from '@/components/layout/sections/AboutSection.vue'
 import { useSearchForm } from '@/composables/useSearchForm'
 
 // Configuration future pour l'authentification

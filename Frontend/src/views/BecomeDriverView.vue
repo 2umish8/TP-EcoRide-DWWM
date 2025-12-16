@@ -387,14 +387,14 @@
 import { ref, computed } from 'vue'
 import { authService, vehicleService } from '@/services/api'
 import { preferencesService } from '@/services/mongoServices'
-import BaseCard from '@/components/ui/BaseCard.vue'
-import LicensePlateInput from '@/components/ui/LicensePlateInput.vue'
-import ListAutocomplete from '@/components/ui/ListAutocomplete.vue'
-import TextInput from '@/components/ui/TextInput.vue'
-import TextAreaInput from '@/components/ui/TextAreaInput.vue'
-import NumberInput from '@/components/ui/NumberInput.vue'
-import PrimaryButton from '@/components/ui/PrimaryButton.vue'
-import SecondaryButton from '@/components/ui/SecondaryButton.vue'
+import BaseCard from '@/components/ui/cards/BaseCard.vue'
+import LicensePlateInput from '@/components/ui/inputs/LicensePlateInput.vue'
+import ListAutocomplete from '@/components/ui/inputs/ListAutocomplete.vue'
+import TextInput from '@/components/ui/inputs/TextInput.vue'
+import TextAreaInput from '@/components/ui/inputs/TextAreaInput.vue'
+import NumberInput from '@/components/ui/inputs/NumberInput.vue'
+import PrimaryButton from '@/components/ui/buttons/PrimaryButton.vue'
+import SecondaryButton from '@/components/ui/buttons/SecondaryButton.vue'
 
 export default {
   name: 'BecomeDriverView',

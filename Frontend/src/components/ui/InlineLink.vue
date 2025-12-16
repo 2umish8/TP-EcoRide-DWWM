@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import BaseButton from './BaseButton.vue'
+import BaseButton from './buttons/BaseButton.vue'
 </script>
 
 <style scoped>
@@ -25,8 +25,3 @@ import BaseButton from './BaseButton.vue'
   text-decoration: none;
 }
 </style>
-
-
-
-
-

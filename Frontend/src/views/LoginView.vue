@@ -93,8 +93,8 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { authService } from '@/services/api'
-import PrimaryButton from '@/components/ui/PrimaryButton.vue'
-import IconButton from '@/components/ui/IconButton.vue'
+import PrimaryButton from '@/components/ui/buttons/PrimaryButton.vue'
+import IconButton from '@/components/ui/buttons/IconButton.vue'
 import InlineLink from '@/components/ui/InlineLink.vue'
 
 const router = useRouter()

@@ -1,9 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
-import AppNavbar from './components/AppNavbar.vue'
-import AppFooter from './components/AppFooter.vue'
-import Notification from './components/Notification.vue'
+import AppNavbar from './components/layout/AppNavbar.vue'
+import AppFooter from './components/layout/AppFooter.vue'
+import Notification from './components/ui/feedback/Notification.vue'
 import { useNotificationStore } from './stores/notification'
 
 const route = useRoute()
@@ -56,8 +56,3 @@ footer {
   z-index: 100;
 }
 </style>
-
-
-
-
-

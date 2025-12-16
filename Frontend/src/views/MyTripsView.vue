@@ -70,11 +70,11 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import DriverTripsSection from '@/components/DriverTripsSection.vue'
-import PassengerTripsSection from '@/components/PassengerTripsSection.vue'
-import ConfirmActionModal from '@/components/ConfirmActionModal.vue'
+import DriverTripsSection from '@/components/driver/trips/DriverTripsSection.vue'
+import PassengerTripsSection from '@/components/user/passenger/PassengerTripsSection.vue'
+import ConfirmActionModal from '@/components/shared/modals/ConfirmActionModal.vue'
 import useDriverStatus from '@/composables/useDriverStatus'
-import TabButton from '@/components/ui/TabButton.vue'
+import TabButton from '@/components/ui/buttons/TabButton.vue'
 
 export default {
   name: 'MyTripsView',
