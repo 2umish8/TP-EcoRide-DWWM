@@ -372,6 +372,16 @@ const getStatusLabel = (status) => {
 
 // Fonction pour initier la participation (première étape)
 const initiateParticipation = async () => {
+  // Vérifier si l'utilisateur est connecté
+  if (!authStore.isAuthenticated) {
+    // Rediriger vers la page de connexion avec l'URL de retour
+    router.push({
+      path: '/login',
+      query: { redirect: route.fullPath },
+    })
+    return
+  }
+
   try {
     isParticipating.value = true
     error.value = null

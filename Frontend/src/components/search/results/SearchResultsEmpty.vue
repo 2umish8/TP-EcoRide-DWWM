@@ -1,24 +1,22 @@
 <template>
   <div class="state-container">
     <div class="no-results-content">
-      <h2 v-if="nextAvailableDate">
-        <font-awesome-icon :icon="['fas', 'magnifying-glass']" /> Aucun trajet trouvé pour cette
-        date
-      </h2>
-      <h2 v-else><font-awesome-icon :icon="['fas', 'magnifying-glass']" /> Aucun trajet trouvé</h2>
+      <h2><font-awesome-icon :icon="['fas', 'magnifying-glass']" /> Aucun trajet trouvé</h2>
 
-      <p v-if="nextAvailableDate">
-        Cependant, nous avons trouvé des trajets pour le
-        <strong>{{ formatDate(nextAvailableDate) }}</strong>
-      </p>
-      <p v-else>
+      <p>
         Essayez de modifier vos critères de recherche ou créez une alerte pour être notifié quand un
         trajet correspondant sera publié.
       </p>
 
       <div class="no-results-actions">
-        <PrimaryButton v-if="nextAvailableDate" @click="$emit('search-alternative-date')">
-          Voir ces trajets
+        <PrimaryButton v-if="departure || arrival" @click="$emit('search-other-dates')">
+          <template v-if="departure && arrival">
+            Regarder les autres dates pour {{ departure }} - {{ arrival }}
+          </template>
+          <template v-else-if="departure">
+            Regarder les autres dates pour partir de {{ departure }}
+          </template>
+          <template v-else> Regarder les autres dates pour aller à {{ arrival }} </template>
         </PrimaryButton>
         <SecondaryButton @click="$emit('new-search')">Nouvelle recherche</SecondaryButton>
       </div>
@@ -30,24 +28,18 @@
 import PrimaryButton from '@/components/ui/buttons/PrimaryButton.vue'
 import SecondaryButton from '@/components/ui/buttons/SecondaryButton.vue'
 
-defineEmits(['search-alternative-date', 'new-search'])
+defineEmits(['search-other-dates', 'new-search'])
 
 defineProps({
-  nextAvailableDate: {
+  departure: {
+    type: String,
+    default: null,
+  },
+  arrival: {
     type: String,
     default: null,
   },
 })
-
-const formatDate = (dateString) => {
-  if (!dateString) return ''
-  return new Date(dateString).toLocaleDateString('fr-FR', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
 </script>
 
 <style scoped>

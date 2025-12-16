@@ -113,17 +113,17 @@
    - [x] Les résultats se mettent à jour immédiatement
 
 6. Cas "Aucun résultat":
-   - [ ] Si 0 covoiturage → message "Aucun résultat"
-   - [ ] Permettre chercher patiellement avec la barre de recherche. Voir les inputs comme des filtres. Chercher sans rien affiche tout, chercher avec une date affiche tous les trajets cette date, chercher uniquement un départ affiche tout avec ce départ, chercher avec départ un jour, ou départ et arrivée, ou arrivée et un jour etc... est possible.
-   - [ ] Système propose: "Regarder les autres dates pour {Départ} {Arrivée}"
+   - [x] Si 0 covoiturage → message "Aucun résultat"
+   - [x] Permettre chercher patiellement avec la barre de recherche. Voir les inputs comme des filtres. Chercher sans rien affiche tout, chercher avec une date affiche tous les trajets cette date, chercher uniquement un départ affiche tout avec ce départ, chercher avec départ un jour, ou départ et arrivée, ou arrivée et un jour etc... est possible.
+   - [x] Système propose: "Regarder les autres dates pour {Départ} {Arrivée}"
 
 7. Cliquer sur "Détail":
-   - [ ] Redirection vers /search/:id (ou modal)
-   - [ ] Page/modal affiche infos complètes (voir US 5)
+   - [x] Redirection vers /carpoolings/:id (ou modal)
+   - [x] Page/modal affiche infos complètes (voir US 5)
 
 8. Cliquer "Participer" sans auth:
    - [ ] Redirection vers /login
-   - [ ] Message: "Connectez-vous pour participer"
+   - [x] Message: "Connectez-vous pour participer" (Automatique)
 
 
 **Validation**: ✅ Passé / ❌ Échoué

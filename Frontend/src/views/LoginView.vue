@@ -90,7 +90,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { authService } from '@/services/api'
 import PrimaryButton from '@/components/ui/buttons/PrimaryButton.vue'
@@ -98,6 +98,7 @@ import IconButton from '@/components/ui/buttons/IconButton.vue'
 import InlineLink from '@/components/ui/InlineLink.vue'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
 // État du formulaire
@@ -144,7 +145,12 @@ const handleLogin = async () => {
     successMessage.value = 'Connexion réussie ! Redirection...'
 
     setTimeout(() => {
-      if (response.user && response.user.role === 'admin') {
+      // Vérifier s'il y a une page de redirection dans les query params
+      const redirectPath = route.query.redirect
+
+      if (redirectPath) {
+        router.push(redirectPath)
+      } else if (response.user && response.user.role === 'admin') {
         router.push('/admin')
       } else {
         router.push('/')
