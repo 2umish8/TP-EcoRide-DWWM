@@ -76,17 +76,6 @@ const autoCancelExpiredCarpoolings = async () => {
                             data: { cancellation_date: new Date() },
                         });
 
-                        // Enregistrer l'historique des crédits
-                        await transactionPrisma.credit_transaction.create({
-                            data: {
-                                user_id: participation.passenger_id,
-                                transaction_type: "crédit",
-                                amount: participation.credits_paid,
-                                description: `Remboursement annulation automatique covoiturage #${carpooling.id}`,
-                                transaction_date: new Date(),
-                            },
-                        });
-
                         refundedCount++;
                     }
 
@@ -181,21 +170,6 @@ const cancelCarpoolingById = async (carpoolingId, options = { isAutoCancelled: f
                 await transactionPrisma.participation.update({
                     where: { id: participant.id },
                     data: { cancellation_date: new Date() },
-                });
-
-                // Enregistrer l'historique des crédits
-                const refundReason = options.isAutoCancelled
-                    ? `Remboursement annulation automatique covoiturage #${carpoolingId}`
-                    : `Remboursement annulation covoiturage #${carpoolingId}`;
-
-                await transactionPrisma.credit_transaction.create({
-                    data: {
-                        user_id: participant.passenger_id,
-                        transaction_type: "crédit",
-                        amount: participant.credits_paid,
-                        description: refundReason,
-                        transaction_date: new Date(),
-                    },
                 });
             }
 

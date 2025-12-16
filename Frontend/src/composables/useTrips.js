@@ -23,10 +23,16 @@ export default function useTrips() {
       error.value = null
 
       const response = await carpoolingService.getDriverTrips()
+      if (import.meta.env.DEV) {
+        console.log('Loaded driver trips response:', response)
+      }
       trips.value = response.carpoolings || []
       return trips.value
     } catch (err) {
-      console.error('Error loading trips:', err)
+      error.value = err.message || 'Failed to load trips'
+      if (import.meta.env.DEV) {
+        console.error('Error loading trips:', err)
+      }
       throw err
     } finally {
       loading.value = false

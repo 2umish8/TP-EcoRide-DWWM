@@ -4,8 +4,8 @@
 const { PrismaClient, PrismaClientKnownRequestError } = require("@prisma/client");
 const prisma = new PrismaClient();
 const { autoCancelExpiredCarpoolings } = require("../utils/carpoolingUtils.js");
-// MongoDB models temporarily disabled
-// const Review = require("../models/Review");
+// MongoDB models
+const Review = require("../models/Review");
 
 /*
  * Fonction améliorée de recherche d'itinéraires avec fonctionnalités avancées
@@ -211,7 +211,8 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
                 duration_minutes,
                 occupancy_rate,
                 participants_count: carpooling._count.participations,
-                driver_rating: 0, // Sera calculé avec MongoDB
+                driver_rating: 0, // Will be calculated with MongoDB
+                total_reviews: 0, // Will be calculated with MongoDB
                 is_almost_full: carpooling.seats_remaining <= 1,
                 is_departing_soon:
                     new Date(carpooling.departure_datetime) - new Date() <= 24 * 60 * 60 * 1000,
@@ -238,21 +239,23 @@ const getAvailableCarpoolingsAdvanced = async (req, res) => {
 
             // Récupérer les moyennes des notes depuis MongoDB
             const driverRatings = {};
+            const driverReviewCounts = {};
             for (const driverId of driverIds) {
                 try {
-                    // MongoDB Review model disabled, setting default rating
-                    driverRatings[driverId] = 0;
-                    // const rating = await Review.getAverageRating(driverId);
-                    // driverRatings[driverId] = rating.average || 0;
+                    const ratingStats = await Review.getAverageRating(driverId);
+                    driverRatings[driverId] = ratingStats.average || 0;
+                    driverReviewCounts[driverId] = ratingStats.total || 0;
                 } catch (error) {
                     console.warn(`Erreur récupération note chauffeur ${driverId}:`, error.message);
                     driverRatings[driverId] = 0;
+                    driverReviewCounts[driverId] = 0;
                 }
             }
 
             // Ajouter les notes aux covoiturages
             filteredCarpoolings.forEach((carpooling) => {
                 carpooling.driver_rating = driverRatings[carpooling.driver_id] || 0;
+                carpooling.total_reviews = driverReviewCounts[carpooling.driver_id] || 0;
             });
 
             // Filtrer par note minimale si spécifiée

@@ -132,6 +132,7 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 import BecomDriverPromo from '@/components/shared/prompts/BecomDriverPromo.vue'
 import LoadingState from '@/components/shared/states/LoadingState.vue'
 import ErrorState from '@/components/shared/states/ErrorState.vue'
@@ -178,6 +179,10 @@ const handleFinishTrip = (tripId) => finishTripAction(finishTrip, tripId)
 const handleCancelTrip = (tripId) => cancelTripAction(cancelTrip, tripId)
 
 const getCarbonSaved = () => calculateCarbonSaved(trips.value)
+
+onMounted(() => {
+  loadTrips()
+})
 
 defineExpose({
   loadTrips,

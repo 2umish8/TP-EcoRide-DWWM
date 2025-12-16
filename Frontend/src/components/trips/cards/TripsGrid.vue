@@ -1,6 +1,6 @@
 <template>
   <div class="trips-grid">
-    <trip-card
+    <TripCard
       v-for="(item, index) in items"
       :key="item.key || index"
       :trip="item.trip"
@@ -10,11 +10,13 @@
       <template #actions>
         <slot :item="item" :index="index" />
       </template>
-    </trip-card>
+    </TripCard>
   </div>
 </template>
 
 <script setup>
+import TripCard from './TripCard.vue'
+
 defineProps({
   items: {
     type: Array,
@@ -22,8 +24,6 @@ defineProps({
     validator: (arr) => Array.isArray(arr),
   },
 })
-
-import TripCard from './TripCard.vue'
 </script>
 
 <style scoped>

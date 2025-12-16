@@ -302,13 +302,15 @@ export default {
           return
         }
 
-        // Conversion des types
+        // Conversion des types - match backend contract
         const submitData = {
-          ...tripData.value,
-          initial_seats_offered: parseInt(tripData.value.initial_seats_offered),
-          price_per_passenger: parseInt(tripData.value.price_per_passenger),
-          seats_remaining: parseInt(tripData.value.initial_seats_offered),
-          vehicle_id: selectedVehicleId.value,
+          departure_address: tripData.value.departure_address,
+          arrival_address: tripData.value.arrival_address,
+          departure_datetime: tripData.value.departure_datetime,
+          arrival_datetime: tripData.value.arrival_datetime,
+          seats_offered: parseInt(tripData.value.initial_seats_offered),
+          price_per_passenger: parseFloat(tripData.value.price_per_passenger),
+          vehicle_id: parseInt(selectedVehicleId.value),
         }
 
         // Appel API
