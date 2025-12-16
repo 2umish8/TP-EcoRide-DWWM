@@ -387,6 +387,7 @@
 import { ref, computed } from 'vue'
 import { authService, vehicleService } from '@/services/api'
 import { preferencesService } from '@/services/mongoServices'
+import { useAuthStore } from '@/stores/auth'
 import BaseCard from '@/components/ui/cards/BaseCard.vue'
 import LicensePlateInput from '@/components/ui/inputs/LicensePlateInput.vue'
 import ListAutocomplete from '@/components/ui/inputs/ListAutocomplete.vue'
@@ -409,7 +410,8 @@ export default {
     SecondaryButton,
   },
   setup() {
-    // État des étapes
+    // State management
+    const authStore = useAuthStore()
     const currentStep = ref(1)
     const isSubmitting = ref(false)
     const acceptEngagement = ref(false)
@@ -532,6 +534,9 @@ export default {
         if (response.token && response.user) {
           localStorage.setItem('authToken', response.token)
           localStorage.setItem('user', JSON.stringify(response.user))
+
+          // Mettre à jour le store Pinia
+          authStore.login(response.user, response.token)
         }
 
         // 3. Sauvegarder les préférences
