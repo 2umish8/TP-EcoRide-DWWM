@@ -28,7 +28,7 @@ Outils nécessaires :
 - Compte Netlify (frontend)
 - Compte Render (backend) ou autre plateforme de votre choix
 - Compte MongoDB Atlas
-- Accès à un service MySQL managé (Aiven, Railway, etc.) ou instance MySQL
+- Compte Aiven
 
 ## Variables d'environnement (exemples)
 

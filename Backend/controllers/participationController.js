@@ -4,7 +4,12 @@ const prisma = new PrismaClient();
 /* --------------------------------------------------- Vérifier les conditions de participation ------------------- */
 const checkParticipationConditions = async (req, res) => {
     try {
-        console.log("🔍 checkParticipationConditions called - params:", req.params, "user:", req.user);
+        console.log(
+            "🔍 checkParticipationConditions called - params:",
+            req.params,
+            "user:",
+            req.user
+        );
         const userId = req.user?.id;
         const carpoolingId = parseInt(req.params.id);
 

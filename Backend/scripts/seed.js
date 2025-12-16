@@ -402,135 +402,135 @@ async function seed() {
 
         console.log("✅ Vehicles created");
 
-// Insert Carpoolings (using future dates for testing)
-    const carpoolings = await Promise.all([
-      prisma.carpooling.create({
-        data: {
-          status: "prévu",
-          departure_address: "15 Rue de la République, 69001 Lyon",
-          arrival_address: "25 Avenue des Champs-Élysées, 75008 Paris",
-          departure_datetime: new Date("2025-12-20T08:00:00"),
-          arrival_datetime: new Date("2025-12-20T12:30:00"),
-          price_per_passenger: 25,
-          initial_seats_offered: 3,
-          seats_remaining: 3,
-          platform_commission_earned: 2,
-          driver_id: users[3].id,
-          vehicle_id: vehicles[0].id,
-        },
-      }),
-      prisma.carpooling.create({
-        data: {
-          status: "prévu",
-          departure_address: "10 Place Bellecour, 69002 Lyon",
-          arrival_address: "50 Rue de Rivoli, 75001 Paris",
-          departure_datetime: new Date("2025-12-22T07:30:00"),
-          arrival_datetime: new Date("2025-12-22T11:45:00"),
-          price_per_passenger: 30,
-          initial_seats_offered: 3,
-          seats_remaining: 3,
-          platform_commission_earned: 2,
-          driver_id: users[4].id,
-          vehicle_id: vehicles[2].id,
-        },
-      }),
-      prisma.carpooling.create({
-        data: {
-          status: "prévu",
-          departure_address: "5 Cours Lafayette, 69003 Lyon",
-          arrival_address: "12 Boulevard Saint-Germain, 75005 Paris",
-          departure_datetime: new Date("2025-12-25T09:00:00"),
-          arrival_datetime: new Date("2025-12-25T13:15:00"),
-          price_per_passenger: 20,
-          initial_seats_offered: 3,
-          seats_remaining: 3,
-          platform_commission_earned: 2,
-          driver_id: users[5].id,
-          vehicle_id: vehicles[3].id,
-        },
-      }),
-      prisma.carpooling.create({
-        data: {
-          status: "prévu",
-          departure_address: "30 Rue Victor Hugo, 69002 Lyon",
-          arrival_address: "8 Place de la Bastille, 75011 Paris",
-          departure_datetime: new Date("2025-12-28T14:00:00"),
-          arrival_datetime: new Date("2025-12-28T18:30:00"),
-          price_per_passenger: 22,
-          initial_seats_offered: 2,
-          seats_remaining: 2,
-          platform_commission_earned: 2,
-          driver_id: users[6].id,
-          vehicle_id: vehicles[4].id,
-        },
-      }),
-      prisma.carpooling.create({
-        data: {
-          status: "prévu",
-          departure_address: "20 Avenue Jean Jaurès, 69007 Lyon",
-          arrival_address: "15 Rue de la Paix, 75002 Paris",
-          departure_datetime: new Date("2026-01-05T10:00:00"),
-          arrival_datetime: new Date("2026-01-05T14:30:00"),
-          price_per_passenger: 28,
-          initial_seats_offered: 3,
-          seats_remaining: 3,
-          platform_commission_earned: 2,
-          driver_id: users[7].id,
-          vehicle_id: vehicles[5].id,
-        },
-      }),
-      prisma.carpooling.create({
-        data: {
-          status: "prévu",
-          departure_address: "100 Rue de la Part-Dieu, 69003 Lyon",
-          arrival_address: "40 Avenue de l'Opéra, 75002 Paris",
-          departure_datetime: new Date("2026-01-10T06:00:00"),
-          arrival_datetime: new Date("2026-01-10T10:15:00"),
-          price_per_passenger: 35,
-          initial_seats_offered: 3,
-          seats_remaining: 3,
-          platform_commission_earned: 2,
-          driver_id: users[3].id,
-          vehicle_id: vehicles[1].id,
-        },
-      }),
-      prisma.carpooling.create({
-        data: {
-          status: "terminé",
-          departure_address: "45 Quai Perrache, 69002 Lyon",
-          arrival_address: "22 Boulevard Haussmann, 75009 Paris",
-          departure_datetime: new Date("2025-12-10T15:30:00"),
-          arrival_datetime: new Date("2025-12-10T20:00:00"),
-          price_per_passenger: 26,
-          initial_seats_offered: 3,
-          seats_remaining: 0,
-          platform_commission_earned: 2,
-          driver_id: users[4].id,
-          vehicle_id: vehicles[2].id,
-        },
-      }),
-      prisma.carpooling.create({
-        data: {
-          status: "terminé",
-          departure_address: "18 Place des Terreaux, 69001 Lyon",
-          arrival_address: "33 Rue du Faubourg Saint-Antoine, 75011 Paris",
-          departure_datetime: new Date("2025-12-08T08:45:00"),
-          arrival_datetime: new Date("2025-12-08T13:00:00"),
-          price_per_passenger: 24,
-          initial_seats_offered: 4,
-          seats_remaining: 0,
-          platform_commission_earned: 2,
-          driver_id: users[7].id,
-          vehicle_id: vehicles[6].id,
-        },
-      }),
-      prisma.carpooling.create({
-        data: {
-          status: "annulé",
-          departure_address: "25 Rue Mercière, 69002 Lyon",
-          arrival_address: "18 Avenue Montaigne, 75008 Paris",
-          departure_datetime: new Date("2025-12-15T16:00:00"),
-          arrival_datetime: new Date("2025-12-15T20:30:00"),
+        // Insert Carpoolings (using future dates for testing)
+        const carpoolings = await Promise.all([
+            prisma.carpooling.create({
+                data: {
+                    status: "prévu",
+                    departure_address: "15 Rue de la République, 69001 Lyon",
+                    arrival_address: "25 Avenue des Champs-Élysées, 75008 Paris",
+                    departure_datetime: new Date("2025-12-20T08:00:00"),
+                    arrival_datetime: new Date("2025-12-20T12:30:00"),
+                    price_per_passenger: 25,
+                    initial_seats_offered: 3,
+                    seats_remaining: 3,
+                    platform_commission_earned: 2,
+                    driver_id: users[3].id,
+                    vehicle_id: vehicles[0].id,
+                },
+            }),
+            prisma.carpooling.create({
+                data: {
+                    status: "prévu",
+                    departure_address: "10 Place Bellecour, 69002 Lyon",
+                    arrival_address: "50 Rue de Rivoli, 75001 Paris",
+                    departure_datetime: new Date("2025-12-22T07:30:00"),
+                    arrival_datetime: new Date("2025-12-22T11:45:00"),
+                    price_per_passenger: 30,
+                    initial_seats_offered: 3,
+                    seats_remaining: 3,
+                    platform_commission_earned: 2,
+                    driver_id: users[4].id,
+                    vehicle_id: vehicles[2].id,
+                },
+            }),
+            prisma.carpooling.create({
+                data: {
+                    status: "prévu",
+                    departure_address: "5 Cours Lafayette, 69003 Lyon",
+                    arrival_address: "12 Boulevard Saint-Germain, 75005 Paris",
+                    departure_datetime: new Date("2025-12-25T09:00:00"),
+                    arrival_datetime: new Date("2025-12-25T13:15:00"),
+                    price_per_passenger: 20,
+                    initial_seats_offered: 3,
+                    seats_remaining: 3,
+                    platform_commission_earned: 2,
+                    driver_id: users[5].id,
+                    vehicle_id: vehicles[3].id,
+                },
+            }),
+            prisma.carpooling.create({
+                data: {
+                    status: "prévu",
+                    departure_address: "30 Rue Victor Hugo, 69002 Lyon",
+                    arrival_address: "8 Place de la Bastille, 75011 Paris",
+                    departure_datetime: new Date("2025-12-28T14:00:00"),
+                    arrival_datetime: new Date("2025-12-28T18:30:00"),
+                    price_per_passenger: 22,
+                    initial_seats_offered: 2,
+                    seats_remaining: 2,
+                    platform_commission_earned: 2,
+                    driver_id: users[6].id,
+                    vehicle_id: vehicles[4].id,
+                },
+            }),
+            prisma.carpooling.create({
+                data: {
+                    status: "prévu",
+                    departure_address: "20 Avenue Jean Jaurès, 69007 Lyon",
+                    arrival_address: "15 Rue de la Paix, 75002 Paris",
+                    departure_datetime: new Date("2026-01-05T10:00:00"),
+                    arrival_datetime: new Date("2026-01-05T14:30:00"),
+                    price_per_passenger: 28,
+                    initial_seats_offered: 3,
+                    seats_remaining: 3,
+                    platform_commission_earned: 2,
+                    driver_id: users[7].id,
+                    vehicle_id: vehicles[5].id,
+                },
+            }),
+            prisma.carpooling.create({
+                data: {
+                    status: "prévu",
+                    departure_address: "100 Rue de la Part-Dieu, 69003 Lyon",
+                    arrival_address: "40 Avenue de l'Opéra, 75002 Paris",
+                    departure_datetime: new Date("2026-01-10T06:00:00"),
+                    arrival_datetime: new Date("2026-01-10T10:15:00"),
+                    price_per_passenger: 35,
+                    initial_seats_offered: 3,
+                    seats_remaining: 3,
+                    platform_commission_earned: 2,
+                    driver_id: users[3].id,
+                    vehicle_id: vehicles[1].id,
+                },
+            }),
+            prisma.carpooling.create({
+                data: {
+                    status: "terminé",
+                    departure_address: "45 Quai Perrache, 69002 Lyon",
+                    arrival_address: "22 Boulevard Haussmann, 75009 Paris",
+                    departure_datetime: new Date("2025-12-10T15:30:00"),
+                    arrival_datetime: new Date("2025-12-10T20:00:00"),
+                    price_per_passenger: 26,
+                    initial_seats_offered: 3,
+                    seats_remaining: 0,
+                    platform_commission_earned: 2,
+                    driver_id: users[4].id,
+                    vehicle_id: vehicles[2].id,
+                },
+            }),
+            prisma.carpooling.create({
+                data: {
+                    status: "terminé",
+                    departure_address: "18 Place des Terreaux, 69001 Lyon",
+                    arrival_address: "33 Rue du Faubourg Saint-Antoine, 75011 Paris",
+                    departure_datetime: new Date("2025-12-08T08:45:00"),
+                    arrival_datetime: new Date("2025-12-08T13:00:00"),
+                    price_per_passenger: 24,
+                    initial_seats_offered: 4,
+                    seats_remaining: 0,
+                    platform_commission_earned: 2,
+                    driver_id: users[7].id,
+                    vehicle_id: vehicles[6].id,
+                },
+            }),
+            prisma.carpooling.create({
+                data: {
+                    status: "annulé",
+                    departure_address: "25 Rue Mercière, 69002 Lyon",
+                    arrival_address: "18 Avenue Montaigne, 75008 Paris",
+                    departure_datetime: new Date("2025-12-15T16:00:00"),
+                    arrival_datetime: new Date("2025-12-15T20:30:00"),
                     price_per_passenger: 32,
                     initial_seats_offered: 2,
                     seats_remaining: 2,
@@ -543,76 +543,76 @@ async function seed() {
 
         console.log("✅ Carpoolings created");
 
-// Insert Participations (only for completed trips)
-    await Promise.all([
-      prisma.participation.create({
-        data: {
-          passenger_id: users[10].id, // lea_voyageuse
-          carpooling_id: carpoolings[6].id,
-          credits_paid: 26,
-          participation_date: new Date("2025-12-09T12:00:00"),
-          is_validated_by_passenger: true,
-          cancellation_date: null,
-        },
-      }),
-      prisma.participation.create({
-        data: {
-          passenger_id: users[11].id, // marc_commuter
-          carpooling_id: carpoolings[6].id,
-          credits_paid: 26,
-          participation_date: new Date("2025-12-09T13:15:00"),
-          is_validated_by_passenger: true,
-          cancellation_date: null,
-        },
-      }),
-      prisma.participation.create({
-        data: {
-          passenger_id: users[12].id, // alice_eco
-          carpooling_id: carpoolings[6].id,
-          credits_paid: 26,
-          participation_date: new Date("2025-12-09T14:30:00"),
-          is_validated_by_passenger: true,
-          cancellation_date: null,
-        },
-      }),
-      prisma.participation.create({
-        data: {
-          passenger_id: users[8].id, // emma_traveler
-          carpooling_id: carpoolings[7].id,
-          credits_paid: 24,
-          participation_date: new Date("2025-12-07T16:00:00"),
-          is_validated_by_passenger: true,
-          cancellation_date: null,
-        },
-      }),
-      prisma.participation.create({
-        data: {
-          passenger_id: users[9].id, // lucas_student
-          carpooling_id: carpoolings[7].id,
-          credits_paid: 24,
-          participation_date: new Date("2025-12-07T17:00:00"),
-          is_validated_by_passenger: true,
-          cancellation_date: null,
-        },
-      }),
-      prisma.participation.create({
-        data: {
-          passenger_id: users[10].id, // lea_voyageuse
-          carpooling_id: carpoolings[7].id,
-          credits_paid: 24,
-          participation_date: new Date("2025-12-07T18:00:00"),
-          is_validated_by_passenger: false,
-          cancellation_date: null,
-        },
-      }),
-      prisma.participation.create({
-        data: {
-          passenger_id: users[11].id, // marc_commuter
-          carpooling_id: carpoolings[7].id,
-          credits_paid: 24,
-          participation_date: new Date("2025-12-07T19:00:00"),
-          is_validated_by_passenger: true,
-          cancellation_date: null,
+        // Insert Participations (only for completed trips)
+        await Promise.all([
+            prisma.participation.create({
+                data: {
+                    passenger_id: users[10].id, // lea_voyageuse
+                    carpooling_id: carpoolings[6].id,
+                    credits_paid: 26,
+                    participation_date: new Date("2025-12-09T12:00:00"),
+                    is_validated_by_passenger: true,
+                    cancellation_date: null,
+                },
+            }),
+            prisma.participation.create({
+                data: {
+                    passenger_id: users[11].id, // marc_commuter
+                    carpooling_id: carpoolings[6].id,
+                    credits_paid: 26,
+                    participation_date: new Date("2025-12-09T13:15:00"),
+                    is_validated_by_passenger: true,
+                    cancellation_date: null,
+                },
+            }),
+            prisma.participation.create({
+                data: {
+                    passenger_id: users[12].id, // alice_eco
+                    carpooling_id: carpoolings[6].id,
+                    credits_paid: 26,
+                    participation_date: new Date("2025-12-09T14:30:00"),
+                    is_validated_by_passenger: true,
+                    cancellation_date: null,
+                },
+            }),
+            prisma.participation.create({
+                data: {
+                    passenger_id: users[8].id, // emma_traveler
+                    carpooling_id: carpoolings[7].id,
+                    credits_paid: 24,
+                    participation_date: new Date("2025-12-07T16:00:00"),
+                    is_validated_by_passenger: true,
+                    cancellation_date: null,
+                },
+            }),
+            prisma.participation.create({
+                data: {
+                    passenger_id: users[9].id, // lucas_student
+                    carpooling_id: carpoolings[7].id,
+                    credits_paid: 24,
+                    participation_date: new Date("2025-12-07T17:00:00"),
+                    is_validated_by_passenger: true,
+                    cancellation_date: null,
+                },
+            }),
+            prisma.participation.create({
+                data: {
+                    passenger_id: users[10].id, // lea_voyageuse
+                    carpooling_id: carpoolings[7].id,
+                    credits_paid: 24,
+                    participation_date: new Date("2025-12-07T18:00:00"),
+                    is_validated_by_passenger: false,
+                    cancellation_date: null,
+                },
+            }),
+            prisma.participation.create({
+                data: {
+                    passenger_id: users[11].id, // marc_commuter
+                    carpooling_id: carpoolings[7].id,
+                    credits_paid: 24,
+                    participation_date: new Date("2025-12-07T19:00:00"),
+                    is_validated_by_passenger: true,
+                    cancellation_date: null,
                 },
             }),
         ]);
