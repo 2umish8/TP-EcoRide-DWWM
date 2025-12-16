@@ -19,8 +19,21 @@
       </div>
     </div>
 
+    <!-- Current User Info Section (Preview Mode) -->
+    <div v-if="currentUser" class="trip-user-info">
+      <img
+        :src="currentUserAvatarUrl"
+        :alt="currentUser.pseudo || 'User avatar'"
+        class="user-avatar"
+      />
+      <div class="user-details">
+        <div class="user-label">Votre profil</div>
+        <div class="user-name">{{ currentUser.pseudo || 'Utilisateur' }}</div>
+      </div>
+    </div>
+
     <!-- Driver Info Section -->
-    <div class="trip-driver-info">
+    <div v-if="trip.driver_pseudo" class="trip-driver-info">
       <img
         v-if="driverAvatarUrl"
         :src="driverAvatarUrl"
@@ -141,6 +154,13 @@ export default {
       required: true,
     },
     /**
+     * Current user object (optional - for preview mode)
+     */
+    currentUser: {
+      type: Object,
+      default: null,
+    },
+    /**
      * Show earnings information (driver view)
      */
     showEarnings: {
@@ -164,6 +184,13 @@ export default {
       return `https://i.pravatar.cc/150?img=${(props.trip.driver_id || 0) % 70}`
     })
 
+    const currentUserAvatarUrl = computed(() => {
+      if (props.currentUser?.photo_url) {
+        return props.currentUser.photo_url
+      }
+      return `https://i.pravatar.cc/150?img=${(props.currentUser?.id || 0) % 70}`
+    })
+
     return {
       formatDate,
       formatTime,
@@ -174,6 +201,7 @@ export default {
       calculateEarnings,
       formatDurationMinutes,
       driverAvatarUrl,
+      currentUserAvatarUrl,
     }
   },
   created() {
@@ -248,6 +276,47 @@ export default {
 .trip-actions {
   display: flex;
   gap: 0.5rem;
+}
+
+/* User Info (Preview Mode) */
+.trip-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: rgba(143, 218, 179, 0.08);
+  border: 1px solid rgba(143, 218, 179, 0.3);
+  border-radius: 6px;
+}
+
+.user-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+}
+
+.user-label {
+  font-size: 0.75rem;
+  color: var(--color-success);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.user-name {
+  font-weight: 600;
+  color: var(--color-light);
+  font-size: 0.95rem;
+  line-height: 1;
 }
 
 /* Driver Info */

@@ -32,7 +32,7 @@
     <!-- Become Driver Button -->
     <div v-if="user && !isDriver" class="become-driver-section">
       <PrimaryButton @click="navigateToBecomeDriver" class="become-driver-button">
-        <font-awesome-icon :icon="['fas', 'steering-wheel']" class="button-icon" />
+        <font-awesome-icon :icon="['fas', 'steering']" class="button-icon" />
         Devenir chauffeur
       </PrimaryButton>
     </div>

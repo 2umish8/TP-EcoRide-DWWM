@@ -4,13 +4,17 @@
       <font-awesome-icon :icon="['fas', 'clipboard-list']" /> Récapitulatif
     </h3>
 
-    <TripCard :trip="previewTrip" />
+    <TripCard :trip="previewTrip" :current-user="currentUser" />
   </div>
 </template>
 
 <script setup>
 import { defineProps, computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import TripCard from '@/components/trips/cards/TripCard.vue'
+
+const authStore = useAuthStore()
+const currentUser = computed(() => authStore.currentUser)
 
 const props = defineProps({
   tripData: {
