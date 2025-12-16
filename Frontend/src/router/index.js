@@ -50,7 +50,7 @@ const router = createRouter({
       component: () => import('../views/CreateTripView.vue'),
       beforeEnter: (to, from, next) => {
         const user = JSON.parse(localStorage.getItem('user') || 'null')
-        const isDriver = user && user.driver_role === true
+        const isDriver = user && user.roles && user.roles.includes('chauffeur')
 
         if (!isDriver) {
           next('/become-driver')

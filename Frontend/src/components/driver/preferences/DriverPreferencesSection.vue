@@ -27,9 +27,10 @@
           @change="onChange({ ...preferences, conversationLevel: $event.target.value })"
           class="form-select"
         >
-          <option value="silencieux">Silencieux</option>
-          <option value="modéré">Modéré</option>
-          <option value="bavard">Bavard</option>
+          <option value="silent">Silencieux</option>
+          <option value="minimal">Minimal</option>
+          <option value="friendly">Modéré</option>
+          <option value="chatty">Bavard</option>
         </select>
       </div>
     </div>
